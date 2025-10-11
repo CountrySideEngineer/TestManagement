@@ -19,6 +19,7 @@ namespace TestManagement.Controllers
             return View();
         }
 
+        [HttpPost]
         public IActionResult Create(int testCaseId, string status, string log)
         {
             var run = new TestRun
