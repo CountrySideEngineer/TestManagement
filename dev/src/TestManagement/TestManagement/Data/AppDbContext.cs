@@ -13,6 +13,11 @@ namespace TestManagement.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<TestRun>()
+                .HasOne(testRun => testRun.TestCase)
+                .WithMany(testCase => testCase.TestRuns);
         }
     }
 }
