@@ -1,0 +1,51 @@
+﻿@page
+@model TestManagement.Pages.TestRuns.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>TestRun</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TestRun.Id" />
+            <div class="form-group">
+                <label asp-for="TestRun.TestCaseId" class="control-label"></label>
+                <select asp-for="TestRun.TestCaseId" class="form-control" asp-items="ViewBag.TestCaseId"></select>
+                <span asp-validation-for="TestRun.TestCaseId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="TestRun.Status" class="control-label"></label>
+                <input asp-for="TestRun.Status" class="form-control" />
+                <span asp-validation-for="TestRun.Status" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TestRun.Remarks" class="control-label"></label>
+                <input asp-for="TestRun.Remarks" class="form-control" />
+                <span asp-validation-for="TestRun.Remarks" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TestRun.ExecutedAt" class="control-label"></label>
+                <input asp-for="TestRun.ExecutedAt" class="form-control" />
+                <span asp-validation-for="TestRun.ExecutedAt" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
