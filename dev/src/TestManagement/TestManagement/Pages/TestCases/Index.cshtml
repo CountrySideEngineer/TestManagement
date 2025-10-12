@@ -1,25 +1,51 @@
 ﻿@page
 @model TestManagement.Pages.TestCases.IndexModel
+@{
+    ViewData["Title"] = "テストケース一覧";
+}
 
-<h1>Test Cases</h1>
+<h1>テストケース一覧</h1>
 
-<table class="table">
+<table class="table table-striped">
     <thead>
         <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Description</th>
-            <th>CreatedAt</th>
+            <th>タイトル</th>
+            <th>説明</th>
+            <th>テスト結果</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.TestCases)
+        @foreach (var testCase in Model.TestCases)
         {
             <tr>
-                <td>@item.Id</td>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-                <td>@item.CreatedAt</td>
+                <td>@testCase.Name</td>
+                <td>@testCase.Description</td>
+                <td>
+                    @if (testCase.TestRuns != null && testCase.TestRuns.Any())
+                    {
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>実行日</th>
+                                    <th>結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var run in testCase.TestRuns)
+                                {
+                                    <tr>
+                                        <td>@run.ExecutedAt.ToString("yyyy/MM/dd HH:mm")</td>
+                                        <td>@run.Status</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <span class="text-muted">テスト結果なし</span>
+                    }
+                </td>
             </tr>
         }
     </tbody>
