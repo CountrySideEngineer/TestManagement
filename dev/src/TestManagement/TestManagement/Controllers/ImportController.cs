@@ -46,7 +46,7 @@ namespace TestManagement.Controllers
 
                     var run = new TestRun()
                     {
-                        TestCaseId = testCase.TestCaseId,
+                        TestCaseId = testCase.Id,
                         Status = status,
                         ExecutedAt = DateTime.Now
                     };

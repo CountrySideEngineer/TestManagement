@@ -26,7 +26,6 @@ namespace TestManagement.Controllers
             {
                 TestCaseId = testCaseId,
                 Status = status,
-                Log = log,
                 ExecutedAt = DateTime.Now
             };
             _context.TestRuns.Add(run);
