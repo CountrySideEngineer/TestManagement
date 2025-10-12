@@ -21,6 +21,6 @@ namespace TestManagement.Models
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation property (reference to parent table.)
-        public TestCase TestCase { get; set; } = new TestCase();
+        public TestCase? TestCase { get; set; } = new TestCase();
     }
 }
