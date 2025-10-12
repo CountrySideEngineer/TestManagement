@@ -15,9 +15,11 @@ namespace TestManagement.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<TestRun>()
-                .HasOne(testRun => testRun.TestCase)
-                .WithMany(testCase => testCase.TestRuns);
+            // Relation TestCase (parent) to TestRun(child), 1 to N.
+            modelBuilder.Entity<TestCase>()
+                .HasMany(testCase => testCase.TestRuns)
+                .WithOne(testRun => testRun.TestCase)
+                .HasForeignKey(testRun => testRun.TestCaseId);
         }
     }
 }
