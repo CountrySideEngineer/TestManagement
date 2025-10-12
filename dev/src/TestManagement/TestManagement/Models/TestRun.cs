@@ -15,6 +15,9 @@ namespace TestManagement.Models
         [MaxLength(20)]
         public string Status { get; set; } = string.Empty;
 
+        [MaxLength(500)]
+        public string? Remarks { get; set; }
+
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation property (reference to parent table.)
