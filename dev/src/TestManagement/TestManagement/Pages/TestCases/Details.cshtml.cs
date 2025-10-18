@@ -28,7 +28,9 @@ namespace TestManagement.Pages.TestCases
                 return NotFound();
             }
 
-            var testcase = await _context.TestCases.FirstOrDefaultAsync(m => m.Id == id);
+            var testcase = await _context.TestCases
+                .Include(tc => tc.TestRuns)
+                .FirstOrDefaultAsync(m => m.Id == id);
             if (testcase == null)
             {
                 return NotFound();
