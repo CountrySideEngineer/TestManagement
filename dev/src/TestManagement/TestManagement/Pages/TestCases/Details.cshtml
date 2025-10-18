@@ -66,6 +66,7 @@
                 <th>
                     @Html.DisplayNameFor(model => model.TestCase.TestRuns.ElementAt(0).Remarks)
                 </th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -81,7 +82,10 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Remarks)
                 </td>
-            </tr>
+                <td>
+                    <a asp-page="/TestRuns/Details" asp-route-id="@item.Id">詳細</a>
+                </td>
+                </tr>
         }
         </tbody>
     </table>

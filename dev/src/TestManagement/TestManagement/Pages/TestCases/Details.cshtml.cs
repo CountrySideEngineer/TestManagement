@@ -21,6 +21,8 @@ namespace TestManagement.Pages.TestCases
 
         public TestCase TestCase { get; set; } = default!;
 
+        public List<TestRun> TestRuns { get; set; } = new();
+
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -38,6 +40,9 @@ namespace TestManagement.Pages.TestCases
             else
             {
                 TestCase = testcase;
+                TestRuns = await _context.TestRuns.Where(tr => tr.TestCaseId == testcase.Id)
+                    .OrderByDescending(tr => tr.ExecutedAt)
+                    .ToListAsync();
             }
             return Page();
         }
