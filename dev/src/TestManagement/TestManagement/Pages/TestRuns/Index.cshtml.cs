@@ -24,7 +24,9 @@ namespace TestManagement.Pages.TestRuns
         public async Task OnGetAsync()
         {
             TestRun = await _context.TestRuns
-                .Include(t => t.TestCase).ToListAsync();
+                .Include(t => t.TestCase)
+                .OrderByDescending(tr => tr.ExecutedAt)
+                .ToListAsync();
         }
     }
 }

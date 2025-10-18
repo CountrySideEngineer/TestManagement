@@ -36,6 +36,7 @@ namespace TestManagement.Pages.TestRuns
                 return Page();
             }
 
+            TestRun.ExecutedAt = DateTime.SpecifyKind(TestRun.ExecutedAt, DateTimeKind.Utc);
             _context.TestRuns.Add(TestRun);
             await _context.SaveChangesAsync();
 

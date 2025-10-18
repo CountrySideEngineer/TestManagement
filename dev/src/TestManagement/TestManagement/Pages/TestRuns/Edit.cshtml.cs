@@ -49,6 +49,8 @@ namespace TestManagement.Pages.TestRuns
                 return Page();
             }
 
+            TestRun.ExecutedAt = DateTime.SpecifyKind(TestRun.ExecutedAt, DateTimeKind.Utc);
+
             _context.Attach(TestRun).State = EntityState.Modified;
 
             try
