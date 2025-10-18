@@ -16,6 +16,8 @@ namespace TestManagement.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        public DateTime? UpdatedAt { get; set; }
+
         // Navigation property(1 to n).
         public ICollection<TestRun> TestRuns { get; set; } = new List<TestRun>();
     }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Transactions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -48,6 +49,9 @@ namespace TestManagement.Pages.TestCases
                 return Page();
             }
 
+            TestCase.UpdatedAt = DateTime.UtcNow;
+
+            // Set changes as tracking.
             _context.Attach(TestCase).State = EntityState.Modified;
 
             try
@@ -66,6 +70,7 @@ namespace TestManagement.Pages.TestCases
                 }
             }
 
+            // Redirect to index page after saving changes.
             return RedirectToPage("./Index");
         }
 
