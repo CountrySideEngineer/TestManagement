@@ -19,7 +19,8 @@ namespace TestManagement.Data
             modelBuilder.Entity<TestCase>()
                 .HasMany(testCase => testCase.TestRuns)
                 .WithOne(testRun => testRun.TestCase)
-                .HasForeignKey(testRun => testRun.TestCaseId);
+                .HasForeignKey(testRun => testRun.TestCaseId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
