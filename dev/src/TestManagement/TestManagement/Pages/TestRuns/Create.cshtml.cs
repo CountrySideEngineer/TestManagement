@@ -19,14 +19,24 @@ namespace TestManagement.Pages.TestRuns
             _context = context;
         }
 
-        public IActionResult OnGet()
-        {
-        ViewData["TestCaseId"] = new SelectList(_context.TestCases, "Id", "Name");
-            return Page();
-        }
-
         [BindProperty]
         public TestRun TestRun { get; set; } = default!;
+
+        [FromQuery(Name = "testCaseId")]
+        public int? TestCaseId { get; set; }
+
+        public IActionResult OnGet()
+        {
+            if (TestCaseId.HasValue)
+            {
+                this.TestRun = new TestRun
+                {
+                    TestCaseId = TestCaseId.Value,
+                    ExecutedAt = DateTime.UtcNow
+                };
+            }
+            return Page();
+        }
 
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
