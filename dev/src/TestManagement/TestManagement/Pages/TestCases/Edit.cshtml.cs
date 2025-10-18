@@ -49,6 +49,7 @@ namespace TestManagement.Pages.TestCases
                 return Page();
             }
 
+            TestCase.CreatedAt = DateTime.SpecifyKind(TestCase.CreatedAt, DateTimeKind.Utc);
             TestCase.UpdatedAt = DateTime.UtcNow;
 
             // Set changes as tracking.
