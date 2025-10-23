@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestManagement.Models
@@ -21,6 +23,7 @@ namespace TestManagement.Models
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
         // Navigation property (reference to parent table.)
-        public TestCase? TestCase { get; set; } = new TestCase();
+        [BindNever]
+        public TestCase? TestCase { get; set; }
     }
 }

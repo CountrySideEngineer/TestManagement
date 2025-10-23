@@ -20,7 +20,7 @@ namespace TestManagement.Pages.TestRuns
         }
 
         [BindProperty]
-        public TestRun TestRun { get; set; } = default!;
+        public TestRun TestRun { get; set; } = new();
 
         [FromQuery(Name = "testCaseId")]
         public int? TestCaseId { get; set; }
@@ -29,7 +29,7 @@ namespace TestManagement.Pages.TestRuns
         {
             if (TestCaseId.HasValue)
             {
-                this.TestRun = new TestRun
+                TestRun = new TestRun
                 {
                     TestCaseId = TestCaseId.Value,
                     ExecutedAt = DateTime.UtcNow
@@ -41,6 +41,8 @@ namespace TestManagement.Pages.TestRuns
         // For more information, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
+            TestRun.TestCase = null;
+
             if (!ModelState.IsValid)
             {
                 return Page();
@@ -50,7 +52,7 @@ namespace TestManagement.Pages.TestRuns
             _context.TestRuns.Add(TestRun);
             await _context.SaveChangesAsync();
 
-            return RedirectToPage("./Index");
+            return RedirectToPage("./TestCases/details", new {id = TestRun.TestCaseId });
         }
     }
 }
