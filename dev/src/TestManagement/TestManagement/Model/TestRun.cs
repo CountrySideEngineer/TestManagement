@@ -4,6 +4,7 @@ namespace TestManagement.Model
 {
     public class TestRun
     {
+        [Key]
         public int Id { get; set; }
 
         public int ProjectId { get; set; }

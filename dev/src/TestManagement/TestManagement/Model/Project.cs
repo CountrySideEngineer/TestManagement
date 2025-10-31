@@ -4,6 +4,7 @@ namespace TestManagement.Model
 {
     public class Project
     {
+        [Key]
         public int Id { get; set; }
 
         [Required, MaxLength(200)]

@@ -4,6 +4,7 @@ namespace TestManagement.Model
 {
     public class TestCase
     {
+        [Key]
         public int Id { get; set; }
 
         public int TestSuiteId { get; set; }

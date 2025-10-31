@@ -14,6 +14,7 @@ namespace TestManagement.Model
 
     public class TestResult
     {
+        [Key]
         public int Id { get; set; }
 
         public int TestRunId { get; set; }
