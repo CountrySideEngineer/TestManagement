@@ -18,6 +18,7 @@ namespace TestManagement.Model
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 
         // Navigation
+        public ICollection<Tester> Testers { get; set; } = new List<Tester>();
         public ICollection<TestSuite> TestSuites { get; set; } = new List<TestSuite>();
         public ICollection<TestRun> TestRuns { get; set; } = new List<TestRun>();
     }
