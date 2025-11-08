@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TestManagement.Model;
 
 namespace TestManagement.Data
@@ -63,6 +64,27 @@ namespace TestManagement.Data
                 .WithOne(r => r.Tester)
                 .HasForeignKey(r => r.TesterId)
                 .OnDelete(DeleteBehavior.SetNull);
+
+            var statusConverter = new EnumToStringConverter<TestStatus>();
+            modelBuilder.Entity<TestResult>()
+                .Property(rr => rr.Status)
+                .HasConversion(statusConverter)
+                .HasMaxLength(32)
+                .HasColumnName("Status");
+
+            modelBuilder.Entity<TestRun>().Property(r => r.ExecutedAt).HasColumnType("timestamptz");
+            modelBuilder.Entity<Project>().Property(p => p.CreatedAt).HasColumnType("timestamptz");
+            modelBuilder.Entity<Project>().Property(p => p.UpdatedAt).HasColumnType("timestamptz");
+            modelBuilder.Entity<TestCase>().Property(c => c.CreatedAt).HasColumnType("timestamptz");
+            modelBuilder.Entity<TestCase>().Property(c => c.UpdatedAt).HasColumnType("timestamptz");
+            modelBuilder.Entity<TestSuite>().Property(s => s.CreatedAt).HasColumnType("timestamptz");
+
+            // Optional: Seed TestLevel (Unit/Integration/System)
+            modelBuilder.Entity<TestLevel>().HasData(
+                new TestLevel { Id = 1, Name = "Unit", Description = "Unit tests" },
+                new TestLevel { Id = 2, Name = "Integration", Description = "Integration tests" },
+                new TestLevel { Id = 3, Name = "System", Description = "System tests" }
+            );
         }
     }
 }
