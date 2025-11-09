@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace TestManagement.Data
+namespace TestManagement.Data.Repositories
 {
     public interface IGenericRepository<T> where T : class
     {
