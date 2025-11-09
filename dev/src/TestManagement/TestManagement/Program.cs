@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.Data;
 using TestManagement.Data.Repositories;
+using TestManagement.Serivces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<TestManagementDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
+builder.Services.AddScoped<ProjectService>();
 
 var app = builder.Build();
 
