@@ -16,6 +16,6 @@ namespace TestManagement.Data.Repositories
 
         void Remove(T entity);
 
-        Task SaveChangeAsync();
+        Task SaveChangesAsync();
     }
 }
