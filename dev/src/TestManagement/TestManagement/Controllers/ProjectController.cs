@@ -4,13 +4,13 @@ using TestManagement.Serivces;
 
 namespace TestManagement.Controllers
 {
-    [Route("api/[conttroller]")]
+    [Route("api/[controller]")]
     [ApiController]
-    public class ProjectController : ControllerBase
+    public class ProjectsController : ControllerBase
     {
         private readonly ProjectService _projectService;
 
-        public ProjectController(ProjectService projectService)
+        public ProjectsController(ProjectService projectService)
         {
             _projectService = projectService;
         }
