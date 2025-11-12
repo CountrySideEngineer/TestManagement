@@ -4,11 +4,11 @@ using TestManagement.Model;
 
 namespace TestManagement.Data.Repositories
 {
-    public class TestSuiteRepository
+    public class TestSuitesRepository
     {
         private readonly TestManagementDbContext _context;
 
-        public TestSuiteRepository(TestManagementDbContext context)
+        public TestSuitesRepository(TestManagementDbContext context)
         {
             _context = context;
         }
