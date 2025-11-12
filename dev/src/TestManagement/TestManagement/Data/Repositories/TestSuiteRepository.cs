@@ -5,7 +5,7 @@ using TestManagement.Model;
 
 namespace TestManagement.Data.Repositories
 {
-    public class TestSuiteRepository
+    public class TestSuiteRepository : ITestSuiteRepository
     {
         private readonly TestManagementDbContext _context;
 
