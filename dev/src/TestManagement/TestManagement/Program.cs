@@ -12,7 +12,7 @@ builder.Services.AddDbContext<TestManagementDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
-
+builder.Services.AddScoped<ITestSuiteRepository, TestSuiteRepository>();
 //Register DI, denependency injection, for service layer.
 builder.Services.AddScoped<ProjectService>();
 
