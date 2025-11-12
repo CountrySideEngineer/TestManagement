@@ -1,14 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using TestManagement.Model;
 
 namespace TestManagement.Data.Repositories
 {
-    public class TestSuitesRepository
+    public class TestSuiteRepository
     {
         private readonly TestManagementDbContext _context;
 
-        public TestSuitesRepository(TestManagementDbContext context)
+        public TestSuiteRepository(TestManagementDbContext context)
         {
             _context = context;
         }
