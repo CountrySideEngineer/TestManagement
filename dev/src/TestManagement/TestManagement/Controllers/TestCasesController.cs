@@ -4,6 +4,8 @@ using TestManagement.Model;
 
 namespace TestManagement.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class TestCasesController : ControllerBase
     {
         private readonly ITestCaseRepository _testCaseRepository;
