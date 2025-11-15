@@ -15,6 +15,18 @@ namespace TestManagement.Data.Repositories
         public async Task<IEnumerable<TestCase>> GetAllAsync()
         {
             return await _context.TestCases
+                .Include(_ => _.TestSuite)
+                .Include(_ => _.TestLevel)
+                .Include(_ => _.TestResults)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<TestCase>> GetByTestSuiteIdAsync(int testSuiteId)
+        {
+            return await _context.TestCases
+                .Where(_ => _.TestSuiteId == testSuiteId)
+                .Include(_ => _.TestSuite)
+                .Include(_ => _.TestLevel)
                 .Include(_ => _.TestResults)
                 .ToListAsync();
         }
@@ -22,9 +34,10 @@ namespace TestManagement.Data.Repositories
         public async Task<TestCase?> GetByIdAsync(int id)
         {
             return await _context.TestCases
+                .Include(_ => _.TestSuite)
+                .Include(_ => _.TestLevel)
                 .Include(_ => _.TestResults)
-                .Where(_ => _.Id == id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(_ => _.Id == id);
         }
 
         public async Task AddAsync(TestCase testCase)
