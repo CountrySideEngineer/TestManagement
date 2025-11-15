@@ -13,6 +13,7 @@ builder.Services.AddDbContext<TestManagementDbContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<ITestSuiteRepository, TestSuiteRepository>();
+builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
 //Register DI, denependency injection, for service layer.
 builder.Services.AddScoped<ProjectService>();
 
