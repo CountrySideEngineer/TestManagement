@@ -16,7 +16,24 @@ namespace TestManagement.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            // Additional model configuration can go here
+
+            modelBuilder.Entity<TestLevel>()
+                .HasMany(_ => _.TestCases)
+                .WithOne(_ => _.TestLevel)
+                .HasForeignKey(_ => _.TestLevelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TestCase>()
+                .HasMany(_ => _.Results)
+                .WithOne(_ => _.TestCase)
+                .HasForeignKey(_ => _.TestCaseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<TestRun>()
+                .HasMany(_ => _.TestResults)
+                .WithOne(_ => _.TestRun)
+                .HasForeignKey(_ => _.TestRunId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
