@@ -20,5 +20,8 @@ namespace TestManagement.API.Models
         // Foregin key to TestLevel
         public int TestLevelId { get; set; }
         public TestLevel TestLevel { get; set; } = new TestLevel();
+
+        // Navigation property to related TestResult objects.
+        public ICollection<TestResult> Results { get; set; } = new List<TestResult>();
     }
 }
