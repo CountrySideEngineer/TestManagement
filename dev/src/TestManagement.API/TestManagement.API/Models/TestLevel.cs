@@ -4,6 +4,7 @@ namespace TestManagement.API.Models
 {
     public class TestLevel
     {
+        [Key]
         public int Id { get; set; }
 
         [Required]
