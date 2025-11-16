@@ -19,6 +19,7 @@ namespace TestManagement.Model
         [MaxLength(4000)]
         public string? Description { get; set; }
 
+        // Use DateTimeOffset for timezone-safe timestamps
         public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
         public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
 

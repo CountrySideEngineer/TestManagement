@@ -17,6 +17,10 @@ namespace TestManagement.Model
         public int? ProjectId { get; set; }
         public Project? Project { get; set; }
 
+        // Use DateTimeOffset for timezone-safe timestamps
+        public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+        public DateTimeOffset UpdatedAt { get; set; } = DateTimeOffset.UtcNow;
+
         public ICollection<TestRun> TestRuns { get; set; } = new List<TestRun>();
     }
 }
