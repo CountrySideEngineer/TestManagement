@@ -16,5 +16,8 @@ namespace TestManagement.API.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        // Navigation property to related TestCases
+        public ICollection<TestCase> TestCases { get; set; } = new List<TestCase>();
     }
 }
