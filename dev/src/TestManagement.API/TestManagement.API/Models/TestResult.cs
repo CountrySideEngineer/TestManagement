@@ -12,6 +12,9 @@ namespace TestManagement.API.Models
         public int TestCaseId { get; set; }
         public TestCase TestCase { get; set; } = new TestCase();
 
+        public int TestRunId { get; set; }
+        public TestRun TestRun { get; set; } = new TestRun();
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
