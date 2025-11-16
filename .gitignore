@@ -1,0 +1,11 @@
+appsettings.json
+
+# Ignore Visual Studio folder
+.vs/
+*.bak
+Microsoft.*.dll
+System.*.dll
+*.cache
+*.log
+*.user
+*/obj/*
