@@ -34,6 +34,14 @@ namespace TestManagement.API.Data
                 .WithOne(_ => _.TestRun)
                 .HasForeignKey(_ => _.TestRunId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // Add seed TestLevel class (Unit, Integration, System, Acceptance)
+            modelBuilder.Entity<TestLevel>().HasData(
+                new TestLevel { Id = 1, Name = "Unit", Description = "Unit Level Testing" },
+                new TestLevel { Id = 2, Name = "Integration", Description = "Integration Level Testing" },
+                new TestLevel { Id = 3, Name = "System", Description = "System Level Testing" },
+                new TestLevel { Id = 4, Name = "Acceptance", Description = "Acceptance Level Testing" }
+            );
         }
     }
 }
