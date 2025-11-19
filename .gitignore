@@ -9,3 +9,4 @@ System.*.dll
 *.log
 *.user
 */obj/*
+.env
