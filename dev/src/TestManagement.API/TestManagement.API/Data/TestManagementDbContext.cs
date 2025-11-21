@@ -36,12 +36,15 @@ namespace TestManagement.API.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Add seed TestLevel class (Unit, Integration, System, Acceptance)
-            modelBuilder.Entity<TestLevel>().HasData(
-                new TestLevel { Id = 1, Name = "Unit", Description = "Unit Level Testing" },
-                new TestLevel { Id = 2, Name = "Integration", Description = "Integration Level Testing" },
-                new TestLevel { Id = 3, Name = "System", Description = "System Level Testing" },
-                new TestLevel { Id = 4, Name = "Acceptance", Description = "Acceptance Level Testing" }
-            );
+            var seedDate = new DateTime(2025, 11, 21, 0, 0, 0, DateTimeKind.Utc);
+            modelBuilder.Entity<TestLevel>(_ =>
+            {
+                _.HasData(
+                    new TestLevel { Id = 1, Name = "Unit", Description = "Unit Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate },
+                    new TestLevel { Id = 2, Name = "Integration", Description = "Integration Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate },
+                    new TestLevel { Id = 3, Name = "System", Description = "System Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate },
+                    new TestLevel { Id = 4, Name = "Acceptance", Description = "Acceptance Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate });
+            });
         }
     }
 }
