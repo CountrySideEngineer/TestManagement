@@ -26,6 +26,8 @@ namespace TestManagement.API.Data.Repositories
 
         public async Task AddAsync(TestCase testCase)
         {
+            TestLevel testLevel = _context.TestLevels.Find(testCase.TestLevelId)!;
+            testCase.TestLevel = testLevel;
             _context.TestCases.Add(testCase);
             await _context.SaveChangesAsync();
         }
