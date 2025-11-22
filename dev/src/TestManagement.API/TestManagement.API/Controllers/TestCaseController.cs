@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TestManagement.API.Models;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
@@ -22,10 +23,17 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTestCasesByTestLevelId(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             var testCases = await _testCaseService.GetByIdAsync(id);
             return Ok(testCases);
+        }
+
+        public async Task<IActionResult> Create(TestCase testCase)
+        {
+            await _testCaseService.Create(testCase);
+
+            return CreatedAtAction(nameof(GetById), new { id = testCase.Id }, testCase);
         }
     }
 }
