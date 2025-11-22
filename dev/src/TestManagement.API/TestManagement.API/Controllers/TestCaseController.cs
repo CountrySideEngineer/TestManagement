@@ -29,6 +29,7 @@ namespace TestManagement.API.Controllers
             return Ok(testCases);
         }
 
+        [HttpPost]
         public async Task<IActionResult> Create(TestCase testCase)
         {
             await _testCaseService.Create(testCase);
