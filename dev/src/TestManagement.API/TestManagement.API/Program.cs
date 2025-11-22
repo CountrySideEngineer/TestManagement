@@ -13,6 +13,8 @@ builder.Services.AddDbContext<TestManagementDbContext>(options =>
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ITestLevelRepository, TestLevelRepository>();
 builder.Services.AddScoped<TestLevelService>();
+builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
+builder.Services.AddScoped<TestCaseService>();
 
 
 builder.Services.AddControllers();
