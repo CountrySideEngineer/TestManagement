@@ -21,5 +21,10 @@ namespace TestManagement.API.Services
         {
             return await _testCaseRepository.GetByIdAsync(testLevelId);
         }
+
+        public async Task Create(TestCase testCase)
+        {
+            await _testCaseRepository.AddAsync(testCase);
+        }
     }
 }
