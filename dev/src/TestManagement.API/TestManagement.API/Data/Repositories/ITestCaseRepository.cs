@@ -7,5 +7,7 @@ namespace TestManagement.API.Data.Repositories
         Task<ICollection<TestCase>> GetAllAsync();
 
         Task<ICollection<TestCase>> GetByIdAsync(int testLevelId);
+
+        Task AddAsync(TestCase testCase);
     }
 }

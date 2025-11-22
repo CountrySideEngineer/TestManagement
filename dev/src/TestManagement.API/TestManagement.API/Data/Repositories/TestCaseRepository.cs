@@ -23,5 +23,11 @@ namespace TestManagement.API.Data.Repositories
                 .Where(_ => _.TestLevelId == testLevelId)
                 .ToListAsync();
         }
+
+        public async Task AddAsync(TestCase testCase)
+        {
+            _context.TestCases.Add(testCase);
+            await _context.SaveChangesAsync();
+        }
     }
 }
