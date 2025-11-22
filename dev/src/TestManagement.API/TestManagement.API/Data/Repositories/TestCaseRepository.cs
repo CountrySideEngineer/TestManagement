@@ -14,13 +14,16 @@ namespace TestManagement.API.Data.Repositories
 
         public async Task<ICollection<TestCase>> GetAllAsync()
         {
-            return await _context.TestCases.ToListAsync();
+            return await _context.TestCases
+                .Include(_ => _.TestLevel)
+                .ToListAsync();
         }
 
         public async Task<ICollection<TestCase>> GetByIdAsync(int testLevelId)
         {
             return await _context.TestCases
                 .Where(_ => _.TestLevelId == testLevelId)
+                .Include(_ => _.TestLevel)
                 .ToListAsync();
         }
 
