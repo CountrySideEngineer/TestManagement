@@ -5,11 +5,11 @@ namespace TestManagement.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class TestLevelControllers : ControllerBase
+    public class TestLevelController : ControllerBase
     {
         private readonly TestLevelService _testLevelService;
 
-        public TestLevelControllers(TestLevelService testLevelRepository)
+        public TestLevelController(TestLevelService testLevelRepository)
         {
             _testLevelService = testLevelRepository;
         }
