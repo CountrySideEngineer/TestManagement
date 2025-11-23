@@ -19,10 +19,10 @@ namespace TestManagement.API.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<TestCase>> GetByIdAsync(int testLevelId)
+        public async Task<ICollection<TestCase>> GetByIdAsync(int id)
         {
             return await _context.TestCases
-                .Where(_ => _.TestLevelId == testLevelId)
+                .Where(_ => _.Id == id)
                 .Include(_ => _.TestLevel)
                 .ToListAsync();
         }
@@ -32,6 +32,17 @@ namespace TestManagement.API.Data.Repositories
             TestLevel testLevel = _context.TestLevels.Find(testCase.TestLevelId)!;
             testCase.TestLevel = testLevel;
             _context.TestCases.Add(testCase);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddAsync(ICollection<TestCase> testCases)
+        {
+            foreach (var item in testCases)
+            {
+                TestLevel testLevel = _context.TestLevels.Find(item.TestLevelId)!;
+                item.TestLevel = testLevel;
+            }
+            _context.TestCases.AddRange(testCases);
             await _context.SaveChangesAsync();
         }
     }
