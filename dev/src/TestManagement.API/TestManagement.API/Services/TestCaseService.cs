@@ -26,5 +26,10 @@ namespace TestManagement.API.Services
         {
             await _testCaseRepository.AddAsync(testCase);
         }
+
+        public async Task Create(ICollection<TestCase> testCases)
+        {
+            await _testCaseRepository.AddAsync(testCases);
+        }
     }
 }
