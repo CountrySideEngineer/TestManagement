@@ -36,5 +36,13 @@ namespace TestManagement.API.Controllers
 
             return CreatedAtAction(nameof(GetById), new { id = testCase.Id }, testCase);
         }
+
+        [HttpPost("Bulk")]
+        public async Task<IActionResult> CreateBulf(List<TestCase> testCases)
+        {
+            await _testCaseService.Create(testCases);
+
+            return CreatedAtAction(nameof(GetById), new { id = testCases[0].Id }, testCases);
+        }
     }
 }
