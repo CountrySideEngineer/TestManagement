@@ -6,7 +6,7 @@ var client = new HttpClient();
 // POST メソッドで JSON の Body のリクエストを投げる
 var postResponse = await client.PostAsJsonAsync(
     @"https://localhost:7162/api/TestCase",
-    new TestCase
+    new TestCaseModel
     {
         Title = "Sample test case X001",
         Description = "Sample test case post from application implemented in C#",
@@ -32,7 +32,7 @@ var response = await client.GetAsync(
 // レスポンスのステータスコードが成功していたら Answer の値を出力
 if (response.IsSuccessStatusCode)
 {
-    var item = await response.Content.ReadFromJsonAsync<List<TestCase>>();
+    var item = await response.Content.ReadFromJsonAsync<List<TestCaseModel>>();
     Console.WriteLine(item);
 
     if (null == item)
@@ -59,7 +59,7 @@ public class TestLevelModel
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }
 
-public class TestCase
+public class TestCaseModel
 {
     public int Id { get; set; }
 
