@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestManagement.client.TestC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestManagement.client.TestLevel", "TestManagement.client.TestLevel\TestManagement.client.TestLevel.csproj", "{3C4FE99E-A847-49B2-87FB-853B64AFEB47}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestManagement.client.TestRun", "TestManagement.client.TestRun\TestManagement.client.TestRun.csproj", "{84DEEBB6-79F4-4B16-A4AA-AF7E2EFBB849}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{3C4FE99E-A847-49B2-87FB-853B64AFEB47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C4FE99E-A847-49B2-87FB-853B64AFEB47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3C4FE99E-A847-49B2-87FB-853B64AFEB47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{84DEEBB6-79F4-4B16-A4AA-AF7E2EFBB849}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84DEEBB6-79F4-4B16-A4AA-AF7E2EFBB849}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84DEEBB6-79F4-4B16-A4AA-AF7E2EFBB849}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84DEEBB6-79F4-4B16-A4AA-AF7E2EFBB849}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
