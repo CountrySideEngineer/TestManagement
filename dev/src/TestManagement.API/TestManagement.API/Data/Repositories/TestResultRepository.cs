@@ -36,7 +36,8 @@ namespace TestManagement.API.Data.Repositories
 
             result.TestCase = testCase;
             result.TestRun = testRun;
-            await _context.TestResults.AddAsync(result);
+            _context.TestResults.Add(result);
+            await _context.SaveChangesAsync();
         }
 
         public async Task AddAsync(ICollection<TestResult> results)
