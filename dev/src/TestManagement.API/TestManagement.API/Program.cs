@@ -15,6 +15,10 @@ builder.Services.AddScoped<ITestLevelRepository, TestLevelRepository>();
 builder.Services.AddScoped<TestLevelService>();
 builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
 builder.Services.AddScoped<TestCaseService>();
+builder.Services.AddScoped<ITestResultRepository, TestResultRepository>();
+builder.Services.AddScoped<TestResultService>();
+builder.Services.AddScoped<ITestRunRepository, TestRunRepository>();
+builder.Services.AddScoped<TestRunService>();
 
 
 builder.Services.AddControllers();
