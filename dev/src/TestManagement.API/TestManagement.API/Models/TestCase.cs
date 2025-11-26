@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TestManagement.API.Models
 {
@@ -22,6 +23,7 @@ namespace TestManagement.API.Models
         public TestLevel TestLevel { get; set; } = new TestLevel();
 
         // Navigation property to related TestResult objects.
+        [JsonIgnore]
         public ICollection<TestResult> Results { get; set; } = new List<TestResult>();
     }
 }

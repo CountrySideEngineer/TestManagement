@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace TestManagement.API.Models
 {
@@ -17,7 +18,8 @@ namespace TestManagement.API.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation property to related TestCases
+        // Navigation property to related TestCases.
+        [JsonIgnore]
         public ICollection<TestCase> TestCases { get; set; } = new List<TestCase>();
     }
 }
