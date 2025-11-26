@@ -5,6 +5,23 @@ using System.Text.Json.Serialization;
 // Web API を呼ぶための HttpClient を作る
 var client = new HttpClient();
 // POST メソッドで JSON の Body のリクエストを投げる
+var postResponse = await client.PostAsJsonAsync(
+    @"https://localhost:7162/api/TestRun",
+    new TestRunModel
+    {
+        ExecutedAt = DateTime.UtcNow,
+        Environment = "Linux",
+        Notes = "Sample test run from C# client application"
+    });
+if (postResponse.IsSuccessStatusCode)
+{
+    Console.WriteLine("POST succeeded.");
+}
+else
+{
+    Console.WriteLine("POST failed.");
+}
+
 var response = await client.GetAsync(
     @"https://localhost:7162/api/TestRun");
 // レスポンスのステータスコードが成功していたら Answer の値を出力
@@ -19,7 +36,9 @@ if (response.IsSuccessStatusCode)
     foreach (var record in item)
     {
         Console.WriteLine($"Id: {record.Id}," +
-            $"Result num: {record.TestResults.Count}"
+            $"Notes: {record.Notes}, " +
+            $"Environment: {record.Environment}, " +
+            $"Executed: {record.ExecutedAt.ToString("yyyy-MM-dd, HH:mm:ss")}"
         );
     }
 }
