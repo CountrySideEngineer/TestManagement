@@ -7,6 +7,7 @@ services:
       - "5433:5432"
     volumes:
       - ./postgres/init:/docker-entrypoint-initdb.d
+      - ./postgres/pgdata:/var/lib/postgresql/
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
