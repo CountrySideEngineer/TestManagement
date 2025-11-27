@@ -12,8 +12,9 @@ WORKDIR /Source/TestManagement.API
 RUN dotnet restore && \
     dotnet publish -c release -o /App --no-restore
 
-# Start building production environment.
-FROM mcr.microsoft.com/dotnet/sdk:8.0
+# Start building running environment.
+# It can not build application, only run it to avoid change the application or api.
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
 # Copy application from "build" container.
 WORKDIR /App
