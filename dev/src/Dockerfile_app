@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
+
+WORKDIR /Source
+
+# COPY source code of application.
+COPY ./TestManagement.API /Source/
+
+# Change working directory to the sample project folder.
+WORKDIR /Source/TestManagement.API
+
+# build the application.
+RUN dotnet restore && \
+    dotnet publish -c release -o /App --no-restore
+
+# Start building production environment.
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
+# Copy application from "build" container.
+WORKDIR /App
+COPY --from=build /App ./
+
+# Start 
+ENTRYPOINT ["dotnet", "TestManagement.API.dll"]

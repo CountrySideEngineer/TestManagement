@@ -1,0 +1,10 @@
+services:
+  app:
+    image: test_manage_app_test
+    container_name: test_manage_app_test_cont
+    build: 
+      context: .
+      dockerfile: Dockerfile_app
+    restart: no
+    ports: 
+      - "8080:8080"
