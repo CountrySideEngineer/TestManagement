@@ -7,7 +7,7 @@ services:
       - "5433:5432"
     volumes:
       - ./postgres/init:/docker-entrypoint-initdb.d
-      - ./postgres/pgdata:/var/lib/postgresql/
+      - ./secure/db_pass:/run/secrets/db_pass:ro
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
@@ -15,3 +15,27 @@ services:
       TZ: "${TZ}"
     env_file:
       - .env
+
+  api:
+    image: test_manage_api_test
+    container_name: test_manage_api_test_cont
+    build: 
+      context: .
+      dockerfile: Dockerfile_api
+    restart: no
+    ports: 
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: "${DB_HOST}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PORT: "${DB_PORT}"
+      DB_PASSWORD_FILE: "${DB_PASSWORD_FILE}"
+    volumes:
+      - ./secure/api_pass:/run/secrets/api_pass:ro
+    env_file:
+      - .env
+
+
