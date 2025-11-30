@@ -1,10 +1,26 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Home page";
+    ViewData["Title"] = "TestLevels";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>テストレベル一覧</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>レベル</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TestLevels)
+        {
+            <tr>
+                <td>@item.Id</td>
+                <td>@item.Name</td>
+            </tr>
+            
+        }
+    </tbody>
+</table>
