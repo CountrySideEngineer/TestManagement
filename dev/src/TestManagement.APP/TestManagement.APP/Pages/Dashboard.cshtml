@@ -1,0 +1,152 @@
+﻿@page
+@model DashboardModel
+@{
+    ViewData["Title"] = "開発者向けダッシュボード";
+}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+        }
+
+        header {
+            background-color: #2f3640;
+            color: white;
+            padding: 16px 24px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 24px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .block {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .block-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>開発者向けダッシュボード</header>
+
+    <div class="container">
+
+        <!-- サマリーカード -->
+        <div class="cards">
+            <div class="card">
+                <div class="card-title">今日のリクエスト数</div>
+                <div class="card-value">@Model.Summary?.TodayRequests</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">エラー率</div>
+                <div class="card-value">@Model.GetErrorRatePercent()</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">平均レスポンスタイム</div>
+                <div class="card-value">@Model.Summary?.AvgResponseMs ms</div>
+            </div>
+        </div>
+
+        <!-- リクエスト推移 -->
+        <div class="block">
+            <div class="block-title">リクエスト推移</div>
+            <canvas id="requestsChart" height="70"></canvas>
+        </div>
+
+        <!-- エラー詳細 -->
+        <div class="block">
+            <div class="block-title">エラー詳細</div>
+
+            @if (Model.Errors?.Count > 0)
+            {
+                <ul>
+                    @foreach (var err in Model.Errors)
+                    {
+                        <li>[ @err.Time ] @err.Message</li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>エラーはありません。</p>
+            }
+        </div>
+
+    </div>
+
+    <script>
+        // Razor バインディング（JSON化）
+        const requestTrendLabels = @Html.Raw(Model.RequestTrendLabelsJson);
+        const requestTrendValues = @Html.Raw(Model.RequestTrendValuesJson);
+
+        // Chart.js
+        const ctx = document.getElementById("requestsChart");
+
+        new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: requestTrendLabels,
+                datasets: [{
+                    label: "リクエスト数",
+                    data: requestTrendValues,
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+
+</body>
+</html>
