@@ -12,10 +12,13 @@ builder.Services.AddHttpClient("TestApiClient", client =>
         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 });
 
-Console.WriteLine($"{nameof(apiBaseUrl)} = {apiBaseUrl}");
-
 // Add services to the container.
-builder.Services.AddRazorPages();
+//builder.Services.AddRazorPages();
+builder.Services.AddRazorPages()
+    .AddRazorPagesOptions(options =>
+    {
+        options.Conventions.AddPageRoute("/Dashboard", "");
+    });
 builder.Services.AddScoped<TestLevelApiClient>();
 
 var app = builder.Build();
