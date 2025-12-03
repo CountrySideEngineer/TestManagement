@@ -20,6 +20,7 @@ builder.Services.AddRazorPages()
         options.Conventions.AddPageRoute("/Dashboard", "");
     });
 builder.Services.AddScoped<TestLevelApiClient>();
+builder.Services.AddScoped<DashboardApiClient>();
 
 var app = builder.Build();
 

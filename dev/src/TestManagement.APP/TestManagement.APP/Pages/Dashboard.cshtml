@@ -76,77 +76,18 @@
 
     <div class="container">
 
-        <!-- サマリーカード -->
+        <!-- プロジェクトサマリ -->
         <div class="cards">
             <div class="card">
-                <div class="card-title">今日のリクエスト数</div>
-                <div class="card-value">@Model.Summary?.TodayRequests</div>
+                <div class="card-title">成功率</div>
+                <div class="card-value">@Model.GetPassRatePercent()</div>
             </div>
 
             <div class="card">
-                <div class="card-title">エラー率</div>
-                <div class="card-value">@Model.GetErrorRatePercent()</div>
-            </div>
-
-            <div class="card">
-                <div class="card-title">平均レスポンスタイム</div>
-                <div class="card-value">@Model.Summary?.AvgResponseMs ms</div>
+                <div class="card-title">実行件数</div>
+                <div class="card-value">@Model.Summary?.ExecutedNum</div>
             </div>
         </div>
-
-        <!-- リクエスト推移 -->
-        <div class="block">
-            <div class="block-title">リクエスト推移</div>
-            <canvas id="requestsChart" height="70"></canvas>
-        </div>
-
-        <!-- エラー詳細 -->
-        <div class="block">
-            <div class="block-title">エラー詳細</div>
-
-            @if (Model.Errors?.Count > 0)
-            {
-                <ul>
-                    @foreach (var err in Model.Errors)
-                    {
-                        <li>[ @err.Time ] @err.Message</li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p>エラーはありません。</p>
-            }
-        </div>
-
     </div>
-
-    <script>
-        // Razor バインディング（JSON化）
-        const requestTrendLabels = @Html.Raw(Model.RequestTrendLabelsJson);
-        const requestTrendValues = @Html.Raw(Model.RequestTrendValuesJson);
-
-        // Chart.js
-        const ctx = document.getElementById("requestsChart");
-
-        new Chart(ctx, {
-            type: "line",
-            data: {
-                labels: requestTrendLabels,
-                datasets: [{
-                    label: "リクエスト数",
-                    data: requestTrendValues,
-                    borderWidth: 2
-                }]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    legend: { display: false }
-                }
-            }
-        });
-    </script>
-
 </body>
 </html>
