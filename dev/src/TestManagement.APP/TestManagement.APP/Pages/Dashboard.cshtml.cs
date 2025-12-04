@@ -1,5 +1,7 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http.Json;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using TestManagement.APP.Models;
 using TestManagement.APP.Services;
 
 public class DashboardModel : PageModel
@@ -14,9 +16,10 @@ public class DashboardModel : PageModel
     }
 
     public SummaryDto? Summary { get; set; }
-    public List<TestRecordDto> TestRecords { get; set; } = [];
-    public List<RequestTrendDto> RequestTrend { get; set; } = [];
-    public List<ErrorDto> Errors { get; set; } = [];
+    public List<TestResultDto> TestResults { get; set; } = new List<TestResultDto>();
+    public List<TestRecordDto> TestRecords { get; set; } = new List<TestRecordDto>();
+    public List<RequestTrendDto> RequestTrend { get; set; } = new List<RequestTrendDto>();
+    public List<ErrorDto> Errors { get; set; } = new List<ErrorDto>();
 
     // Chart.js —p JSON
     public string RequestTrendLabelsJson => System.Text.Json.JsonSerializer.Serialize(RequestTrend.Select(x => x.Time));
@@ -38,9 +41,10 @@ public class DashboardModel : PageModel
     }
 
 
-    public async Task OnGet()
+    public async Task OnGetAsync()
     {
-        await _apiClient.GetDashboardAsync();
+        Summary = await _apiClient.GetSummaryAsync();
+        TestResults = await _apiClient.GetTestRecordsAsync();
     }
 }
 

@@ -67,6 +67,27 @@
             font-weight: bold;
             margin-bottom: 12px;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+        }
+
+        th {
+            background: #fafafa;
+            font-weight: 600;
+        }
+
+        .status-success { color: #2ecc71; font-weight: bold; }
+        .status-failure { color: #e74c3c; font-weight: bold; }
+        .status-skipped { color: #f1c40f; font-weight: bold; }
     </style>
 </head>
 
@@ -87,6 +108,44 @@
                 <div class="card-title">実行件数</div>
                 <div class="card-value">@Model.Summary?.ExecutedNum</div>
             </div>
+        </div>
+
+        <!-- 最近の実行結果 -->
+        <div class="block">
+            <div class="block-title">最近の実行結果</div>
+
+            @if (Model.TestResults == null || !Model.TestResults.Any())
+            {
+                <div>データがありません。</div>
+            }
+            else
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>TestRunId</th>
+                            <th>ActualResult</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tr in Model.TestResults)
+                        {
+                            var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
+                                : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
+                                : "status-skipped";
+
+                            <tr>
+                                <td>@tr.Id</td>
+                                <td>@tr.TestRunId</td>
+                                <td>@tr.ActualResult</td>
+                                <td class="@statusClass">@tr.Status.ToString()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
         </div>
     </div>
 </body>
