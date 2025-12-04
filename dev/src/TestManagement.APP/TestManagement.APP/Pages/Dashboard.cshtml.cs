@@ -1,6 +1,9 @@
 using System.Net.Http.Json;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Hosting;
 using TestManagement.APP.Models;
 using TestManagement.APP.Services;
 
@@ -20,6 +23,9 @@ public class DashboardModel : PageModel
     public List<TestRecordDto> TestRecords { get; set; } = new List<TestRecordDto>();
     public List<RequestTrendDto> RequestTrend { get; set; } = new List<RequestTrendDto>();
     public List<ErrorDto> Errors { get; set; } = new List<ErrorDto>();
+
+    [BindProperty]
+    public IFormFile UploadFile { get; set; }
 
     // Chart.js —p JSON
     public string RequestTrendLabelsJson => System.Text.Json.JsonSerializer.Serialize(RequestTrend.Select(x => x.Time));
@@ -45,6 +51,17 @@ public class DashboardModel : PageModel
     {
         Summary = await _apiClient.GetSummaryAsync();
         TestResults = await _apiClient.GetTestRecordsAsync();
+    }
+
+    public IActionResult OnPost()
+    {
+        Console.WriteLine("OnPost called");
+
+        using Stream stream = UploadFile.OpenReadStream();
+        byte[] readData = new byte[stream.Length];
+        int readByte = stream.Read(readData, 0, (int)stream.Length);
+
+        return RedirectToPage();
     }
 }
 

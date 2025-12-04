@@ -88,6 +88,38 @@
         .status-success { color: #2ecc71; font-weight: bold; }
         .status-failure { color: #e74c3c; font-weight: bold; }
         .status-skipped { color: #f1c40f; font-weight: bold; }
+
+        .upload-btn {
+            background: #0984e3;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* simple modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* ensure modal appears on top */
+        }
+
+        .modal {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 420px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .modal h3 { margin-top: 0; }
+
     </style>
 </head>
 
@@ -108,6 +140,11 @@
                 <div class="card-title">実行件数</div>
                 <div class="card-value">@Model.Summary?.ExecutedNum</div>
             </div>
+
+            <form method="post" enctype="multipart/form-data">
+                <input type="file" asp-for="UploadFile" />
+                <input type="submit" value="POST" />
+            </form>
         </div>
 
         <!-- 最近の実行結果 -->
