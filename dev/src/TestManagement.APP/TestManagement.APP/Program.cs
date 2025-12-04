@@ -32,7 +32,10 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// Redirect HTTP to HTTPS. Ensure this middleware runs early.
 app.UseHttpsRedirection();
+
+// Serve static files
 app.UseStaticFiles();
 
 app.UseRouting();
