@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using TestManagement.APP.Services;
+using TestManagement.APP.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,9 @@ builder.Services.AddHttpClient("TestApiClient", client =>
     client.DefaultRequestHeaders.Accept.Add(
         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 });
+
+builder.Services.AddDbContext<AnalysisRequestDbContext>(options =>
+   options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services to the container.
 //builder.Services.AddRazorPages();
