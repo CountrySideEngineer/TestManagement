@@ -97,6 +97,8 @@
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
         }
 
         /* simple modal */
@@ -119,6 +121,20 @@
         }
 
         .modal h3 { margin-top: 0; }
+
+        .page-footer {
+            margin-top: 28px;
+            text-align: center;
+        }
+
+        .notice {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: #fff8db;
+            border: 1px solid #f0e6b6;
+            border-radius: 6px;
+            display: inline-block;
+        }
 
     </style>
 </head>
@@ -200,6 +216,18 @@
                 </table>
             }
         </div>
+
+        @* ページ下部：ファイル選択画面への遷移ボタンとアップロード結果通知 *@
+        <div class="page-footer">
+            @if (TempData["UploadMessage"] is string msg)
+            {
+                <div class="notice">@msg</div>
+            }
+            <div style="margin-top:8px;">
+                <a asp-page="/Upload" class="upload-btn">ファイルを選択してアップロード</a>
+            </div>
+        </div>
+
     </div>
 </body>
 </html>
