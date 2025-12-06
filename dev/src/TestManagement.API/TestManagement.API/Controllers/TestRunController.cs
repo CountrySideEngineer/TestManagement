@@ -37,11 +37,7 @@ namespace TestManagement.API.Controllers
         public async Task<IActionResult> Create(TestRun testRun)
         {
             await _testRunService.Create(testRun);
-
-            ICollection<TestRun> testRuns = await _testRunService.GetAllAsync();
-            TestRun latestRun = testRuns.OrderByDescending(_ => _.CreatedAt).First();
-
-            return CreatedAtAction(nameof(GetById), new { id = latestRun.Id }, latestRun);
+            return CreatedAtAction(nameof(GetById), new { id = testRun.Id }, testRun);
         }
 
         [HttpPost("Bulk")]
