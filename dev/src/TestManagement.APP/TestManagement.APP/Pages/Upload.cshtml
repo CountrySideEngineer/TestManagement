@@ -1,0 +1,30 @@
+@page
+@model UploadModel
+@{
+    ViewData["Title"] = "ファイルアップロード";
+}
+
+<div style="padding:24px; max-width:720px; margin:0 auto;">
+    <h2>ファイルを選択</h2>
+
+    @if (!Model.ModelState.IsValid)
+    {
+        <div style="color:#e74c3c;">
+            @foreach (var err in Model.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <div>@err.ErrorMessage</div>
+            }
+        </div>
+    }
+
+    <form method="post" enctype="multipart/form-data">
+        <div style="margin:8px 0;">
+            <input type="file" asp-for="UploadFiles" multiple />
+        </div>
+
+        <div style="margin-top:12px;">
+            <button type="submit" class="upload-btn">アップロード開始</button>
+            <a asp-page="/Dashboard" style="margin-left:10px; text-decoration:none;">キャンセル</a>
+        </div>
+    </form>
+</div>
