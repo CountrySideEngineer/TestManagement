@@ -130,7 +130,7 @@
     <div class="container">
 
         <!-- プロジェクトサマリ -->
-        <div class="cards">
+@*         <div class="cards">
             <div class="card">
                 <div class="card-title">成功率</div>
                 <div class="card-value">@Model.GetPassRatePercent()</div>
@@ -145,6 +145,22 @@
                 <input type="file" asp-for="UploadFiles" multiple="multiple" />
                 <input type="submit" value="POST" />
             </form>
+        </div>
+ *@
+
+        <div class="cards">
+            <div class="card">
+                    <form method="post" enctype="multipart/form-data">
+                    <div class="card-title">
+                        <input type="file" asp-for="UploadFiles" multiple="multiple" />
+                    </div>
+                    <div class="card-title">
+                        <input type="submit" value="POST" />
+                    </div>
+
+                    </form>
+                </div>
+            </div>
         </div>
 
         <!-- 最近の実行結果 -->
