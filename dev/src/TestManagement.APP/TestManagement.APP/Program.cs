@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using TestManagement.APP.Services;
 using TestManagement.APP.Data;
+using TestManagement.APP.Data.Repositories.TestAnalysis;
+using TestManagement.APP.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ builder.Services.AddRazorPages()
     });
 builder.Services.AddScoped<TestLevelApiClient>();
 builder.Services.AddScoped<DashboardApiClient>();
+builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 
 var app = builder.Build();
 
