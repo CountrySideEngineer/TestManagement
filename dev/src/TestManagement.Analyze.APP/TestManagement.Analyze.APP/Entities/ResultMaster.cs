@@ -6,6 +6,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TestManagement.Analyze.APP.Entities;
 
+enum RESULT {
+    UNKNOWN = 1,
+    PASSED = 2,
+    FAILED = 3
+};
+
 public partial class ResultMaster
 {
     [Key]

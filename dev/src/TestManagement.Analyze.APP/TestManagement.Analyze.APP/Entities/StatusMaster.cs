@@ -6,6 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TestManagement.Analyze.APP.Entities;
 
+public enum STATUS
+{
+    NOT_STARTED = 1,
+    RUNNING = 2,
+    COMPLETED = 3
+};
+
 public partial class StatusMaster
 {
     [Key]
