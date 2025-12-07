@@ -1,4 +1,5 @@
 appsettings.json
+appsettings.Development.json
 
 # Ignore Visual Studio folder
 .vs/
@@ -10,3 +11,4 @@ System.*.dll
 *.user
 */obj/*
 .env
+
