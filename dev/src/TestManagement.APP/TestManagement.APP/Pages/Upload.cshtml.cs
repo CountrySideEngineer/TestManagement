@@ -38,7 +38,6 @@ public class UploadModel : PageModel
         string dirPath = Path.Combine("Uploads", dirName);
         Directory.CreateDirectory(dirPath);
 
-
         // 作成したディレクトリに、ファイルをアップロードする。
         foreach (var fileItem in UploadFiles)
         {
