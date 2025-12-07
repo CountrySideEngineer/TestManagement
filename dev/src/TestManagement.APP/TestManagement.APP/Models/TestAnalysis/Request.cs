@@ -5,7 +5,7 @@ namespace TestManagement.APP.Models.TestAnalysis
     public class Request
     {
         [Key]
-        public int Key { get; set; }
+        public int Id { get; set; }
 
         [Required]
         public string DirectoryPath { get; set; } = string.Empty;
