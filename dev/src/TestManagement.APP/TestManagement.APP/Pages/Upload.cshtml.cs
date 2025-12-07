@@ -1,16 +1,19 @@
-using System;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System;
 using TestManagement.APP.Data;
+using TestManagement.APP.Data.Repositories.TestAnalysis;
+using TestManagement.APP.Models.TestAnalysis;
 
 public class UploadModel : PageModel
 {
-    private readonly AnalysisRequestDbContext _dbContext;
+    private readonly IRequestRepository _repository;
 
-    public UploadModel(AnalysisRequestDbContext dbContext)
+    public UploadModel(IRequestRepository repository)
     {
-        _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        _repository = repository;
     }
 
     [BindProperty]
@@ -28,28 +31,39 @@ public class UploadModel : PageModel
             return Page();
         }
 
-        const long maxSize = 10 * 1024 * 1024; // 10MB 上限（必要に応じて変更）
+        // 指定されたファイルを格納するディレクトリを作成する。
+        // ディレクトリ名は、タイムスタンプで一意に決定する。
+        DateTime timeStamp = DateTime.UtcNow;
+        string dirName = timeStamp.ToString("yyyyMMdd_HHmmssfff");
+        string dirPath = Path.Combine("Uploads", dirName);
+        Directory.CreateDirectory(dirPath);
 
-        int started = 0;
-        foreach (var file in UploadFiles)
+
+        // 作成したディレクトリに、ファイルをアップロードする。
+        foreach (var fileItem in UploadFiles)
         {
-            if (file == null || file.Length == 0)
-            {
-                // 無視
-                continue;
-            }
+            using var stream = fileItem.OpenReadStream();
+            using var content = new MultipartFormDataContent();
+            var streamContent = new StreamContent(stream);
+            content.Add(streamContent, "file", fileItem.FileName);
 
-            if (file.Length > maxSize)
+            string filePath = Path.Combine(dirPath, fileItem.FileName);
+            using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
             {
-                ModelState.AddModelError(string.Empty, $"ファイルが大きすぎます: {file.FileName}");
-                return Page();
-            }
-
-            // TODO: _dbContext を使った保存処理や、API 呼び出しをここに実装
-            started++;
+                await fileItem.CopyToAsync(fileStream);
+            };
         }
 
-        TempData["UploadMessage"] = $"{started} 件のアップロードを開始しました。処理状況はダッシュボードで確認してください。";
+        // 新規要求を発行する。
+        var newRequest = new Request()
+        {
+            DirectoryPath = dirPath,
+            StatusId = 1,
+            ResultId = 1
+        };
+        await _repository.AddAsync(newRequest);
+
+        //TempData["UploadMessage"] = $"{started} 件のアップロードを開始しました。処理状況はダッシュボードで確認してください。";
         return RedirectToPage("/Dashboard");
     }
 }
