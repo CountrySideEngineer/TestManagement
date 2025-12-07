@@ -19,16 +19,16 @@ namespace TestManagement.APP.Data
             base.OnModelCreating(modelBuilder);
 
             // Configure relationships and constraints if needed
-            modelBuilder.Entity<Models.TestAnalysis.Request>()
-                .HasOne(r => r.Status)
-                .WithMany(s => s.Requests)
-                .HasForeignKey(r => r.StatusId)
+            modelBuilder.Entity<Models.TestAnalysis.ResultMaster>()
+                .HasMany(_ => _.Requests)
+                .WithOne(_ => _.Result)
+                .HasForeignKey(_ => _.ResultId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<Models.TestAnalysis.Request>()
-                .HasOne(r => r.Result)
-                .WithMany(res => res.Requests)
-                .HasForeignKey(r => r.ResultId)
+            modelBuilder.Entity<Models.TestAnalysis.StatusMaster>()
+                .HasMany(_ => _.Requests)
+                .WithOne(_ => _.Status)
+                .HasForeignKey(_ => _.StatusId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             var seedDate = new DateTime(2025, 11, 21, 0, 0, 0, DateTimeKind.Utc);
