@@ -1,361 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="4">
-  <diagram name="SystemOverview" id="nEWw62Z6lc6UH7BfdXab">
-    <mxGraphModel dx="1117" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-6" target="MGAE1fQRjsUqPf-KPPBF-8" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="480" y="540" />
-              <mxPoint x="480" y="540" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="ffYaD4E5P0CluGeV1-fi-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="MGAE1fQRjsUqPf-KPPBF-6" target="MGAE1fQRjsUqPf-KPPBF-7">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="500" y="560" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-6" value="WEB/アプリケーション&lt;div&gt;サーバ&lt;/div&gt;&lt;div&gt;(アプリ)&lt;/div&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Non_Azure_Machine.svg;" parent="1" vertex="1">
-          <mxGeometry x="580" y="520" width="40" height="64.52" as="geometry" />
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-7" value="データベース&lt;div&gt;サーバ&lt;/div&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Azure_Cache_for_Redis.svg;" parent="1" vertex="1">
-          <mxGeometry x="450" y="800" width="60" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-8" target="MGAE1fQRjsUqPf-KPPBF-7" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="460" y="560" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-8" value="WEB/アプリケーション&lt;div&gt;サーバ&lt;/div&gt;&lt;div&gt;(API)&lt;/div&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Non_Azure_Machine.svg;" parent="1" vertex="1">
-          <mxGeometry x="340" y="520" width="40" height="64.52" as="geometry" />
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-10" target="MGAE1fQRjsUqPf-KPPBF-6" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="480" y="440" />
-              <mxPoint x="600" y="440" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-10" value="ネットワーク" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/CosmosDB.svg;" parent="1" vertex="1">
-          <mxGeometry x="455" y="350" width="50" height="50" as="geometry" />
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=12;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-11" target="MGAE1fQRjsUqPf-KPPBF-10" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="480" y="300" />
-              <mxPoint x="480" y="300" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-11" value="クライアント&lt;div&gt;PC&lt;/div&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Managed_Desktop.svg;" parent="1" vertex="1">
-          <mxGeometry x="450" y="200" width="60" height="43.2" as="geometry" />
-        </mxCell>
-        <mxCell id="MGAE1fQRjsUqPf-KPPBF-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-10" target="MGAE1fQRjsUqPf-KPPBF-8" edge="1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="430" y="435" as="sourcePoint" />
-            <mxPoint x="610" y="370" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="480" y="440" />
-              <mxPoint x="360" y="440" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="rtEIW8MblFh7h54xMBvw" name="DFD">
-    <mxGraphModel dx="1310" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="PdYCA-4lCb-SBGBRhwSD-1" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" target="9FiOCkr4Sj6WyptHoXjA-1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="160" y="110" as="sourcePoint" />
-            <mxPoint x="350" y="100" as="targetPoint" />
-            <Array as="points">
-              <mxPoint x="160" y="120" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="PdYCA-4lCb-SBGBRhwSD-2" value="テスト実行情報/テスト結果" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="PdYCA-4lCb-SBGBRhwSD-1">
-          <mxGeometry x="-0.3167" y="-2" relative="1" as="geometry">
-            <mxPoint x="28" y="-12" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-2" value="ユーザ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="80" y="80" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=12;" edge="1" parent="1" source="e4V3AlI49JSp8FQZh4-l-5" target="e4V3AlI49JSp8FQZh4-l-6">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-10" value="テスト結果管理情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="e4V3AlI49JSp8FQZh4-l-8">
-          <mxGeometry x="-0.525" y="3" relative="1" as="geometry">
-            <mxPoint x="47" y="11" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-16" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="e4V3AlI49JSp8FQZh4-l-5" target="e4V3AlI49JSp8FQZh4-l-15">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-17" value="テスト結果ファイル" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="e4V3AlI49JSp8FQZh4-l-16">
-          <mxGeometry x="-0.24" y="-1" relative="1" as="geometry">
-            <mxPoint x="-24" y="-11" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-5" value="2. テスト結果&lt;div&gt;登録処理&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="320" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-9" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="e4V3AlI49JSp8FQZh4-l-6" target="e4V3AlI49JSp8FQZh4-l-7">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="460" y="600" />
-              <mxPoint x="460" y="600" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-11" value="テスト結果管理情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="e4V3AlI49JSp8FQZh4-l-9">
-          <mxGeometry x="-0.45" relative="1" as="geometry">
-            <mxPoint x="60" y="8" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-6" value="テスト結果&lt;div&gt;解析要求&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="400" y="480" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-13" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="e4V3AlI49JSp8FQZh4-l-7" target="e4V3AlI49JSp8FQZh4-l-12">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="460" y="750" />
-              <mxPoint x="460" y="750" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-14" value="テスト結果" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="e4V3AlI49JSp8FQZh4-l-13">
-          <mxGeometry x="-0.1818" relative="1" as="geometry">
-            <mxPoint x="40" y="-3" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-7" value="3. テスト結果&lt;div&gt;登録処理&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="640" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-12" value="テスト結果" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="400" y="800" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-18" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="e4V3AlI49JSp8FQZh4-l-15" target="e4V3AlI49JSp8FQZh4-l-7">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="700" y="680" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-19" value="テスト結果" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="e4V3AlI49JSp8FQZh4-l-18">
-          <mxGeometry x="0.04" y="-1" relative="1" as="geometry">
-            <mxPoint x="-84" y="-9" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="e4V3AlI49JSp8FQZh4-l-15" value="テスト結果&lt;div&gt;(ファイル)&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
-          <mxGeometry x="640" y="480" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="PdYCA-4lCb-SBGBRhwSD-5" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="9FiOCkr4Sj6WyptHoXjA-1" target="e4V3AlI49JSp8FQZh4-l-5">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="PdYCA-4lCb-SBGBRhwSD-6" value="実行情報管理ID" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="PdYCA-4lCb-SBGBRhwSD-5">
-          <mxGeometry x="0.025" y="5" relative="1" as="geometry">
-            <mxPoint x="-51" y="-12" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="Ll_DLRcPBSM_e8PJAm6F-2" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="9FiOCkr4Sj6WyptHoXjA-1" target="Ll_DLRcPBSM_e8PJAm6F-1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="Ll_DLRcPBSM_e8PJAm6F-3" value="テスト実行情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="Ll_DLRcPBSM_e8PJAm6F-2">
-          <mxGeometry x="-0.3667" y="3" relative="1" as="geometry">
-            <mxPoint x="22" y="-7" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="9FiOCkr4Sj6WyptHoXjA-1" value="1. テスト結果&lt;div&gt;登録処理&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="400" y="80" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="Ll_DLRcPBSM_e8PJAm6F-4" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="Ll_DLRcPBSM_e8PJAm6F-1" target="e4V3AlI49JSp8FQZh4-l-5">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="700" y="240" />
-              <mxPoint x="480" y="240" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="Ll_DLRcPBSM_e8PJAm6F-5" value="テスト実行情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="Ll_DLRcPBSM_e8PJAm6F-4">
-          <mxGeometry x="-0.2309" y="2" relative="1" as="geometry">
-            <mxPoint x="-43" y="8" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="Ll_DLRcPBSM_e8PJAm6F-1" value="テスト結果&lt;div&gt;管理&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="640" y="80" width="120" height="80" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
-  <diagram id="E6ntuVhy-1RTPatLk4WS" name="DFD_layer1">
-    <mxGraphModel dx="1310" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
-      <root>
-        <mxCell id="0" />
-        <mxCell id="1" parent="0" />
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=12;" edge="1" parent="1" source="zTyBMWGgtA36PzBf8yMZ-3" target="h4GpL4IItPKPpEg_L4ZS-1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="200" y="150" as="targetPoint" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-2" value="テスト実行情報/&lt;div&gt;テスト結果ファイル&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="zTyBMWGgtA36PzBf8yMZ-1">
-          <mxGeometry x="-0.0714" y="-1" relative="1" as="geometry">
-            <mxPoint x="4" y="-21" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-3" value="ユーザ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="40" y="40" width="80" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-6" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="zTyBMWGgtA36PzBf8yMZ-12" target="zTyBMWGgtA36PzBf8yMZ-11">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-7" value="テスト結果ファイル" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="zTyBMWGgtA36PzBf8yMZ-6">
-          <mxGeometry x="-0.24" y="-1" relative="1" as="geometry">
-            <mxPoint x="-59" y="-11" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="61XQqs3Fs3rQBzB8YR1S-3" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="zTyBMWGgtA36PzBf8yMZ-10" target="61XQqs3Fs3rQBzB8YR1S-2">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="61XQqs3Fs3rQBzB8YR1S-4" value="要求有無" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="61XQqs3Fs3rQBzB8YR1S-3">
-          <mxGeometry x="-0.0333" y="1" relative="1" as="geometry">
-            <mxPoint x="-31" y="-18" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-10" value="テスト結果&lt;div&gt;解析要求&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="600" y="680" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="61XQqs3Fs3rQBzB8YR1S-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="zTyBMWGgtA36PzBf8yMZ-11" target="61XQqs3Fs3rQBzB8YR1S-5">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="360" y="1080" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="61XQqs3Fs3rQBzB8YR1S-9" value="テスト結果ファイル" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="61XQqs3Fs3rQBzB8YR1S-8">
-          <mxGeometry x="-0.575" y="1" relative="1" as="geometry">
-            <mxPoint as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-11" value="テスト結果&lt;div&gt;(ファイル)&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
-          <mxGeometry x="280" y="680" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="dBg1YoP6LFbY5495XHVu-1" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="zTyBMWGgtA36PzBf8yMZ-12" target="zTyBMWGgtA36PzBf8yMZ-14">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="dBg1YoP6LFbY5495XHVu-2" value="テスト結果ファイル&lt;div&gt;格納場所/&lt;/div&gt;&lt;div&gt;実行日時&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="dBg1YoP6LFbY5495XHVu-1">
-          <mxGeometry x="-0.45" y="-4" relative="1" as="geometry">
-            <mxPoint x="36" y="-34" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-12" value="2.1. テスト結果ファイル&lt;div&gt;格納&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="280" y="440" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="AM7yjsqvfwZUmo8MDPKX-1" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="zTyBMWGgtA36PzBf8yMZ-14" target="zTyBMWGgtA36PzBf8yMZ-10">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="AM7yjsqvfwZUmo8MDPKX-2" value="テスト結果ファイル&lt;div&gt;格納場所/&lt;/div&gt;&lt;div&gt;実行日時&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="AM7yjsqvfwZUmo8MDPKX-1">
-          <mxGeometry x="-0.1375" y="-3" relative="1" as="geometry">
-            <mxPoint x="-57" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="zTyBMWGgtA36PzBf8yMZ-14" value="2.2. テスト結果&lt;div&gt;解析要求発行&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="600" y="440" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="61XQqs3Fs3rQBzB8YR1S-6" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="61XQqs3Fs3rQBzB8YR1S-2" target="61XQqs3Fs3rQBzB8YR1S-5">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="61XQqs3Fs3rQBzB8YR1S-7" value="解析対象&lt;div&gt;テスト結果ファイル&lt;/div&gt;&lt;div&gt;格納場所&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="61XQqs3Fs3rQBzB8YR1S-6">
-          <mxGeometry x="-0.175" y="3" relative="1" as="geometry">
-            <mxPoint x="-63" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="61XQqs3Fs3rQBzB8YR1S-2" value="2.1. テスト結果&lt;div&gt;解析要求確認&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="600" y="880" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="61XQqs3Fs3rQBzB8YR1S-5" value="2.2. テスト結果&lt;div&gt;解析&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="600" y="1040" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="tmSJ0SWXUqDbuUZQCwHZ-1" value="テスト結果" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="620" y="1240" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="vdj0Ox_blHpZwtNjWxz9-1" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="61XQqs3Fs3rQBzB8YR1S-5" target="tmSJ0SWXUqDbuUZQCwHZ-1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="GL-56RMOhr8KAl86nRUc-1" value="テスト結果" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="vdj0Ox_blHpZwtNjWxz9-1">
-          <mxGeometry x="-0.2167" y="-4" relative="1" as="geometry">
-            <mxPoint x="-26" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="c-_QI4MMMana8Hp3YBSm-2" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="h4GpL4IItPKPpEg_L4ZS-1" target="c-_QI4MMMana8Hp3YBSm-1">
-          <mxGeometry relative="1" as="geometry" />
-        </mxCell>
-        <mxCell id="DxzAwnpN3qZdWtFRDob0-2" value="テスト実行情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="c-_QI4MMMana8Hp3YBSm-2">
-          <mxGeometry x="-0.2125" y="-5" relative="1" as="geometry">
-            <mxPoint y="-15" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="rs6BL_ZsPyg80OIC9M-Q-1" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="hDCaFmxF1buEJAj1mE8J-1" target="zTyBMWGgtA36PzBf8yMZ-12">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="hDCaFmxF1buEJAj1mE8J-6" value="テスト実行情報&lt;div&gt;管理ID/&lt;/div&gt;&lt;div&gt;テスト結果ファイル&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="rs6BL_ZsPyg80OIC9M-Q-1">
-          <mxGeometry x="-0.2833" y="4" relative="1" as="geometry">
-            <mxPoint x="50" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="h4GpL4IItPKPpEg_L4ZS-1" value="1.1. テスト実行情報&lt;div&gt;登録&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="280" y="40" width="160" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="hDCaFmxF1buEJAj1mE8J-4" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="c-_QI4MMMana8Hp3YBSm-1" target="hDCaFmxF1buEJAj1mE8J-1">
-          <mxGeometry relative="1" as="geometry">
-            <Array as="points">
-              <mxPoint x="660" y="280" />
-            </Array>
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="hDCaFmxF1buEJAj1mE8J-5" value="テスト実行情報管理ID" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="hDCaFmxF1buEJAj1mE8J-4">
-          <mxGeometry x="0.2368" y="1" relative="1" as="geometry">
-            <mxPoint x="-55" y="-11" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="c-_QI4MMMana8Hp3YBSm-1" value="テスト結果&lt;div&gt;管理&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
-          <mxGeometry x="600" y="40" width="120" height="80" as="geometry" />
-        </mxCell>
-        <mxCell id="hDCaFmxF1buEJAj1mE8J-2" value="" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="1" source="h4GpL4IItPKPpEg_L4ZS-1" target="hDCaFmxF1buEJAj1mE8J-1">
-          <mxGeometry relative="1" as="geometry">
-            <mxPoint x="360" y="160" as="sourcePoint" />
-            <mxPoint x="360" y="440" as="targetPoint" />
-            <Array as="points" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="hDCaFmxF1buEJAj1mE8J-3" value="&lt;div&gt;テスト結果ファイル&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="hDCaFmxF1buEJAj1mE8J-2">
-          <mxGeometry x="-0.1488" relative="1" as="geometry">
-            <mxPoint x="54" y="-8" as="offset" />
-          </mxGeometry>
-        </mxCell>
-        <mxCell id="hDCaFmxF1buEJAj1mE8J-1" value="1.2. テスト実行情報&lt;div&gt;取得&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="280" y="240" width="160" height="80" as="geometry" />
-        </mxCell>
-      </root>
-    </mxGraphModel>
-  </diagram>
   <diagram id="aiP9908AJh_Nd8ucAJXE" name="architecture">
-    <mxGraphModel dx="1426" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1117" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -472,6 +117,316 @@
         </mxCell>
         <mxCell id="GyCRiwOHyWxQxCHIHBXk-24" value="Client" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Managed_Desktop.svg;fontFamily=Helvetica;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
           <mxGeometry x="40" y="280" width="60" height="43.2" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="SystemOverview" id="nEWw62Z6lc6UH7BfdXab">
+    <mxGraphModel dx="1117" dy="695" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-6" target="MGAE1fQRjsUqPf-KPPBF-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="540" />
+              <mxPoint x="480" y="540" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="ffYaD4E5P0CluGeV1-fi-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" edge="1" parent="1" source="MGAE1fQRjsUqPf-KPPBF-6" target="MGAE1fQRjsUqPf-KPPBF-7">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="500" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-6" value="WEB/アプリケーション&lt;div&gt;サーバ&lt;/div&gt;&lt;div&gt;(アプリ)&lt;/div&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Non_Azure_Machine.svg;" parent="1" vertex="1">
+          <mxGeometry x="580" y="520" width="40" height="64.52" as="geometry" />
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-7" value="データベース&lt;div&gt;サーバ&lt;/div&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Azure_Cache_for_Redis.svg;" parent="1" vertex="1">
+          <mxGeometry x="450" y="800" width="60" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-8" target="MGAE1fQRjsUqPf-KPPBF-7" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="560" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-8" value="WEB/アプリケーション&lt;div&gt;サーバ&lt;/div&gt;&lt;div&gt;(API)&lt;/div&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Non_Azure_Machine.svg;" parent="1" vertex="1">
+          <mxGeometry x="340" y="520" width="40" height="64.52" as="geometry" />
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-10" target="MGAE1fQRjsUqPf-KPPBF-6" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="440" />
+              <mxPoint x="600" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-10" value="ネットワーク" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/CosmosDB.svg;" parent="1" vertex="1">
+          <mxGeometry x="455" y="350" width="50" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=12;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-11" target="MGAE1fQRjsUqPf-KPPBF-10" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="480" y="300" />
+              <mxPoint x="480" y="300" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-11" value="クライアント&lt;div&gt;PC&lt;/div&gt;" style="image;sketch=0;aspect=fixed;html=1;points=[];align=center;fontSize=12;image=img/lib/mscae/Managed_Desktop.svg;" parent="1" vertex="1">
+          <mxGeometry x="450" y="200" width="60" height="43.2" as="geometry" />
+        </mxCell>
+        <mxCell id="MGAE1fQRjsUqPf-KPPBF-14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=none;endFill=0;" parent="1" source="MGAE1fQRjsUqPf-KPPBF-10" target="MGAE1fQRjsUqPf-KPPBF-8" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="430" y="435" as="sourcePoint" />
+            <mxPoint x="610" y="370" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="480" y="440" />
+              <mxPoint x="360" y="440" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="rtEIW8MblFh7h54xMBvw" name="DFD">
+    <mxGraphModel dx="1426" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="PdYCA-4lCb-SBGBRhwSD-1" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" parent="1" target="9FiOCkr4Sj6WyptHoXjA-1" edge="1" source="e4V3AlI49JSp8FQZh4-l-2">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="190" y="110" as="sourcePoint" />
+            <mxPoint x="360" y="60" as="targetPoint" />
+            <Array as="points" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="PdYCA-4lCb-SBGBRhwSD-2" value="テスト実行情報/テスト結果ファイル" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="PdYCA-4lCb-SBGBRhwSD-1" vertex="1" connectable="0">
+          <mxGeometry x="-0.3167" y="-2" relative="1" as="geometry">
+            <mxPoint x="28" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4V3AlI49JSp8FQZh4-l-2" value="ユーザ" style="rounded=0;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="e4V3AlI49JSp8FQZh4-l-5" value="2. テスト結果&lt;div&gt;登録処理&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="280" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="e4V3AlI49JSp8FQZh4-l-13" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" parent="1" source="e4V3AlI49JSp8FQZh4-l-5" target="e4V3AlI49JSp8FQZh4-l-12" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points" />
+            <mxPoint x="460" y="720" as="sourcePoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4V3AlI49JSp8FQZh4-l-14" value="テスト結果" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="e4V3AlI49JSp8FQZh4-l-13" vertex="1" connectable="0">
+          <mxGeometry x="-0.1818" relative="1" as="geometry">
+            <mxPoint x="40" y="-3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e4V3AlI49JSp8FQZh4-l-12" value="テスト結果" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+          <mxGeometry x="400" y="480" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Ll_DLRcPBSM_e8PJAm6F-2" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" parent="1" source="9FiOCkr4Sj6WyptHoXjA-1" target="Ll_DLRcPBSM_e8PJAm6F-1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="120" />
+              <mxPoint x="540" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ll_DLRcPBSM_e8PJAm6F-3" value="テスト実行情報/&lt;div&gt;テスト結果格納先&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="Ll_DLRcPBSM_e8PJAm6F-2" vertex="1" connectable="0">
+          <mxGeometry x="-0.3667" y="3" relative="1" as="geometry">
+            <mxPoint x="12" y="-17" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=12;" edge="1" parent="1" source="9FiOCkr4Sj6WyptHoXjA-1" target="Nxx6JuSeDGSvFk3TOCeY-4">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="40" />
+              <mxPoint x="860" y="40" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-6" value="テスト結果ファイル" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Nxx6JuSeDGSvFk3TOCeY-5">
+          <mxGeometry x="-0.4483" y="4" relative="1" as="geometry">
+            <mxPoint x="16" y="-6" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="9FiOCkr4Sj6WyptHoXjA-1" value="1. テスト結果&lt;div&gt;登録要求&lt;/div&gt;&lt;div&gt;処理&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+          <mxGeometry x="400" y="80" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=12;" edge="1" parent="1" source="Ll_DLRcPBSM_e8PJAm6F-1" target="e4V3AlI49JSp8FQZh4-l-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-13" value="テスト結果解析要求" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Nxx6JuSeDGSvFk3TOCeY-10">
+          <mxGeometry x="-0.3131" relative="1" as="geometry">
+            <mxPoint x="-100" y="26" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Ll_DLRcPBSM_e8PJAm6F-1" value="テスト結果&lt;div&gt;解析要求&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" parent="1" vertex="1">
+          <mxGeometry x="640" y="80" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=12;" edge="1" parent="1" source="Nxx6JuSeDGSvFk3TOCeY-4" target="e4V3AlI49JSp8FQZh4-l-5">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="860" y="330" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-14" value="テスト結果ファイル" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Nxx6JuSeDGSvFk3TOCeY-11">
+          <mxGeometry x="0.1604" y="3" relative="1" as="geometry">
+            <mxPoint x="-123" y="7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-4" value="テスト結果" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="1">
+          <mxGeometry x="800" y="80" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Nxx6JuSeDGSvFk3TOCeY-7" target="e4V3AlI49JSp8FQZh4-l-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-9" value="実行要求" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="Nxx6JuSeDGSvFk3TOCeY-8">
+          <mxGeometry x="-0.325" y="-1" relative="1" as="geometry">
+            <mxPoint x="19" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Nxx6JuSeDGSvFk3TOCeY-7" value="定周期処理&lt;div&gt;管理&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="280" width="80" height="80" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="DFDのコピー" id="LKZUxjq5x2-dT6ezsgbn">
+    <mxGraphModel dx="1426" dy="841" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-0" />
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-1" parent="nRzfqEbpCSj2sIwD4qlV-0" />
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-2" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" target="nRzfqEbpCSj2sIwD4qlV-24">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="110" as="sourcePoint" />
+            <mxPoint x="350" y="100" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="160" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-3" value="テスト実行情報/テスト結果" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-2">
+          <mxGeometry x="-0.3167" y="-2" relative="1" as="geometry">
+            <mxPoint x="28" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-4" value="ユーザ" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="nRzfqEbpCSj2sIwD4qlV-1">
+          <mxGeometry x="80" y="80" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" source="nRzfqEbpCSj2sIwD4qlV-9" target="nRzfqEbpCSj2sIwD4qlV-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-6" value="テスト結果管理情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-5">
+          <mxGeometry x="-0.525" y="3" relative="1" as="geometry">
+            <mxPoint x="47" y="11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-7" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" source="nRzfqEbpCSj2sIwD4qlV-9" target="nRzfqEbpCSj2sIwD4qlV-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-8" value="テスト結果ファイル" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-7">
+          <mxGeometry x="-0.24" y="-1" relative="1" as="geometry">
+            <mxPoint x="-24" y="-11" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-9" value="2. テスト結果&lt;div&gt;登録処理&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="nRzfqEbpCSj2sIwD4qlV-1">
+          <mxGeometry x="400" y="320" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-10" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" source="nRzfqEbpCSj2sIwD4qlV-12" target="nRzfqEbpCSj2sIwD4qlV-15">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="600" />
+              <mxPoint x="460" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-11" value="テスト結果管理情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-10">
+          <mxGeometry x="-0.45" relative="1" as="geometry">
+            <mxPoint x="60" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-12" value="テスト結果&lt;div&gt;解析要求&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="nRzfqEbpCSj2sIwD4qlV-1">
+          <mxGeometry x="400" y="480" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-13" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" source="nRzfqEbpCSj2sIwD4qlV-15" target="nRzfqEbpCSj2sIwD4qlV-16">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="460" y="750" />
+              <mxPoint x="460" y="750" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-14" value="テスト結果" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-13">
+          <mxGeometry x="-0.1818" relative="1" as="geometry">
+            <mxPoint x="40" y="-3" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-15" value="3. テスト結果&lt;div&gt;登録処理&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="nRzfqEbpCSj2sIwD4qlV-1">
+          <mxGeometry x="400" y="640" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-16" value="テスト結果" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="nRzfqEbpCSj2sIwD4qlV-1">
+          <mxGeometry x="400" y="800" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-17" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" source="nRzfqEbpCSj2sIwD4qlV-19" target="nRzfqEbpCSj2sIwD4qlV-15">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-18" value="テスト結果" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-17">
+          <mxGeometry x="0.04" y="-1" relative="1" as="geometry">
+            <mxPoint x="-84" y="-9" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-19" value="テスト結果&lt;div&gt;(ファイル)&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="nRzfqEbpCSj2sIwD4qlV-1">
+          <mxGeometry x="640" y="480" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-20" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" source="nRzfqEbpCSj2sIwD4qlV-24" target="nRzfqEbpCSj2sIwD4qlV-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-21" value="実行情報管理ID" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-20">
+          <mxGeometry x="0.025" y="5" relative="1" as="geometry">
+            <mxPoint x="-51" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-22" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" source="nRzfqEbpCSj2sIwD4qlV-24" target="nRzfqEbpCSj2sIwD4qlV-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-23" value="テスト実行情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-22">
+          <mxGeometry x="-0.3667" y="3" relative="1" as="geometry">
+            <mxPoint x="22" y="-7" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-24" value="1. テスト結果&lt;div&gt;登録処理&lt;/div&gt;" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="nRzfqEbpCSj2sIwD4qlV-1">
+          <mxGeometry x="400" y="80" width="120" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-25" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=12;" edge="1" parent="nRzfqEbpCSj2sIwD4qlV-1" source="nRzfqEbpCSj2sIwD4qlV-27" target="nRzfqEbpCSj2sIwD4qlV-9">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="700" y="240" />
+              <mxPoint x="480" y="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-26" value="テスト実行情報" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="nRzfqEbpCSj2sIwD4qlV-25">
+          <mxGeometry x="-0.2309" y="2" relative="1" as="geometry">
+            <mxPoint x="-43" y="8" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nRzfqEbpCSj2sIwD4qlV-27" value="テスト結果&lt;div&gt;管理&lt;/div&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;" vertex="1" parent="nRzfqEbpCSj2sIwD4qlV-1">
+          <mxGeometry x="640" y="80" width="120" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
