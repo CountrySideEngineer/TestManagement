@@ -34,9 +34,9 @@ public class UploadModel : PageModel
         // 指定されたファイルを格納するディレクトリを作成する。
         // ディレクトリ名は、タイムスタンプで一意に決定する。
         DateTime timeStamp = DateTime.UtcNow;
-        string dirName = timeStamp.ToString("yyyyMMdd_HHmmssfff");
-        string dirPath = Path.Combine("Uploads", dirName);
-        Directory.CreateDirectory(dirPath);
+        string driveRoot = Path.GetPathRoot(Directory.GetCurrentDirectory())!;
+        string uploadPath = Path.Combine(driveRoot, "Uploads", timeStamp.ToString("yyyyMMdd_HHmmssfff"));
+        Directory.CreateDirectory(uploadPath);
 
         // 作成したディレクトリに、ファイルをアップロードする。
         foreach (var fileItem in UploadFiles)
@@ -46,7 +46,7 @@ public class UploadModel : PageModel
             var streamContent = new StreamContent(stream);
             content.Add(streamContent, "file", fileItem.FileName);
 
-            string filePath = Path.Combine(dirPath, fileItem.FileName);
+            string filePath = Path.Combine(uploadPath, fileItem.FileName);
             using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
             {
                 await fileItem.CopyToAsync(fileStream);
@@ -56,7 +56,7 @@ public class UploadModel : PageModel
         // 新規要求を発行する。
         var newRequest = new Request()
         {
-            DirectoryPath = dirPath,
+            DirectoryPath = uploadPath,
             StatusId = 1,
             ResultId = 1
         };
