@@ -56,8 +56,6 @@ namespace TestManagement.Analyze.APP.Model.Xml
             {
                 throw;
             }
-
-
         }
     }
 }
