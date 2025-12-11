@@ -37,18 +37,22 @@ namespace TestManagement.Analyze.APP.ApiClient
             }
         }
 
-        public bool Add(ICollection<TestCaseDto> testCases)
+        public ICollection<TestCaseDto>? Add(ICollection<TestCaseDto> testCases)
         {
             Task<HttpResponseMessage> task = _httpClient.PostAsJsonAsync("TestCase/Bulk", testCases);
             task.Wait();
             HttpResponseMessage response = task.Result;
             if (response.IsSuccessStatusCode)
             {
-                return true;
+                Task<ICollection<TestCaseDto>?> testCasesTask =
+                    response.Content.ReadFromJsonAsync<ICollection<TestCaseDto>>();
+                testCasesTask.Wait();
+                ICollection<TestCaseDto>? registeredTestCases = testCasesTask.Result;
+                return registeredTestCases;
             }
             else
             {
-                return false;
+                return null;
             }
         }
     }
