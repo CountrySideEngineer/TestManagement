@@ -61,10 +61,26 @@ namespace TestManagement.Analyze.APP.Model.Converter
                 {
                     Title = testCaseName,
                     Description = testCase.Name,
-                    TestLevelId = 1
+                    TestLevelId = 1,
+                    TestLevel = new TestLevelDto()
+                    {
+                        Id = 1,
+                        Name = "",
+                        Description = "",
+                    },
                 };
                 yield return testCaseDto;
             }
         }
+
+        public IEnumerable<TestResultDto> ToTestResult(IEnumerable<TestSuites> testSuitesCollection)
+        {
+
+
+
+
+            return null;
+        }
+
     }
 }

@@ -6,7 +6,8 @@ using System.Text.Json.Serialization;
 var client = new HttpClient();
 // POST メソッドで JSON の Body のリクエストを投げる
 var postResponse = await client.PostAsJsonAsync(
-    @"https://localhost:7162/api/TestRun",
+    @"http://192.168.0.100:8080/api/TestRun",
+    //@"https://localhost:7162/api/TestRun",
     new TestRunModel
     {
         ExecutedAt = DateTime.UtcNow,
@@ -16,6 +17,14 @@ var postResponse = await client.PostAsJsonAsync(
 if (postResponse.IsSuccessStatusCode)
 {
     Console.WriteLine("POST succeeded.");
+
+    var item = await postResponse.Content.ReadFromJsonAsync<TestRunModel>();
+    Console.WriteLine($"Id: {item.Id}," +
+        $"Notes: {item.Notes}, " +
+        $"Environment: {item.Environment}, " +
+        $"Executed: {item.ExecutedAt.ToString("yyyy-MM-dd, HH:mm:ss")}"
+    );
+
 }
 else
 {
@@ -23,7 +32,8 @@ else
 }
 
 var response = await client.GetAsync(
-    @"https://localhost:7162/api/TestRun");
+    @"http://192.168.0.100:8080/api/TestRun");
+    //@"https://localhost:7162/api/TestRun");
 // レスポンスのステータスコードが成功していたら Answer の値を出力
 if (response.IsSuccessStatusCode)
 {
@@ -41,6 +51,15 @@ if (response.IsSuccessStatusCode)
             $"Executed: {record.ExecutedAt.ToString("yyyy-MM-dd, HH:mm:ss")}"
         );
     }
+
+    // Get latest
+    var latest = item.OrderByDescending(_ => _.CreatedAt).FirstOrDefault()!;
+    Console.WriteLine($"Id: {latest.Id}," +
+        $"Notes: {latest.Notes}, " +
+        $"Environment: {latest.Environment}, " +
+        $"Executed: {latest.ExecutedAt.ToString("yyyy-MM-dd, HH:mm:ss")}",
+        $"CreatedAt: {latest.CreatedAt.ToString("yyyy-MM-dd, HH:mm:ss")}"
+    );
 }
 
 public class TestLevelModel
