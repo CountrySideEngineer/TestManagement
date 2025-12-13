@@ -16,6 +16,14 @@ var postResponse = await client.PostAsJsonAsync(
 if (postResponse.IsSuccessStatusCode)
 {
     Console.WriteLine("POST succeeded.");
+
+    var item = await postResponse.Content.ReadFromJsonAsync<TestRunModel>();
+    Console.WriteLine($"Id: {item.Id}," +
+        $"Notes: {item.Notes}, " +
+        $"Environment: {item.Environment}, " +
+        $"Executed: {item.ExecutedAt.ToString("yyyy-MM-dd, HH:mm:ss")}"
+    );
+
 }
 else
 {
@@ -41,6 +49,15 @@ if (response.IsSuccessStatusCode)
             $"Executed: {record.ExecutedAt.ToString("yyyy-MM-dd, HH:mm:ss")}"
         );
     }
+
+    // Get latest
+    var latest = item.OrderByDescending(_ => _.CreatedAt).FirstOrDefault()!;
+    Console.WriteLine($"Id: {latest.Id}," +
+        $"Notes: {latest.Notes}, " +
+        $"Environment: {latest.Environment}, " +
+        $"Executed: {latest.ExecutedAt.ToString("yyyy-MM-dd, HH:mm:ss")}",
+        $"CreatedAt: {latest.CreatedAt.ToString("yyyy-MM-dd, HH:mm:ss")}"
+    );
 }
 
 public class TestLevelModel
