@@ -1,0 +1,233 @@
+﻿@page
+@model DashboardModel
+@{
+    ViewData["Title"] = "開発者向けダッシュボード";
+}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f6fa;
+            margin: 0;
+        }
+
+        header {
+            background-color: #2f3640;
+            color: white;
+            padding: 16px 24px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 24px;
+        }
+
+        .cards {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            flex: 1;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 8px;
+        }
+
+        .card-value {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .block {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .block-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 12px;
+        }
+
+        th, td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+            text-align: left;
+        }
+
+        th {
+            background: #fafafa;
+            font-weight: 600;
+        }
+
+        .status-success { color: #2ecc71; font-weight: bold; }
+        .status-failure { color: #e74c3c; font-weight: bold; }
+        .status-skipped { color: #f1c40f; font-weight: bold; }
+
+        .upload-btn {
+            background: #0984e3;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* simple modal */
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* ensure modal appears on top */
+        }
+
+        .modal {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            width: 420px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .modal h3 { margin-top: 0; }
+
+        .page-footer {
+            margin-top: 28px;
+            text-align: center;
+        }
+
+        .notice {
+            margin-bottom: 12px;
+            padding: 10px;
+            background: #fff8db;
+            border: 1px solid #f0e6b6;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header>開発者向けダッシュボード</header>
+
+    <div class="container">
+
+        <!-- プロジェクトサマリ -->
+@*         <div class="cards">
+            <div class="card">
+                <div class="card-title">成功率</div>
+                <div class="card-value">@Model.GetPassRatePercent()</div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">実行件数</div>
+                <div class="card-value">@Model.Summary?.ExecutedNum</div>
+            </div>
+
+            <form method="post" enctype="multipart/form-data">
+                <input type="file" asp-for="UploadFiles" multiple="multiple" />
+                <input type="submit" value="POST" />
+            </form>
+        </div>
+ *@
+
+        <div class="cards">
+            <div class="card">
+                    <form method="post" enctype="multipart/form-data">
+                    <div class="card-title">
+                        <input type="file" asp-for="UploadFiles" multiple="multiple" />
+                    </div>
+                    <div class="card-title">
+                        <input type="submit" value="POST" />
+                    </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- 最近の実行結果 -->
+        <div class="block">
+            <div class="block-title">最近の実行結果</div>
+
+            @if (Model.TestResults == null || !Model.TestResults.Any())
+            {
+                <div>データがありません。</div>
+            }
+            else
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>TestRunId</th>
+                            <th>ActualResult</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var tr in Model.TestResults)
+                        {
+                            var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
+                                : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
+                                : "status-skipped";
+
+                            <tr>
+                                <td>@tr.Id</td>
+                                <td>@tr.TestRunId</td>
+                                <td>@tr.ActualResult</td>
+                                <td class="@statusClass">@tr.Status.ToString()</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+
+        @* ページ下部：ファイル選択画面への遷移ボタンとアップロード結果通知 *@
+        <div class="page-footer">
+            @if (TempData["UploadMessage"] is string msg)
+            {
+                <div class="notice">@msg</div>
+            }
+            <div style="margin-top:8px;">
+                <a asp-page="/Upload" class="upload-btn">ファイルを選択してアップロード</a>
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
