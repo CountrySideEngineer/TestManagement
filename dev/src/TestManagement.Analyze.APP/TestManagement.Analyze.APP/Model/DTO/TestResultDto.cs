@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 
 namespace TestManagement.Analyze.APP.Model.DTO
 {
+    public enum TestStatus
+    {
+        Unknown = 0,
+        Success = 1,
+        Failure = 2,
+        Skipped = 3,
+        Blocked = 4
+    }
+
     internal class TestResultDto
     {
         public int Id { get; set; }
@@ -18,6 +27,7 @@ namespace TestManagement.Analyze.APP.Model.DTO
         public int TestRunId { get; set; }
         public TestRunDto TestRun { get; set; } = new ();
 
+        public TestStatus Status { get; set; } = TestStatus.Unknown;
 
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
