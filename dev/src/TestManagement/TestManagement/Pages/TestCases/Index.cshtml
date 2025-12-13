@@ -1,0 +1,61 @@
+﻿@page
+@model TestManagement.Pages.TestCases.IndexModel
+@{
+    ViewData["Title"] = "テストケース一覧";
+}
+
+<h1>テストケース一覧</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">新規作成</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>タイトル</th>
+            <th>説明</th>
+            <th>テスト結果</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var testCase in Model.TestCases)
+        {
+            <tr>
+                <td>@testCase.Name</td>
+                <td>@testCase.Description</td>
+                <td>
+                    @if (testCase.TestRuns != null && testCase.TestRuns.Any())
+                    {
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>実行日</th>
+                                    <th>結果</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var run in testCase.TestRuns)
+                                {
+                                    <tr>
+                                        <td>@run.ExecutedAt.ToString("yyyy/MM/dd HH:mm")</td>
+                                        <td>@run.Status</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <span class="text-muted">テスト結果なし</span>
+                    }
+                </td>
+                <td>
+                    <a asp-page="Edit" asp-route-id="@testCase.Id" class="btn btn-sm btn-warning">編集</a>
+                    <a asp-page="Details" asp-route-id="@testCase.Id" class="btn btn-sm btn-info">詳細</a>
+                    <a asp-page="Delete" asp-route-id="@testCase.Id" class="btn btn-sm btn-danger">削除</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
