@@ -6,8 +6,7 @@ using System.Text.Json.Serialization;
 var client = new HttpClient();
 // POST メソッドで JSON の Body のリクエストを投げる
 var postResponse = await client.PostAsJsonAsync(
-    @"http://192.168.0.100:8080/api/TestRun",
-    //@"https://localhost:7162/api/TestRun",
+    @"https://localhost:7162/api/TestRun",
     new TestRunModel
     {
         ExecutedAt = DateTime.UtcNow,
@@ -32,8 +31,7 @@ else
 }
 
 var response = await client.GetAsync(
-    @"http://192.168.0.100:8080/api/TestRun");
-    //@"https://localhost:7162/api/TestRun");
+    @"https://localhost:7162/api/TestRun");
 // レスポンスのステータスコードが成功していたら Answer の値を出力
 if (response.IsSuccessStatusCode)
 {
