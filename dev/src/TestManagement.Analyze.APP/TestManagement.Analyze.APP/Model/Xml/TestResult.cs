@@ -63,6 +63,15 @@ namespace TestManagement.Analyze.APP.Model.Xml
         public List<TestCase> TestCases { get; set; } = new();
     }
 
+    public enum TestResultCode
+    {
+        Unknown = 0,
+        Success = 1,
+        Failure = 2,
+        Skipped = 3,
+        Blocked = 4
+    }
+
     [XmlRoot("testcase")]
     public class TestCase
     {
@@ -92,19 +101,18 @@ namespace TestManagement.Analyze.APP.Model.Xml
         [XmlElement("failure")]
         public Failure? Failure { get; set; }
 
-        public string Judge
+        public TestResultCode ResultCode
         {
             get
             {
                 if (null == Failure)
                 {
-                    return "OK";
+                    return TestResultCode.Success;
                 }
                 else
                 {
-                    return "NG";
+                    return TestResultCode.Failure;
                 }
-
             }
         }
 
