@@ -171,12 +171,23 @@ foreach (var requestItem in requests)
             testResultItem.TestRun = regTestRun!;
             testResultItem.TestRunId = regTestRun.Id;
         }
-        testResultApiClient.Add(testResults);
-
-        return;
+        ICollection<TestResultDto>? addResults = testResultApiClient.Add(testResults);
+        if (null == addResults)
+        {
+            requestItem.Status = new StatusMaster() { Id = (int)STATUS.COMPLETED, Name = $"{nameof(STATUS.COMPLETED)}" };
+        }
+        else
+        {
+            requestItem.Status = new StatusMaster() { Id = (int)STATUS.COMPLETED, Name = "Failure" };
+        }
+        requestItem.StatusId = requestItem.Status.Id;
+        requestItem.UpdateAt = DateTime.UtcNow;
+        requestRepo.Update(requestItem);
     }
     catch (Exception ex)
     {
         logger.LogError(ex.ToString());
     }
 }
+
+return;
