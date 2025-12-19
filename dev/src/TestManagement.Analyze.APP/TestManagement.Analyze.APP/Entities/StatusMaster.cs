@@ -10,7 +10,8 @@ public enum STATUS
 {
     NOT_STARTED = 1,
     RUNNING = 2,
-    COMPLETED = 3
+    COMPLETED_BY_SUCCESS = 3,
+    COMPLETED_BY_FAILURE = 4
 };
 
 public partial class StatusMaster
