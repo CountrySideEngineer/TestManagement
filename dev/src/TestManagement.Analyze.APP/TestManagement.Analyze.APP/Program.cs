@@ -88,8 +88,8 @@ var testResultApiClient = services.GetRequiredService<TestResultApiClient>();
 
 foreach (var requestItem in requests)
 {
-    Console.WriteLine($"{nameof(requestItem.Id),24} = {requestItem.Id}");
-    Console.WriteLine($"{nameof(requestItem.DirectoryPath),24} = {requestItem.DirectoryPath}");
+    logger.LogInformation($"{nameof(requestItem.Id),24} = {requestItem.Id}");
+    logger.LogInformation($"{nameof(requestItem.DirectoryPath),24} = {requestItem.DirectoryPath}");
 
     try
     {
@@ -174,11 +174,11 @@ foreach (var requestItem in requests)
         ICollection<TestResultDto>? addResults = testResultApiClient.Add(testResults);
         if (null == addResults)
         {
-            requestItem.Status = new StatusMaster() { Id = (int)STATUS.COMPLETED, Name = $"{nameof(STATUS.COMPLETED)}" };
+            requestItem.Status = new StatusMaster() { Id = (int)STATUS.COMPLETED_BY_SUCCESS, Name = $"{nameof(STATUS.COMPLETED_BY_SUCCESS)}" };
         }
         else
         {
-            requestItem.Status = new StatusMaster() { Id = (int)STATUS.COMPLETED, Name = "Failure" };
+            requestItem.Status = new StatusMaster() { Id = (int)STATUS.COMPLETED_BY_FAILURE, Name = $"{nameof(STATUS.COMPLETED_BY_SUCCESS)}" };
         }
         requestItem.StatusId = requestItem.Status.Id;
         requestItem.UpdateAt = DateTime.UtcNow;
