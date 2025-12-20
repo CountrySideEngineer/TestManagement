@@ -34,7 +34,7 @@ public class DashboardModel : PageModel
     public string RequestTrendValuesJson => System.Text.Json.JsonSerializer.Serialize(RequestTrend.Select(x => x.Count));
 
     public string GetErrorRatePercent()
-        => Summary == null ? "--" : (Summary.ErrorNum * 100).ToString("F2") + "%";
+        => Summary == null ? "--" : (Summary.ErrorNum * 100).ToString("F0") + "%";
 
     public string GetPassRatePercent()
     {
@@ -44,10 +44,11 @@ public class DashboardModel : PageModel
         }
         else
         {
-            return ((1 - Summary.ErrorNum) * 100).ToString("F2") + "%";
+            int passedRate = (((Summary.ExecutedNum - Summary.ErrorNum) * 100) / Summary.ExecutedNum);
+            string passedRateInStr = passedRate.ToString("F0") + "%";
+            return passedRateInStr;
         }
     }
-
 
     public async Task OnGetAsync()
     {
