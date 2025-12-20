@@ -23,13 +23,15 @@ namespace TestManagement.APP.Services
                 var testRunResults = testResults?.Where(_ => _.TestRunId == latestRun).ToList();
                 int execNum = null == testRunResults ? 0 : testRunResults.Count();
                 int errNum = null == testRunResults ? 0 : testRunResults.Where(_ => _.Status == TestStatus.Failure).Count();
-                var summary = new SummaryDto(errNum, execNum);
+                int skippedNum = null == testResults ? 0 : testResults.Where(_ => _.Status == TestStatus.Skipped).Count();
+                int disabledNum = null == testResults ? 0 : testResults.Where(_ => _.Status == TestStatus.Blocked).Count();
+                var summary = new SummaryDto(errNum, skippedNum, disabledNum, execNum);
 
                 return summary;
             }
             catch (Exception)
             {
-                return new SummaryDto(0, 0);
+                return new SummaryDto(0, 0, 0, 0);
             }
         }
 
@@ -48,32 +50,6 @@ namespace TestManagement.APP.Services
             {
                 return new List<TestResultDto>();
             }
-        }
-
-
-        public async Task<Models.DashboardDto> GetDashboardAsync()
-        {
-            var response = await _httpClient.GetFromJsonAsync<List<Models.TestRunDto>>("api/testrun");
-            try
-            {
-                //テスト実行結果の取得
-
-                var latestRun = response?.OrderByDescending(_ => _.ExecutedAt).First().Id;
-                var testResults = await _httpClient.GetFromJsonAsync<List<Models.TestResultDto>>($"api/testrun/");
-                var testRunResults = testResults?.Where(_ => _.TestRunId == latestRun).ToList();
-
-                int execNum = null == testResults ? 0 : testResults.Count();
-                int errNum = null == testResults ? 0 : testResults.Where(_ => _.Status == TestStatus.Failure).Count();
-                var summary = new SummaryDto(errNum, execNum);
-
-
-
-            }
-            catch (Exception ex)
-            {
-            }
-
-            return new Models.DashboardDto();
         }
 
         public async Task UploadTestResultAsync(IFormFile file, CancellationToken cancellationToken = default)

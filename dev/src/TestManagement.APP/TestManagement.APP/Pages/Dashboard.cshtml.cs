@@ -17,7 +17,7 @@ public class DashboardModel : PageModel
     {
         _apiClient = apiClient;
 
-        Summary = new SummaryDto(0, 0);
+        Summary = new SummaryDto(0, 0, 0, 0);
     }
 
     public SummaryDto? Summary { get; set; }
@@ -105,7 +105,7 @@ public class DashboardModel : PageModel
     }
 }
 
-public record SummaryDto(int ErrorNum, int ExecutedNum);
+public record SummaryDto(int ErrorNum, int SkippedNum, int DisabledNum, int ExecutedNum);
 public record TestRecordDto(DateTime ExecutedAt, string Result);
 public record RequestTrendDto(string Time, int Count);
 public record ErrorDto(string Time, string Message);
