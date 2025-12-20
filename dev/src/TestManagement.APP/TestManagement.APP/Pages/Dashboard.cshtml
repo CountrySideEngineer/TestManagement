@@ -35,12 +35,32 @@
             margin-bottom: 30px;
         }
 
+        /* layout for summary: chart on left, stacked cards on right */
+        .summary-row {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+            width: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         /* New: vertical layout for the summary cards (成功率 / 実行件数) */
         .vertical-cards {
             display: flex;
             flex-direction: column;
             gap: 12px;
             margin-bottom: 20px;
+            min-width: 200px;
         }
 
         .card {
@@ -154,17 +174,23 @@
     <div class="container">
 
         <!-- プロジェクトサマリ -->
-        <div class="vertical-cards">
-             <div class="card">
-                 <div class="card-title">成功率</div>
-                 <div class="card-value">@Model.GetPassRatePercent()</div>
-             </div>
+        <div class="summary-row">
+            <div class="chart-card">
+                <canvas id="summaryChart" width="180" height="180" aria-label="成功率と実行件数の円グラフ"></canvas>
+            </div>
 
-             <div class="card">
-                 <div class="card-title">実行件数</div>
-                 <div class="card-value">@Model.Summary?.ExecutedNum</div>
-             </div>
-         </div>
+            <div class="vertical-cards">
+                 <div class="card">
+                     <div class="card-title">成功率</div>
+                     <div class="card-value">@Model.GetPassRatePercent()</div>
+                 </div>
+
+                 <div class="card">
+                     <div class="card-title">実行件数</div>
+                     <div class="card-value">@Model.Summary?.ExecutedNum</div>
+                 </div>
+            </div>
+        </div>
 
 
          <div class="cards">
@@ -232,5 +258,38 @@
          </div>
 
      </div>
-</body>
+
+    <script>
+        (function() {
+            // Summary counts from server
+            const executed = @(Model.Summary?.ExecutedNum ?? 0);
+            const errors = @(Model.Summary?.ErrorNum ?? 0);
+            const success = Math.max(0, executed - errors);
+
+            const ctx = document.getElementById('summaryChart');
+            if (!ctx) return;
+
+            const data = {
+                labels: ['成功', '失敗'],
+                datasets: [{
+                    data: [success, errors],
+                    backgroundColor: ['#2ecc71', '#e74c3c'],
+                    hoverOffset: 6
+                }]
+            };
+
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: data,
+                options: {
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: { enabled: true }
+                    },
+                    cutout: '60%'
+                }
+            });
+        })();
+    </script>
+ </body>
 </html>
