@@ -19,10 +19,10 @@ namespace TestManagement.APP.Services
             {
                 var response = await _httpClient.GetFromJsonAsync<List<Models.TestRunDto>>("api/testrun/");
                 var latestRun = response?.OrderByDescending(_ => _.ExecutedAt).First().Id;
-                var testResults = await _httpClient.GetFromJsonAsync<List<Models.TestResultDto>>($"api/testrun/");
+                var testResults = await _httpClient.GetFromJsonAsync<List<Models.TestResultDto>>($"api/testresult/");
                 var testRunResults = testResults?.Where(_ => _.TestRunId == latestRun).ToList();
-                int execNum = null == testResults ? 0 : testResults.Count();
-                int errNum = null == testResults ? 0 : testResults.Where(_ => _.Status == TestStatus.Failure).Count();
+                int execNum = null == testRunResults ? 0 : testRunResults.Count();
+                int errNum = null == testRunResults ? 0 : testRunResults.Where(_ => _.Status == TestStatus.Failure).Count();
                 var summary = new SummaryDto(errNum, execNum);
 
                 return summary;
