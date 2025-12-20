@@ -6,21 +6,45 @@ using System;
 using TestManagement.APP.Data;
 using TestManagement.APP.Data.Repositories.TestAnalysis;
 using TestManagement.APP.Models.TestAnalysis;
+using TestManagement.APP.Services;
+using TestManagement.APP.Models;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Linq;
 
 public class UploadModel : PageModel
 {
     private readonly IRequestRepository _repository;
 
-    public UploadModel(IRequestRepository repository)
+    private readonly TestLevelApiClient _apiClient;
+
+    public UploadModel(IRequestRepository repository, TestLevelApiClient apiClient)
     {
         _repository = repository;
+        _apiClient = apiClient;
     }
 
     [BindProperty]
     public List<IFormFile> UploadFiles { get; set; } = new List<IFormFile>();
 
-    public void OnGet()
+    // 画面に表示するテストレベル一覧
+    public List<TestLevelDto> TestLevels { get; set; } = new List<TestLevelDto>();
+
+    // ドロップダウンの選択値（必要なら POST 時に利用可能）
+    [BindProperty]
+    public int? SelectedTestLevelId { get; set; }
+
+    public async Task OnGetAsync()
     {
+        try
+        {
+            TestLevels = await _apiClient.GetTestLevelsAsync() ?? new List<TestLevelDto>();
+        }
+        catch (Exception)
+        {
+            // 取得失敗時は空リストにする（ログを追加する場合はここで）
+            TestLevels = new List<TestLevelDto>();
+        }
     }
 
     public async Task<IActionResult> OnPostAsync()
@@ -28,6 +52,11 @@ public class UploadModel : PageModel
         if (UploadFiles == null || UploadFiles.Count == 0)
         {
             ModelState.AddModelError(string.Empty, "ファイルを選択してください。");
+            return Page();
+        }
+        if (null == SelectedTestLevelId)
+        {
+            ModelState.AddModelError(string.Empty, "テストレベルを選択してください。");
             return Page();
         }
 
@@ -58,7 +87,8 @@ public class UploadModel : PageModel
         {
             DirectoryPath = uploadPath,
             StatusId = 1,
-            ResultId = 1
+            ResultId = 1,
+            TestLevelId = (int)SelectedTestLevelId
         };
         await _repository.AddAsync(newRequest);
 

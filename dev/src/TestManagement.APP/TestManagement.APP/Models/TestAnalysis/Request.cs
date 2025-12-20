@@ -10,6 +10,9 @@ namespace TestManagement.APP.Models.TestAnalysis
         [Required]
         public string DirectoryPath { get; set; } = string.Empty;
 
+        [Required]
+        public int TestLevelId { get; set; } = 0;
+
         // Foreign key to StatusMaster
         public int StatusId { get;set; }
         public StatusMaster Status { get; set; } = new StatusMaster();

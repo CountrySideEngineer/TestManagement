@@ -1,15 +1,13 @@
-@page
+﻿@page
 @model UploadModel
 @{
-    ViewData["Title"] = "�t�@�C���A�b�v���[�h";
+    ViewData["Title"] = "ファイルアップロード";
 }
 
 <div style="padding:24px; max-width:720px; margin:0 auto;">
-    <h2>�t�@�C����I��</h2>
-
     @if (!Model.ModelState.IsValid)
     {
-        <div style="color:#e74c3c;">
+        <div style="color:#e74c3c; margin-bottom:12px;">
             @foreach (var err in Model.ModelState.Values.SelectMany(v => v.Errors))
             {
                 <div>@err.ErrorMessage</div>
@@ -18,13 +16,44 @@
     }
 
     <form method="post" enctype="multipart/form-data">
-        <div style="margin:8px 0;">
-            <input type="file" asp-for="UploadFiles" multiple />
+        <div style="margin-bottom:20px;">
+            <h2 style="margin:0 0 8px 0;">テストレベルを選択</h2>
+
+            @if (Model.TestLevels != null && Model.TestLevels.Any())
+            {
+                <div style="margin:8px 0;">
+                    @* <label for="testLevelSelect">テストレベル</label> *@
+                    <select id="testLevelSelect" asp-for="SelectedTestLevelId" style="display:block; width:100%; padding:8px; margin-top:6px;">
+                        <option value="">選択してください</option>
+                        @foreach (var level in Model.TestLevels)
+                        {
+                            <option value="@level.Id">
+                                @level.Name @if(!string.IsNullOrWhiteSpace(level.Description)) {
+                                    <text>- @level.Description</text>
+                                }
+                            </option>
+                        }
+                    </select>
+                </div>
+            }
+            else
+            {
+                <div style="color:#e74c3c; margin:8px 0;">テストレベルを取得できませんでした。</div>
+            }
         </div>
 
-        <div style="margin-top:12px;">
-            <input type="submit" class="upload-btn" value="�A�b�v���[�h�J�n"/>
-            <a asp-page="/Dashboard" style="margin-left:10px; text-decoration:none;">�L�����Z��</a>
+        <div>
+            <h2 style="margin:0 0 8px 0;">ファイルを選択</h2>
+
+            <div style="margin:8px 0;">
+                @* <label for="fileInput">ファイル</label> *@
+<input id="fileInput" type="file" asp-for="UploadFiles" multiple style="display:block; margin-top:6px;" />
+            </div>
+
+            <div style="margin-top:12px;">
+                <input type="submit" class="upload-btn" value="アップロード開始" />
+                <a asp-page="/Dashboard" style="margin-left:10px; text-decoration:none;">キャンセル</a>
+            </div>
         </div>
     </form>
 </div>

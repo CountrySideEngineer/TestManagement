@@ -37,7 +37,8 @@ namespace TestManagement.APP.Data
                 _.HasData(
                     new StatusMaster { Id = 1, Name = "Not started", CreatedAt = seedDate, UpdatedAt = seedDate },
                     new StatusMaster { Id = 2, Name = "Running", CreatedAt = seedDate, UpdatedAt = seedDate },
-                    new StatusMaster { Id = 3, Name = "Finished", CreatedAt = seedDate, UpdatedAt = seedDate }
+                    new StatusMaster { Id = 3, Name = "Completed(success)", CreatedAt = seedDate, UpdatedAt = seedDate },
+                    new StatusMaster { Id = 4, Name = "Completed(failed)", CreatedAt = seedDate, UpdatedAt = seedDate }
                     );
             });
 
