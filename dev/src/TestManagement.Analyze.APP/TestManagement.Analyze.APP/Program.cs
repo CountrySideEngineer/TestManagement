@@ -169,7 +169,7 @@ foreach (var requestItem in requests)
             testResultItem.TestCase = testCaseDto;
 
             testResultItem.TestRun = regTestRun!;
-            testResultItem.TestRunId = regTestRun.Id;
+            testResultItem.TestRunId = regTestRun!.Id;
         }
         ICollection<TestResultDto>? addResults = testResultApiClient.Add(testResults);
         if (null == addResults)
