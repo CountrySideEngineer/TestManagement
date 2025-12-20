@@ -35,6 +35,14 @@
             margin-bottom: 30px;
         }
 
+        /* New: vertical layout for the summary cards (成功率 / 実行件数) */
+        .vertical-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
         .card {
             background: white;
             border-radius: 8px;
@@ -146,88 +154,83 @@
     <div class="container">
 
         <!-- プロジェクトサマリ -->
-@*         <div class="cards">
-            <div class="card">
-                <div class="card-title">成功率</div>
-                <div class="card-value">@Model.GetPassRatePercent()</div>
-            </div>
+        <div class="vertical-cards">
+             <div class="card">
+                 <div class="card-title">成功率</div>
+                 <div class="card-value">@Model.GetPassRatePercent()</div>
+             </div>
 
-            <div class="card">
-                <div class="card-title">実行件数</div>
-                <div class="card-value">@Model.Summary?.ExecutedNum</div>
-            </div>
+             <div class="card">
+                 <div class="card-title">実行件数</div>
+                 <div class="card-value">@Model.Summary?.ExecutedNum</div>
+             </div>
+         </div>
 
-            <form method="post" enctype="multipart/form-data">
-                <input type="file" asp-for="UploadFiles" multiple="multiple" />
-                <input type="submit" value="POST" />
-            </form>
-        </div>
- *@
 
-        <div class="cards">
-            <div class="card">
-                    <form method="post" enctype="multipart/form-data">
-                    <div class="card-title">
-                        <input type="file" asp-for="UploadFiles" multiple="multiple" />
-                    </div>
-                    <div class="card-title">
-                        <input type="submit" value="POST" />
-                    </div>
+         <div class="cards">
+             <div class="card">
+                     <form method="post" enctype="multipart/form-data">
+                     <div class="card-title">
+                         <input type="file" asp-for="UploadFiles" multiple="multiple" />
+                     </div>
+                     <div class="card-title">
+                         <input type="submit" value="POST" />
+                     </div>
 
-                    </form>
-                </div>
-            </div>
-        </div>
+                     </form>
+                 </div>
+             </div>
+         </div>
 
-        <!-- 最近の実行結果 -->
-        <div class="block">
-            <div class="block-title">最近の実行結果</div>
+         <!-- 最近の実行結果 -->
+         <div class="block">
+             <div class="block-title">最近の実行結果</div>
 
-            @if (Model.TestResults == null || !Model.TestResults.Any())
-            {
-                <div>データがありません。</div>
-            }
-            else
-            {
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>TestRunId</th>
-                            <th>ActualResult</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var tr in Model.TestResults)
-                        {
-                            var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
-                                : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
-                                : "status-skipped";
+             @if (Model.TestResults == null || !Model.TestResults.Any())
+             {
+                 <div>データがありません。</div>
+             }
+             else
+             {
+                 <table>
+                     <thead>
+                         <tr>
+                             <th>ID</th>
+                             <th>TestRunId</th>
+                             <th>ActualResult</th>
+                             <th>Status</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         @foreach (var tr in Model.TestResults)
+                         {
+                             var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
+                                 : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
+                                 : "status-skipped";
 
-                            <tr>
-                                <td>@tr.Id</td>
-                                <td>@tr.TestRunId</td>
-                                <td>@tr.ActualResult</td>
-                                <td class="@statusClass">@tr.Status.ToString()</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
-        </div>
+                             <tr>
+                                 <td>@tr.Id</td>
+                                 <td>@tr.TestRunId</td>
+                                 <td>@tr.ActualResult</td>
+                                 <td class="@statusClass">@tr.Status.ToString()</td>
+                             </tr>
+                         }
+                     </tbody>
+                 </table>
+             }
+         </div>
 
-        @* ページ下部：ファイル選択画面への遷移ボタンとアップロード結果通知 *@
-        <div class="page-footer">
-            @if (TempData["UploadMessage"] is string msg)
-            {
-                <div class="notice">@msg</div>
-            }
-            <div style="margin-top:8px;">
-                <a asp-page="/Upload" class="upload-btn">ファイルを選択してアップロード</a>
-            </div>
-        </div>
+         @* ページ下部：ファイル選択画面への遷移ボタンとアップロード結果通知 *@
+         <div class="page-footer">
+             @if (TempData["UploadMessage"] is string msg)
+             {
+                 <div class="notice">@msg</div>
+             }
+             <div style="margin-top:8px;">
+                 <a asp-page="/Upload" class="upload-btn">ファイルを選択してアップロード</a>
+             </div>
+         </div>
 
-    </div>
+     </div>
 </body>
 </html>
