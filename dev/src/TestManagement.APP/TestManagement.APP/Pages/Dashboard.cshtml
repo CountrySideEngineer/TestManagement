@@ -205,9 +205,9 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>TestRunId</th>
-                            <th>ActualResult</th>
+                            <th>ExecutedAt</th>
+                            <th>TestCaseId</th>
+                            <th>TestCaseName</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -219,9 +219,9 @@
                                 : "status-skipped";
 
                             <tr>
-                                <td>@tr.Id</td>
-                                <td>@tr.TestRunId</td>
-                                <td>@tr.ActualResult</td>
+                                <td>@tr.ExecutedAt</td>
+                                <td>@tr.TestCaseId</td>
+                                <td>@tr.TestCase!.Title</td>
                                 <td class="@statusClass">@tr.Status.ToString()</td>
                             </tr>
                         }
