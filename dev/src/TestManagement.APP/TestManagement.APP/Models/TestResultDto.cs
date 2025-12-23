@@ -17,6 +17,10 @@
 
         public int TestRunId { get; set; }
 
+        public int TestCaseId { get; set; }
+
+        public TestCaseDto? TestCase { get; set; }
+
         public TestStatus Status { get; set; } = TestStatus.Unknown;
     }
 }
