@@ -132,8 +132,8 @@ namespace TestManagement.Analyze.APP.Model.Converter
             }
             TestCaseDto testCaseDto = ToTestCase(testCase, builder);
             resultDto.TestCase = testCaseDto;
+            resultDto.ExecutedAt = testCase.Timestamp;
             return resultDto;
         }
-
     }
 }

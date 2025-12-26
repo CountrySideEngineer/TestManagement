@@ -21,6 +21,7 @@ public class DashboardModel : PageModel
     }
 
     public SummaryDto? Summary { get; set; }
+    public TestRunDto TestRun { get; set; } = new TestRunDto();
     public List<TestResultDto> TestResults { get; set; } = new List<TestResultDto>();
     public List<TestRecordDto> TestRecords { get; set; } = new List<TestRecordDto>();
     public List<RequestTrendDto> RequestTrend { get; set; } = new List<RequestTrendDto>();
@@ -53,7 +54,8 @@ public class DashboardModel : PageModel
     public async Task OnGetAsync()
     {
         Summary = await _apiClient.GetSummaryAsync();
-        TestResults = await _apiClient.GetTestRecordsAsync();
+        TestRun = await _apiClient.GetLatestTestRunAsync();
+        TestResults = await _apiClient.GetTestRecordsByTestRunAsync(TestRun.Id);
     }
 
     public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)

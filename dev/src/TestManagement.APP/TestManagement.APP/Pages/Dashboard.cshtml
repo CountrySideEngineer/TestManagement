@@ -196,6 +196,25 @@
         <div class="block">
             <div class="block-title">最近の実行結果</div>
 
+
+            @* 先頭に TestRun の概要を表示 *@
+            @if (Model.TestRun != null && Model.TestRun.Id != 0)
+            {
+                <div class="card" style="margin-bottom:12px; padding:12px;">
+                    <div class="card-title">テスト実行情報</div>
+                    <div>実行ID: <strong>@Model.TestRun.Id</strong></div>
+                    <div>実行日時: <strong>@Model.TestRun.ExecutedAt.ToString("yyyy/MM/dd")</strong></div>
+                    @if (!string.IsNullOrEmpty(Model.TestRun.Environment) && (!string.IsNullOrWhiteSpace(Model.TestRun.Environment)))
+                    {
+                        <div>環境: <strong>@Model.TestRun.Environment</strong></div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.TestRun.Notes))
+                    {
+                        <div style="margin-top:6px;">備考: <span>@Model.TestRun.Notes</span></div>
+                    }
+                </div>
+            }
+
             @if (Model.TestResults == null || !Model.TestResults.Any())
             {
                 <div>データがありません。</div>
@@ -205,10 +224,10 @@
                 <table>
                     <thead>
                         <tr>
+                            <th>実行日</th>
                             <th>ID</th>
-                            <th>TestRunId</th>
-                            <th>ActualResult</th>
-                            <th>Status</th>
+                            <th>名前</th>
+                            <th>実行結果</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -219,9 +238,9 @@
                                 : "status-skipped";
 
                             <tr>
-                                <td>@tr.Id</td>
-                                <td>@tr.TestRunId</td>
-                                <td>@tr.ActualResult</td>
+                                <td>@tr.ExecutedAt</td>
+                                <td>@tr.TestCaseId</td>
+                                <td>@tr.TestCase!.Title</td>
                                 <td class="@statusClass">@tr.Status.ToString()</td>
                             </tr>
                         }
@@ -237,10 +256,9 @@
                  <div class="notice">@msg</div>
              }
              <div style="margin-top:8px;">
-                 <a asp-page="/Upload" class="upload-btn">ファイルを選択してアップロード</a>
+                 <a asp-page="/Upload" class="upload-btn">テスト実行結果の登録</a>
              </div>
          </div>
-
      </div>
 
     <script>
