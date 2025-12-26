@@ -35,6 +35,29 @@ namespace TestManagement.APP.Services
             }
         }
 
+        public async Task<TestRunDto> GetLatestTestRunAsync()
+        {
+            var response = await _httpClient.GetFromJsonAsync<List<Models.TestRunDto>>("api/testrun/");
+            var latestRun = response?.OrderByDescending(_ => _.ExecutedAt).First();
+
+            return (null == latestRun ? new TestRunDto() : latestRun);
+        }
+
+        public async Task<List<Models.TestResultDto>> GetTestRecordsByTestRunAsync(int testRunId)
+        {
+            try
+            {
+                var testResults = await _httpClient.GetFromJsonAsync<List<Models.TestResultDto>>($"api/testresult/");
+                var testRunResults = testResults?.Where(_ => _.TestRunId == testRunId).ToList();
+
+                return (null == testRunResults ? new List<Models.TestResultDto>() : testRunResults);
+            }
+            catch (Exception)
+            {
+                return new List<TestResultDto>();
+            }
+        }
+
         public async Task<List<Models.TestResultDto>> GetTestRecordsAsync()
         {
             try
