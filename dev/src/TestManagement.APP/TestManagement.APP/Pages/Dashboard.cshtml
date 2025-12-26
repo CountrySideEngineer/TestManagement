@@ -196,6 +196,25 @@
         <div class="block">
             <div class="block-title">最近の実行結果</div>
 
+
+            @* 先頭に TestRun の概要を表示 *@
+            @if (Model.TestRun != null && Model.TestRun.Id != 0)
+            {
+                <div class="card" style="margin-bottom:12px; padding:12px;">
+                    <div class="card-title">テスト実行情報</div>
+                    <div>実行ID: <strong>@Model.TestRun.Id</strong></div>
+                    <div>実行日時: <strong>@Model.TestRun.ExecutedAt.ToString("yyyy/MM/dd")</strong></div>
+                    @if (!string.IsNullOrEmpty(Model.TestRun.Environment) && (!string.IsNullOrWhiteSpace(Model.TestRun.Environment)))
+                    {
+                        <div>環境: <strong>@Model.TestRun.Environment</strong></div>
+                    }
+                    @if (!string.IsNullOrWhiteSpace(Model.TestRun.Notes))
+                    {
+                        <div style="margin-top:6px;">備考: <span>@Model.TestRun.Notes</span></div>
+                    }
+                </div>
+            }
+
             @if (Model.TestResults == null || !Model.TestResults.Any())
             {
                 <div>データがありません。</div>
