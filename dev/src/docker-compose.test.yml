@@ -1,7 +1,10 @@
 services:
   db:
-    container_name: test_manage_db_test
-    build: ./
+    image: test_manage_db_test
+    container_name: test_manage_db_test_cont
+    build: 
+      context: .
+      dockerfile: Dockerfile_db
     restart: no
     ports: 
       - "5433:5432"
