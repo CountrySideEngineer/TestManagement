@@ -36,6 +36,7 @@ services:
       DB_USER: "${DB_USER}"
       DB_PORT: "${DB_PORT}"
       DB_PASSWORD_FILE: "${DB_PASSWORD_FILE}"
+      ANALYSIS_DB_NAME: "${ANALYSIS_DB_NAME}"
     volumes:
       - ./secure/api_pass:/run/secrets/api_pass:ro
     env_file:

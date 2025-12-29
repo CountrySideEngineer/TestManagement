@@ -15,7 +15,7 @@ namespace TestManagement.Analyze.APP.Infrastructure.DBConnectionFactory
         {
             string host = ConfigUtility.GetValue(config, "DB_HOST");
             string port = ConfigUtility.GetValue(config, "DB_PORT");
-            string database = ConfigUtility.GetValue(config, "DB_NAME");
+            string database = ConfigUtility.GetValue(config, "ANALYSIS_DB_NAME");
             string user = ConfigUtility.GetValue(config, "DB_USER");
             string passFilePath = ConfigUtility.GetValue(config, "DB_PASSWORD_FILE");
 
