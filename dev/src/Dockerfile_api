@@ -28,6 +28,9 @@ RUN dotnet restore && \
 # It can not build application, only run it to avoid change the application or api.
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
+RUN apt-get update && \
+    apt-get install -y cron
+
 # Copy application from "build" containers.
 # Copy analye application.
 WORKDIR /App/Analyze
@@ -39,6 +42,14 @@ COPY --from=build_analysis /App ./
 WORKDIR /App/Api
 COPY --from=build_api /App ./
 COPY ./TestManagement.API/TestManagement.API/pass.txt /etc/pass.txt
+
+# Add cron job to execute the application periodically
+RUN echo "* * * * * root dotnet /App/Api/TestManagement.API.dll" > /etc/cron.d/testmanagement-cron && \
+    chmod 0644 /etc/cron.d/testmanagement-cron && \
+    crontab /etc/cron.d/testmanagement-cron
+
+# Ensure cron service is started
+CMD ["/bin/bash", "-c", "cron && tail -f /dev/null"]
 
 # Start 
 ENTRYPOINT ["dotnet", "TestManagement.API.dll"]
