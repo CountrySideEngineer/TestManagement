@@ -10,6 +10,7 @@ using System.Data;
 using TestManagement.Analyze.APP.ApiClient;
 using TestManagement.Analyze.APP.DBContext;
 using TestManagement.Analyze.APP.Entities;
+using TestManagement.Analyze.APP.Infrastructure.DBConnectionFactory;
 using TestManagement.Analyze.APP.Model;
 using TestManagement.Analyze.APP.Model.Converter;
 using TestManagement.Analyze.APP.Model.DTO;
@@ -30,8 +31,8 @@ var host = Host.CreateDefaultBuilder(args)
         services.Configure<ApiSetting>(configuration.GetSection("ApiSettings"));
 
         // Register DbContext
-        string connectionString = 
-            configuration.GetConnectionString("DefaultConnection")
+        string connectionString =
+            DBConnectionFactory.CreatePostgresConnectionString(configuration)
                 ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         services.AddDbContext<RequestDbContext>(options => options.UseNpgsql(connectionString));
 

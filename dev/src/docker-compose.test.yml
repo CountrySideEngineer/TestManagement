@@ -1,7 +1,10 @@
 services:
   db:
-    container_name: test_manage_db_test
-    build: ./
+    image: test_manage_db_test
+    container_name: test_manage_db_test_cont
+    build: 
+      context: .
+      dockerfile: Dockerfile_db
     restart: no
     ports: 
       - "5433:5432"
@@ -33,6 +36,7 @@ services:
       DB_USER: "${DB_USER}"
       DB_PORT: "${DB_PORT}"
       DB_PASSWORD_FILE: "${DB_PASSWORD_FILE}"
+      ANALYSIS_DB_NAME: "${ANALYSIS_DB_NAME}"
     volumes:
       - ./secure/api_pass:/run/secrets/api_pass:ro
     env_file:

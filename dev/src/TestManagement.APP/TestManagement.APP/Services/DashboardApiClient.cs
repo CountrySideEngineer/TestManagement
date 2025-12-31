@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Diagnostics;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using TestManagement.APP.Models;
 
@@ -38,9 +39,17 @@ namespace TestManagement.APP.Services
         public async Task<TestRunDto> GetLatestTestRunAsync()
         {
             var response = await _httpClient.GetFromJsonAsync<List<Models.TestRunDto>>("api/testrun/");
-            var latestRun = response?.OrderByDescending(_ => _.ExecutedAt).First();
+            try
+            {
+                var latestRun = response?.OrderByDescending(_ => _.ExecutedAt).First();
 
-            return (null == latestRun ? new TestRunDto() : latestRun);
+                return (null == latestRun ? new TestRunDto() : latestRun);
+            }
+            catch (Exception ex)
+            when ((ex is ArgumentNullException) || (ex is InvalidOperationException))
+            {
+                return new TestRunDto();
+            }
         }
 
         public async Task<List<Models.TestResultDto>> GetTestRecordsByTestRunAsync(int testRunId)
