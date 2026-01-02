@@ -1,0 +1,25 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
+
+WORKDIR /Source
+
+# COPY source code of application.
+COPY ./TestManagement.Analyze.APP /Source/
+
+# Change working directory to the sample project folder.
+WORKDIR /Source/TestManagement.Analyze.APP
+
+# build the application.
+RUN dotnet restore && \
+    dotnet publish -c release -o /App --no-restore
+
+# Start building running environment.
+# It can not build application, only run it to avoid chgit puange the application or api.
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+
+# Copy application from "build" container.
+WORKDIR /App
+COPY --from=build /App ./
+COPY ./TestManagement.Analyze.APP/TestManagement.Analyze.APP/pass.txt /etc/pass.txt
+
+# Start 
+ENTRYPOINT ["dotnet", "TestManagement.Analyze.APP.dll"]

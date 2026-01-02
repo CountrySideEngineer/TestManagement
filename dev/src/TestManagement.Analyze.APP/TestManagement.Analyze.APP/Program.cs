@@ -20,7 +20,8 @@ using TestManagement.Analyze.APP.Repository;
 var host = Host.CreateDefaultBuilder(args)
     .ConfigureAppConfiguration((context, config) =>
     {
-        config.SetBasePath(Directory.GetCurrentDirectory());
+        string curDirPath = AppDomain.CurrentDomain.BaseDirectory;
+        config.SetBasePath(curDirPath);
         config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
     })
     .ConfigureServices((context, services) =>
@@ -86,7 +87,6 @@ var converter = services.GetRequiredService<TestSuitesConverter>();
 var testCaseApiClient = services.GetRequiredService<TestCaseApiClient>();
 var testRunApiClient = services.GetRequiredService<TestRunApiClient>();
 var testResultApiClient = services.GetRequiredService<TestResultApiClient>();
-
 foreach (var requestItem in requests)
 {
     logger.LogInformation($"{nameof(requestItem.Id),24} = {requestItem.Id}");

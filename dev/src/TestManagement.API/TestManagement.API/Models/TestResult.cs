@@ -25,7 +25,7 @@ namespace TestManagement.API.Models
 
         public TestStatus Status { get; set; } = TestStatus.Unknown;
 
-        public DateTime ExecutedAt { get; set; } = DateTime.MinValue;
+        public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
