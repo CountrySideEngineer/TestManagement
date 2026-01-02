@@ -13,7 +13,11 @@ public partial class Request
     [Key]
     public int Id { get; set; }
 
+    [Required]
     public string DirectoryPath { get; set; } = null!;
+
+    [Required]
+    public int TestLevelId { get; set; } = 0;
 
     public int StatusId { get; set; }
 
