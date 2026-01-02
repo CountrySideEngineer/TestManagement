@@ -41,3 +41,26 @@ services:
       - ./secure/api_pass:/run/secrets/api_pass:ro
     env_file:
       - .env
+  app:
+    image: test_manage_app_test
+    container_name: test_manage_app_test_cont
+    build: 
+      context: .
+      dockerfile: Dockerfile_app
+    restart: no
+    ports: 
+      - "8082:8080"
+      - "443:443"
+    depends_on:
+      - api
+    environment:
+      DB_HOST: "${DB_HOST}"
+      DB_NAME: "${DB_NAME}"
+      DB_USER: "${DB_USER}"
+      DB_PORT: "${DB_PORT}"
+      DB_PASSWORD_FILE: "${DB_PASSWORD_FILE}"
+      ANALYSIS_DB_NAME: "${ANALYSIS_DB_NAME}"
+    volumes:
+      - ./secure/api_pass:/run/secrets/api_pass:ro
+    env_file:
+      - .env
