@@ -132,7 +132,7 @@ namespace TestManagement.Analyze.APP.Model.Converter
             }
             TestCaseDto testCaseDto = ToTestCase(testCase, builder);
             resultDto.TestCase = testCaseDto;
-            resultDto.ExecutedAt = testCase.Timestamp;
+            resultDto.ExecutedAt = DateTime.SpecifyKind(testCase.Timestamp, DateTimeKind.Utc);
             return resultDto;
         }
     }
