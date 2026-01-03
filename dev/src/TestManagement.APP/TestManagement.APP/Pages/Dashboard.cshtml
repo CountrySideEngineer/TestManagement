@@ -238,7 +238,7 @@
                                 : "status-skipped";
 
                             <tr>
-                                <td>@tr.ExecutedAt</td>
+                                <td>@tr.ExecutedAt.ToString("yyyy/MM/dd hh:mm:ss")</td>
                                 <td>@tr.TestCaseId</td>
                                 <td>@tr.TestCase!.Title</td>
                                 <td class="@statusClass">@tr.Status.ToString()</td>
