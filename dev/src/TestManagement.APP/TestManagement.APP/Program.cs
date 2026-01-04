@@ -25,6 +25,7 @@ builder.Services.AddRazorPages()
     {
         options.Conventions.AddPageRoute("/Dashboard", "");
     });
+builder.Services.AddScoped<TestCaseApiClient>();
 builder.Services.AddScoped<TestLevelApiClient>();
 builder.Services.AddScoped<DashboardApiClient>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
