@@ -1,0 +1,34 @@
+@page
+@model TestManagement.APP.Pages.TestCases.IndexModel
+@{
+    ViewData["Title"] = "テストケース一覧";
+}
+
+<h1>テストケース一覧</h1>
+
+@if (Model.TestCases == null || Model.TestCases.Count == 0)
+{
+    <div>データがありません。</div>
+}
+else
+{
+    <table class="table" style="width:100%; border-collapse:collapse;">
+        <thead>
+            <tr>
+                <th style="text-align:left; padding:8px;">タイトル</th>
+                <th style="text-align:left; padding:8px;">説明</th>
+                <th style="text-align:left; padding:8px;">作成日時</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tc in Model.TestCases)
+            {
+                <tr>
+                    <td style="padding:8px;">@tc.Title</td>
+                    <td style="padding:8px;">@tc.Description</td>
+                    <td style="padding:8px;">@tc.CreatedAt.ToString("yyyy/MM/dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
