@@ -15,15 +15,17 @@ else
     <table class="table" style="width:100%; border-collapse:collapse;">
         <thead>
             <tr>
+                <th style="text-align:left; padding:8px;">ID</th>
                 <th style="text-align:left; padding:8px;">タイトル</th>
                 <th style="text-align:left; padding:8px;">説明</th>
                 <th style="text-align:left; padding:8px;">作成日時</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var tc in Model.TestCases)
+            @foreach (var tc in Model.TestCases.OrderBy(_ => _.Id).ToList())
             {
                 <tr>
+                    <td style="padding:8px;">@tc.Id</td>
                     <td style="padding:8px;">@tc.Title</td>
                     <td style="padding:8px;">@tc.Description</td>
                     <td style="padding:8px;">@tc.CreatedAt.ToString("yyyy/MM/dd HH:mm")</td>
