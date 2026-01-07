@@ -1,0 +1,34 @@
+﻿@page
+@model TestManagement.APP.Pages.TestRuns.IndexModel
+@{
+    ViewData["Title"] = "テスト実行一覧";
+}
+
+<h1>テスト実行一覧</h1>
+
+@if ((Model.TestRuns == null) || (Model.TestRuns.Count == 0))
+{
+    <div>テスト実行情報がありません。</div>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+@*                 <th>実行日</th>
+                <th>実行件数</th>
+                <th>成功率</th>
+ *@            
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var tr in Model.TestRuns)
+            {
+                <tr>
+                    <td>@tr.Id</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
