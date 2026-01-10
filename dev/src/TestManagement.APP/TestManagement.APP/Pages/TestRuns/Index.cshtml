@@ -16,8 +16,8 @@ else
         <thead>
             <tr>
                 <th>ID</th>
-@*                 <th>実行日</th>
-                <th>実行件数</th>
+                <th>実行日</th>
+@*                 <th>実行件数</th>
                 <th>成功率</th>
  *@            
             </tr>
@@ -27,6 +27,7 @@ else
             {
                 <tr>
                     <td>@tr.Id</td>
+                    <td>@tr.ExecutedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
                 </tr>
             }
         </tbody>
