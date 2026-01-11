@@ -13,12 +13,19 @@ namespace TestManagement.APP.Services
 
         public async Task<List<TestRunDto>> GetTestRunsAsync()
         {
-            var testRuns = await _httpClient.GetFromJsonAsync<List<TestRunDto>>("api/testrun");
-            var testResults = await _httpClient.GetFromJsonAsync<List<TestResultDto>>("api/testresult");
+            List<TestRunDto>? testRuns = await _httpClient.GetFromJsonAsync<List<TestRunDto>>("api/testrun");
+            if (null == testRuns)
+            {
+                return new List<TestRunDto>();
+
+            }
+            List<TestResultDto>? testResults = await _httpClient.GetFromJsonAsync<List<TestResultDto>>("api/testresult");
+            if (null == testResults)
+            {
+                return testRuns;
+            }
             foreach (var item in testRuns)
             {
-                Console.WriteLine(item.Id);
-
                 var testResult = testResults.Where(_ => _.TestRunId == item.Id).ToList();
                 item.TestResults = testResult;
             }
