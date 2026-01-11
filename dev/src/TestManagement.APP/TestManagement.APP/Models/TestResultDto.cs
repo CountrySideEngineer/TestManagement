@@ -16,6 +16,7 @@
         public string ActualResult { get; set; } = string.Empty;
 
         public int TestRunId { get; set; }
+        public TestRunDto TestRun { get; set; } = new TestRunDto();
 
         public int TestCaseId { get; set; }
         public TestCaseDto? TestCase { get; set; }
