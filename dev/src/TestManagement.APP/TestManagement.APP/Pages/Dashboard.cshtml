@@ -31,7 +31,7 @@
 
                  <div class="card">
                      <div class="card-title">実行件数</div>
-                     <div class="card-value">@Model.Summary?.ExecutedNum</div>
+                     <div class="card-value">@Model.Summary?.ExecutedNum 件</div>
                  </div>
             </div>
         </div>
@@ -75,7 +75,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var tr in Model.TestResults)
+                        @foreach (var tr in Model.GetTestResultsToDisplay())
                         {
                             var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
                                 : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
