@@ -51,6 +51,23 @@ public class DashboardModel : PageModel
         }
     }
 
+    public List<TestResultDto> GetTestResultsToDisplay()
+    {
+        if (TestResults == null)
+        {
+            return new();
+        }
+
+        if (10 < TestResults.Count)
+        {
+            return TestResults.GetRange(0, 10);
+        }
+        else
+        {
+            return TestResults;
+        }
+    }
+
     public async Task OnGetAsync()
     {
         Summary = await _apiClient.GetSummaryAsync();

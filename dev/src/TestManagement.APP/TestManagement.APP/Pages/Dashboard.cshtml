@@ -75,7 +75,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var tr in Model.TestResults)
+                        @foreach (var tr in Model.GetTestResultsToDisplay())
                         {
                             var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
                                 : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
