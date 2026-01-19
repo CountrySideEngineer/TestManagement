@@ -22,7 +22,7 @@
             {
                 <div class="block">
                     <div class="block-title">テスト実行一覧</div>
-                    <table>
+                    <table class="table-header-center">
                         <thead>
                             <tr>
                                 <th>ID</th>
@@ -34,9 +34,9 @@
                             @foreach (var tr in Model.TestRuns)
                             {
                                 <tr>
-                                    <td>@tr.Id</td>
+                                    <td class="col-right">@tr.Id</td>
                                     <td>@tr.ExecutedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
-                                    <td>@tr.TestResults.Count</td>
+                                    <td class="col-right">@tr.TestResults.Count</td>
                                 </tr>
                             }
                         </tbody>
