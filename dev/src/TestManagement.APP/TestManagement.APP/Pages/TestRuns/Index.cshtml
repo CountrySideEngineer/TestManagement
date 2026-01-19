@@ -4,31 +4,46 @@
     ViewData["Title"] = "テスト実行一覧";
 }
 
-<h1>テスト実行一覧</h1>
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8"/>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-@if ((Model.TestRuns == null) || (Model.TestRuns.Count == 0))
-{
-    <div>テスト実行情報がありません。</div>
-}
-else
-{
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>実行日</th>
-                <th>実行件数</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var tr in Model.TestRuns)
+    </head>
+
+    <body>
+        <div class="container">
+            @if ((Model.TestRuns == null) || (Model.TestRuns.Count == 0))
             {
-                <tr>
-                    <td>@tr.Id</td>
-                    <td>@tr.ExecutedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
-                    <td>@tr.TestResults.Count</td>
-                </tr>
+                <div>テスト実行情報がありません。</div>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <div class="block">
+                    <div class="block-title">テスト実行一覧</div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>実行日</th>
+                                <th>実行件数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tr in Model.TestRuns)
+                            {
+                                <tr>
+                                    <td>@tr.Id</td>
+                                    <td>@tr.ExecutedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
+                                    <td>@tr.TestResults.Count</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    
+    </body>
+</html>
