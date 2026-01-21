@@ -21,7 +21,7 @@ html {
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f6fa;
-  margin: 0 0 60px 0; /* preserve previous bottom margin while resetting other margins */
+  margin-bottom: 0 0 60px;
 }
 
 /* Dashboard specific styles moved from Dashboard.cshtml */
