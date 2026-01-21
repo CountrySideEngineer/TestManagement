@@ -4,140 +4,127 @@
     ViewData["Title"] = "開発者向けダッシュボード";
 }
 
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8" />
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="container">
 
-    @* Styles moved to wwwroot/css/site.css *@
-</head>
-
-<body>
-
-    <div class="container">
-
-        <!-- プロジェクトサマリ -->
-        <div class="summary-row">
-            <div class="chart-card">
-                <canvas id="summaryChart" width="180" height="180" aria-label="成功率と実行件数の円グラフ"></canvas>
-            </div>
-
-            <div class="vertical-cards">
-                 <div class="card">
-                     <div class="card-title">成功率</div>
-                     <div class="card-value">@Model.GetPassRatePercent()</div>
-                 </div>
-
-                 <div class="card">
-                     <div class="card-title">実行件数</div>
-                     <div class="card-value">@Model.Summary?.ExecutedNum 件</div>
-                 </div>
-            </div>
+    <!-- プロジェクトサマリ -->
+    <div class="summary-row">
+        <div class="chart-card">
+            <canvas id="summaryChart" width="180" height="180" aria-label="成功率と実行件数の円グラフ"></canvas>
         </div>
 
-        <!-- 最近の実行結果 -->
-        <div class="block">
-            <div class="block-title">最近の実行結果</div>
-
-
-            @* 先頭に TestRun の概要を表示 *@
-            @if (Model.TestRun != null && Model.TestRun.Id != 0)
-            {
-                <div class="card" style="margin-bottom:12px; padding:12px;">
-                    <div class="card-title">テスト実行情報</div>
-                    <div>実行ID: <strong>@Model.TestRun.Id</strong></div>
-                    <div>実行日時: <strong>@Model.TestRun.ExecutedAt.ToString("yyyy/MM/dd")</strong></div>
-                    @if (!string.IsNullOrEmpty(Model.TestRun.Environment) && (!string.IsNullOrWhiteSpace(Model.TestRun.Environment)))
-                    {
-                        <div>環境: <strong>@Model.TestRun.Environment</strong></div>
-                    }
-                    @if (!string.IsNullOrWhiteSpace(Model.TestRun.Notes))
-                    {
-                        <div style="margin-top:6px;">備考: <span>@Model.TestRun.Notes</span></div>
-                    }
+        <div class="vertical-cards">
+                <div class="card">
+                    <div class="card-title">成功率</div>
+                    <div class="card-value">@Model.GetPassRatePercent()</div>
                 </div>
-            }
 
-            @if (Model.TestResults == null || !Model.TestResults.Any())
-            {
-                <div>データがありません。</div>
-            }
-            else
-            {
-                <table>
-                    <thead>
-                        <tr>
-                            <th>実行日</th>
-                            <th>ID</th>
-                            <th>名前</th>
-                            <th>実行結果</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var tr in Model.GetTestResultsToDisplay())
-                        {
-                            var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
-                                : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
-                                : "status-skipped";
-
-                            <tr>
-                                <td>@tr.ExecutedAt.ToString("yyyy/MM/dd hh:mm:ss")</td>
-                                <td>@tr.TestCaseId</td>
-                                <td>@tr.TestCase!.Title</td>
-                                <td class="@statusClass">@tr.Status.ToString()</td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            }
+                <div class="card">
+                    <div class="card-title">実行件数</div>
+                    <div class="card-value">@Model.Summary?.ExecutedNum 件</div>
+                </div>
         </div>
+    </div>
 
-         @* ページ下部：ファイル選択画面への遷移ボタンとアップロード結果通知 *@
-         <div class="page-footer">
-             @if (TempData["UploadMessage"] is string msg)
-             {
-                 <div class="notice">@msg</div>
-             }
-             <div style="margin-top:8px;">
-                <a asp-page="/TestRuns/Index" class="upload-btn" style="margin-right:8px;">テスト実行一覧</a>
-                <a asp-page="/TestCases/Index" class="upload-btn" style="margin-right:8px;">テストケース一覧</a>
-                <a asp-page="/Upload" class="upload-btn">テスト実行結果の登録</a>
-             </div>
-         </div>
-     </div>
+    <!-- 最近の実行結果 -->
+    <div class="block">
+        <div class="block-title">最近の実行結果</div>
 
-    <script>
-        (function() {
-            // Summary counts from server
-            const executed = @(Model.Summary?.ExecutedNum ?? 0);
-            const errors = @(Model.Summary?.ErrorNum ?? 0);
-            const success = Math.max(0, executed - errors);
 
-            const ctx = document.getElementById('summaryChart');
-            if (!ctx) return;
-
-            const data = {
-                labels: ['成功', '失敗'],
-                datasets: [{
-                    data: [success, errors],
-                    backgroundColor: ['#2ecc71', '#e74c3c'],
-                    hoverOffset: 6
-                }]
-            };
-
-            new Chart(ctx, {
-                type: 'doughnut',
-                data: data,
-                options: {
-                    plugins: {
-                        legend: { position: 'bottom' },
-                        tooltip: { enabled: true }
-                    },
-                    cutout: '60%'
+        @* 先頭に TestRun の概要を表示 *@
+        @if (Model.TestRun != null && Model.TestRun.Id != 0)
+        {
+            <div class="card" style="margin-bottom:12px; padding:12px;">
+                <div class="card-title">テスト実行情報</div>
+                <div>実行ID: <strong>@Model.TestRun.Id</strong></div>
+                <div>実行日時: <strong>@Model.TestRun.ExecutedAt.ToString("yyyy/MM/dd")</strong></div>
+                @if (!string.IsNullOrEmpty(Model.TestRun.Environment) && (!string.IsNullOrWhiteSpace(Model.TestRun.Environment)))
+                {
+                    <div>環境: <strong>@Model.TestRun.Environment</strong></div>
                 }
-            });
-        })();
-    </script>
- </body>
-</html>
+                @if (!string.IsNullOrWhiteSpace(Model.TestRun.Notes))
+                {
+                    <div style="margin-top:6px;">備考: <span>@Model.TestRun.Notes</span></div>
+                }
+            </div>
+        }
+
+        @if (Model.TestResults == null || !Model.TestResults.Any())
+        {
+            <div>データがありません。</div>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>実行日</th>
+                        <th>ID</th>
+                        <th>名前</th>
+                        <th>実行結果</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tr in Model.GetTestResultsToDisplay())
+                    {
+                        var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
+                            : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
+                            : "status-skipped";
+
+                        <tr>
+                            <td>@tr.ExecutedAt.ToString("yyyy/MM/dd hh:mm:ss")</td>
+                            <td>@tr.TestCaseId</td>
+                            <td>@tr.TestCase!.Title</td>
+                            <td class="@statusClass">@tr.Status.ToString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    @* ページ下部：ファイル選択画面への遷移ボタンとアップロード結果通知 *@
+    <div class="page-footer">
+        @if (TempData["UploadMessage"] is string msg)
+        {
+            <div class="notice">@msg</div>
+        }
+        <div style="margin-top:8px;">
+        <a asp-page="/TestRuns/Index" class="upload-btn" style="margin-right:8px;">テスト実行一覧</a>
+        <a asp-page="/TestCases/Index" class="upload-btn" style="margin-right:8px;">テストケース一覧</a>
+        <a asp-page="/Upload" class="upload-btn">テスト実行結果の登録</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Summary counts from server
+        const executed = @(Model.Summary?.ExecutedNum ?? 0);
+        const errors = @(Model.Summary?.ErrorNum ?? 0);
+        const success = Math.max(0, executed - errors);
+
+        const ctx = document.getElementById('summaryChart');
+        if (!ctx) return;
+
+        const data = {
+            labels: ['成功', '失敗'],
+            datasets: [{
+                data: [success, errors],
+                backgroundColor: ['#2ecc71', '#e74c3c'],
+                hoverOffset: 6
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { enabled: true }
+                },
+                cutout: '60%'
+            }
+        });
+    })();
+</script>
