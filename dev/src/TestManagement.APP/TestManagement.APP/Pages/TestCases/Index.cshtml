@@ -4,33 +4,45 @@
     ViewData["Title"] = "テストケース一覧";
 }
 
-<h1>テストケース一覧</h1>
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="utf-8" />
 
-@if (Model.TestCases == null || Model.TestCases.Count == 0)
-{
-    <div>データがありません。</div>
-}
-else
-{
-    <table class="table" style="width:100%; border-collapse:collapse;">
-        <thead>
-            <tr>
-                <th style="text-align:left; padding:8px;">ID</th>
-                <th style="text-align:left; padding:8px;">タイトル</th>
-                <th style="text-align:left; padding:8px;">説明</th>
-                <th style="text-align:left; padding:8px;">作成日時</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var tc in Model.TestCases.OrderBy(_ => _.Id).ToList())
+    </head>
+    <body>
+        <div class="container">
+            @if (Model.TestCases == null || Model.TestCases.Count == 0)
             {
-                <tr>
-                    <td style="padding:8px;">@tc.Id</td>
-                    <td style="padding:8px;">@tc.Title</td>
-                    <td style="padding:8px;">@tc.Description</td>
-                    <td style="padding:8px;">@tc.CreatedAt.ToString("yyyy/MM/dd HH:mm")</td>
-                </tr>
+                <div>データがありません。</div>
             }
-        </tbody>
-    </table>
-}
+            else
+            {
+                <div class="block">
+                    <div class="block-title">テストケース一覧</div>
+                    <table class="table-header-center">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>タイトル</th>
+                                <th>説明</th>
+                                <th>作成日時</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tc in Model.TestCases.OrderBy(_ => _.Id).ToList())
+                            {
+                                <tr>
+                                    <td class="col-right">@tc.Id</td>
+                                    <td>@tc.Title</td>
+                                    <td>@tc.Description</td>
+                                    <td>@tc.CreatedAt.ToString("yyyy/MM/dd HH:mm")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </body>
+</html>

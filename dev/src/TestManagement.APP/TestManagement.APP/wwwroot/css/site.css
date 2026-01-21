@@ -171,3 +171,15 @@ th {
   border-radius: 6px;
   display: inline-block;
 }
+
+/* Utility: center table headers */
+.table-header-center th {
+  text-align: center;
+}
+
+/* Utility: right-align table column cells */
+.col-right,
+.col-right th,
+.col-right td {
+  text-align: right;
+}
