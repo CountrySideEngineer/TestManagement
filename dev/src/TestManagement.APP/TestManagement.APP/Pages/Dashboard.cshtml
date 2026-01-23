@@ -7,23 +7,23 @@
 <div class="container">
 
     <!-- プロジェクトサマリ -->
-    <div class="summary-row d-flex align-items-stretch">
-        <div class="vertical-cards flex-fill d-flex flex-column">
-            <div class="chart-card d-flex align-items-center justify-content-center flex-fill">
-                <canvas id="summaryChart" aria-label="成功率と実行件数の円グラフ" style="width:auto; height:100%; max-width:100%; max-height:100%;"></canvas>
+    <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
+        <div class="summary-col" style="flex:0 0; max-width:50%; display:flex; padding:0; margin: 0 16px 0 0;">
+            <div class="chart-card d-flex align-items-center justify-content-center flex-fill" style="padding:0; margin:0;">
+                <canvas id="summaryChart" aria-label="成功率と実行件数の円グラフ" style="display:block; width:100%; height:100%; padding:8px;"></canvas>
             </div>
         </div>
 
-        <div class="vertical-cards flex-fill d-flex flex-column">
-                <div class="card">
-                    <div class="card-title">成功率</div>
-                    <div class="card-value">@Model.GetPassRatePercent()</div>
-                </div>
+        <div class="summary-col" style="flex:0 0 20%; max-width:50%; display:flex; flex-direction:column; padding:0;">
+            <div class="card" style="margin:0 0 8px 0; border:0;">
+                <div class="card-title">成功率</div>
+                <div class="card-value">@Model.GetPassRatePercent()</div>
+            </div>
 
-                <div class="card">
-                    <div class="card-title">実行件数</div>
-                    <div class="card-value">@Model.Summary?.ExecutedNum 件</div>
-                </div>
+            <div class="card" style="margin:8px 0 0 0; border:0;">
+                <div class="card-title">実行件数</div>
+                <div class="card-value">@Model.Summary?.ExecutedNum 件</div>
+            </div>
         </div>
     </div>
 
