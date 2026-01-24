@@ -38,7 +38,7 @@
         @* 先頭に TestRun の概要を表示 *@
         @if (Model.TestRun != null && Model.TestRun.Id != 0)
         {
-            <div class="card" style="margin-bottom:12px; padding:12px;">
+            <div class="card" style="display:inline-block; width:auto; max-width:100%; margin-bottom:12px;">
                 <div class="card-title">テスト実行情報</div>
                 <div>実行ID: <strong>@Model.TestRun.Id</strong></div>
                 <div>実行日時: <strong>@Model.TestRun.ExecutedAt.ToString("yyyy/MM/dd")</strong></div>
