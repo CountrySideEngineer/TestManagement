@@ -5,14 +5,14 @@
 }
 
 <div class="container">
-    @if (Model.TestCases == null || Model.TestCases.Count == 0)
-    {
-        <div>データがありません。</div>
-    }
-    else
-    {
-        <div class="block">
-            <div class="block-title">テストケース一覧</div>
+    <div class="block">
+        <div class="block-title">テストケース一覧</div>
+        @if (Model.TestCases == null || Model.TestCases.Count == 0)
+        {
+            <div>データがありません。</div>
+        }
+        else
+        {
             <table class="table-header-center">
                 <thead>
                     <tr>
@@ -29,11 +29,11 @@
                             <td class="col-right">@tc.Id</td>
                             <td>@tc.Title</td>
                             <td>@tc.Description</td>
-                            <td>@tc.CreatedAt.ToString("yyyy/MM/dd HH:mm")</td>
+                            <td class="text-center">@tc.CreatedAt.ToString("yyyy/MM/dd HH:mm")</td>
                         </tr>
                     }
                 </tbody>
             </table>
-        </div>
-    }
+        }
+    </div>
 </div>
