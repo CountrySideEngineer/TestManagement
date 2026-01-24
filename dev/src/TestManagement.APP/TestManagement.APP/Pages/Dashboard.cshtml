@@ -59,7 +59,7 @@
         }
         else
         {
-            <table>
+            <table class="table-header-center">
                 <thead>
                     <tr>
                         <th>実行日</th>
@@ -76,10 +76,10 @@
                             : "status-skipped";
 
                         <tr>
-                            <td>@tr.ExecutedAt.ToString("yyyy/MM/dd hh:mm:ss")</td>
-                            <td>@tr.TestCaseId</td>
+                            <td class="text-center">@tr.ExecutedAt.ToString("yyyy/MM/dd hh:mm:ss")</td>
+                            <td class="col-right">@tr.TestCaseId</td>
                             <td>@tr.TestCase!.Title</td>
-                            <td class="@statusClass">@tr.Status.ToString()</td>
+                            <td class="@statusClass text-center">@tr.Status.ToString()</td>
                         </tr>
                     }
                 </tbody>
