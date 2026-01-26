@@ -16,39 +16,45 @@
                     }
                 </div>
             }
-            <div class="block-title">テストレベルを選択</div>
-            <div style="margin-bottom:20px;">
-            @if (Model.TestLevels != null && Model.TestLevels.Any())
-            {
-                <div style="margin:8px 0;">
-                    @* <label for="testLevelSelect">テストレベル</label> *@
-                    <select id="testLevelSelect" asp-for="SelectedTestLevelId" style="flex:0 0 20%; display:block; max-width:50%; padding:8px; margin-top:6px;">
-                        <option value="">選択してください</option>
-                        @foreach (var level in Model.TestLevels)
+            <div class="block-title">テスト結果の登録</div>
+            <div style="display:flex; flex-direction:column; gap:16px;">
+                <div class="card" style="margin:0; border-width: thin">
+                    <div class="card-title">テストレベルを選択</div>
+                    <div style="margin-bottom:8px;">
+                        @if (Model.TestLevels != null && Model.TestLevels.Any())
                         {
-                            <option value="@level.Id">
-                                @level.Name @if(!string.IsNullOrWhiteSpace(level.Description)) {
-                                    <text>- @level.Description</text>
-                                }
-                            </option>
+                            <div style="margin:0;">
+                                <select id="testLevelSelect" asp-for="SelectedTestLevelId" style="flex:0 0 20%; display:block; max-width:50%; padding:8px; margin-top:6px;">
+                                    <option value="">選択してください</option>
+                                    @foreach (var level in Model.TestLevels)
+                                    {
+                                        <option value="@level.Id">
+                                            @level.Name @if(!string.IsNullOrWhiteSpace(level.Description)) {
+                                                <text>- @level.Description</text>
+                                            }
+                                        </option>
+                                    }
+                                </select>
+                            </div>
                         }
-                    </select>
+                        else
+                        {
+                            <div style="color:#e74c3c; margin:8px 0;">テストレベルを取得できませんでした。</div>
+                        }
+                    </div>
                 </div>
-            }
-            else
-            {
-                <div style="color:#e74c3c; margin:8px 0;">テストレベルを取得できませんでした。</div>
-            }
-            </div>
-            <div class="block-title">ファイルを選択</div>
-            <div style="margin:8px 0;">
-                @* <label for="fileInput">ファイル</label> *@
-                <input id="fileInput" type="file" asp-for="UploadFiles" multiple style="display:block; margin-top:6px;" />
-            </div>
 
-            <div style="margin-top:12px;">
-                <input type="submit" class="upload-btn" value="アップロード開始" />
-                <a asp-page="/Dashboard" style="margin-left:10px; text-decoration:none;">キャンセル</a>
+                <div class="card" style="margin:0; border-width: thin">
+                    <div class="card-title">ファイルを選択</div>
+                    <div style="margin:0;">
+                        <input id="fileInput" type="file" asp-for="UploadFiles" multiple style="display:block; margin-top:6px;" />
+                    </div>
+
+                    <div style="margin-top:12px;">
+                        <input type="submit" class="upload-btn" value="アップロード開始" />
+                        <a asp-page="/Dashboard" style="margin-left:10px; text-decoration:none;">キャンセル</a>
+                    </div>
+                </div>
             </div>
         </div>
     </form>
