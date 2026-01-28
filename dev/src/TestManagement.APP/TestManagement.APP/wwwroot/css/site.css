@@ -24,15 +24,6 @@ body {
   margin-bottom: 0 0 60px;
 }
 
-/* Dashboard specific styles moved from Dashboard.cshtml */
-header {
-  background-color: #2f3640;
-  color: white;
-  padding: 16px 24px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
 .container {
   padding: 8px;
 }
