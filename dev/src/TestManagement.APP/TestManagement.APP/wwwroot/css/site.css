@@ -36,10 +36,10 @@ body {
 
 /* layout for summary: chart on left, stacked cards on right */
 .summary-row {
-  display: flex;
-  gap: 20px;
-  align-items: center;
-  margin-bottom: 20px;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
 }
 
 .chart-card {
@@ -56,11 +56,11 @@ body {
 
 /* New: vertical layout for the summary cards (ê¨å˜ó¶ / é¿çsåèêî) */
 .vertical-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 20px;
-  min-width: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    min-width: 200px;
 }
 
 .card {
@@ -72,14 +72,14 @@ body {
 }
 
 .card-title {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 8px;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
 }
 
 .card-value {
-  font-size: 28px;
-  font-weight: bold;
+    font-size: 28px;
+    font-weight: bold;
 }
 
 .block {
@@ -91,15 +91,15 @@ body {
 }
 
 .block-title {
-  font-size: 16px;
-  font-weight: bold;
-  margin-bottom: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 12px;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 12px;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
 }
 
 th, td {
