@@ -4,46 +4,36 @@
     ViewData["Title"] = "テスト実行一覧";
 }
 
-<!DOCTYPE html>
-<html lang="ja">
-    <head>
-        <meta charset="utf-8"/>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<div class="container">
+    <div class="block">
+        <div class="block-title">テスト実行一覧</div>
+        @if ((Model.TestRuns == null) || (Model.TestRuns.Count == 0))
+        {
+            <div>テスト実行情報がありません。</div>
+        }
+        else
+        {
+            <table class="table-header-center">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th class="text-center">実行日</th>
+                        <th>実行件数</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var tr in Model.TestRuns)
+                    {
+                        <tr>
+                            <td class="col-right">@tr.Id</td>
+                            <td class="text-center">@tr.ExecutedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
+                            <td class="col-right">@tr.TestResults.Count</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
 
-    </head>
+    </div>
 
-    <body>
-        <div class="container">
-            @if ((Model.TestRuns == null) || (Model.TestRuns.Count == 0))
-            {
-                <div>テスト実行情報がありません。</div>
-            }
-            else
-            {
-                <div class="block">
-                    <div class="block-title">テスト実行一覧</div>
-                    <table class="table-header-center">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>実行日</th>
-                                <th>実行件数</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var tr in Model.TestRuns)
-                            {
-                                <tr>
-                                    <td class="col-right">@tr.Id</td>
-                                    <td>@tr.ExecutedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
-                                    <td class="col-right">@tr.TestResults.Count</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
-            }
-        </div>
-    
-    </body>
-</html>
+</div>
