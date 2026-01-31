@@ -34,8 +34,8 @@ namespace TestManagement.APP.Data.Repositories.TestAnalysis
             ResultMaster result = await _dbContext.ResultMasters.FindAsync(testRun.ResultId);
             StatusMaster status = await _dbContext.StatusMasters.FindAsync(testRun.StatusId);
             
-            testRun.Result = result;
-            testRun.Status = status;
+            testRun.Result = result!;
+            testRun.Status = status!;
 
             _dbContext.Requests.Add(testRun);
             await _dbContext.SaveChangesAsync();
@@ -76,9 +76,9 @@ namespace TestManagement.APP.Data.Repositories.TestAnalysis
                 .First();
 
             // Update fields.
-            storedRequest.StatusId = statusId;
-            storedRequest.ResultId = resultId;
-            storedRequest.UpdateAt = DateTime.UtcNow;
+            storedRequest!.StatusId = statusId;
+            storedRequest!.ResultId = resultId;
+            storedRequest!.UpdateAt = DateTime.UtcNow;
             await _dbContext.SaveChangesAsync();
         }
     }

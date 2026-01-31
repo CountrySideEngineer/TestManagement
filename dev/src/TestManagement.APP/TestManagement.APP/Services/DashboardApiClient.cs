@@ -66,22 +66,5 @@ namespace TestManagement.APP.Services
                 return new List<TestResultDto>();
             }
         }
-
-        public async Task<List<Models.TestResultDto>> GetTestRecordsAsync()
-        {
-            try
-            {
-                var response = await _httpClient.GetFromJsonAsync<List<Models.TestRunDto>>("api/testrun/");
-                var latestRun = response?.OrderByDescending(_ => _.ExecutedAt).First().Id;
-                var testResults = await _httpClient.GetFromJsonAsync<List<Models.TestResultDto>>($"api/testresult/");
-                var testRunResults = testResults?.Where(_ => _.TestRunId == latestRun).ToList();
-
-                return (null == testRunResults ? new List<Models.TestResultDto>() : testRunResults);
-            }
-            catch (Exception)
-            {
-                return new List<TestResultDto>();
-            }
-        }
     }
 }

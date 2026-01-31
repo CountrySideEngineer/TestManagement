@@ -14,7 +14,7 @@ namespace TestManagement.APP.Services
         public async Task<List<Models.TestCaseDto>> GetTestCaseAsync()
         {
             var response = await _httpClient.GetFromJsonAsync<List<TestCaseDto>>("api/TestCase");
-            return response;
+            return response!;
         }
     }
 }
