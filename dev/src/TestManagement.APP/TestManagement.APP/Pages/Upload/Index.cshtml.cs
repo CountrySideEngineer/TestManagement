@@ -82,7 +82,6 @@ namespace TestManagement.APP.Pages.Upload
                 {
                     await fileItem.CopyToAsync(fileStream);
                 }
-                ;
             }
 
             // 新規要求を発行する。
