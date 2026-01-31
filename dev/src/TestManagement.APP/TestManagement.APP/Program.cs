@@ -23,7 +23,7 @@ builder.Services.AddDbContext<AnalysisRequestDbContext>(options =>
 builder.Services.AddRazorPages()
     .AddRazorPagesOptions(options =>
     {
-        options.Conventions.AddPageRoute("/Dashboard", "");
+        options.Conventions.AddPageRoute("/", "");
     });
 builder.Services.AddScoped<TestRunApiClient>();
 builder.Services.AddScoped<TestCaseApiClient>();

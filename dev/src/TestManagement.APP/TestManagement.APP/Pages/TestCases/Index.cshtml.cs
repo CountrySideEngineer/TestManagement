@@ -28,7 +28,7 @@ namespace TestManagement.APP.Pages.TestCases
             {
                 TestCases = await _apiClient.GetTestCaseAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

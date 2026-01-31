@@ -1,5 +1,5 @@
 ﻿@page
-@model DashboardModel
+@model IndexModel
 @{
     ViewData["Title"] = "開発者向けダッシュボード";
 }
@@ -96,7 +96,7 @@
         <div style="margin-top:8px;">
         <a asp-page="/TestRuns/Index" class="upload-btn" style="margin-right:8px;">テスト実行一覧</a>
         <a asp-page="/TestCases/Index" class="upload-btn" style="margin-right:8px;">テストケース一覧</a>
-        <a asp-page="/Upload" class="upload-btn">テスト実行結果の登録</a>
+        <a asp-page="/Upload/Index" class="upload-btn">テスト実行結果の登録</a>
         </div>
     </div>
 </div>
