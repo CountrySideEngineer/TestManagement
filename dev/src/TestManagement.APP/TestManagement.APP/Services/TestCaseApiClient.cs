@@ -16,7 +16,5 @@ namespace TestManagement.APP.Services
             var response = await _httpClient.GetFromJsonAsync<List<TestCaseDto>>("api/TestCase");
             return response;
         }
-
-
     }
 }
