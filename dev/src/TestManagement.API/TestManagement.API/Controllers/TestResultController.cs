@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestManagement.API.Models;
+using TestManagement.API.Models.TestReport.Xml;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
@@ -43,6 +44,16 @@ namespace TestManagement.API.Controllers
             await _testResultService.Create(testResults);
 
             return CreatedAtAction(nameof(GetById), new { id = testResults[0].Id }, testResults);
+        }
+
+        [HttpPost("FromXML")]
+        [Consumes("application/xml")]
+        public async Task<IActionResult> CreateFromXml([FromBody] TestSuitesXml suites)
+        {
+            // Convert and persist XML suites to TestResult entities using service
+            await _testResultService.Create(suites);
+
+            return Ok();
         }
     }
 }

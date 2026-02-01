@@ -1,4 +1,5 @@
 ﻿using TestManagement.API.Models;
+using TestManagement.API.Models.TestReport.Xml;
 
 namespace TestManagement.API.Data.Repositories
 {
@@ -11,5 +12,7 @@ namespace TestManagement.API.Data.Repositories
         Task AddAsync(TestResult result);
 
         Task AddAsync(ICollection<TestResult> results);
+
+        Task AddAsync(TestSuitesXml suites);
     }
 }

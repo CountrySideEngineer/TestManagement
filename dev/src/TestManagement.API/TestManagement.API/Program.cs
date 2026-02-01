@@ -5,6 +5,7 @@ using TestManagement.API.Data.Repositories;
 using TestManagement.API.Infrastructure.Database;
 using TestManagement.API.Services;
 using TestManagement.Data.Repositories;
+using TestManagement.API.Services.Xml;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,11 +18,15 @@ builder.Services.AddScoped<ITestLevelRepository, TestLevelRepository>();
 builder.Services.AddScoped<TestLevelService>();
 builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
 builder.Services.AddScoped<TestCaseService>();
+
+// XML converter
+builder.Services.AddScoped<ITestResultXmlConverter, TestResultXmlConverter>();
+
 builder.Services.AddScoped<ITestResultRepository, TestResultRepository>();
 builder.Services.AddScoped<TestResultService>();
 builder.Services.AddScoped<ITestRunRepository, TestRunRepository>();
 builder.Services.AddScoped<TestRunService>();
-
+builder.Services.AddMvc().AddXmlSerializerFormatters();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
