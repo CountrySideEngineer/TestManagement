@@ -32,3 +32,4 @@
 | GET      | /api/testresult/{id}  | 詳細取得      |
 | POST     | /api/testresult/      | 作成          |
 | POST     | /api/testresult/bulk  | 作成(一括)    |
+| POST     | /api/testresult/report| 作成(XMLから) |
