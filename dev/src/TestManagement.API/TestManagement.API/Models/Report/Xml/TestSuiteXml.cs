@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace TestManagement.API.Models.TestReport.Xml
+namespace TestManagement.API.Models.Report.Xml
 {
     [XmlRoot("testsuites")]
     public class TestSuitesXml
