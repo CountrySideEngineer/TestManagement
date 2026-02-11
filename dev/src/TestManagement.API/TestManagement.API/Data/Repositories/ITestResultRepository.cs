@@ -1,5 +1,5 @@
 ﻿using TestManagement.API.Models;
-using TestManagement.API.Models.TestReport.Xml;
+using TestManagement.API.Models.Report.Xml;
 
 namespace TestManagement.API.Data.Repositories
 {

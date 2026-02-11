@@ -1,6 +1,6 @@
 ﻿using TestManagement.API.Data.Repositories;
 using TestManagement.API.Models;
-using TestManagement.API.Models.TestReport.Xml;
+using TestManagement.API.Models.Report.Xml;
 using TestManagement.API.Services.Xml;
 
 namespace TestManagement.API.Services

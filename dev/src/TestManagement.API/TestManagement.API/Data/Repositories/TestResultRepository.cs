@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Models;
-using TestManagement.API.Models.TestReport.Xml;
+using TestManagement.API.Models.Report.Xml;
 using TestCase = TestManagement.API.Models.TestCase;
 using TestManagement.API.Services.Xml;
 

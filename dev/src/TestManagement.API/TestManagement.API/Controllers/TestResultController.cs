@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestManagement.API.Models;
-using TestManagement.API.Models.TestReport.Xml;
+using TestManagement.API.Models.Report.Xml;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
@@ -46,7 +46,7 @@ namespace TestManagement.API.Controllers
             return CreatedAtAction(nameof(GetById), new { id = testResults[0].Id }, testResults);
         }
 
-        [HttpPost("FromXML")]
+        [HttpPost("report")]
         [Consumes("application/xml")]
         public async Task<IActionResult> CreateFromXml([FromBody] TestSuitesXml suites)
         {
