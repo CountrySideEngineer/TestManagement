@@ -5,8 +5,6 @@ namespace TestManagement.API.Models.Report.Xml
     [XmlRoot("testsuites")]
     public class TestSuitesXml
     {
-        protected string _path = string.Empty;
-
         [XmlAttribute("tests")]
         public int Tests { get; set; } = 0;
 
@@ -40,8 +38,6 @@ namespace TestManagement.API.Models.Report.Xml
     [XmlRoot("testsuite")]
     public class TestSuiteXml
     {
-        public string _path = string.Empty;
-
         [XmlAttribute("name")]
         public string Name { get; set; } = string.Empty;
 
