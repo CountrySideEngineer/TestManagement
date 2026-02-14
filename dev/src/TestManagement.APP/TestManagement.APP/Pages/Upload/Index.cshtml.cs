@@ -18,12 +18,15 @@ namespace TestManagement.APP.Pages.Upload
     {
         private readonly IRequestRepository _repository;
 
-        private readonly TestLevelApiClient _apiClient;
+        private readonly TestLevelApiClient _testLevelApiClient;
 
-        public IndexModel(IRequestRepository repository, TestLevelApiClient apiClient)
+        private readonly TestRunApiClient _testRunApiClient;
+
+        public IndexModel(IRequestRepository repository, TestLevelApiClient apiClient, TestRunApiClient testRunApi)
         {
             _repository = repository;
-            _apiClient = apiClient;
+            _testLevelApiClient = apiClient;
+            _testRunApiClient = testRunApi;
         }
 
         [BindProperty]
@@ -47,12 +50,21 @@ namespace TestManagement.APP.Pages.Upload
         {
             try
             {
-                TestLevels = await _apiClient.GetTestLevelsAsync() ?? new List<TestLevelDto>();
+                TestLevels = await _testLevelApiClient.GetTestLevelsAsync() ?? new List<TestLevelDto>();
             }
             catch (Exception)
             {
                 // 取得失敗時は空リストにする（ログを追加する場合はここで）
                 TestLevels = new List<TestLevelDto>();
+            }
+
+            try
+            {
+                ExecutionInfos = await _testRunApiClient.GetTestRunsAsync() ?? new List<TestRunDto>();
+            }
+            catch (Exception)
+            {
+                ExecutionInfos = new List<TestRunDto>();
             }
         }
 
