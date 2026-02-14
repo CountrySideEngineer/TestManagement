@@ -11,6 +11,10 @@ namespace TestManagement.API.Models
         [Required]
         public DateTime ExecutedAt { get; set; }
 
+        [Required]
+        [MaxLength(32)]
+        public string Abstract { get; set; } = string.Empty;
+
         [MaxLength(200)]
         public string Environment { get; set; } = string.Empty;
 
