@@ -45,26 +45,56 @@
 
                     <!-- ここにドロップダウンを追加: テストレベル選択領域の下 -->
                     <div style="margin:0 12px 8px 0;">
-                        <div class="card-title">既存の実行情報を指定（リビジョン - 日付）</div>
+                        <div class="card-title">実行情報の指定（既存の選択または新規登録）</div>
 
-                        @if (Model.ExecutionInfos != null && Model.ExecutionInfos.Any())
-                        {
-                            <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
-                                <option value="">選択してください</option>
-                                @foreach (var info in Model.ExecutionInfos)
-                                {
-                                    <option value="@info.Id">リビジョン @info.Abstract - @info.ExecutedAt.ToString("yyyy/MM/dd HH:mm")</option>
-                                }
-                            </select>
-                        }
-                        else
-                        {
-                            <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" disabled style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
-                                <option value="">実行情報がありません</option>
-                            </select>
-                        }
+                        <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+                            <label style="display:flex; gap:6px; align-items:center;">
+                                <input type="radio" name="executionMode" value="existing" id="modeExisting" checked /> 既存の実行情報を使用
+                            </label>
+                            <label style="display:flex; gap:6px; align-items:center;">
+                                <input type="radio" name="executionMode" value="new" id="modeNew" /> 新規に登録する
+                            </label>
+                        </div>
 
-                        <div style="font-size:0.9em; color:#666; margin-top:6px;">※ 表示は「リビジョン番号 - 実行日時」です。選択肢はサーバ側のデータを使用します。</div>
+                        <div id="existingBlock">
+                            @if (Model.ExecutionInfos != null && Model.ExecutionInfos.Any())
+                            {
+                                <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
+                                    <option value="">選択してください</option>
+                                    @foreach (var info in Model.ExecutionInfos)
+                                    {
+                                        <option value="@info.Id">リビジョン @info.Abstract - @info.ExecutedAt.ToString("yyyy/MM/dd HH:mm")</option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {
+                                <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" disabled style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
+                                    <option value="">実行情報がありません</option>
+                                </select>
+                            }
+
+                            <div style="font-size:0.9em; color:#666; margin-top:6px;">※ 表示は「リビジョン番号 - 実行日時」です。選択肢はサーバ側のデータを使用します。</div>
+                        </div>
+
+                        <div id="newBlock" style="display:none; margin-top:12px; border:1px dashed #ddd; padding:8px; border-radius:4px; max-width:60%;">
+                            <div style="margin-bottom:8px; font-weight:600;">新しい実行情報を登録</div>
+
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <label style="display:flex; flex-direction:column; gap:4px;">
+                                    <span>リビジョン番号（任意）</span>
+                                    <input type="text" name="NewExecutionRevision" id="newRevision" placeholder="例: 1.0.3" style="padding:8px; max-width:100%;" />
+                                </label>
+
+                                <label style="display:flex; flex-direction:column; gap:4px;">
+                                    <span>実行日時（カレンダー・時刻）</span>
+                                    <input type="datetime-local" name="NewExecutionExecutedAt" id="newExecutedAt" style="padding:8px; max-width:100%;" />
+                                </label>
+
+                                <div style="font-size:0.9em; color:#666;">※ 新規登録を選択した場合、入力したリビジョンと日時がアップロード時にサーバへ送信され、新しい実行情報として登録されます。</div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
 
@@ -83,3 +113,37 @@
         </div>
     </form>
 </div>
+
+<script>
+    (function(){
+        var modeExisting = document.getElementById('modeExisting');
+        var modeNew = document.getElementById('modeNew');
+        var existingBlock = document.getElementById('existingBlock');
+        var newBlock = document.getElementById('newBlock');
+        var executionSelect = document.getElementById('executionInfoSelect');
+        var newRevision = document.getElementById('newRevision');
+        var newExecutedAt = document.getElementById('newExecutedAt');
+
+        function updateMode() {
+            if (modeNew.checked) {
+                newBlock.style.display = '';
+                existingBlock.style.display = 'none';
+                if (executionSelect) executionSelect.disabled = true;
+                if (newRevision) newRevision.disabled = false;
+                if (newExecutedAt) newExecutedAt.disabled = false;
+            } else {
+                newBlock.style.display = 'none';
+                existingBlock.style.display = '';
+                if (executionSelect) executionSelect.disabled = false;
+                if (newRevision) newRevision.disabled = true;
+                if (newExecutedAt) newExecutedAt.disabled = true;
+            }
+        }
+
+        modeExisting.addEventListener('change', updateMode);
+        modeNew.addEventListener('change', updateMode);
+
+        // Initialize state
+        updateMode();
+    })();
+</script>
