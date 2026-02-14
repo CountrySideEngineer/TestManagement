@@ -42,6 +42,30 @@
                             <div style="color:#e74c3c; margin:8px 0;">テストレベルを取得できませんでした。</div>
                         }
                     </div>
+
+                    <!-- ここにドロップダウンを追加: テストレベル選択領域の下 -->
+                    <div style="margin:0 12px 8px 0;">
+                        <div class="card-title">既存の実行情報を指定（リビジョン - 日付）</div>
+
+                        @if (Model.ExecutionInfos != null && Model.ExecutionInfos.Any())
+                        {
+                            <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
+                                <option value="">選択してください</option>
+                                @foreach (var info in Model.ExecutionInfos)
+                                {
+                                    <option value="@info.Id">リビジョン @info.Abstract - @info.ExecutedAt.ToString("yyyy/MM/dd HH:mm")</option>
+                                }
+                            </select>
+                        }
+                        else
+                        {
+                            <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" disabled style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
+                                <option value="">実行情報がありません</option>
+                            </select>
+                        }
+
+                        <div style="font-size:0.9em; color:#666; margin-top:6px;">※ 表示は「リビジョン番号 - 実行日時」です。選択肢はサーバ側のデータを使用します。</div>
+                    </div>
                 </div>
 
                 <div class="card" style="margin:0; border-width: thin">

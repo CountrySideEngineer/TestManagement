@@ -32,9 +32,16 @@ namespace TestManagement.APP.Pages.Upload
         // 画面に表示するテストレベル一覧
         public List<TestLevelDto> TestLevels { get; set; } = new List<TestLevelDto>();
 
+        // 実行情報一覧（UI のドロップダウンで使用）
+        public IList<TestRunDto> ExecutionInfos { get; set; } = new List<TestRunDto>();
+
         // ドロップダウンの選択値（必要なら POST 時に利用可能）
         [BindProperty]
         public int? SelectedTestLevelId { get; set; }
+
+        // ドロップダウン選択: 実行情報のId
+        [BindProperty]
+        public int? SelectedExecutionInfoId { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -59,6 +66,12 @@ namespace TestManagement.APP.Pages.Upload
             if (null == SelectedTestLevelId)
             {
                 ModelState.AddModelError(string.Empty, "テストレベルを選択してください。");
+                return Page();
+            }
+
+            if (null == SelectedExecutionInfoId)
+            {
+                ModelState.AddModelError(string.Empty, "実行情報を選択してください。");
                 return Page();
             }
 
