@@ -49,14 +49,36 @@
 
                         <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
                             <label style="display:flex; gap:6px; align-items:center;">
-                                <input type="radio" name="executionMode" value="existing" id="modeExisting" checked /> 既存の実行情報を使用
-                            </label>
-                            <label style="display:flex; gap:6px; align-items:center;">
                                 <input type="radio" name="executionMode" value="new" id="modeNew" /> 新規に登録する
                             </label>
                         </div>
 
-                        <div id="existingBlock">
+                        <div id="newBlock" style="margin-top:12px; border:1px dashed #ddd; padding:8px; border-radius:4px; max-width:60%;">
+                            <div style="margin-bottom:8px; font-weight:600;">新しい実行情報を登録</div>
+
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <label style="display:flex; flex-direction:column; gap:4px;">
+                                    <span>リビジョン番号（任意）</span>
+                                    <input type="text" name="NewExecutionRevision" id="newRevision" placeholder="例: 1.0.3" style="padding:8px; max-width:100%;" />
+                                </label>
+
+                                <label style="display:flex; flex-direction:column; gap:4px;">
+                                    <span>実行日時（カレンダー・時刻）</span>
+                                    <input type="datetime-local" name="NewExecutionExecutedAt" id="newExecutedAt" style="padding:8px; max-width:100%;" />
+                                </label>
+
+                                <div style="font-size:0.9em; color:#666;">※ 新規登録を選択した場合、入力したリビジョンと日時がアップロード時にサーバへ送信され、新しい実行情報として登録されます。</div>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+                            <label style="display:flex; gap:6px; align-items:center;">
+                                <input type="radio" name="executionMode" value="existing" id="modeExisting" checked /> 既存の実行情報を使用
+                            </label>
+                        </div>
+
+                        <div id="existingBlock" class="" style="margin-top:12px;">
+
                             @if (Model.ExecutionInfos != null && Model.ExecutionInfos.Any())
                             {
                                 <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
@@ -75,24 +97,6 @@
                             }
 
                             <div style="font-size:0.9em; color:#666; margin-top:6px;">※ 表示は「リビジョン番号 - 実行日時」です。選択肢はサーバ側のデータを使用します。</div>
-                        </div>
-
-                        <div id="newBlock" style="display:none; margin-top:12px; border:1px dashed #ddd; padding:8px; border-radius:4px; max-width:60%;">
-                            <div style="margin-bottom:8px; font-weight:600;">新しい実行情報を登録</div>
-
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <label style="display:flex; flex-direction:column; gap:4px;">
-                                    <span>リビジョン番号（任意）</span>
-                                    <input type="text" name="NewExecutionRevision" id="newRevision" placeholder="例: 1.0.3" style="padding:8px; max-width:100%;" />
-                                </label>
-
-                                <label style="display:flex; flex-direction:column; gap:4px;">
-                                    <span>実行日時（カレンダー・時刻）</span>
-                                    <input type="datetime-local" name="NewExecutionExecutedAt" id="newExecutedAt" style="padding:8px; max-width:100%;" />
-                                </label>
-
-                                <div style="font-size:0.9em; color:#666;">※ 新規登録を選択した場合、入力したリビジョンと日時がアップロード時にサーバへ送信され、新しい実行情報として登録されます。</div>
-                            </div>
                         </div>
 
                     </div>
@@ -114,29 +118,55 @@
     </form>
 </div>
 
+<style>
+    /* グレーアウト表示用: container remains normal; only form controls get disabled look */
+    .grayed {
+        background-color: #f7f7f7;
+    }
+    /* Controls other than the existing-radio appear disabled */
+    .grayed input:not(#modeExisting), .grayed select, .grayed textarea, .grayed button {
+         background-color: #f5f5f5;
+         color: #6c6c6c;
+     }
+    /* Ensure the label around the existing radio keeps normal color when parent is grayed */
+    .grayed .keep-normal {
+        color: initial !important;
+        opacity: 1 !important;
+    }
+</style>
+
 <script>
     (function(){
         var modeExisting = document.getElementById('modeExisting');
         var modeNew = document.getElementById('modeNew');
         var existingBlock = document.getElementById('existingBlock');
         var newBlock = document.getElementById('newBlock');
-        var executionSelect = document.getElementById('executionInfoSelect');
-        var newRevision = document.getElementById('newRevision');
-        var newExecutedAt = document.getElementById('newExecutedAt');
+
+        function setDisabledForBlock(block, disabled) {
+            if (!block) return;
+            if (disabled) {
+                block.classList.add('grayed');
+            } else {
+                block.classList.remove('grayed');
+            }
+            var controls = block.querySelectorAll('input, select, textarea, button');
+            controls.forEach(function(c){
+                // Don't disable the radio buttons that control mode
+                if (c.id === 'modeExisting' || c.id === 'modeNew') return;
+                // Keep the underlying select enabled only when not disabled
+                try { c.disabled = disabled; } catch (e) { /* ignore */ }
+            });
+        }
 
         function updateMode() {
             if (modeNew.checked) {
-                newBlock.style.display = '';
-                existingBlock.style.display = 'none';
-                if (executionSelect) executionSelect.disabled = true;
-                if (newRevision) newRevision.disabled = false;
-                if (newExecutedAt) newExecutedAt.disabled = false;
+                // new enabled, existing disabled
+                setDisabledForBlock(newBlock, false);
+                setDisabledForBlock(existingBlock, true);
             } else {
-                newBlock.style.display = 'none';
-                existingBlock.style.display = '';
-                if (executionSelect) executionSelect.disabled = false;
-                if (newRevision) newRevision.disabled = true;
-                if (newExecutedAt) newExecutedAt.disabled = true;
+                // existing enabled, new disabled
+                setDisabledForBlock(newBlock, true);
+                setDisabledForBlock(existingBlock, false);
             }
         }
 
