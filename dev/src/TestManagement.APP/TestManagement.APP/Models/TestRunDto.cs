@@ -6,6 +6,8 @@
 
         public DateTime ExecutedAt { get; set; }
 
+        public string Abstract { get; set; } = string.Empty;
+
         public string Environment { get; set; } = string.Empty;
 
         public string Notes { get; set; } = string.Empty;
