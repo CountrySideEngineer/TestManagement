@@ -43,7 +43,6 @@
                         }
                     </div>
 
-                    <!-- ここにドロップダウンを追加: テストレベル選択領域の下 -->
                     <div style="margin:0 12px 8px 0;">
                         <div class="card-title">実行情報の指定（既存の選択または新規登録）</div>
 
@@ -53,7 +52,7 @@
                             </label>
                         </div>
 
-                        <div id="newBlock" style="margin-top:12px; border:1px dashed #ddd; padding:8px; border-radius:4px; max-width:60%;">
+                        <div id="newBlock" style="margin-top:12px; margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:60%;">
                             <div style="margin-bottom:8px; font-weight:600;">新しい実行情報を登録</div>
 
                             <div style="display:flex; flex-direction:column; gap:8px;">
@@ -71,16 +70,17 @@
                             </div>
                         </div>
 
-                        <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+                        <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px; margin-top:12px;">
                             <label style="display:flex; gap:6px; align-items:center;">
                                 <input type="radio" name="executionMode" value="existing" id="modeExisting" checked /> 既存の実行情報を使用
                             </label>
                         </div>
 
-                        <div id="existingBlock" class="" style="margin-top:12px;">
+                        <div id="existingBlock" style="margin-top:12px; margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:60%;">
 
                             @if (Model.ExecutionInfos != null && Model.ExecutionInfos.Any())
                             {
+                                <div style="margin-bottom:8px; font-weight:600;">既存の実行情報を選択</div>
                                 <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
                                     <option value="">選択してください</option>
                                     @foreach (var info in Model.ExecutionInfos)
