@@ -49,17 +49,17 @@
 
                     <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
                         <label style="display:flex; gap:6px; align-items:center;">
-                            <input type="radio" name="executionMode" value="new" id="modeNew" checked /> 新規に登録する
+                            <input type="radio" name="executionMode" value="new" id="modeNew" checked />新規に登録する
                         </label>
                     </div>
 
-                    <div id="newBlock" style="margin-top:12px; margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:100%;">
-                        <div style="margin-bottom:8px; font-weight:600;">新しい実行情報を登録</div>
+                    <div id="newBlock" style="margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:100%;">
+                        <div style="margin-bottom:8px; font-weight:600;">新しい実行情報</div>
 
                         <div style="display:flex; flex-direction:column; gap:8px;">
-                            <label style="display:flex; flex-direction:column; gap:4px;">
-                                <span>リビジョン番号（任意）</span>
-                                <input type="text" name="NewExecutionRevision" id="newRevision" placeholder="例: 1.0.3" style="padding:8px; max-width:100%;" />
+                            <label style="display:flex; flex-direction:column; gap:4px; margin-bottom: 8px;">
+                                <span>リビジョン番号</span>
+                                <input type="text" name="NewExecutionRevision" id="newRevision" placeholder="Ex). 123" style="padding:8px; max-width:100%;" />
                             </label>
 
                             <label style="display:flex; flex-direction:column; gap:4px;">
@@ -71,17 +71,17 @@
                         </div>
                     </div>
 
-                    <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px; margin-top:12px;">
+                    <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
                         <label style="display:flex; gap:6px; align-items:center;">
-                            <input type="radio" name="executionMode" value="existing" id="modeExisting" /> 既存の実行情報を使用
+                            <input type="radio" name="executionMode" value="existing" id="modeExisting" />既存の実行情報を使用
                         </label>
                     </div>
 
-                    <div id="existingBlock" style="margin-top:12px; margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:100%;">
+                    <div id="existingBlock" style="margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:100%;">
 
                         @if (Model.ExecutionInfos != null && Model.ExecutionInfos.Any())
                         {
-                            <div style="margin-bottom:8px; font-weight:600;">既存の実行情報を選択</div>
+                            <div style="margin-bottom:8px; font-weight:600;">既存の実行情報</div>
                             <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" style="flex:0 0 30%; display:block; max-width:70%; padding:8px; margin-top:6px;">
                                 <option value="">選択してください</option>
                                 @foreach (var info in Model.ExecutionInfos)
@@ -103,11 +103,11 @@
 
                 <div class="card" style="margin:0; border-width: thin">
                     <div class="card-title">ファイルを選択</div>
-                    <div style="margin:0;">
+                    <div style="margin-bottom: 8px;">
                         <input id="fileInput" type="file" asp-for="UploadFiles" multiple style="display:block; margin-top:6px;" />
                     </div>
 
-                    <div style="margin-top:12px;">
+                    <div style="margin-bottom:8px;">
                         <input type="submit" class="upload-btn" value="アップロード開始" />
                         <a asp-page="/Dashboard" style="margin-left:10px; text-decoration:none;">キャンセル</a>
                     </div>
