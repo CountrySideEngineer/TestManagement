@@ -47,14 +47,19 @@
                 <div class="card" style="margin:0; border-width: thin; max-width: 50%;">
                     <div class="card-title">実行情報の指定（既存の選択または新規登録）</div>
 
-                    <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
-                        <label style="display:flex; gap:6px; align-items:center;">
-                            <input type="radio" name="executionMode" value="new" id="modeNew" checked />新規に登録する
-                        </label>
-                    </div>
+                    @if (null != Model.ExecutionInfos && Model.ExecutionInfos.Any())
+                    {
+                        @* 既存の実行情報が存在しない場合には、実行情報の登録を強制したい。 *@
+                        @* そのため、既存の実行情報がない場合には、ラジオボタンによる選択は行わせない。 *@
+                        <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+                            <label style="display:flex; gap:6px; align-items:center;">
+                                <input type="radio" name="executionMode" value="new" id="modeNew" checked />新規に登録する
+                            </label>
+                        </div>
+                    }
 
                     <div id="newBlock" style="margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:100%;">
-                        <div style="margin-bottom:8px; font-weight:600;">新しい実行情報</div>
+                        @* <div style="margin-bottom:8px; font-weight:600;">新しい実行情報</div> *@
 
                         <div style="display:flex; flex-direction:column; gap:8px;">
                             <label style="display:flex; flex-direction:column; gap:4px; margin-bottom: 8px;">
@@ -71,34 +76,30 @@
                         </div>
                     </div>
 
-                    <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
-                        <label style="display:flex; gap:6px; align-items:center;">
-                            <input type="radio" name="executionMode" value="existing" id="modeExisting" />既存の実行情報を使用
-                        </label>
-                    </div>
+                    @if (null != Model.ExecutionInfos && Model.ExecutionInfos.Any())
+                    {
+                        @* 既存の実行情報が存在しない場合には、実行情報の登録を強制したい。 *@
+                        @* そのため、既存の実行情報がない場合には、ラジオボタンによる選択は行わせない。 *@
+                        <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
+                            <label style="display:flex; gap:6px; align-items:center;">
+                                <input type="radio" name="executionMode" value="existing" id="modeExisting" />既存の実行情報を指定
+                            </label>
+                        </div>
 
-                    <div id="existingBlock" style="margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:100%;">
+                        <div id="existingBlock" style="margin-left:24px; border:0px dashed #ddd; padding:8px; border-radius:4px; max-width:100%;">
+                            @* <div style="margin-bottom:8px; font-weight:600;">既存の実行情報</div> *@
 
-                        @if (Model.ExecutionInfos != null && Model.ExecutionInfos.Any())
-                        {
-                            <div style="margin-bottom:8px; font-weight:600;">既存の実行情報</div>
-                            <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" style="flex:0 0 30%; display:block; max-width:70%; padding:8px; margin-top:6px;">
-                                <option value="">選択してください</option>
+                            <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" style="flex:0 0 30%; display:block; padding:8px; margin-top:6px;">
                                 @foreach (var info in Model.ExecutionInfos)
                                 {
                                     <option value="@info.Id">リビジョン @info.Abstract - @info.ExecutedAt.ToString("yyyy/MM/dd HH:mm")</option>
                                 }
                             </select>
-                        }
-                        else
-                        {
-                            <select id="executionInfoSelect" asp-for="SelectedExecutionInfoId" disabled style="flex:0 0 30%; display:block; max-width:60%; padding:8px; margin-top:6px;">
-                                <option value="">実行情報がありません</option>
-                            </select>
-                        }
 
-                        <div style="font-size:0.9em; color:#666; margin-top:6px;">※ 表示は「リビジョン番号 - 実行日時」です。選択肢はサーバ側のデータを使用します。</div>
-                    </div>
+                            <div style="font-size:0.9em; color:#666; margin-top:6px;">※ 表示は「リビジョン番号 - 実行日時」です。選択肢はサーバ側のデータを使用します。</div>
+                        </div>
+                    }
+
                 </div>
 
                 <div class="card" style="margin:0; border-width: thin">
