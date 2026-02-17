@@ -11,6 +11,10 @@ using TestManagement.APP.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
 
 namespace TestManagement.APP.Pages.Upload
 {
@@ -22,11 +26,14 @@ namespace TestManagement.APP.Pages.Upload
 
         private readonly TestRunApiClient _testRunApiClient;
 
-        public IndexModel(IRequestRepository repository, TestLevelApiClient apiClient, TestRunApiClient testRunApi)
+        private readonly UploadFileParser _uploadFileParser;
+
+        public IndexModel(IRequestRepository repository, TestLevelApiClient apiClient, TestRunApiClient testRunApi, UploadFileParser uploadFileParser)
         {
             _repository = repository;
             _testLevelApiClient = apiClient;
             _testRunApiClient = testRunApi;
+            _uploadFileParser = uploadFileParser;
         }
 
         [BindProperty]
@@ -91,18 +98,22 @@ namespace TestManagement.APP.Pages.Upload
                 return Page();
             }
 
-            if (null == SelectedExecutionInfoId)
+            // 解析処理: UploadFiles を TestResultDto のコレクションに変換する。
+            IList<TestResultDto> parsedResults = await _uploadFileParser.ParseAsync(UploadFiles, SelectedTestLevelId.Value);
+
+            // 実行情報の割当: 新規作成 or 既存の選択
+            int runIdForResults = 0;
+            if (ExecutionMode == "new")
             {
-                ModelState.AddModelError(string.Empty, "実行情報を選択してください。");
-                return Page();
+                // 新規要求を作成して、その ID を利用する。
+                // ただし RequestRepository.AddAsync は Request を DB に保存し ID を割り当てる。
+                // ここでは一旦ディレクトリを作成して Request を登録する処理の後で RunId をセットするためフラグを残す。
             }
-
-            // 選択状態
-
-
-
-
-
+            else
+            {
+                // 既存の実行情報を指定している場合は、その ID を TestResultDto に設定する
+                runIdForResults = SelectedExecutionInfoId.Value;
+            }
 
             // 指定されたファイルを格納するディレクトリを作成する。
             // ディレクトリ名は、タイムスタンプで一意に決定する。
@@ -135,6 +146,21 @@ namespace TestManagement.APP.Pages.Upload
                 TestLevelId = (int)SelectedTestLevelId
             };
             await _repository.AddAsync(newRequest);
+
+            // 新しい Request がデータベース上で作成され、ID が付与されているはずなので
+            // ExecutionMode が "new" の場合は、ここで新規作成された Request の Id を RunId として利用する。
+            if (ExecutionMode == "new")
+            {
+                runIdForResults = newRequest.Id;
+            }
+
+            // parsedResults の各要素に RunId を設定する
+            foreach (var r in parsedResults)
+            {
+                r.TestRunId = runIdForResults;
+            }
+
+            // TODO: parsedResults を別のサービスへ送信するなどの処理をここに追加
 
             //TempData["UploadMessage"] = $"{started} 件のアップロードを開始しました。処理状況はダッシュボードで確認してください。";
             return RedirectToPage("/Dashboard");
