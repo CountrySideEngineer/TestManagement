@@ -46,6 +46,10 @@ namespace TestManagement.APP.Pages.Upload
         [BindProperty]
         public int? SelectedExecutionInfoId { get; set; }
 
+        // ラジオで選択されたモード（"new" または "existing"）を受け取る
+        [BindProperty]
+        public string ExecutionMode { get; set; } = "new";
+
         public async Task OnGetAsync()
         {
             try
@@ -86,6 +90,13 @@ namespace TestManagement.APP.Pages.Upload
                 ModelState.AddModelError(string.Empty, "実行情報を選択してください。");
                 return Page();
             }
+
+            // 選択状態
+
+
+
+
+
 
             // 指定されたファイルを格納するディレクトリを作成する。
             // ディレクトリ名は、タイムスタンプで一意に決定する。

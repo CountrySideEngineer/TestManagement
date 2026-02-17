@@ -53,7 +53,7 @@
                         @* そのため、既存の実行情報がない場合には、ラジオボタンによる選択は行わせない。 *@
                         <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
                             <label style="display:flex; gap:6px; align-items:center;">
-                                <input type="radio" name="executionMode" value="new" id="modeNew" checked />新規に登録する
+                                <input asp-for="ExecutionMode" type="radio" id="modeNew" value="new" />新規に登録する
                             </label>
                         </div>
                     }
@@ -81,7 +81,7 @@
                         @* そのため、既存の実行情報がない場合には、ラジオボタンによる選択は行わせない。 *@
                         <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
                             <label style="display:flex; gap:6px; align-items:center;">
-                                <input type="radio" name="executionMode" value="existing" id="modeExisting" />既存の実行情報を指定
+                                <input asp-for="ExecutionMode" type="radio" id="modeExisting" value="existing" />既存の実行情報を指定
                             </label>
                         </div>
 
