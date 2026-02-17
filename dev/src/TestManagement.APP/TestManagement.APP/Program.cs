@@ -30,6 +30,7 @@ builder.Services.AddScoped<TestCaseApiClient>();
 builder.Services.AddScoped<TestLevelApiClient>();
 builder.Services.AddScoped<DashboardApiClient>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
+builder.Services.AddScoped<UploadFileParser>();
 
 var app = builder.Build();
 
