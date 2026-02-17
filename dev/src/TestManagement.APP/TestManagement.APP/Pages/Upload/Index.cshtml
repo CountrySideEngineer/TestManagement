@@ -25,7 +25,6 @@
                         {
                             <div style="margin:0;">
                                 <select id="testLevelSelect" asp-for="SelectedTestLevelId" style="flex:0 0 20%; display:block; max-width:60%; padding:8px; margin-top:6px;">
-                                    <option value="">選択してください</option>
                                     @foreach (var level in Model.TestLevels)
                                     {
                                         <option value="@level.Id">
@@ -110,7 +109,7 @@
 
                 <div style="margin-bottom:8px;">
                     <input type="submit" class="upload-btn" value="アップロード開始" />
-                    <a asp-page="/Dashboard" style="margin-left:10px; text-decoration:none;">キャンセル</a>
+                    <a asp-page="/index" style="margin-left:10px; text-decoration:none;">キャンセル</a>
                 </div>
             </div>
         </div>
