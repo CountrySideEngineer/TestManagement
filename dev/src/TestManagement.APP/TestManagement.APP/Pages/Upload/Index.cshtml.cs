@@ -50,6 +50,12 @@ namespace TestManagement.APP.Pages.Upload
         [BindProperty]
         public string ExecutionMode { get; set; } = "new";
 
+        [BindProperty]
+        public string NewRevision { get; set; } = string.Empty;
+
+        [BindProperty]
+        public DateTime NewRevisionDate { get; set; } = DateTime.UtcNow;
+
         public async Task OnGetAsync()
         {
             try

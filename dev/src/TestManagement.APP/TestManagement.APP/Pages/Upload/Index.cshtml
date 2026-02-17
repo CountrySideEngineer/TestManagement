@@ -63,12 +63,12 @@
                         <div style="display:flex; flex-direction:column; gap:8px;">
                             <label style="display:flex; flex-direction:column; gap:4px; margin-bottom: 8px;">
                                 <span>リビジョン番号</span>
-                                <input type="text" name="NewExecutionRevision" id="newRevision" placeholder="Ex). 123" style="padding:8px; max-width:100%;" />
+                                <input asp-for="NewRevision" class="form-control" placeholder="Ex). 123" style="padding:8px; max-width:100%;" />
                             </label>
 
                             <label style="display:flex; flex-direction:column; gap:4px;">
                                 <span>実行日時（カレンダー・時刻）</span>
-                                <input type="datetime-local" name="NewExecutionExecutedAt" id="newExecutedAt" style="padding:8px; max-width:100%;" />
+                                <input asp-for="NewRevisionDate" type="datetime-local" class="form-control" style="padding:8px; max-width:100%;" />
                             </label>
 
                             <div style="font-size:0.9em; color:#666;">※ 新規登録を選択した場合、入力したリビジョンと日時がアップロード時にサーバへ送信され、新しい実行情報として登録されます。</div>
