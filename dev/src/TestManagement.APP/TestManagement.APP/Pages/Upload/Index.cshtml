@@ -63,12 +63,13 @@
                         <div style="display:flex; flex-direction:column; gap:8px;">
                             <label style="display:flex; flex-direction:column; gap:4px; margin-bottom: 8px;">
                                 <span>リビジョン番号</span>
-                                <input asp-for="NewRevision" class="form-control" placeholder="Ex). 123" style="padding:8px; max-width:100%;" />
+                                <input asp-for="NewRevision" placeholder="Ex). 123" style="padding:8px; max-width:100%;" />
                             </label>
 
                             <label style="display:flex; flex-direction:column; gap:4px;">
                                 <span>実行日時（カレンダー・時刻）</span>
-                                <input asp-for="NewRevisionDate" type="datetime-local" class="form-control" style="padding:8px; max-width:100%;" />
+                                <!-- bind to NewRevisionDate; step=60 disables seconds selection; initial value formatted to minutes only -->
+                                <input name="NewRevisionDate" id="newExecutedAt" type="datetime-local" step="60" placeholder="yyyy/MM/dd HH:mm" value="@(Model.NewRevisionDate.ToString("yyyy-MM-ddTHH:mm"))" style="padding:8px; max-width:100%;" />
                             </label>
 
                             <div style="font-size:0.9em; color:#666;">※ 新規登録を選択した場合、入力したリビジョンと日時がアップロード時にサーバへ送信され、新しい実行情報として登録されます。</div>
@@ -78,7 +79,7 @@
                     @if (null != Model.ExecutionInfos && Model.ExecutionInfos.Any())
                     {
                         @* 既存の実行情報が存在しない場合には、実行情報の登録を強制したい。 *@
-                        @* そのため、既存の実行情報がない場合には、ラジオボタンによる選択は行わせない。 *@
+                        @* そのため、既存の実行情報がない場合には、ラジオボタンによる選択は行わせない。*@
                         <div style="display:flex; gap:12px; align-items:center; margin-bottom:8px;">
                             <label style="display:flex; gap:6px; align-items:center;">
                                 <input asp-for="ExecutionMode" type="radio" id="modeExisting" value="existing" />既存の実行情報を指定
@@ -157,7 +158,7 @@
         }
 
         function updateMode() {
-            if (modeNew.checked) {
+            if (modeNew && modeNew.checked) {
                 // new enabled, existing disabled
                 setDisabledForBlock(newBlock, false);
                 setDisabledForBlock(existingBlock, true);
@@ -168,10 +169,36 @@
             }
         }
 
-        modeExisting.addEventListener('change', updateMode);
-        modeNew.addEventListener('change', updateMode);
+        if (modeExisting) modeExisting.addEventListener('change', updateMode);
+        if (modeNew) modeNew.addEventListener('change', updateMode);
 
         // Initialize state
         updateMode();
-    })();
-</script>
+
+        // Handle datetime-local formatting and display without seconds
+        var dtInput = document.getElementById('newExecutedAt');
+        var dtDisplay = document.getElementById('newExecutedAtDisplay');
+        function formatDisplay(val) {
+            if (!val) return '';
+            // val is like "yyyy-mm-ddThh:mm"
+            var parts = val.split('T');
+            if (parts.length !== 2) return val;
+        var date = parts[0].replace(/-/g, '/');
+        // normalize hour to two digits
+        return date + ' ' + parts[1];
+        }
+        if (dtInput) {
+            // Ensure the value has no seconds
+            if (dtInput.value) {
+                var v = dtInput.value;
+                // truncate seconds if present
+            var match = v.match(/^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2})/);
+            if (match) dtInput.value = match[1];
+            if (dtDisplay) dtDisplay.textContent = formatDisplay(dtInput.value);
+            }
+            dtInput.addEventListener('input', function(e){
+                if (dtDisplay) dtDisplay.textContent = formatDisplay(e.target.value);
+            });
+        }
+     })();
+ </script>
