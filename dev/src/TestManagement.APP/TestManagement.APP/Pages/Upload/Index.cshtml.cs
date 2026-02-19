@@ -98,6 +98,16 @@ namespace TestManagement.APP.Pages.Upload
                 return Page();
             }
 
+            var newTestRun = new TestRunDto()
+            {
+                Abstract = NewRevision,
+                ExecutedAt = NewRevisionDate.ToUniversalTime()
+            };
+            var registeredTestRun = await _testRunApiClient.CreateTestRunAsync(newTestRun);
+
+
+
+
             // 解析処理: UploadFiles を TestResultDto のコレクションに変換する。
             IList<TestResultDto> parsedResults = await _uploadFileParser.ParseAsync(UploadFiles, SelectedTestLevelId.Value);
 
