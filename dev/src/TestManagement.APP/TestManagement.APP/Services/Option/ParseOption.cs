@@ -13,6 +13,6 @@
         /// <summary>
         /// Revision identifier. Specifies the version of the upload or the item being parsed.
         /// </summary>
-        public int RevisionId { get; set; }
+        public int? RevisionId { get; set; }
     }
 }
