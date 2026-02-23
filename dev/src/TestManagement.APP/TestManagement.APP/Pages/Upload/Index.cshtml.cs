@@ -15,6 +15,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using TestManagement.APP.Services.Option;
 
 namespace TestManagement.APP.Pages.Upload
 {
@@ -26,14 +27,30 @@ namespace TestManagement.APP.Pages.Upload
 
         private readonly TestRunApiClient _testRunApiClient;
 
+        private readonly TestCaseApiClient _testCaseApiClient;
+
         private readonly UploadFileParser _uploadFileParser;
 
-        public IndexModel(IRequestRepository repository, TestLevelApiClient apiClient, TestRunApiClient testRunApi, UploadFileParser uploadFileParser)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="repository"></param>
+        /// <param name="apiClient"></param>
+        /// <param name="testRunApi"></param>
+        /// <param name="uploadFileParser"></param>
+        /// <param name="testCaseApiClient"></param>
+        public IndexModel(
+            IRequestRepository repository, 
+            TestLevelApiClient apiClient, 
+            TestRunApiClient testRunApi, 
+            UploadFileParser uploadFileParser, 
+            TestCaseApiClient testCaseApiClient)
         {
             _repository = repository;
             _testLevelApiClient = apiClient;
             _testRunApiClient = testRunApi;
             _uploadFileParser = uploadFileParser;
+            _testCaseApiClient = testCaseApiClient;
         }
 
         [BindProperty]
@@ -105,75 +122,21 @@ namespace TestManagement.APP.Pages.Upload
             };
             var registeredTestRun = await _testRunApiClient.CreateTestRunAsync(newTestRun);
 
+            Console.WriteLine($"{nameof(registeredTestRun)} = {registeredTestRun}");
 
-
-
-            // 解析処理: UploadFiles を TestResultDto のコレクションに変換する。
-            IList<TestResultDto> parsedResults = await _uploadFileParser.ParseAsync(UploadFiles, SelectedTestLevelId.Value);
-
-            // 実行情報の割当: 新規作成 or 既存の選択
-            int runIdForResults = 0;
-            if (ExecutionMode == "new")
+            ParseOption parseOption = new ParseOption()
             {
-                // 新規要求を作成して、その ID を利用する。
-                // ただし RequestRepository.AddAsync は Request を DB に保存し ID を割り当てる。
-                // ここでは一旦ディレクトリを作成して Request を登録する処理の後で RunId をセットするためフラグを残す。
-            }
-            else
-            {
-                // 既存の実行情報を指定している場合は、その ID を TestResultDto に設定する
-                runIdForResults = SelectedExecutionInfoId.Value;
-            }
-
-            // 指定されたファイルを格納するディレクトリを作成する。
-            // ディレクトリ名は、タイムスタンプで一意に決定する。
-            DateTime timeStamp = DateTime.UtcNow;
-            string driveRoot = Path.GetPathRoot(Directory.GetCurrentDirectory())!;
-            string uploadPath = Path.Combine(driveRoot, "Uploads", timeStamp.ToString("yyyyMMdd_HHmmssfff"));
-            Directory.CreateDirectory(uploadPath);
-
-            // 作成したディレクトリに、ファイルをアップロードする。
-            foreach (var fileItem in UploadFiles)
-            {
-                using var stream = fileItem.OpenReadStream();
-                using var content = new MultipartFormDataContent();
-                var streamContent = new StreamContent(stream);
-                content.Add(streamContent, "file", fileItem.FileName);
-
-                string filePath = Path.Combine(uploadPath, fileItem.FileName);
-                using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
-                {
-                    await fileItem.CopyToAsync(fileStream);
-                }
-            }
-
-            // 新規要求を発行する。
-            var newRequest = new Request()
-            {
-                DirectoryPath = uploadPath,
-                StatusId = 1,
-                ResultId = 1,
-                TestLevelId = (int)SelectedTestLevelId
+                TestLevelId = SelectedTestLevelId,
+                RevisionId = registeredTestRun!.Id
             };
-            await _repository.AddAsync(newRequest);
-
-            // 新しい Request がデータベース上で作成され、ID が付与されているはずなので
-            // ExecutionMode が "new" の場合は、ここで新規作成された Request の Id を RunId として利用する。
-            if (ExecutionMode == "new")
+            IList<TestResultDto> results = await _uploadFileParser.ParseAsync(UploadFiles, parseOption);
+            IList<TestCaseDto> testCases = results.Select(r => r.TestCase!).ToList();
+            foreach (var testCase in testCases)
             {
-                runIdForResults = newRequest.Id;
+                testCase.TestLevelId = SelectedTestLevelId.Value;
             }
-
-            // parsedResults の各要素に RunId を設定する
-            foreach (var r in parsedResults)
-            {
-                r.TestRunId = runIdForResults;
-            }
-
-            // TODO: parsedResults を別のサービスへ送信するなどの処理をここに追加
-
-            //TempData["UploadMessage"] = $"{started} 件のアップロードを開始しました。処理状況はダッシュボードで確認してください。";
-            return RedirectToPage("/Dashboard");
+            _testCaseApiClient?.AddWithoutDuplicate(testCases);
+            return RedirectToPage("/index");
         }
     }
 }
