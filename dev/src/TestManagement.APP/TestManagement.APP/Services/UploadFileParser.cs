@@ -5,12 +5,13 @@ using System.Threading.Tasks;
 using System.Xml.Linq;
 using Microsoft.AspNetCore.Http;
 using TestManagement.APP.Models;
+using TestManagement.APP.Services.Option;
 
 namespace TestManagement.APP.Services
 {
     public class UploadFileParser
     {
-        public async Task<IList<TestResultDto>> ParseAsync(IEnumerable<IFormFile> files, int testLevelId)
+        public async Task<IList<TestResultDto>> ParseAsync(IEnumerable<IFormFile> files, ParseOption option)
         {
             var results = new List<TestResultDto>();
 
@@ -57,7 +58,7 @@ namespace TestManagement.APP.Services
                         {
                             Title = string.IsNullOrEmpty(classname) ? name : $"{classname}::{name}",
                             Description = name,
-                            TestLevelId = testLevelId
+                            TestLevelId = option.TestLevelId ?? 0
                         };
 
                         var tr = new TestResultDto
@@ -65,7 +66,8 @@ namespace TestManagement.APP.Services
                             ActualResult = hasFailure ? "FAIL" : "SUCCESS",
                             TestCase = testCaseDto,
                             ExecutedAt = executedAt,
-                            Status = hasFailure ? TestStatus.Failure : TestStatus.Success
+                            Status = hasFailure ? TestStatus.Failure : TestStatus.Success,
+                            TestRunId = option.RevisionId ?? 0
                         };
 
                         results.Add(tr);
