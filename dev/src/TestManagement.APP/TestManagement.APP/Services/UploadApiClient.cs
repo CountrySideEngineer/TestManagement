@@ -11,7 +11,7 @@ namespace TestManagement.APP.Services
             _httpClient = httpClientFactory.CreateClient("TestApiClient");
         }
 
-        public async Task<List<TestLevelDto>> GetTestLevelAsync()
+        public virtual async Task<List<TestLevelDto>> GetTestLevelAsync()
         {
             var testLevels = await _httpClient.GetFromJsonAsync<List<TestLevelDto>>("api/testlevels");
             if (null == testLevels)
@@ -24,7 +24,7 @@ namespace TestManagement.APP.Services
             }
         }
 
-        public async Task<List<TestRunDto>> GetLatestTestRunAsync()
+        public virtual async Task<List<TestRunDto>> GetLatestTestRunAsync()
         {
             var testRuns = await _httpClient.GetFromJsonAsync<List<TestRunDto>>("api/testrun/");
             if (null == testRuns)
@@ -46,7 +46,7 @@ namespace TestManagement.APP.Services
             return testRuns;
         }
 
-        public async Task<TestRunDto?> CreateTestRunAsync(TestRunDto newRun)
+        public virtual async Task<TestRunDto?> CreateTestRunAsync(TestRunDto newRun)
         {
             if (newRun == null) throw new ArgumentNullException(nameof(newRun));
 
@@ -58,6 +58,17 @@ namespace TestManagement.APP.Services
 
             var created = await response.Content.ReadFromJsonAsync<TestRunDto>();
             return created;
+        }
+
+        public virtual async Task<List<TestCaseDto>> CreateTestCaseAsync(List<TestCaseDto> testCases)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/TestCase", testCases);
+            if (!response.IsSuccessStatusCode)
+            {
+                return new List<TestCaseDto>();
+            }
+            var created = await response.Content.ReadFromJsonAsync<List<TestCaseDto>>();
+            return created ?? new List<TestCaseDto>();
         }
     }
 }
