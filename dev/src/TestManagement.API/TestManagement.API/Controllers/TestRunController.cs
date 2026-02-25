@@ -20,7 +20,7 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTestRuns()
         {
-            _logger.LogInformation("Getting all test runs");
+            _logger.LogInformation("TestRunController.GetAllTestRuns() start!");
             var testRuns = await _testRunService.GetAllAsync();
             return Ok(testRuns);
         }
@@ -28,6 +28,9 @@ namespace TestManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
+            _logger.LogInformation("TestRunController.GetById() start!");
+            _logger.LogInformation($"{nameof(id)} = {id}");
+
             var testRun = await _testRunService.GetByIdAsync(id);
             if (testRun == null)
             {
@@ -39,6 +42,9 @@ namespace TestManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(TestRun testRun)
         {
+            _logger.LogInformation("TestRunController.Create() start!");
+            _logger.LogInformation($"{nameof(testRun)}.{nameof(testRun.Abstract)} = {testRun.Abstract}");
+
             await _testRunService.Create(testRun);
             return CreatedAtAction(nameof(GetById), new { id = testRun.Id }, testRun);
         }
@@ -46,6 +52,9 @@ namespace TestManagement.API.Controllers
         [HttpPost("Bulk")]
         public async Task<IActionResult> CreateBulk(List<TestRun> testRuns)
         {
+            _logger.LogInformation("TestRunController.CreateBulk() start!");
+            _logger.LogInformation($"{nameof(testRuns)}.{nameof(testRuns.Count)} = {testRuns.Count}");
+
             await _testRunService.Create(testRuns);
             return CreatedAtAction(nameof(GetById), new { id = testRuns[0].Id }, testRuns);
         }
