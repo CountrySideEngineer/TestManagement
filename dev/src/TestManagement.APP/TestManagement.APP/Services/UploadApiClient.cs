@@ -109,7 +109,9 @@ namespace TestManagement.APP.Services
 
         public virtual async Task<IActionResult> CreateTestResultAsync(ICollection<TestResultDto> testResults)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/TestResult/Bulk", testResults);
+            Task<HttpResponseMessage> responseTask = _httpClient.PostAsJsonAsync("api/TestResult/Bulk", testResults);
+            responseTask.Wait();
+            HttpResponseMessage response = responseTask.Result;
             if (response.IsSuccessStatusCode)
             {
                 return new OkResult();

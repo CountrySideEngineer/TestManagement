@@ -9,15 +9,18 @@ namespace TestManagement.API.Controllers
     public class TestRunController : ControllerBase
     {
         private readonly TestRunService _testRunService;
+        private readonly ILogger<TestRunController> _logger;
 
-        public TestRunController(TestRunService testRunService)
+        public TestRunController(ILogger<TestRunController> logger, TestRunService testRunService)
         {
+            _logger = logger;
             _testRunService = testRunService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllTestRuns()
         {
+            _logger.LogInformation("Getting all test runs");
             var testRuns = await _testRunService.GetAllAsync();
             return Ok(testRuns);
         }

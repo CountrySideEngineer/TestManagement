@@ -16,14 +16,14 @@
         public string ActualResult { get; set; } = string.Empty;
 
         public int TestRunId { get; set; }
-        public TestRunDto TestRun { get; set; } = new TestRunDto();
+        public TestRunDto TestRun { get; set; } = new();
 
         public int TestCaseId { get; set; }
-        public TestCaseDto? TestCase { get; set; }
+        public TestCaseDto TestCase { get; set; } = new();
 
         public TestStatus Status { get; set; } = TestStatus.Unknown;
 
-        public DateTime ExecutedAt { get; set; } = DateTime.MinValue;
+        public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
