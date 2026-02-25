@@ -29,6 +29,7 @@ builder.Services.AddScoped<TestRunApiClient>();
 builder.Services.AddScoped<TestCaseApiClient>();
 builder.Services.AddScoped<TestLevelApiClient>();
 builder.Services.AddScoped<DashboardApiClient>();
+builder.Services.AddScoped<UploadApiClient>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 builder.Services.AddScoped<UploadFileParser>();
 

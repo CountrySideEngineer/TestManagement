@@ -1,4 +1,7 @@
-﻿using TestManagement.APP.Models;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
+using TestManagement.APP.Models;
 
 namespace TestManagement.APP.Services
 {
@@ -46,29 +49,75 @@ namespace TestManagement.APP.Services
             return testRuns;
         }
 
-        public virtual async Task<TestRunDto?> CreateTestRunAsync(TestRunDto newRun)
+        public virtual async Task<TestRunDto> CreateTestRunAsync(TestRunDto newRun)
         {
             if (newRun == null) throw new ArgumentNullException(nameof(newRun));
 
             var response = await _httpClient.PostAsJsonAsync("api/TestRun", newRun);
             if (!response.IsSuccessStatusCode)
             {
-                return null;
+                throw new Exception();
             }
-
-            var created = await response.Content.ReadFromJsonAsync<TestRunDto>();
+            TestRunDto? created = await response.Content.ReadFromJsonAsync<TestRunDto>();
+            if (null == created)
+            {
+                throw new Exception();
+            }
             return created;
         }
 
-        public virtual async Task<List<TestCaseDto>> CreateTestCaseAsync(List<TestCaseDto> testCases)
+        public virtual async Task<IActionResult> CreateTestCaseAsync(IList<TestCaseDto> testCases)
         {
-            var response = await _httpClient.PostAsJsonAsync("api/TestCase", testCases);
-            if (!response.IsSuccessStatusCode)
+            List<TestCaseDto>? testCasesInDb = await _httpClient.GetFromJsonAsync<List<TestCaseDto>>("api/TestCase");
+            if (null != testCasesInDb)
             {
-                return new List<TestCaseDto>();
+                testCases = testCases.Concat(testCasesInDb).ToList();
             }
-            var created = await response.Content.ReadFromJsonAsync<List<TestCaseDto>>();
-            return created ?? new List<TestCaseDto>();
+            IEnumerable<TestCaseDto> uniqueTestCases = testCases
+                .GroupBy(_ => (_.TestLevelId, _.Title, _.Description))
+                .Where(_ => _.Count() == 1)
+                .SelectMany(_ => _)
+                .ToList();
+            if (0 != uniqueTestCases.Count())
+            {
+                var response = await _httpClient.PostAsJsonAsync("api/TestCase/Bulk", uniqueTestCases);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new StatusCodeResult((int)response.StatusCode);
+                }
+            }
+            return new OkResult();
+        }
+
+        public virtual async Task<IList<TestCaseDto>> ApplyTestCaseAsync(IList<TestCaseDto> testCases)
+        {
+            List<TestCaseDto>? testCasesInDb = await _httpClient.GetFromJsonAsync<List<TestCaseDto>>("api/TestCase");
+            if (null != testCasesInDb)
+            {
+                foreach (var testCase in testCases)
+                {
+                    var regTestCase = testCasesInDb
+                        .Where(_ => (_.TestLevelId == testCase.TestLevelId) &&
+                            (_.Title == testCase.Title) && 
+                            (_.Description == testCase.Description))
+                        .FirstOrDefault();
+                    testCase.Id = regTestCase!.Id;
+                }
+            }
+            return testCases;
+        }
+
+        public virtual async Task<IActionResult> CreateTestResultAsync(ICollection<TestResultDto> testResults)
+        {
+            var response = await _httpClient.PostAsJsonAsync("api/TestResult/Bulk", testResults);
+            if (response.IsSuccessStatusCode)
+            {
+                return new OkResult();
+            }
+            else
+            {
+                return new StatusCodeResult((int)response.StatusCode);
+            }
         }
     }
 }

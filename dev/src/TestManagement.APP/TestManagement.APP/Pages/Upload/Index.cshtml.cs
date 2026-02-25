@@ -31,6 +31,8 @@ namespace TestManagement.APP.Pages.Upload
 
         private readonly UploadFileParser _uploadFileParser;
 
+        private readonly UploadApiClient _uploadApiClient;
+
         /// <summary>
         /// 
         /// </summary>
@@ -44,13 +46,16 @@ namespace TestManagement.APP.Pages.Upload
             TestLevelApiClient apiClient, 
             TestRunApiClient testRunApi, 
             UploadFileParser uploadFileParser, 
-            TestCaseApiClient testCaseApiClient)
+            TestCaseApiClient testCaseApiClient,
+            UploadApiClient uploadApiClient
+            )
         {
             _repository = repository;
             _testLevelApiClient = apiClient;
             _testRunApiClient = testRunApi;
             _uploadFileParser = uploadFileParser;
             _testCaseApiClient = testCaseApiClient;
+            _uploadApiClient = uploadApiClient;
         }
 
         [BindProperty]
@@ -120,22 +125,25 @@ namespace TestManagement.APP.Pages.Upload
                 Abstract = NewRevision,
                 ExecutedAt = NewRevisionDate.ToUniversalTime()
             };
-            var registeredTestRun = await _testRunApiClient.CreateTestRunAsync(newTestRun);
-
-            Console.WriteLine($"{nameof(registeredTestRun)} = {registeredTestRun}");
-
+            TestRunDto regTestRun = await _uploadApiClient.CreateTestRunAsync(newTestRun);
             ParseOption parseOption = new ParseOption()
             {
                 TestLevelId = SelectedTestLevelId,
-                RevisionId = registeredTestRun!.Id
+                RevisionId = regTestRun.Id
             };
-            IList<TestResultDto> results = await _uploadFileParser.ParseAsync(UploadFiles, parseOption);
-            IList<TestCaseDto> testCases = results.Select(r => r.TestCase!).ToList();
-            foreach (var testCase in testCases)
+            IList<TestResultDto> testResults = await _uploadFileParser.ParseAsync(UploadFiles, parseOption);
+            List<TestCaseDto> testCases = testResults.Select(r => r.TestCase!).ToList();
+            await _uploadApiClient.CreateTestCaseAsync(testCases);
+            await _uploadApiClient.ApplyTestCaseAsync(testCases);
+            foreach (var testResult in testResults)
             {
-                testCase.TestLevelId = SelectedTestLevelId.Value;
+                if ((null != testResult.TestCase) && (0 != testResult.TestCase.Id))
+                {
+                    testResult.TestCaseId = testResult.TestCase.Id;
+                }
             }
-            _testCaseApiClient?.AddWithoutDuplicate(testCases);
+            await _uploadApiClient.CreateTestResultAsync(testResults);
+
             return RedirectToPage("/index");
         }
     }
