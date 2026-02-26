@@ -8,9 +8,11 @@ namespace TestManagement.APP.Services
     public class UploadApiClient
     {
         private readonly HttpClient _httpClient;
+        private readonly ILogger<UploadApiClient> _logger;
 
-        public UploadApiClient(IHttpClientFactory httpClientFactory)
+        public UploadApiClient(ILogger<UploadApiClient> logger, IHttpClientFactory httpClientFactory)
         {
+            _logger = logger;
             _httpClient = httpClientFactory.CreateClient("TestApiClient");
         }
 
@@ -29,6 +31,8 @@ namespace TestManagement.APP.Services
 
         public virtual async Task<List<TestRunDto>> GetLatestTestRunAsync()
         {
+            _logger.LogInformation("Getting all test runs");
+
             var testRuns = await _httpClient.GetFromJsonAsync<List<TestRunDto>>("api/testrun/");
             if (null == testRuns)
             {
@@ -51,7 +55,11 @@ namespace TestManagement.APP.Services
 
         public virtual async Task<TestRunDto> CreateTestRunAsync(TestRunDto newRun)
         {
+            _logger.LogInformation("CreateTestRunAsync start!");
+
             if (newRun == null) throw new ArgumentNullException(nameof(newRun));
+
+            _logger.LogInformation($"{nameof(newRun)}.{nameof(newRun.Abstract)} = {newRun.Abstract}");
 
             var response = await _httpClient.PostAsJsonAsync("api/TestRun", newRun);
             if (!response.IsSuccessStatusCode)
@@ -68,17 +76,33 @@ namespace TestManagement.APP.Services
 
         public virtual async Task<IActionResult> CreateTestCaseAsync(IList<TestCaseDto> testCases)
         {
+            _logger.LogInformation("CreateTestCaseAsync start!");
+            _logger.LogInformation($"{nameof(testCases)}.{nameof(testCases.Count)} = {testCases.Count}");
+
             List<TestCaseDto>? testCasesInDb = await _httpClient.GetFromJsonAsync<List<TestCaseDto>>("api/TestCase");
+            List<TestCaseDto> uniqueTestCases = new List<TestCaseDto>();
             if (null != testCasesInDb)
             {
-                testCases = testCases.Concat(testCasesInDb).ToList();
+                foreach (var testCase in testCases)
+                {
+                    int count = testCasesInDb.Where(_ => _.TestLevelId == testCase.TestLevelId &&
+                            _.Title == testCase.Title &&
+                            _.Description == testCase.Description)
+                        .ToList()
+                        .Count();
+                    if (0 == count)
+                    {
+                        uniqueTestCases.Add(testCase);
+                    }
+                }
             }
-            IEnumerable<TestCaseDto> uniqueTestCases = testCases
-                .GroupBy(_ => (_.TestLevelId, _.Title, _.Description))
-                .Where(_ => _.Count() == 1)
-                .SelectMany(_ => _)
-                .ToList();
-            if (0 != uniqueTestCases.Count())
+            else
+            {
+                uniqueTestCases = testCases.ToList();
+            }
+
+            _logger.LogInformation($"{nameof(uniqueTestCases)}.{nameof(uniqueTestCases.Count)} = {uniqueTestCases.Count}");
+            if (0 < uniqueTestCases.Count())
             {
                 var response = await _httpClient.PostAsJsonAsync("api/TestCase/Bulk", uniqueTestCases);
                 if (!response.IsSuccessStatusCode)
