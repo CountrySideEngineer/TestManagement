@@ -16,6 +16,21 @@ namespace TestManagement.APP.Services
             _httpClient = httpClientFactory.CreateClient("TestApiClient");
         }
 
+        public virtual List<TestLevelDto> GetTestLevel()
+        {
+            var testLevelsTask = _httpClient.GetFromJsonAsync<List<TestLevelDto>>("api/testlevels");
+            testLevelsTask.Wait();
+            var testLevels = testLevelsTask.Result;
+            if (null == testLevels)
+            {
+                return new List<TestLevelDto>();
+            }
+            else
+            {
+                return testLevels;
+            }
+        }
+
         public virtual async Task<List<TestLevelDto>> GetTestLevelAsync()
         {
             var testLevels = await _httpClient.GetFromJsonAsync<List<TestLevelDto>>("api/testlevels");
@@ -29,9 +44,36 @@ namespace TestManagement.APP.Services
             }
         }
 
-        public virtual async Task<List<TestRunDto>> GetLatestTestRunAsync()
+        public virtual List<TestRunDto> GetTestRun()
         {
-            _logger.LogInformation("Getting all test runs");
+            _logger.LogInformation("UploadApiClient::GetTestRun() start!");
+
+            var testRunsTask = _httpClient.GetFromJsonAsync<List<TestRunDto>>("api/testrun/");
+            testRunsTask.Wait();
+
+            var testRuns = testRunsTask.Result;
+            if (null == testRuns)
+            {
+                return new List<TestRunDto>();
+            }
+            var testResultsTask = _httpClient.GetFromJsonAsync<List<TestResultDto>>("api/testresult");
+            testResultsTask.Wait();
+
+            List<TestResultDto>? testResults = testResultsTask.Result;
+            if (null == testResults)
+            {
+                return testRuns;
+            }
+            foreach (var testRun in testRuns)
+            {
+                testRun.TestResults = testResults.Where(_ => _.TestRunId == testRun.Id).ToList();
+            }
+            return testRuns;
+        }   
+
+        public virtual async Task<List<TestRunDto>> GetTestRunAsync()
+        {
+            _logger.LogInformation("UploadApiClient::GetTestRunAsync() start!");
 
             var testRuns = await _httpClient.GetFromJsonAsync<List<TestRunDto>>("api/testrun/");
             if (null == testRuns)
