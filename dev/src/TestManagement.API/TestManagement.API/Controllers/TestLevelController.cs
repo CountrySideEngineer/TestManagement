@@ -8,15 +8,19 @@ namespace TestManagement.API.Controllers
     public class TestLevelController : ControllerBase
     {
         private readonly TestLevelService _testLevelService;
+        private readonly ILogger<TestLevelController> _logger;
 
-        public TestLevelController(TestLevelService testLevelRepository)
+        public TestLevelController(ILogger<TestLevelController> logger, TestLevelService testLevelRepository)
         {
+            _logger = logger;
             _testLevelService = testLevelRepository;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllTestLevels()
         {
+            _logger.LogInformation("TestLevelController.GetAllTestLevels() start!");
+
             var testLevels = await _testLevelService.GetAllAsync();
             return Ok(testLevels);
         }

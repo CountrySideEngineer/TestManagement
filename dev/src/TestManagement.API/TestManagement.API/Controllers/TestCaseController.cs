@@ -9,15 +9,19 @@ namespace TestManagement.API.Controllers
     public class TestCaseController : ControllerBase
     {
         private readonly TestCaseService _testCaseService;
+        private readonly ILogger<TestCaseController> _logger;
 
-        public TestCaseController(TestCaseService testCaseService)
+        public TestCaseController(ILogger<TestCaseController> logger, TestCaseService testCaseService)
         {
+            _logger = logger;
             _testCaseService = testCaseService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAllTestCases()
         {
+            _logger.LogInformation("TestCaseController.GetAllTestCases() start!");
+
             var testCases = await _testCaseService.GetAllAsync();
             return Ok(testCases);
         }
@@ -25,6 +29,8 @@ namespace TestManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
+            _logger.LogInformation("TestCaseController.GetById() start!");
+
             var testCases = await _testCaseService.GetByIdAsync(id);
             return Ok(testCases);
         }
@@ -32,14 +38,25 @@ namespace TestManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(TestCase testCase)
         {
-            await _testCaseService.Create(testCase);
+            _logger.LogInformation("TestCaseController.Create() start!");
 
-            return CreatedAtAction(nameof(GetById), new { id = testCase.Id }, testCase);
+            if (null != testCase)
+            {
+                await _testCaseService.Create(testCase);
+                return CreatedAtAction(nameof(GetById), new { id = testCase.Id }, testCase);
+            }
+            else
+            {
+                return BadRequest("TestCase cannot be null.");
+            }
+
         }
 
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulf(List<TestCase> testCases)
+        public async Task<IActionResult> CreateBulk(List<TestCase> testCases)
         {
+            _logger.LogInformation("TestCaseController.CreateBulk() start!");
+
             await _testCaseService.Create(testCases);
 
             return CreatedAtAction(nameof(GetById), new { id = testCases[0].Id }, testCases);
