@@ -20,7 +20,7 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTestCases()
         {
-            _logger.LogInformation("TestCaseController.GetAllTestCases() start!");
+            _logger.LogDebug("TestCaseController.GetAllTestCases() start!");
 
             var testCases = await _testCaseService.GetAllAsync();
             return Ok(testCases);
@@ -29,7 +29,7 @@ namespace TestManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            _logger.LogInformation("TestCaseController.GetById() start!");
+            _logger.LogDebug("TestCaseController.GetById() start!");
 
             var testCases = await _testCaseService.GetByIdAsync(id);
             return Ok(testCases);
@@ -38,7 +38,7 @@ namespace TestManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(TestCase testCase)
         {
-            _logger.LogInformation("TestCaseController.Create() start!");
+            _logger.LogDebug("TestCaseController.Create() start!");
 
             if (null != testCase)
             {
@@ -55,7 +55,7 @@ namespace TestManagement.API.Controllers
         [HttpPost("Bulk")]
         public async Task<IActionResult> CreateBulk(List<TestCase> testCases)
         {
-            _logger.LogInformation("TestCaseController.CreateBulk() start!");
+            _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
             await _testCaseService.Create(testCases);
 

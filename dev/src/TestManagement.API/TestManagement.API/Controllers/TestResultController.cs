@@ -21,7 +21,7 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTestResults()
         {
-            _logger.LogInformation("TestResultController.GetAllTestResults() start!");
+            _logger.LogDebug("TestResultController.GetAllTestResults() start!");
 
             var testResults = await _testResultService.GetAllAsync();
             return Ok(testResults);
@@ -30,7 +30,7 @@ namespace TestManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            _logger.LogInformation("TestResultController.GetById() start!");
+            _logger.LogDebug("TestResultController.GetById() start!");
 
             var testResults = await _testResultService.GetByIdAsync(id);
             return Ok(testResults);
@@ -39,7 +39,7 @@ namespace TestManagement.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(TestResult testResult)
         {
-            _logger.LogInformation("TestResultController.Create() start!");
+            _logger.LogDebug("TestResultController.Create() start!");
 
             await _testResultService.Create(testResult);
 
@@ -49,7 +49,7 @@ namespace TestManagement.API.Controllers
         [HttpPost("Bulk")]
         public async Task<IActionResult> CreateBulk(List<TestResult> testResults)
         {
-            _logger.LogInformation("TestResultController.CreateBulk() start!");
+            _logger.LogDebug("TestResultController.CreateBulk() start!");
 
             await _testResultService.Create(testResults);
 
@@ -60,7 +60,7 @@ namespace TestManagement.API.Controllers
         [Consumes("application/xml")]
         public async Task<IActionResult> CreateFromXml([FromBody] TestSuitesXml suites)
         {
-            _logger.LogInformation("TestResultController.CreateFromXml() start!");
+            _logger.LogDebug("TestResultController.CreateFromXml() start!");
 
             // Convert and persist XML suites to TestResult entities using service
             await _testResultService.Create(suites);

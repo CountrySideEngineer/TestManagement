@@ -19,7 +19,7 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTestLevels()
         {
-            _logger.LogInformation("TestLevelController.GetAllTestLevels() start!");
+            _logger.LogDebug("TestLevelController.GetAllTestLevels() start!");
 
             var testLevels = await _testLevelService.GetAllAsync();
             return Ok(testLevels);
