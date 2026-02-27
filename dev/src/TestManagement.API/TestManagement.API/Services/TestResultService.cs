@@ -9,35 +9,51 @@ namespace TestManagement.API.Services
     {
         private readonly ITestResultRepository _testResultRepository;
         private readonly ITestResultXmlConverter _xmlConverter;
+        private readonly ILogger<TestResultService> _logger;
 
-        public TestResultService(ITestResultRepository testResultRepository, ITestResultXmlConverter xmlConverter)
+        public TestResultService(
+            ILogger<TestResultService> logger,
+            ITestResultRepository testResultRepository, 
+            ITestResultXmlConverter xmlConverter
+            )
         {
+            _logger = logger;
             _testResultRepository = testResultRepository;
             _xmlConverter = xmlConverter;
         }
 
         public async Task<ICollection<Models.TestResult>> GetAllAsync()
         {
+            _logger.LogDebug("TestResultService::GetAllAsync() start!");
+
             return await _testResultRepository.GetAllAsyc();
         }
 
         public async Task<Models.TestResult> GetByIdAsync(int id)
         {
+            _logger.LogDebug("TestResultService::GetByIdAsync() start!");
+
             return await _testResultRepository.GetByIdAsync(id);
         }
 
         public async Task Create(Models.TestResult result)
         {
+            _logger.LogDebug("TestResultService::Create() start!");
+    
             await _testResultRepository.AddAsync(result);
         }
 
         public async Task Create(ICollection<TestResult> results)
         {
+            _logger.LogDebug("TestResultService::Create() start!");
+
             await _testResultRepository.AddAsync(results);
         }
 
         public async Task Create(TestSuitesXml suites)
         {
+            _logger.LogDebug("TestResultService::Create() start!");
+
             var results = await _xmlConverter.ConvertAsync(suites);
             // At this point TestCaseId/TestRunId are not set. Depending on requirements, map by name or use defaults.
             await _testResultRepository.AddAsync(results);
@@ -45,6 +61,8 @@ namespace TestManagement.API.Services
 
         public async Task<ICollection<TestResult>> ConvertSuitesAsync(TestSuitesXml suites, CancellationToken cancellationToken = default)
         {
+            _logger.LogDebug("TestResultService::ConvertSuitesAsync() start!");
+
             return await _xmlConverter.ConvertAsync(suites, cancellationToken);
         }
     }
