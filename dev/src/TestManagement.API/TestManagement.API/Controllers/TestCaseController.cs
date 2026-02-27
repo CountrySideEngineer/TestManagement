@@ -18,7 +18,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTestCases()
+        public async Task<IActionResult> GetAllTestCasesAsync()
         {
             _logger.LogDebug("TestCaseController.GetAllTestCases() start!");
 
@@ -27,7 +27,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             _logger.LogDebug("TestCaseController.GetById() start!");
 
@@ -36,14 +36,14 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TestCase testCase)
+        public async Task<IActionResult> CreateAsync(TestCase testCase)
         {
             _logger.LogDebug("TestCaseController.Create() start!");
 
             if (null != testCase)
             {
                 await _testCaseService.Create(testCase);
-                return CreatedAtAction(nameof(GetById), new { id = testCase.Id }, testCase);
+                return CreatedAtAction(nameof(GetByIdAsync), new { id = testCase.Id }, testCase);
             }
             else
             {
@@ -53,13 +53,13 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulk(List<TestCase> testCases)
+        public async Task<IActionResult> CreateBulkAsync(List<TestCase> testCases)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
             await _testCaseService.Create(testCases);
 
-            return CreatedAtAction(nameof(GetById), new { id = testCases[0].Id }, testCases);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = testCases[0].Id }, testCases);
         }
     }
 }

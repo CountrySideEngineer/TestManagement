@@ -18,7 +18,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTestRuns()
+        public async Task<IActionResult> GetAllTestRunsAsync()
         {
             _logger.LogDebug("TestRunController.GetAllTestRuns() start!");
 
@@ -27,7 +27,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             _logger.LogDebug("TestRunController.GetById() start!");
 
@@ -40,21 +40,21 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TestRun testRun)
+        public async Task<IActionResult> CreateAsync(TestRun testRun)
         {
             _logger.LogDebug("TestRunController.Create() start!");
 
             await _testRunService.Create(testRun);
-            return CreatedAtAction(nameof(GetById), new { id = testRun.Id }, testRun);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = testRun.Id }, testRun);
         }
 
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulk(List<TestRun> testRuns)
+        public async Task<IActionResult> CreateBulkAsync(List<TestRun> testRuns)
         {
             _logger.LogDebug("TestRunController.CreateBulk() start!");
 
             await _testRunService.Create(testRuns);
-            return CreatedAtAction(nameof(GetById), new { id = testRuns[0].Id }, testRuns);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = testRuns[0].Id }, testRuns);
         }
     }
 }

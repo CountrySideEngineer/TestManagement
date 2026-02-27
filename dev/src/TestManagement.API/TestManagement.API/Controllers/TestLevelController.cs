@@ -17,7 +17,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTestLevels()
+        public async Task<IActionResult> GetAllTestLevelsAsync()
         {
             _logger.LogDebug("TestLevelController.GetAllTestLevels() start!");
 

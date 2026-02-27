@@ -19,7 +19,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllTestResults()
+        public async Task<IActionResult> GetAllTestResultsAsync()
         {
             _logger.LogDebug("TestResultController.GetAllTestResults() start!");
 
@@ -28,7 +28,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
             _logger.LogDebug("TestResultController.GetById() start!");
 
@@ -37,28 +37,28 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(TestResult testResult)
+        public async Task<IActionResult> CreateAsync(TestResult testResult)
         {
             _logger.LogDebug("TestResultController.Create() start!");
 
             await _testResultService.Create(testResult);
 
-            return CreatedAtAction(nameof(GetById), new { id = testResult.Id }, testResult);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = testResult.Id }, testResult);
         }
 
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulk(List<TestResult> testResults)
+        public async Task<IActionResult> CreateBulkAsync(List<TestResult> testResults)
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
             await _testResultService.Create(testResults);
 
-            return CreatedAtAction(nameof(GetById), new { id = testResults[0].Id }, testResults);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = testResults[0].Id }, testResults);
         }
 
         [HttpPost("report")]
         [Consumes("application/xml")]
-        public async Task<IActionResult> CreateFromXml([FromBody] TestSuitesXml suites)
+        public async Task<IActionResult> CreateFromXmlAsync([FromBody] TestSuitesXml suites)
         {
             _logger.LogDebug("TestResultController.CreateFromXml() start!");
 
