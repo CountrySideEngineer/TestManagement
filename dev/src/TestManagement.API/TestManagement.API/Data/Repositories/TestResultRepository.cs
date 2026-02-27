@@ -10,15 +10,23 @@ namespace TestManagement.API.Data.Repositories
     {
         private readonly TestManagementDbContext _context;
         private readonly ITestResultXmlConverter _xmlConverter;
+        private readonly ILogger<TestResultRepository> _logger;
 
-        public TestResultRepository(TestManagementDbContext context, ITestResultXmlConverter xmlConverter)
+        public TestResultRepository(
+            TestManagementDbContext context, 
+            ITestResultXmlConverter xmlConverter,
+            ILogger<TestResultRepository> logger
+            )
         {
             _context = context;
             _xmlConverter = xmlConverter;
+            _logger = logger;
         }
 
         public async Task<ICollection<TestResult>> GetAllAsyc()
         {
+            _logger.LogInformation("TestResultRepository::GetAllAsyc() start!");
+
             return await _context.TestResults
                 .Include(_ => _.TestCase)
                 .Include(_ => _.TestRun)
@@ -27,6 +35,8 @@ namespace TestManagement.API.Data.Repositories
 
         public async Task<TestResult> GetByIdAsync(int id)
         {
+            _logger.LogInformation("TestResultRepository::GetByIdAsync() start!");
+
             return await _context.TestResults
                 .Where(_ => _.Id == id)
                 .Include(_ => _.TestCase)
@@ -36,6 +46,8 @@ namespace TestManagement.API.Data.Repositories
 
         public async Task AddAsync(TestResult result)
         {
+            _logger.LogInformation("TestResultRepository::AddAsync() start!");
+
             TestCase testCase = _context.TestCases.Find(result.TestCaseId) ?? throw new Exception();
             TestRun testRun = _context.TestRuns.Find(result.TestRunId) ?? throw new Exception();
 
@@ -47,6 +59,8 @@ namespace TestManagement.API.Data.Repositories
 
         public async Task AddAsync(ICollection<TestResult> results)
         {
+            _logger.LogInformation("TestResultRepository::AddAsync() start!");
+
             foreach (var item in results)
             {
                 TestCase testCase = _context.TestCases.Find(item.TestCaseId) ?? throw new Exception();
@@ -60,6 +74,8 @@ namespace TestManagement.API.Data.Repositories
 
         public async Task AddAsync(TestSuitesXml suites)
         {
+            _logger.LogInformation("TestResultRepository::AddAsync() start!");
+
             var results = await _xmlConverter.ConvertAsync(suites);
 
             // Try to map TestCase by title (classname + name) and TestRun by timestamp
