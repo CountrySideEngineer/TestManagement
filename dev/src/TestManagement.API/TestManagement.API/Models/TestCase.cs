@@ -12,6 +12,7 @@ namespace TestManagement.API.Models
         [MaxLength(100)]
         public string Title { get; set; } = string.Empty;
 
+        [Required]
         [MaxLength(2000)]
         public string Description { get; set; } = string.Empty;
 
@@ -20,7 +21,7 @@ namespace TestManagement.API.Models
 
         // Foregin key to TestLevel
         public int TestLevelId { get; set; }
-        public TestLevel TestLevel { get; set; } = new TestLevel();
+        public TestLevel? TestLevel { get; set; }
 
         // Navigation property to related TestResult objects.
         [JsonIgnore]
