@@ -41,7 +41,7 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestResultController.Create() start!");
 
-            await _testResultService.Create(testResult);
+            await _testResultService.CreateAsync(testResult);
 
             return CreatedAtAction(nameof(GetByIdAsync), new { id = testResult.Id }, testResult);
         }
@@ -51,7 +51,7 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
-            await _testResultService.Create(testResults);
+            await _testResultService.CreateAsync(testResults);
 
             return CreatedAtAction(nameof(GetByIdAsync), new { id = testResults[0].Id }, testResults);
         }
@@ -63,7 +63,7 @@ namespace TestManagement.API.Controllers
             _logger.LogDebug("TestResultController.CreateFromXml() start!");
 
             // Convert and persist XML suites to TestResult entities using service
-            await _testResultService.Create(suites);
+            await _testResultService.CreateAsync(suites);
 
             return Ok();
         }

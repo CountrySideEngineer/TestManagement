@@ -36,21 +36,21 @@ namespace TestManagement.API.Services
             return await _testResultRepository.GetByIdAsync(id);
         }
 
-        public async Task Create(Models.TestResult result)
+        public async Task CreateAsync(Models.TestResult result)
         {
             _logger.LogDebug("TestResultService::Create() start!");
     
             await _testResultRepository.AddAsync(result);
         }
 
-        public async Task Create(ICollection<TestResult> results)
+        public async Task CreateAsync(ICollection<TestResult> results)
         {
             _logger.LogDebug("TestResultService::Create() start!");
 
             await _testResultRepository.AddAsync(results);
         }
 
-        public async Task Create(TestSuitesXml suites)
+        public async Task CreateAsync(TestSuitesXml suites)
         {
             _logger.LogDebug("TestResultService::Create() start!");
 

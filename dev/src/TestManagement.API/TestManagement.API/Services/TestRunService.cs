@@ -30,14 +30,14 @@ namespace TestManagement.API.Services
             return await _testRunRepository.GetByIdAsync(id);
         }
 
-        public async Task Create(TestRun testRun)
+        public async Task CreateAsync(TestRun testRun)
         {
             _logger.LogDebug("TestRunService::Create() start!");
 
             await _testRunRepository.AddAsync(testRun);
         }
 
-        public async Task Create(ICollection<TestRun> testRuns)
+        public async Task CreateAsync(ICollection<TestRun> testRuns)
         {
             _logger.LogDebug("TestRunService::Create() start!");
 

@@ -30,14 +30,14 @@ namespace TestManagement.API.Services
             return await _testCaseRepository.GetByIdAsync(testLevelId);
         }
 
-        public async Task Create(TestCase testCase)
+        public async Task CreateAsync(TestCase testCase)
         {
-            _logger.LogDebug("TestCaseService::Create() start!");
+            _logger.LogDebug("TestCaseService::CreateAsync() start!");
 
             await _testCaseRepository.AddAsync(testCase);
         }
 
-        public async Task Create(ICollection<TestCase> testCases)
+        public async Task CreateAsync(ICollection<TestCase> testCases)
         {
             _logger.LogDebug("TestCaseService::Create() start!");
 

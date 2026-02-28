@@ -42,7 +42,7 @@ namespace TestManagement.API.Controllers
 
             if (null != testCase)
             {
-                await _testCaseService.Create(testCase);
+                await _testCaseService.CreateAsync(testCase);
                 return CreatedAtAction(nameof(GetByIdAsync), new { id = testCase.Id }, testCase);
             }
             else
@@ -57,7 +57,7 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
-            await _testCaseService.Create(testCases);
+            await _testCaseService.CreateAsync(testCases);
 
             return CreatedAtAction(nameof(GetByIdAsync), new { id = testCases[0].Id }, testCases);
         }

@@ -44,7 +44,7 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestRunController.Create() start!");
 
-            await _testRunService.Create(testRun);
+            await _testRunService.CreateAsync(testRun);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = testRun.Id }, testRun);
         }
 
@@ -53,7 +53,7 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestRunController.CreateBulk() start!");
 
-            await _testRunService.Create(testRuns);
+            await _testRunService.CreateAsync(testRuns);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = testRuns[0].Id }, testRuns);
         }
     }
