@@ -24,6 +24,10 @@ namespace TestManagement.API.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<TestCase>()
+                .HasIndex(_ => new { _.Title, _.Description, _.TestLevelId })
+                .IsUnique();
+
+            modelBuilder.Entity<TestCase>()
                 .HasMany(_ => _.Results)
                 .WithOne(_ => _.TestCase)
                 .HasForeignKey(_ => _.TestCaseId)
