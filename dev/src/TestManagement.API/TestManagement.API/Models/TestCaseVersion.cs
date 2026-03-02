@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json.Serialization;
 
 namespace TestManagement.API.Models
@@ -16,15 +18,27 @@ namespace TestManagement.API.Models
         [MaxLength(2000)]
         public string Description { get; set; } = string.Empty;
 
+        [Required]
+        public int VersionNumber { get; set; } = 0;
+
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         // Foregin key to TestLevel
+        [Required]
+        [ForeignKey(nameof(TestLevel))]
         public int TestLevelId { get; set; }
-        public TestLevel? TestLevel { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(TestCase))]
+        public int TestCaseId { get; set; }
+
 
         // Navigation property to related TestResult objects.
         [JsonIgnore]
         public ICollection<TestResult> Results { get; set; } = new List<TestResult>();
+
+        public virtual TestLevel? TestLevel { get; set; } = null;
+        public virtual TestCase? TestCase { get; set; } = null;
     }
 }
