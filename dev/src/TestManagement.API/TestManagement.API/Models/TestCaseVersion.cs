@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace TestManagement.API.Models
 {
-    public class TestCase
+    public class TestCaseVersion
     {
         [Key]
         public int Id { get; set; }

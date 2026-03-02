@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Models;
 using TestManagement.API.Models.Report.Xml;
-using TestCase = TestManagement.API.Models.TestCase;
+using TestCaseVersion = TestManagement.API.Models.TestCaseVersion;
 using TestManagement.API.Services.Xml;
 
 namespace TestManagement.API.Data.Repositories
@@ -48,7 +48,7 @@ namespace TestManagement.API.Data.Repositories
         {
             _logger.LogInformation("TestResultRepository::AddAsync() start!");
 
-            TestCase testCase = _context.TestCases.Find(result.TestCaseId) ?? throw new Exception();
+            TestCaseVersion testCase = _context.TestCases.Find(result.TestCaseId) ?? throw new Exception();
             TestRun testRun = _context.TestRuns.Find(result.TestRunId) ?? throw new Exception();
 
             result.TestCase = testCase;
@@ -63,7 +63,7 @@ namespace TestManagement.API.Data.Repositories
 
             foreach (var item in results)
             {
-                TestCase testCase = _context.TestCases.Find(item.TestCaseId) ?? throw new Exception();
+                TestCaseVersion testCase = _context.TestCases.Find(item.TestCaseId) ?? throw new Exception();
                 TestRun testRun = _context.TestRuns.Find(item.TestRunId) ?? throw new Exception();
                 item.TestCase = testCase;
                 item.TestRun = testRun;

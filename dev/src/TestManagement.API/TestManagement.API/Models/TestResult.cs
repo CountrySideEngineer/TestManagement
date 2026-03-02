@@ -18,7 +18,7 @@ namespace TestManagement.API.Models
         public string ActualResult { get; set; } = string.Empty;
 
         public int TestCaseId { get; set; }
-        public TestCase TestCase { get; set; } = new TestCase();
+        public TestCaseVersion TestCase { get; set; } = new TestCaseVersion();
 
         public int TestRunId { get; set; }
         public TestRun TestRun { get; set; } = new TestRun();

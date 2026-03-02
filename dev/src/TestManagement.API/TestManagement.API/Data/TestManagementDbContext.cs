@@ -8,7 +8,7 @@ namespace TestManagement.API.Data
     {
         public TestManagementDbContext(DbContextOptions<TestManagementDbContext> options) : base(options) { }
 
-        public DbSet<TestCase> TestCases { get; set; }
+        public DbSet<TestCaseVersion> TestCases { get; set; }
         public DbSet<TestLevel> TestLevels { get; set; }
         public DbSet<TestResult> TestResults { get; set; }
         public DbSet<TestRun> TestRuns { get; set; }
@@ -23,11 +23,11 @@ namespace TestManagement.API.Data
                 .HasForeignKey(_ => _.TestLevelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            modelBuilder.Entity<TestCase>()
+            modelBuilder.Entity<TestCaseVersion>()
                 .HasIndex(_ => new { _.Title, _.Description, _.TestLevelId })
                 .IsUnique();
 
-            modelBuilder.Entity<TestCase>()
+            modelBuilder.Entity<TestCaseVersion>()
                 .HasMany(_ => _.Results)
                 .WithOne(_ => _.TestCase)
                 .HasForeignKey(_ => _.TestCaseId)

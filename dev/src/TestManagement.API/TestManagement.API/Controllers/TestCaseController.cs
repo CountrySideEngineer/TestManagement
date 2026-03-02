@@ -36,7 +36,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(TestCase testCase)
+        public async Task<IActionResult> CreateAsync(TestCaseVersion testCase)
         {
             _logger.LogDebug("TestCaseController.Create() start!");
 
@@ -53,7 +53,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulkAsync(List<TestCase> testCases)
+        public async Task<IActionResult> CreateBulkAsync(List<TestCaseVersion> testCases)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 

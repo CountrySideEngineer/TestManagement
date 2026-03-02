@@ -20,6 +20,6 @@ namespace TestManagement.API.Models
 
         // Navigation property to related TestCases.
         [JsonIgnore]
-        public ICollection<TestCase> TestCases { get; set; } = new List<TestCase>();
+        public ICollection<TestCaseVersion> TestCases { get; set; } = new List<TestCaseVersion>();
     }
 }

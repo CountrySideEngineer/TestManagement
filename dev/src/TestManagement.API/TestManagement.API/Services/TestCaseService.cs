@@ -16,28 +16,28 @@ namespace TestManagement.API.Services
             _logger = logger;
         }
 
-        public async Task<ICollection<TestCase>> GetAllAsync()
+        public async Task<ICollection<TestCaseVersion>> GetAllAsync()
         {
             _logger.LogDebug("TestCaseService::GetAllAsync() start!");
 
             return await _testCaseRepository.GetAllAsync();
         }
 
-        public async Task<ICollection<TestCase>> GetByIdAsync(int testLevelId)
+        public async Task<ICollection<TestCaseVersion>> GetByIdAsync(int testLevelId)
         {
             _logger.LogDebug("TestCaseService::GetByIdAsync() start!");
 
             return await _testCaseRepository.GetByIdAsync(testLevelId);
         }
 
-        public async Task CreateAsync(TestCase testCase)
+        public async Task CreateAsync(TestCaseVersion testCase)
         {
             _logger.LogDebug("TestCaseService::CreateAsync() start!");
 
             await _testCaseRepository.AddAsync(testCase);
         }
 
-        public async Task CreateAsync(ICollection<TestCase> testCases)
+        public async Task CreateAsync(ICollection<TestCaseVersion> testCases)
         {
             _logger.LogDebug("TestCaseService::Create() start!");
 
