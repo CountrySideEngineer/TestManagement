@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestManagement.API.Models
 {
@@ -17,9 +18,13 @@ namespace TestManagement.API.Models
 
         public string ActualResult { get; set; } = string.Empty;
 
-        public int TestCaseId { get; set; }
-        public TestCaseVersion TestCase { get; set; } = new TestCaseVersion();
+        [Required]
+        [ForeignKey(nameof(Models.TestCaseVersion))]
+        public int TestCaseVersionId { get; set; }
+        public TestCaseVersion TestCaseVersion { get; set; } = new TestCaseVersion();
 
+        [Required]
+        [ForeignKey(nameof(TestRun))]
         public int TestRunId { get; set; }
         public TestRun TestRun { get; set; } = new TestRun();
 
