@@ -28,7 +28,7 @@ namespace TestManagement.API.Data.Repositories
             _logger.LogInformation("TestResultRepository::GetAllAsyc() start!");
 
             return await _context.TestResults
-                .Include(_ => _.TestCase)
+                .Include(_ => _.TestCaseVersion)
                 .Include(_ => _.TestRun)
                 .ToListAsync();
         }
@@ -39,7 +39,7 @@ namespace TestManagement.API.Data.Repositories
 
             return await _context.TestResults
                 .Where(_ => _.Id == id)
-                .Include(_ => _.TestCase)
+                .Include(_ => _.TestCaseVersion)
                 .Include(_ => _.TestRun)
                 .FirstAsync();
         }
@@ -48,10 +48,10 @@ namespace TestManagement.API.Data.Repositories
         {
             _logger.LogInformation("TestResultRepository::AddAsync() start!");
 
-            TestCaseVersion testCase = _context.TestCases.Find(result.TestCaseId) ?? throw new Exception();
+            TestCaseVersion testCase = _context.TestCaseVersions.Find(result.TestCaseVersionId) ?? throw new Exception();
             TestRun testRun = _context.TestRuns.Find(result.TestRunId) ?? throw new Exception();
 
-            result.TestCase = testCase;
+            result.TestCaseVersion = testCase;
             result.TestRun = testRun;
             _context.TestResults.Add(result);
             await _context.SaveChangesAsync();
@@ -63,9 +63,9 @@ namespace TestManagement.API.Data.Repositories
 
             foreach (var item in results)
             {
-                TestCaseVersion testCase = _context.TestCases.Find(item.TestCaseId) ?? throw new Exception();
+                TestCaseVersion testCase = _context.TestCaseVersions.Find(item.TestCaseVersionId) ?? throw new Exception();
                 TestRun testRun = _context.TestRuns.Find(item.TestRunId) ?? throw new Exception();
-                item.TestCase = testCase;
+                item.TestCaseVersion = testCase;
                 item.TestRun = testRun;
             }
             _context.TestResults.AddRange(results);
@@ -82,7 +82,7 @@ namespace TestManagement.API.Data.Repositories
             foreach (var item in results)
             {
                 // attempt to find test case by title matching combination of classname and test name
-                var possibleTitle = item.TestCase?.Title ?? string.Empty;
+                var possibleTitle = item.TestCaseVersion?.Title ?? string.Empty;
                 if (string.IsNullOrEmpty(possibleTitle))
                 {
                     // fallback: try to match by test case name stored in ActualResult? skip mapping here.
