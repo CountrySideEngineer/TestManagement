@@ -30,25 +30,36 @@ namespace TestManagement.API.Services
             return await _testRunRepository.GetByIdAsync(id);
         }
 
+        public async Task<TestRun?> GetByAbstractAndEnvAsync(TestRun testRun)
+        {
+            _logger.LogDebug("TestRunService::GetByAbstractAndEnvAsync() start!");
+
+            var existingRuns = await _testRunRepository.GetAllAsync();
+            var match = existingRuns.FirstOrDefault(tr =>
+                string.Equals(tr.Abstract, testRun.Abstract, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(tr.Environment, testRun.Environment, StringComparison.OrdinalIgnoreCase));
+
+            return match;
+        }
+
         public async Task<TestRun> CreateAsync(TestRun testRun)
         {
             _logger.LogDebug("TestRunService::Create() start!");
 
             // Check for duplicate TestRun by Abstract and Environment
-            var existingRuns = await _testRunRepository.GetAllAsync();
-            var duplicate = existingRuns.Any(tr =>
-                string.Equals(tr.Abstract, testRun.Abstract, StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(tr.Environment, testRun.Environment, StringComparison.OrdinalIgnoreCase));
-
-            if (duplicate)
+            var duplicatedTestRun = await GetByAbstractAndEnvAsync(testRun);
+            if (null != duplicatedTestRun)
             {
                 _logger.LogWarning("Duplicate TestRun detected. Abstract: {Abstract}, Environment: {Environment}", testRun.Abstract, testRun.Environment);
-                throw new InvalidOperationException("A TestRun with the same Abstract and Environment already exists.");
+
+                return duplicatedTestRun;
             }
+            else
+            {
+                var created = await _testRunRepository.AddAsync(testRun);
+                return created;
 
-            var created = await _testRunRepository.AddAsync(testRun);
-
-            return created;
+            }
         }
     }
 }
