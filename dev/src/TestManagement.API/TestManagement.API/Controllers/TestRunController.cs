@@ -47,14 +47,5 @@ namespace TestManagement.API.Controllers
             await _testRunService.CreateAsync(testRun);
             return CreatedAtAction(nameof(GetByIdAsync), new { id = testRun.Id }, testRun);
         }
-
-        [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulkAsync(List<TestRun> testRuns)
-        {
-            _logger.LogDebug("TestRunController.CreateBulk() start!");
-
-            await _testRunService.CreateAsync(testRuns);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = testRuns[0].Id }, testRuns);
-        }
     }
 }
