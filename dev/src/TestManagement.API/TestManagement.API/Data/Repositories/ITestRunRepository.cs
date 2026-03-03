@@ -8,7 +8,7 @@ namespace TestManagement.API.Data.Repositories
 
         Task<TestRun?> GetByIdAsync(int id);
 
-        Task AddAsync(TestRun testRun);
+        Task<TestRun> AddAsync(TestRun testRun);
 
         Task AddAsync(ICollection<TestRun> testRuns);
 

@@ -27,10 +27,11 @@ namespace TestManagement.API.Data.Repositories
                 .FirstAsync(_ => _.Id == id);
         }
 
-        public async Task AddAsync(TestRun testRun)
+        public async Task<TestRun> AddAsync(TestRun testRun)
         {
             _context.TestRuns.Add(testRun);
             await _context.SaveChangesAsync();
+            return testRun;
         }
 
         public async Task AddAsync(ICollection<TestRun> testRuns)
