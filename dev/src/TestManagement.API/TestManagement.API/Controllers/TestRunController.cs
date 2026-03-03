@@ -44,8 +44,8 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestRunController.Create() start!");
 
-            await _testRunService.CreateAsync(testRun);
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = testRun.Id }, testRun);
+            var created = await _testRunService.CreateAsync(testRun);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = created.Id }, created);
         }
     }
 }
