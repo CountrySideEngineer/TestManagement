@@ -55,7 +55,7 @@ namespace TestManagement.API.Data
                 new TestLevel { Id = 1, Name = "Unit", Description = "Unit Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate },
                 new TestLevel { Id = 2, Name = "Integration", Description = "Integration Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate },
                 new TestLevel { Id = 3, Name = "System", Description = "System Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate },
-                new TestLevel { Id = 4, Name = "Acceptance", Description = "Acceptance Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate });
+                new TestLevel { Id = 4, Name = "Acceptance", Description = "Acceptance Level Testing", CreatedAt = seedDate, UpdatedAt = seedDate }
             );
         }
 
@@ -72,6 +72,11 @@ namespace TestManagement.API.Data
 
         private void ConfigureTestRun(ModelBuilder modelBuilder)
         {
+            var entity = modelBuilder.Entity<TestRun>();
+
+            entity.HasIndex(_ => new { _.Abstract, _.Environment })
+                .IsUnique();
+
             modelBuilder.Entity<TestRun>()
                 .HasMany(_ => _.TestResults)
                 .WithOne(_ => _.TestRun)
