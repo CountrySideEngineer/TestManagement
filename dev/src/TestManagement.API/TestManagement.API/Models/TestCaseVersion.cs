@@ -33,6 +33,8 @@ namespace TestManagement.API.Models
         [ForeignKey(nameof(TestCase))]
         public int TestCaseId { get; set; }
 
+        [Required]
+        public bool IsLatest { get; private set; } = true;
 
         // Navigation property to related TestResult objects.
         [JsonIgnore]
