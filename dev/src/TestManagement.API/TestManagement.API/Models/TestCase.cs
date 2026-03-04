@@ -7,7 +7,9 @@ namespace TestManagement.API.Models
         private readonly List<TestCaseVersion> _versions = new();
 
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
+
+        public string Code { get; set; } = null!;
 
         [Required]
         public bool IsActive { get; set; } = true;
