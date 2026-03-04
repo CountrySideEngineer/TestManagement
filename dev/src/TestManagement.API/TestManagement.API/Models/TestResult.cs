@@ -14,19 +14,19 @@ namespace TestManagement.API.Models
     public class TestResult
     {
         [Key]
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         public string ActualResult { get; set; } = string.Empty;
 
         [Required]
-        [ForeignKey(nameof(Models.TestCaseVersion))]
-        public int TestCaseVersionId { get; set; }
+        [ForeignKey(nameof(TestCaseVersion))]
+        public long TestCaseVersionId { get; set; }
         public TestCaseVersion TestCaseVersion { get; set; } = new TestCaseVersion();
 
         [Required]
-        [ForeignKey(nameof(TestRun))]
-        public int TestRunId { get; set; }
-        public TestRun TestRun { get; set; } = new TestRun();
+        [ForeignKey(nameof(TestExecution))]
+        public long TestExecutionId { get; set; }
+        public TestExecution TestRun { get; set; } = new();
 
         public TestStatus Status { get; set; } = TestStatus.Unknown;
 
