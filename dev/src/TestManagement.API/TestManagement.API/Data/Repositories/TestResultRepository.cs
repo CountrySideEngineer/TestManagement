@@ -49,7 +49,7 @@ namespace TestManagement.API.Data.Repositories
             _logger.LogInformation("TestResultRepository::AddAsync() start!");
 
             TestCaseVersion testCase = _context.TestCaseVersions.Find(result.TestCaseVersionId) ?? throw new Exception();
-            TestRun testRun = _context.TestRuns.Find(result.TestRunId) ?? throw new Exception();
+            TestRun testRun = _context.TestRuns.Find(result.TestExecutionId) ?? throw new Exception();
 
             result.TestCaseVersion = testCase;
             result.TestRun = testRun;
@@ -64,7 +64,7 @@ namespace TestManagement.API.Data.Repositories
             foreach (var item in results)
             {
                 TestCaseVersion testCase = _context.TestCaseVersions.Find(item.TestCaseVersionId) ?? throw new Exception();
-                TestRun testRun = _context.TestRuns.Find(item.TestRunId) ?? throw new Exception();
+                TestRun testRun = _context.TestRuns.Find(item.TestExecutionId) ?? throw new Exception();
                 item.TestCaseVersion = testCase;
                 item.TestRun = testRun;
             }
