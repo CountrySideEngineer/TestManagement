@@ -21,11 +21,15 @@ namespace TestManagement.API.Models
         [Required]
         [ForeignKey(nameof(TestCaseVersion))]
         public long TestCaseVersionId { get; set; }
+
         public TestCaseVersion TestCaseVersion { get; set; } = new TestCaseVersion();
 
         [Required]
         [ForeignKey(nameof(TestExecution))]
         public long TestExecutionId { get; set; }
+
+        public string Message { get; set; } = string.Empty;
+
         public TestExecution TestRun { get; set; } = new();
 
         public TestStatus Status { get; set; } = TestStatus.Unknown;
