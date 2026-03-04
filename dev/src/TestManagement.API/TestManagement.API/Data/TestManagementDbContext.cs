@@ -106,7 +106,7 @@ namespace TestManagement.API.Data
             entity.Property(_ => _.VersionNumber)
                 .IsRequired();
 
-            entity.Property(_ => _.Title)
+            entity.Property(_ => _.Name)
                 .IsRequired()
                 .HasMaxLength(100);
 
@@ -137,7 +137,7 @@ namespace TestManagement.API.Data
                 .HasFilter("\"IsLatest\" = true");
 
             //Latest version is not allow to have same Title, Description and TestLevelId.
-            entity.HasIndex(_ => new {_.Title, _.Description, _.TestLevelId })
+            entity.HasIndex(_ => new {_.Name, _.Description, _.TestLevelId })
                 .IsUnique()
                 .HasFilter("\"IsLatest\" = true");
 

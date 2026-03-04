@@ -82,7 +82,7 @@ namespace TestManagement.API.Data.Repositories
             foreach (var item in results)
             {
                 // attempt to find test case by title matching combination of classname and test name
-                var possibleTitle = item.TestCaseVersion?.Title ?? string.Empty;
+                var possibleTitle = item.TestCaseVersion?.Name ?? string.Empty;
                 if (string.IsNullOrEmpty(possibleTitle))
                 {
                     // fallback: try to match by test case name stored in ActualResult? skip mapping here.
