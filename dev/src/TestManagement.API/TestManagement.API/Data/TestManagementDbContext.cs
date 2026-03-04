@@ -80,7 +80,7 @@ namespace TestManagement.API.Data
             modelBuilder.Entity<TestRun>()
                 .HasMany(_ => _.TestResults)
                 .WithOne(_ => _.TestRun)
-                .HasForeignKey(_ => _.TestRunId)
+                .HasForeignKey(_ => _.TestExecutionId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
