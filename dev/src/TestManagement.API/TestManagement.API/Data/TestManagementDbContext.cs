@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System.Data.Common;
 using System.Security.Cryptography.X509Certificates;
 using TestManagement.API.Models;
+using Environment = TestManagement.API.Models.Environment;
 
 namespace TestManagement.API.Data
 {
@@ -9,21 +11,51 @@ namespace TestManagement.API.Data
     {
         public TestManagementDbContext(DbContextOptions<TestManagementDbContext> options) : base(options) { }
 
+        public DbSet<Environment> Environments { get;set; }
+        public DbSet<TestCase> TestCases { get; set; }
         public DbSet<TestCaseVersion> TestCaseVersions { get; set; }
+        public DbSet<TestExecution> TestExecutions { get; set; }
         public DbSet<TestLevel> TestLevels { get; set; }
         public DbSet<TestResult> TestResults { get; set; }
-        public DbSet<TestRun> TestRuns { get; set; }
-        public DbSet<TestCase> TestCases { get; set; }
+        public DbSet<TestStatus> TestStatuses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-            ConfigureTestLevel(modelBuilder);
+            ConfigureEnvironment(modelBuilder);
             ConfigureTestCase(modelBuilder);
             ConfigureTestCaseVersion(modelBuilder);
+            ConfigureTestExecution(modelBuilder);
+            ConfigureTestLevel(modelBuilder);
             ConfigureTestResult(modelBuilder);
-            ConfigureTestRun(modelBuilder);
+            ConfigureTestStatus(modelBuilder);
+        }
+
+        private void ConfigureEnvironment(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<Environment>();
+            // Id as primary key.
+            entity.HasKey(_ => _.Id);
+
+            // Name is required and has max length of 100.
+            entity.Property(_ => _.Name).IsRequired()
+                .HasMaxLength(100);
+
+            // OS has max length of 100.
+            entity.Property(_ => _.Os)
+                .HasMaxLength(100);
+
+            entity.Property(_ => _.RunTime)
+                .HasMaxLength(100);
+
+            entity.Property(_ => _.CreatedAt)
+                .HasColumnType("timestamp with time zone")
+                .HasDefaultValue("NOW()");
+
+            // Environments with the same name, OS, and runtime
+            // are considered identical, so they must not be registered as duplicates.
+            entity.HasIndex(_ => new { _.Name, _.Os, _.RunTime }).IsUnique();
         }
 
         private void ConfigureTestLevel(ModelBuilder modelBuilder)
@@ -42,12 +74,6 @@ namespace TestManagement.API.Data
             entity.HasIndex(_ => _.Name)
                 .IsUnique();
 
-            modelBuilder.Entity<TestLevel>()
-                .HasMany(_ => _.TestCases)
-                .WithOne(_ => _.TestLevel)
-                .HasForeignKey(_ => _.TestLevelId)
-                .OnDelete(DeleteBehavior.Restrict);
-
 
             // Add seed TestLevel class (Unit, Integration, System, Acceptance)
             var seedDate = new DateTime(2025, 11, 21, 0, 0, 0, DateTimeKind.Utc);
@@ -63,32 +89,30 @@ namespace TestManagement.API.Data
         {
             var entity = modelBuilder.Entity<TestResult>();
 
-            modelBuilder.Entity<TestResult>()
-                .HasOne(_ => _.TestCaseVersion)
-                .WithMany()
-                .HasForeignKey(_ => _.TestCaseVersionId)
-                .OnDelete(DeleteBehavior.Restrict);
-        }
+            entity.HasKey(_ => _.Id);
 
-        private void ConfigureTestRun(ModelBuilder modelBuilder)
-        {
-            var entity = modelBuilder.Entity<TestRun>();
-
-            entity.HasIndex(_ => new { _.Abstract, _.Environment })
+            entity.HasIndex( _ => new { _.TestExecutionId, _.TestCaseVersionId } )
                 .IsUnique();
 
-            modelBuilder.Entity<TestRun>()
-                .HasMany(_ => _.TestResults)
-                .WithOne(_ => _.TestRun)
+            entity.HasOne(_ => _.TestExecution)
+                .WithMany(_ => _.TestResults)
                 .HasForeignKey(_ => _.TestExecutionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(_ => _.TestCaseVersion)
+                .WithMany(_ => _.Results)
+                .HasForeignKey(_ => _.TestCaseVersionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(_ => _.Status)
+                .WithMany(_ => _.TestResults)
+                .HasForeignKey(_ => _.StatusId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
         private void ConfigureTestCase(ModelBuilder modelBuilder)
         {
             var entity = modelBuilder.Entity<TestCase>();
-
-            entity.ToTable("TestCases");
 
             modelBuilder.Entity<TestCase>()
                 .HasMany(_ => _.Versions)
@@ -103,46 +127,74 @@ namespace TestManagement.API.Data
 
             entity.HasKey(_ => _.Id);
 
+            entity.Property(_ => _.Name)
+                .IsRequired()
+                .HasMaxLength(255);
+
             entity.Property(_ => _.VersionNumber)
                 .IsRequired();
 
-            entity.Property(_ => _.Name)
-                .IsRequired()
-                .HasMaxLength(100);
-
             entity.Property(_ => _.Description)
-                .IsRequired()
                 .HasMaxLength(2000);
 
             entity.Property(_ => _.IsLatest)
                 .IsRequired();
 
             entity.HasOne<TestCase>()
-                .WithMany("_versions")
+                .WithMany(_ => _.Versions)
                 .HasForeignKey(_ => _.TestCaseId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne<TestLevel>()
-                .WithMany()
+                .WithMany(_ => _.TestCaseVersions)
                 .HasForeignKey(_ => _.TestLevelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             //Unique constraints
             entity.HasIndex(_ => new { _.TestCaseId, _.VersionNumber })
                 .IsUnique();
+        }
 
-            //Latest version of a TestCase should be unique
-            entity.HasIndex(_ => _.TestCaseId)
-                .IsUnique()
-                .HasFilter("\"IsLatest\" = true");
+        private void ConfigureTestExecution(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<TestExecution>();
+            entity.HasKey(_ => _.Id);
 
-            //Latest version is not allow to have same Title, Description and TestLevelId.
-            entity.HasIndex(_ => new {_.Name, _.Description, _.TestLevelId })
-                .IsUnique()
-                .HasFilter("\"IsLatest\" = true");
+            entity.Property(_ => _.Revision)
+                .IsRequired()
+                .HasMaxLength(255);
 
-            entity.HasIndex(_ => new { _.TestCaseId, _.IsLatest });
-            entity.HasIndex(_ => _.TestLevelId);
+            entity.HasIndex(_ => new { _.Revision, _.EnvironmentId, _.ExecutedAt } )
+                .IsUnique();
+
+            entity.HasOne(exe => exe.Environment)
+                .WithMany(env => env.TestExecutions)
+                .HasForeignKey(exe => exe.EnvironmentId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        private void ConfigureTestStatus(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<TestStatus>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Code)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(_ => _.DisplayName)
+                .HasMaxLength(100)
+                .IsRequired();
+
+            entity.Property(_ => _.IsSuccess)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            entity.Property(_ => _.IsTerminal)
+                .IsRequired()
+                .HasDefaultValue(false);
+
         }
     }
 }

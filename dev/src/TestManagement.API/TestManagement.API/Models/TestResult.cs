@@ -26,6 +26,8 @@ namespace TestManagement.API.Models
         public string? Message { get; set; }
 
         [Required]
+        [ForeignKey(nameof(TestStatus))]
+        public int StatusId { get; set; }
         public TestStatus Status { get; set; } = null!;
 
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;

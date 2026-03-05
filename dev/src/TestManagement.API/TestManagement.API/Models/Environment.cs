@@ -14,6 +14,6 @@
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        ICollection<TestExecution> TestExecutions { get; set; } = new List<TestExecution>();
+        public ICollection<TestExecution> TestExecutions { get; set; } = new List<TestExecution>();
     }
 }

@@ -11,10 +11,9 @@ namespace TestManagement.API.Models
         public long Id { get; set; }
 
         [Required]
-        [MaxLength(100)]
+        [MaxLength(255)]
         public string Name { get; set; } = string.Empty;
 
-        [Required]
         [MaxLength(2000)]
         public string Description { get; set; } = string.Empty;
 
