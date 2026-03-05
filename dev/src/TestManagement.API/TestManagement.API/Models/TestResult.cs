@@ -3,13 +3,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TestManagement.API.Models
 {
-    public enum TestStatus {
-        Unknown = 0,
-        Success = 1,
-        Failure = 2,
-        Skipped = 3,
-        Blocked = 4
-    }
 
     public class TestResult
     {
@@ -19,20 +12,21 @@ namespace TestManagement.API.Models
         public string ActualResult { get; set; } = string.Empty;
 
         [Required]
-        [ForeignKey(nameof(TestCaseVersion))]
-        public long TestCaseVersionId { get; set; }
-
-        public TestCaseVersion TestCaseVersion { get; set; } = new TestCaseVersion();
-
-        [Required]
         [ForeignKey(nameof(TestExecution))]
         public long TestExecutionId { get; set; }
 
-        public string Message { get; set; } = string.Empty;
+        public TestExecution TestExecution { get; set; } = null!;
 
-        public TestExecution TestRun { get; set; } = new();
+        [Required]
+        [ForeignKey(nameof(TestCaseVersion))]
+        public long TestCaseVersionId { get; set; }
 
-        public TestStatus Status { get; set; } = TestStatus.Unknown;
+        public TestCaseVersion TestCaseVersion { get; set; } = null!;
+
+        public string? Message { get; set; }
+
+        [Required]
+        public TestStatus Status { get; set; } = null!;
 
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
