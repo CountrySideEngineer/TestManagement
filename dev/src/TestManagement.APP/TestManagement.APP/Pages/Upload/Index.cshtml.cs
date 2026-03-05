@@ -21,40 +21,21 @@ namespace TestManagement.APP.Pages.Upload
 {
     public class IndexModel : PageModel
     {
-        private readonly IRequestRepository _repository;
-
-        private readonly TestLevelApiClient _testLevelApiClient;
-
-        private readonly TestRunApiClient _testRunApiClient;
-
-        private readonly TestCaseApiClient _testCaseApiClient;
-
         private readonly UploadFileParser _uploadFileParser;
 
         private readonly UploadApiClient _uploadApiClient;
 
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
-        /// <param name="repository"></param>
-        /// <param name="apiClient"></param>
-        /// <param name="testRunApi"></param>
-        /// <param name="uploadFileParser"></param>
-        /// <param name="testCaseApiClient"></param>
+        /// <param name="uploadFileParser">File parser object.</param>
+        /// <param name="uploadApiClient">Test result upload API client.</param>
         public IndexModel(
-            IRequestRepository repository, 
-            TestLevelApiClient apiClient, 
-            TestRunApiClient testRunApi, 
             UploadFileParser uploadFileParser, 
-            TestCaseApiClient testCaseApiClient,
             UploadApiClient uploadApiClient
             )
         {
-            _repository = repository;
-            _testLevelApiClient = apiClient;
-            _testRunApiClient = testRunApi;
             _uploadFileParser = uploadFileParser;
-            _testCaseApiClient = testCaseApiClient;
             _uploadApiClient = uploadApiClient;
         }
 
@@ -89,7 +70,7 @@ namespace TestManagement.APP.Pages.Upload
         {
             try
             {
-                TestLevels = await _testLevelApiClient.GetTestLevelsAsync() ?? new List<TestLevelDto>();
+                TestLevels = await _uploadApiClient.GetTestLevelAsync() ?? new List<TestLevelDto>();
             }
             catch (Exception)
             {

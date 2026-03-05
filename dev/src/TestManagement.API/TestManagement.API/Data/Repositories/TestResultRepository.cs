@@ -29,7 +29,7 @@ namespace TestManagement.API.Data.Repositories
 
             return await _context.TestResults
                 .Include(_ => _.TestCaseVersion)
-                .Include(_ => _.TestRun)
+                .Include(_ => _.TestExecution)
                 .ToListAsync();
         }
 
@@ -40,7 +40,7 @@ namespace TestManagement.API.Data.Repositories
             return await _context.TestResults
                 .Where(_ => _.Id == id)
                 .Include(_ => _.TestCaseVersion)
-                .Include(_ => _.TestRun)
+                .Include(_ => _.TestExecution)
                 .FirstAsync();
         }
 
@@ -49,10 +49,10 @@ namespace TestManagement.API.Data.Repositories
             _logger.LogInformation("TestResultRepository::AddAsync() start!");
 
             TestCaseVersion testCase = _context.TestCaseVersions.Find(result.TestCaseVersionId) ?? throw new Exception();
-            TestRun testRun = _context.TestRuns.Find(result.TestExecutionId) ?? throw new Exception();
+            TestExecution testExecution = _context.TestExecutions.Find(result.TestExecutionId) ?? throw new Exception();
 
             result.TestCaseVersion = testCase;
-            result.TestRun = testRun;
+            result.TestExecution = testExecution;
             _context.TestResults.Add(result);
             await _context.SaveChangesAsync();
         }
@@ -64,9 +64,9 @@ namespace TestManagement.API.Data.Repositories
             foreach (var item in results)
             {
                 TestCaseVersion testCase = _context.TestCaseVersions.Find(item.TestCaseVersionId) ?? throw new Exception();
-                TestRun testRun = _context.TestRuns.Find(item.TestExecutionId) ?? throw new Exception();
+                TestExecution testRun = _context.TestExecutions.Find(item.TestExecutionId) ?? throw new Exception();
                 item.TestCaseVersion = testCase;
-                item.TestRun = testRun;
+                item.TestExecution = testRun;
             }
             _context.TestResults.AddRange(results);
             await _context.SaveChangesAsync();
