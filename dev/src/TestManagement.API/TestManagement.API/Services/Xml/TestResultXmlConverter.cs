@@ -35,32 +35,7 @@ namespace TestManagement.API.Services.Xml
 
         private TestStatus MapStatus(TestCaseXml tc)
         {
-            if (tc.IsFail)
-                return TestStatus.Failure;
-
-            if (!string.IsNullOrEmpty(tc.Status))
-            {
-                if (tc.Status.Equals("skipped", StringComparison.OrdinalIgnoreCase))
-                    return TestStatus.Skipped;
-
-                if (tc.Status.Equals("blocked", StringComparison.OrdinalIgnoreCase))
-                    return TestStatus.Blocked;
-
-                if (tc.Status.Equals("success", StringComparison.OrdinalIgnoreCase) || tc.Status.Equals("passed", StringComparison.OrdinalIgnoreCase) || tc.Status.Equals("ok", StringComparison.OrdinalIgnoreCase))
-                    return TestStatus.Success;
-            }
-
-            // fallback based on Judge/Result
-            if (!string.IsNullOrEmpty(tc.Result))
-            {
-                if (tc.Result.Equals("OK", StringComparison.OrdinalIgnoreCase) || tc.Result.Equals("Passed", StringComparison.OrdinalIgnoreCase))
-                    return TestStatus.Success;
-
-                if (tc.Result.Equals("NG", StringComparison.OrdinalIgnoreCase) || tc.Result.Equals("Failed", StringComparison.OrdinalIgnoreCase))
-                    return TestStatus.Failure;
-            }
-
-            return TestStatus.Unknown;
+            return new TestStatus();
         }
     }
 }
