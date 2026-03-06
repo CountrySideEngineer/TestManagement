@@ -15,39 +15,32 @@ namespace TestManagement.API.Data.Repositories
 
         public async Task<ICollection<TestRun>> GetAllAsync()
         {
-            return await _context.TestRuns
-                .Include(_ => _.TestResults)
-                .ToListAsync();
+            throw new NotSupportedException();
         }
 
         public async Task<TestRun?> GetByIdAsync(int id)
         {
-            return await _context.TestRuns
-                .Include(_ => _.TestResults)
-                .FirstAsync(_ => _.Id == id);
+            throw new NotSupportedException();
         }
 
         public async Task<TestRun> AddAsync(TestRun testRun)
         {
-            _context.TestRuns.Add(testRun);
-            await _context.SaveChangesAsync();
-            return testRun;
+            throw new NotSupportedException();
         }
 
         public async Task AddAsync(ICollection<TestRun> testRuns)
         {
-            _context.TestRuns.AddRange(testRuns);
-            await _context.SaveChangesAsync();
+            throw new NotSupportedException();
         }
 
         public Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task UpdateAsync(TestRun testRun)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 }
