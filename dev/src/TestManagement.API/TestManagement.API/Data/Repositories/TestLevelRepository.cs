@@ -12,6 +12,12 @@ namespace TestManagement.API.Data.Repositories
             _context = context;
         }
 
+        public async Task AddAsync(TestLevel testLevel)
+        {
+            await _context.TestLevels.AddAsync(testLevel);
+            _context.SaveChanges();
+        }
+
         public async Task<ICollection<TestLevel>> GetAllAsync()
         {
             return await _context.TestLevels.ToListAsync();
