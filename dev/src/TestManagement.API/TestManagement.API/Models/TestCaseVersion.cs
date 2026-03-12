@@ -20,7 +20,6 @@ namespace TestManagement.API.Models
         [Required]
         public int VersionNumber { get; set; } = 0;
 
-        // Foregin key to TestLevel
         [Required]
         [ForeignKey(nameof(TestLevel))]
         public long TestLevelId { get; set; }
@@ -30,7 +29,7 @@ namespace TestManagement.API.Models
         public long TestCaseId { get; set; }
 
         [Required]
-        public bool IsLatest { get; private set; } = true;
+        public bool IsLatest { get; set; } = true;
 
         // Navigation property to related TestResult objects.
         [JsonIgnore]
