@@ -30,6 +30,136 @@ namespace TestManagement.API.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            ConfigureTestLevel(modelBuilder);
+            ConfigureTestCaseVersion(modelBuilder);
+            ConfigureTestCase(modelBuilder);
+            ConfigureTestResult(modelBuilder);
         }
+
+        private void ConfigureTestLevel(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<TestLevel>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(_ => _.DisplayName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(_ => _.Description)
+                .HasMaxLength(2000);
+
+            entity.Property(_ => _.Code)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            var seedDate = DateTime.UtcNow;
+            entity.HasData(
+                new TestLevel
+                {
+                    Id = 1,
+                    Name = "Unit",
+                    DisplayName = "Unit Test",
+                    Description = "Tests that validate the functionality of a specific section of code, usually at the function level.",
+                    Code = "UNIT",
+                    SortOrder = 1,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                },
+                new TestLevel
+                {
+                    Id = 2,
+                    Name = "Integration",
+                    DisplayName = "Integration Test",
+                    Description = "Tests that validate the interaction between different components or systems.",
+                    Code = "INTEGRATION",
+                    SortOrder = 2,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                },
+                new TestLevel
+                {
+                    Id = 3,
+                    Name = "System",
+                    DisplayName = "System Test",
+                    Description = "Tests that validate the complete and integrated system.",
+                    Code = "SYSTEM",
+                    SortOrder = 3,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                },
+                new TestLevel
+                {
+                    Id = 4,
+                    Name = "Acceptance",
+                    DisplayName = "Acceptance Test",
+                    Description = "Tests that validate the system against the business requirements and user needs.",
+                    Code = "ACCEPTANCE",
+                    SortOrder = 4,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                }
+            );
+        }
+
+        private void ConfigureTestCaseVersion(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<TestCaseVersion>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.VersionNumber)
+                .IsRequired()
+                .HasMaxLength(20);
+
+            entity.Property(_ => _.Description)
+                .HasMaxLength(2000);
+
+            entity.HasOne(_ => _.TestLevel)
+                .WithMany(tl => tl.TestCaseVersions)
+                .HasForeignKey(_ => _.TestLevelId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(_ => _.TestCase)
+                .WithMany(tc => tc.Versions)
+                .HasForeignKey(_ => _.TestCaseId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        private void ConfigureTestCase(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<TestCase>();
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Code)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            // Make Code unique
+            entity.HasIndex(_ => _.Code)
+                .IsUnique();
+        }
+
+        private void ConfigureTestResult(ModelBuilder builder)
+        {
+            var entity = builder.Entity<TestResult>();
+            entity.HasKey(_ => _.Id);
+
+            entity.HasOne(_ => _.TestExecutionItem)
+                .WithMany(te => te.TestResults)
+                .HasForeignKey(_ => _.TestExecutionItemId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(_ => _.TestCaseVersion)
+                .WithMany(tc => tc.Results)
+                .HasForeignKey(_ => _.TestCaseVersionId)
+                .OnDelete(DeleteBehavior.Restrict);
+        }
+
     }
 }
