@@ -24,8 +24,6 @@ builder.Services.AddScoped<ITestResultXmlConverter, TestResultXmlConverter>();
 
 builder.Services.AddScoped<ITestResultRepository, TestResultRepository>();
 builder.Services.AddScoped<TestResultService>();
-builder.Services.AddScoped<ITestRunRepository, TestRunRepository>();
-builder.Services.AddScoped<TestRunService>();
 builder.Services.AddMvc().AddXmlSerializerFormatters();
 
 builder.Services.AddControllers();

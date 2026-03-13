@@ -29,7 +29,7 @@ namespace TestManagement.API.Data.Repositories
 
             return await _context.TestResults
                 .Include(_ => _.TestCaseVersion)
-                .Include(_ => _.TestExecution)
+                .Include(_ => _.TestExecutionItem)
                 .ToListAsync();
         }
 
@@ -40,7 +40,7 @@ namespace TestManagement.API.Data.Repositories
             return await _context.TestResults
                 .Where(_ => _.Id == id)
                 .Include(_ => _.TestCaseVersion)
-                .Include(_ => _.TestExecution)
+                .Include(_ => _.TestExecutionItem)
                 .FirstAsync();
         }
 
@@ -52,7 +52,7 @@ namespace TestManagement.API.Data.Repositories
             TestExecution testExecution = _context.TestExecutions.Find(result.TestExecutionItemId) ?? throw new Exception();
 
             result.TestCaseVersion = testCase;
-            result.TestExecution = testExecution;
+            //result.TestExecutionItem = testExecution;
             _context.TestResults.Add(result);
             await _context.SaveChangesAsync();
         }
@@ -66,7 +66,6 @@ namespace TestManagement.API.Data.Repositories
                 TestCaseVersion testCase = _context.TestCaseVersions.Find(item.TestCaseVersionId) ?? throw new Exception();
                 TestExecution testRun = _context.TestExecutions.Find(item.TestExecutionItemId) ?? throw new Exception();
                 item.TestCaseVersion = testCase;
-                item.TestExecution = testRun;
             }
             _context.TestResults.AddRange(results);
             await _context.SaveChangesAsync();

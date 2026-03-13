@@ -94,11 +94,6 @@ namespace TestManagement.API.Data
             entity.HasIndex( _ => new { _.TestExecutionItemId, _.TestCaseVersionId } )
                 .IsUnique();
 
-            entity.HasOne(_ => _.TestExecution)
-                .WithMany(_ => _.TestResults)
-                .HasForeignKey(_ => _.TestExecutionItemId)
-                .OnDelete(DeleteBehavior.Cascade);
-
             entity.HasOne(_ => _.TestCaseVersion)
                 .WithMany(_ => _.Results)
                 .HasForeignKey(_ => _.TestCaseVersionId)
