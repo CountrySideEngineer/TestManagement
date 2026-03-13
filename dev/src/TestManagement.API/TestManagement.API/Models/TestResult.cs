@@ -12,10 +12,10 @@ namespace TestManagement.API.Models
         public string ActualResult { get; set; } = string.Empty;
 
         [Required]
-        [ForeignKey(nameof(TestExecution))]
-        public long TestExecutionId { get; set; }
+        [ForeignKey(nameof(TestExecutionItem))]
+        public long TestExecutionItemId { get; set; }
 
-        public TestExecution TestExecution { get; set; } = null!;
+        public TestExecutionItem TestExecutionItem { get; set; } = null!;
 
         [Required]
         [ForeignKey(nameof(TestCaseVersion))]
