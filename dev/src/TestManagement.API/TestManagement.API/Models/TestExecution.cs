@@ -13,6 +13,9 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public Environment Environment { get; set; } = null!;
-        public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
+
+        private readonly List<TestExecutionItem> _items = new();
+
+        public IReadOnlyCollection<TestExecutionItem> Items => _items;
     }
 }
