@@ -7,26 +7,60 @@ using Environment = TestManagement.API.Models.Environment;
 
 namespace TestManagement.API.Data
 {
+    /// <summary>
+    /// Entity Framework Core DbContext for the Test Management domain.
+    /// Configures entity mappings and seeds initial lookup data.
+    /// </summary>
     public class TestManagementDbContext : DbContext
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="TestManagementDbContext"/> using the specified options.
+        /// </summary>
         public TestManagementDbContext(DbContextOptions<TestManagementDbContext> options) : base(options) { }
 
+        /// <summary>
+        /// DbSet of test levels.
+        /// </summary>
         public DbSet<TestLevel> TestLevels { get; set; }
 
+        /// <summary>
+        /// DbSet of test case versions.
+        /// </summary>
         public DbSet<TestCaseVersion> TestCaseVersions { get; set; }
 
+        /// <summary>
+        /// DbSet of test cases.
+        /// </summary>
         public DbSet<TestCase> TestCases { get; set; }
 
+        /// <summary>
+        /// DbSet of test results.
+        /// </summary>
         public DbSet<TestResult> TestResults { get; set; }
 
+        /// <summary>
+        /// DbSet of test statuses.
+        /// </summary>
         public DbSet<TestStatus> TestStatuses { get; set; }
 
+        /// <summary>
+        /// DbSet of environments.
+        /// </summary>
         public DbSet<Environment> Environments { get; set; }
 
+        /// <summary>
+        /// DbSet of test execution items.
+        /// </summary>
         public DbSet<TestExecutionItem> TestExecutionItems { get; set; }
 
+        /// <summary>
+        /// DbSet of test executions.
+        /// </summary>
         public DbSet<TestExecution> TestExecutions { get; set; }
 
+        /// <summary>
+        /// Applies configuration for all entities when the model is being created.
+        /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -41,6 +75,9 @@ namespace TestManagement.API.Data
             ConfigureTestExecution(modelBuilder);
         }
 
+        /// <summary>
+        /// Configures the TestLevel entity mapping and seeds initial test levels.
+        /// </summary>
         private void ConfigureTestLevel(ModelBuilder modelBuilder)
         {
             var entity = modelBuilder.Entity<TestLevel>();
@@ -111,6 +148,9 @@ namespace TestManagement.API.Data
             );
         }
 
+        /// <summary>
+        /// Configures the TestCaseVersion entity mapping and relationships.
+        /// </summary>
         private void ConfigureTestCaseVersion(ModelBuilder modelBuilder)
         {
             var entity = modelBuilder.Entity<TestCaseVersion>();
@@ -138,6 +178,9 @@ namespace TestManagement.API.Data
                 .OnDelete(DeleteBehavior.Cascade);
         }
 
+        /// <summary>
+        /// Configures the TestCase entity mapping and constraints.
+        /// </summary>
         private void ConfigureTestCase(ModelBuilder modelBuilder)
         {
             var entity = modelBuilder.Entity<TestCase>();
@@ -152,6 +195,9 @@ namespace TestManagement.API.Data
                 .IsUnique();
         }
 
+        /// <summary>
+        /// Configures the TestResult entity mapping and relationships.
+        /// </summary>
         private void ConfigureTestResult(ModelBuilder builder)
         {
             var entity = builder.Entity<TestResult>();
@@ -168,6 +214,9 @@ namespace TestManagement.API.Data
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
+        /// <summary>
+        /// Configures the TestStatus entity mapping and seeds default statuses.
+        /// </summary>
         private void ConfigureTestStatus(ModelBuilder builder)
         {
             var entity = builder.Entity<TestStatus>();
@@ -239,6 +288,9 @@ namespace TestManagement.API.Data
             );
         }
 
+        /// <summary>
+        /// Configures the Environment entity mapping.
+        /// </summary>
         private void ConfigureEnvironment(ModelBuilder builder)
         {
             var entity = builder.Entity<Environment>();
@@ -258,6 +310,9 @@ namespace TestManagement.API.Data
                 .HasMaxLength(100);
         }
 
+        /// <summary>
+        /// Configures the TestExecutionItem entity mapping and relationships.
+        /// </summary>
         private void ConfigureTestExecutionItem(ModelBuilder builder)
         {
             var entity = builder.Entity<TestExecutionItem>();
@@ -274,6 +329,9 @@ namespace TestManagement.API.Data
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
+        /// <summary>
+        /// Configures the TestExecution entity mapping.
+        /// </summary>
         private void ConfigureTestExecution(ModelBuilder builder)
         {
             var entity = builder.Entity<TestExecution>();
