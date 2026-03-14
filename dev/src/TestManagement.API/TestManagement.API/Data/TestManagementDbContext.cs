@@ -35,6 +35,7 @@ namespace TestManagement.API.Data
             ConfigureTestCaseVersion(modelBuilder);
             ConfigureTestCase(modelBuilder);
             ConfigureTestResult(modelBuilder);
+            ConfigureEnvironment(modelBuilder);
         }
 
         private void ConfigureTestLevel(ModelBuilder modelBuilder)
@@ -125,7 +126,7 @@ namespace TestManagement.API.Data
                 .HasForeignKey(_ => _.TestLevelId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            entity.HasIndex(_ => new {_.Name, _.Description, _.TestLevelId, _.TestCaseId, _.VersionNumber })
+            entity.HasIndex(_ => new { _.Name, _.Description, _.TestLevelId, _.TestCaseId, _.VersionNumber })
                 .IsUnique();
 
             entity.HasOne(_ => _.TestCase)
@@ -164,5 +165,23 @@ namespace TestManagement.API.Data
                 .OnDelete(DeleteBehavior.Restrict);
         }
 
+        private void ConfigureEnvironment(ModelBuilder builder)
+        {
+            var entity = builder.Entity<Environment>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(_ => _.Os)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(_ => _.RunTime)
+                .IsRequired()
+                .HasMaxLength(100);
+        }
     }
 }
