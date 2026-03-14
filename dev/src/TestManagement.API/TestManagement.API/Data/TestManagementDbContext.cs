@@ -38,6 +38,7 @@ namespace TestManagement.API.Data
             ConfigureTestStatus(modelBuilder);
             ConfigureEnvironment(modelBuilder);
             ConfigureTestExecutionItem(modelBuilder);
+            ConfigureTestExecution(modelBuilder);
         }
 
         private void ConfigureTestLevel(ModelBuilder modelBuilder)
@@ -271,6 +272,12 @@ namespace TestManagement.API.Data
                 .WithMany(e => e.TestExecutionItems)
                 .HasForeignKey(_ => _.EnvironmentId)
                 .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        private void ConfigureTestExecution(ModelBuilder builder)
+        {
+            var entity = builder.Entity<TestExecution>();
+            entity.HasKey(_ => _.Id);
         }
     }
 }
