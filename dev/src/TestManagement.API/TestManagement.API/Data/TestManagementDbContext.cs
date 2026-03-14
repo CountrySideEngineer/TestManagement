@@ -35,6 +35,7 @@ namespace TestManagement.API.Data
             ConfigureTestCaseVersion(modelBuilder);
             ConfigureTestCase(modelBuilder);
             ConfigureTestResult(modelBuilder);
+            ConfigureTestStatus(modelBuilder);
             ConfigureEnvironment(modelBuilder);
         }
 
@@ -163,6 +164,77 @@ namespace TestManagement.API.Data
                 .WithMany(tc => tc.Results)
                 .HasForeignKey(_ => _.TestCaseVersionId)
                 .OnDelete(DeleteBehavior.Restrict);
+        }
+
+        private void ConfigureTestStatus(ModelBuilder builder)
+        {
+            var entity = builder.Entity<TestStatus>();
+            entity.HasKey(_ => _.Id);
+            entity.Property(_ => _.Code)
+                .IsRequired()
+                .HasMaxLength(100);
+            entity.Property(_ => _.DisplayName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            var seedDate = DateTime.UtcNow;
+            entity.HasData(
+                new TestStatus
+                {
+                    Id = 1,
+                    Code = "PASSED",
+                    DisplayName = "Passed",
+                    IsSuccess = true,
+                    IsTerminal = true,
+                    SortOrder = 1,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                },
+                new TestStatus
+                {
+                    Id = 2,
+                    Code = "FAILED",
+                    DisplayName = "Failed",
+                    IsSuccess = false,
+                    IsTerminal = true,
+                    SortOrder = 2,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                },
+                new TestStatus
+                {
+                    Id = 3,
+                    Code = "SKIPPED",
+                    DisplayName = "Skipped",
+                    IsSuccess = false,
+                    IsTerminal = true,
+                    SortOrder = 3,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                },
+                new TestStatus
+                {
+                    Id = 4,
+                    Code = "IN_PROGRESS",
+                    DisplayName = "In Progress",
+                    IsSuccess = false,
+                    IsTerminal = false,
+                    SortOrder = 4,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                },
+                new TestStatus
+                {
+                    Id = 5,
+                    Code = "NOT EXECUTED",
+                    DisplayName = "In Progress",
+                    IsSuccess = false,
+                    IsTerminal = false,
+                    SortOrder = 4,
+                    CreatedAt = seedDate,
+                    UpdatedAt = seedDate
+                }
+            );
         }
 
         private void ConfigureEnvironment(ModelBuilder builder)
