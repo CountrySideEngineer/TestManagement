@@ -31,7 +31,7 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestCaseController.GetById() start!");
 
-            var testCases = await _testCaseService.GetByIdAsync(id);
+            var testCases = await _testCaseService.GetByTestLevelIdAsync(id);
             return Ok(testCases);
         }
 
