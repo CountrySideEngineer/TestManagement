@@ -255,5 +255,16 @@ namespace TestManagement.API.Data
                 .IsRequired()
                 .HasMaxLength(100);
         }
+
+        private void ConfigureTestExecutionItem(ModelBuilder builder)
+        {
+            var entity = builder.Entity<TestExecutionItem>();
+            entity.HasKey(_ => _.Id);
+
+            entity.HasOne(_ => _.TestExecution)
+                .WithMany(te => te.Items)
+                .HasForeignKey(_ => _.TestExecutionId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
     }
 }

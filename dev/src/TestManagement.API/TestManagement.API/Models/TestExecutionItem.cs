@@ -40,5 +40,15 @@
         /// </summary>
         public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
 
+        /// <summary>
+        /// Navigation property to the parent test execution.
+        /// </summary>
+        public TestExecution? TestExecution { get; set; } = null;
+
+        /// <summary>
+        /// Navigation property to the environment where this item was executed.
+        /// </summary>
+        public Environment? Environment { get; set; } = null;
+
     }
 }
