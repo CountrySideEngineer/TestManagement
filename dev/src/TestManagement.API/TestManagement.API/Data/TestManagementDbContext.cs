@@ -212,6 +212,11 @@ namespace TestManagement.API.Data
                 .WithMany(tc => tc.Results)
                 .HasForeignKey(_ => _.TestCaseVersionId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(_ => _.Status)
+                .WithMany(_ => _.TestResults )
+                .HasForeignKey(_ => _.StatusId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
         /// <summary>
