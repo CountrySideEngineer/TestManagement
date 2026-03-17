@@ -8,12 +8,12 @@
         /// <summary>
         /// Unique identifier for the execution item.
         /// </summary>
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Foreign key linking this item to its parent test execution.
         /// </summary>
-        public int TestExecutionId { get; set; } = 0;
+        public long TestExecutionId { get; set; } = 0;
 
         /// <summary>
         /// The point in time when this specific item was executed (UTC).
@@ -23,7 +23,7 @@
         /// <summary>
         /// Identifier of the environment where this item was executed.
         /// </summary>
-        public int EnvironmentId { get; set; } = 0;
+        public long EnvironmentId { get; set; } = 0;
 
         /// <summary>
         /// The point in time when this record was created (UTC).

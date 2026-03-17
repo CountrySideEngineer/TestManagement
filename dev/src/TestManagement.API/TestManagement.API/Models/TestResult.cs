@@ -54,7 +54,7 @@ namespace TestManagement.API.Models
         /// </summary>
         [Required]
         [ForeignKey(nameof(TestStatus))]
-        public int StatusId { get; set; }
+        public long StatusId { get; set; }
 
         /// <summary>
         /// Navigation property to the <see cref="TestStatus"/> describing the outcome of this result.

@@ -9,7 +9,7 @@
         /// <summary>
         /// Primary key identifier for the test status.
         /// </summary>
-        public int Id { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Machine-friendly code for the status (e.g. "PASSED", "FAILED").
