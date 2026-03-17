@@ -99,7 +99,7 @@ namespace TestManagement.API.Data
                 .IsRequired()
                 .HasMaxLength(50);
 
-            var seedDate = DateTime.UtcNow;
+            var seedDate = new DateTime(2025, 11, 21, 0, 0, 0, DateTimeKind.Utc);
             entity.HasData(
                 new TestLevel
                 {
@@ -233,7 +233,7 @@ namespace TestManagement.API.Data
                 .IsRequired()
                 .HasMaxLength(100);
 
-            var seedDate = DateTime.UtcNow;
+            var seedDate = new DateTime(2025, 11, 21, 0, 0, 0, DateTimeKind.Utc);
             entity.HasData(
                 new TestStatus
                 {
