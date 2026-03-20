@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
 using TestManagement.API.Data.Repositories;
-
+using TestManagement.API.Features.TestCases.Create;
 using TestManagement.API.Models;
 namespace TestManagement.API.Services
 {
@@ -174,6 +174,57 @@ namespace TestManagement.API.Services
 
             _context.TestCaseVersions.Add(testCaseVersion);
             await _context.SaveChangesAsync(ct);
+        }
+
+        /// <summary>
+        /// Creates a new test case along with an initial version using the provided request data.
+        /// </summary>
+        /// <param name="request">The request containing the code, name, description and test level id for the new test case.</param>
+        /// <param name="ct">Cancellation token used to cancel the operation.</param>
+        /// <returns>A <see cref="CreateTestCaseResponse"/> describing the created test case version.</returns>
+        public async Task<CreateTestCaseResponse> CreateAsync(CreateTestCaseRequest request, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestCaseService::CreateAsync(CreateTestCaseRequest) start!");
+
+            var isExists = await _context.TestCases.AnyAsync(_ => _.Code == request.Code);
+            if (isExists)
+            {
+                throw new Exception($"Test case with code {request.Code} already exists.");
+            }
+            var newTestCase = new TestCase()
+            {
+                Code = request.Code,
+                IsActive = true
+            };
+            newTestCase.AddVersion(request.Name, request.Description, request.TestLevelId);
+            _context.TestCases.Add(newTestCase);
+
+            try
+            {
+                await _context.SaveChangesAsync(ct);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error occurred while saving new test case to the database.");
+                throw;
+            }
+
+            var createdTestCase = newTestCase.Versions.OrderByDescending(_ => _.VersionNumber).FirstOrDefault();
+            if (null == createdTestCase)
+            {
+                throw new Exception("Failed to create test case version.");
+            }
+            var response = new CreateTestCaseResponse()
+            {
+                Id = createdTestCase.Id,
+                Code = newTestCase.Code,
+                Name = createdTestCase.Name,
+                Description = createdTestCase.Description,
+                TestLevelId = createdTestCase.TestLevelId,
+                VersionNumber = 1
+            };
+
+            return response;
         }
 
         /// <summary>
