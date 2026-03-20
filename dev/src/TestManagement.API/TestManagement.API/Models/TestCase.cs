@@ -62,7 +62,6 @@ namespace TestManagement.API.Models
             {
                 Name = name,
                 Description = description,
-                VersionNumber = 1,
                 TestLevelId = testLevelId,
                 TestCaseId = this.Id,
                 IsLatest = true
