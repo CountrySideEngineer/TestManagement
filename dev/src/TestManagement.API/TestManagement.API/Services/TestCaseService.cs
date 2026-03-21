@@ -99,7 +99,7 @@ namespace TestManagement.API.Services
         /// This method loads the aggregate (<see cref="Models.TestCase"/>), calls its domain method
         /// to add a version (so invariants are applied inside the model), then saves the unit of work.
         /// </remarks>
-        public async Task CreateVersionForExistingCaseAsync(long testCaseId, string name, string description, int testLevelId, CancellationToken ct = default)
+        public async Task<CreateTestCaseResponse> CreateVersionForExistingCaseAsync(CreateTestCaseRequest request, CancellationToken ct = default)
         {
             _logger?.LogDebug("TestCaseService::CreateVersionForExistingCaseAsync() start!");
 
@@ -107,73 +107,52 @@ namespace TestManagement.API.Services
             // It ensures that the new version is properly associated with the existing test case
             // and that all necessary data is provided.
             var testCase = await _context.TestCases
+                .Where(_ => _.Code == request.Code)
                 .Include(tc => tc.Versions)
-                .FirstOrDefaultAsync(tc => tc.Id == testCaseId, ct);
-
+                .FirstOrDefaultAsync(ct);
             if (testCase == null)
             {
-                throw new InvalidOperationException($"TestCase {testCaseId} not found.");
+                throw new InvalidOperationException($"TestCase {request.Code} not found.");
             }
 
-
-            // Call the domain method TestCase.AddVersion (to ensure invariants within the model).
-            testCase.AddVersion(name, description, testLevelId);
-
-            await _context.SaveChangesAsync(ct);
-        }
-
-        /// <summary>
-        /// Creates a standalone test case version. This method performs a simple duplicate check
-        /// on name/description/testLevel and then inserts a new <see cref="TestCaseVersion"/>.
-        /// </summary>
-        /// <param name="name">The name/title of the test case version to create.</param>
-        /// <param name="description">A textual description for the new version.</param>
-        /// <param name="testLevelId">The id of the test level associated with the new version.</param>
-        /// <param name="ct">Cancellation token used to cancel the operation.</param>
-        /// <exception cref="InvalidOperationException">Thrown when a test case with the same name/description/test level already exists.</exception>
-        /// <remarks>
-        /// Note: This method creates a TestCaseVersion without attaching it to an existing TestCase aggregate.
-        /// Consider using <see cref="CreateVersionForExistingCaseAsync"/> if you need to maintain aggregate invariants.
-        /// </remarks>
-        public async Task CreateAsync(string name, string description, int testLevelId, CancellationToken ct = default)
-        {
-            _logger?.LogDebug("TestCaseService::CreateAsync() start!");
-
-            var testCaseCount = await _context.TestCaseVersions
-                .Where(_ => _.Name == name && _.Description == description && _.TestLevelId == testLevelId)
-                .CountAsync(ct);
-            if (0 < testCaseCount)
+            int retryCount = 0;
+            while (retryCount < 3)
             {
-                throw new InvalidOperationException($"Test case named \"{name}\" has already been registerd.");
+                retryCount++;
+                try
+                {
+                    using (var transaction = await _context.Database.BeginTransactionAsync(ct))
+                    {
+                        // Call the domain method TestCase.AddVersion (to ensure invariants within the model).
+                        testCase.AddVersion(request.Name, request.Description, request.TestLevelId);
+                        await _context.SaveChangesAsync(ct);
+
+                        transaction.Commit();
+                        break;
+                    }
+                }
+                catch (DbUpdateException)
+                {
+                    _logger?.LogInformation($"Add new version of TestCase {request.Code} failed, retry.");
+                }
             }
 
-            var newTestCaseVersion = new TestCaseVersion()
+            var createdVersion = testCase.Versions.OrderByDescending(_ => _.VersionNumber).FirstOrDefault();
+            if (null == createdVersion)
             {
-                Name = name,
-                Description = description,
-                TestLevelId = testLevelId,
-                VersionNumber = 1
+                throw new Exception($"Failed to create new version of {request.Code}.");
+            }
+            var response = new CreateTestCaseResponse()
+            {
+                Id = createdVersion.Id,
+                Code = testCase.Code,
+                Name = createdVersion.Name,
+                Description = createdVersion.Description,
+                TestLevelId = createdVersion.TestLevelId,
+                VersionNumber = createdVersion.VersionNumber
             };
-            _context.TestCaseVersions.Add(newTestCaseVersion);
 
-            await _context.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// Adds the provided <see cref="TestCaseVersion"/> to the database directly.
-        /// </summary>
-        /// <param name="testCaseVersion">The test case version entity to add.</param>
-        /// <param name="ct">Cancellation token used to cancel the operation.</param>
-        /// <remarks>
-        /// Directly adding a <see cref="TestCaseVersion"/> may bypass domain invariants enforced on aggregates.
-        /// Use with caution when aggregate rules must be preserved.
-        /// </remarks>
-        public async Task CreateAsync(TestCaseVersion testCaseVersion, CancellationToken ct = default)
-        {
-            _logger?.LogDebug("TestCaseService::CreateAsync(TestCaseVersion) start!");
-
-            _context.TestCaseVersions.Add(testCaseVersion);
-            await _context.SaveChangesAsync(ct);
+            return response;
         }
 
         /// <summary>
