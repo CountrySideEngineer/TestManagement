@@ -67,18 +67,26 @@ namespace TestManagement.API.Controllers
         }
 
         /// <summary>
-        /// Bulk creates test case versions.
+        /// Attempts to create multiple test cases from the provided requests and returns per-request responses.
         /// </summary>
-        /// <param name="testCases">Collection of <see cref="TestCaseVersion"/> entities to create.</param>
-        /// <returns>HTTP 201 Created with a reference to the created resources.</returns>
+        /// <param name="requests">Collection of <see cref="CreateTestCaseRequest"/> objects to process.</param>
+        /// <returns>
+        /// A collection of <see cref="CreateTestCaseResponse"/> objects describing the result for each request.
+        /// Successful entries contain the created test case id and version information. Failed entries will have
+        /// Id = -1 and VersionNumber = 0 to indicate failure.
+        /// </returns>
+        /// <remarks>
+        /// The controller delegates processing to the service layer which performs validation and persistence.
+        /// The returned collection preserves one response per input request.
+        /// </remarks>
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulkAsync(List<TestCaseVersion> testCases)
+        public async Task<ICollection<CreateTestCaseResponse>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
-            await _testCaseService.CreateAsync(testCases);
+            var responses = await _testCaseService.CreateAsync(requests);
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = testCases[0].Id }, testCases);
+            return responses;
         }
     }
 }
