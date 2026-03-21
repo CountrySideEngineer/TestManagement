@@ -158,8 +158,7 @@ namespace TestManagement.API.Data
             entity.HasKey(_ => _.Id);
 
             entity.Property(_ => _.VersionNumber)
-                .IsRequired()
-                .HasMaxLength(20);
+                .IsRequired();
 
             entity.Property(_ => _.Description)
                 .HasMaxLength(2000);
