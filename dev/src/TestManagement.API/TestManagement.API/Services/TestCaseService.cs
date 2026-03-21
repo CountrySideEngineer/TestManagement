@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
 using TestManagement.API.Data.Repositories;
 using TestManagement.API.Features.TestCases.Create;
@@ -222,5 +223,106 @@ namespace TestManagement.API.Services
             _context.TestCaseVersions.AddRange(testCases);
             await _context.SaveChangesAsync(ct);
         }
+
+        /// <summary>
+        /// Processes a collection of create requests and attempts to create test cases for each request.
+        /// Returns a per-request response indicating whether creation succeeded or failed.
+        /// </summary>
+        /// <param name="requests">Collection of create requests to process.</param>
+        /// <param name="ct">Cancellation token to cancel the operation.</param>
+        /// <returns>
+        /// A collection of <see cref="CreateTestCaseResponse"/> objects. Successful entries will contain the created
+        /// test case id and version information. Failed entries will return an object with Id = -1 and VersionNumber = 0.
+        /// </returns>
+        /// <remarks>
+        /// The method attempts to create each request using <see cref="CreateWithoutSave"/> and accumulates the
+        /// successful ones. A single call to <see cref="TestManagementDbContext.SaveChangesAsync"/> is executed for
+        /// all successful creations. Exceptions during individual request processing do not abort the entire batch;
+        /// failed requests are reported back in the returned collection.
+        /// </remarks>
+        public async Task<ICollection<CreateTestCaseResponse>> CreateAsync(ICollection<CreateTestCaseRequest> requests, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestCaseService::Create(ICollection<CreateTestCaseRequest>) start!");
+
+            var oks = new List<CreateTestCaseRequest>();
+            var ngs = new List<CreateTestCaseRequest>();
+
+            foreach (var request in requests)
+            {
+                try
+                {
+                    CreateWithoutSave(request);
+                    oks.Add(request);
+                }
+                catch (Exception)
+                {
+                    ngs.Add(request);
+                }
+            }
+            if (0 < oks.Count)
+            {
+                await _context.SaveChangesAsync(ct);
+            }
+
+            var responses = new List<CreateTestCaseResponse>();
+            foreach (var ok in oks)
+            {
+                var testCase = _context.TestCases.Where(_ => _.Code == ok.Code).First();
+                var response = new CreateTestCaseResponse()
+                {
+                    Id = testCase.Id,
+                    Code = ok.Code,
+                    Name = ok.Name,
+                    Description = ok.Description,
+                    TestLevelId = ok.TestLevelId,
+                    VersionNumber = 1
+                };
+                responses.Add(response);
+            }
+            foreach (var ng in ngs)
+            {
+                var response = new CreateTestCaseResponse()
+                {
+                    Id = -1,
+                    Code = ng.Code,
+                    Name = ng.Name,
+                    Description = ng.Description,
+                    TestLevelId = ng.TestLevelId,
+                    VersionNumber = 0
+                };
+                responses.Add(response);
+            }
+            return responses;
+        }
+
+        /// <summary>
+        /// Prepares and adds a new <see cref="TestCase"/> with its initial version to the DbContext without persisting.
+        /// </summary>
+        /// <param name="request">Request containing the code, name, description and test level id for the new test case.</param>
+        /// <remarks>
+        /// This method performs a duplicate check based on the test case code and will throw an exception if a
+        /// test case with the same code already exists. The created entity is added to the DbContext but this
+        /// method does not call SaveChanges/SaveChangesAsync — the caller is responsible for persisting the unit of work.
+        /// </remarks>
+        public void CreateWithoutSave(CreateTestCaseRequest request)
+        {
+            var isExists = _context.TestCases.Any(_ => _.Code == request.Code);
+            if (isExists)
+            {
+                string message = $"Test case with code {request.Code} already exists.";
+                _logger?.LogError(message);
+                throw new Exception(message);
+            }
+
+            var newTestCase = new TestCase()
+            {
+                Code = request.Code,
+                IsActive = true
+            };
+            newTestCase.AddVersion(request.Name, request.Description, request.TestLevelId);
+            _context.TestCases.Add(newTestCase);
+        }
+
+
     }
 }
