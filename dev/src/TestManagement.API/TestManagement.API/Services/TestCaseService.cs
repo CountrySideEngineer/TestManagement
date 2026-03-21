@@ -208,23 +208,6 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Adds a collection of <see cref="TestCaseVersion"/> entities to the database.
-        /// </summary>
-        /// <param name="testCases">The collection of test case versions to add.</param>
-        /// <param name="ct">Cancellation token used to cancel the operation.</param>
-        /// <remarks>
-        /// Bulk insertion can be more efficient but may still bypass aggregate-level invariants.
-        /// Consider domain-level validation before calling this method.
-        /// </remarks>
-        public async Task CreateAsync(ICollection<TestCaseVersion> testCases, CancellationToken ct = default)
-        {
-            _logger?.LogDebug("TestCaseService::Create(ICollection<TestCaseVersion>) start!");
-
-            _context.TestCaseVersions.AddRange(testCases);
-            await _context.SaveChangesAsync(ct);
-        }
-
-        /// <summary>
         /// Processes a collection of create requests and attempts to create test cases for each request.
         /// Returns a per-request response indicating whether creation succeeded or failed.
         /// </summary>
@@ -322,7 +305,5 @@ namespace TestManagement.API.Services
             newTestCase.AddVersion(request.Name, request.Description, request.TestLevelId);
             _context.TestCases.Add(newTestCase);
         }
-
-
     }
 }
