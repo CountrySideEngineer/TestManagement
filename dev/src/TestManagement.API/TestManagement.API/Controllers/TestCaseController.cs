@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestManagement.API.Features.TestCases.Create;
+using TestManagement.API.Features.TestCases.Update;
 using TestManagement.API.Models;
 using TestManagement.API.Services;
 
@@ -87,6 +88,16 @@ namespace TestManagement.API.Controllers
             var responses = await _testCaseService.CreateAsync(requests);
 
             return responses;
+        }
+
+        [HttpPost("Update")]
+        public async Task<UpdateTestCaseResponse> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
+        {
+            _logger.LogDebug("TestCaseController.CreateBulk() start!");
+
+            var response = await _testCaseService.UpdateAsync(request, ct);
+
+            return response;
         }
     }
 }

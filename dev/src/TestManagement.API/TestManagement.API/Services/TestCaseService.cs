@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
 using TestManagement.API.Data.Repositories;
 using TestManagement.API.Features.TestCases.Create;
+using TestManagement.API.Features.TestCases.Get;
+using TestManagement.API.Features.TestCases.Update;
 using TestManagement.API.Models;
 namespace TestManagement.API.Services
 {
@@ -23,10 +25,10 @@ namespace TestManagement.API.Services
         private readonly ILogger<TestCaseService>? _logger = null;
 
         /// <summary>
-        /// Constructs a new instance of <see cref="TestCaseService"/>.
-        /// </summary>
-        /// <param name="context">The <see cref="TestManagementDbContext"/> used for persistence.</param>
-        /// <param name="logger">The logger used for diagnostic output.</param>
+        /// Creates a new instance of <see cref="TestCaseService"/>.
+     /// </summary>
+        /// <param name="context">The database context used for persistence and queries.</param>
+        /// <param name="logger">Logger instance for diagnostic messages.</param>
         public TestCaseService(
             TestManagementDbContext context,
             ILogger<TestCaseService> logger)
@@ -36,17 +38,35 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Retrieves all test case versions including their associated test level information.
+        /// Retrieves only the latest TestCaseVersion for each TestCase (the version with the highest VersionNumber).
+        /// Projects the results to <see cref="GetTestCaseResponse"/> and includes associated TestLevel information if needed.
+        /// Results are returned as no-tracking queries.
         /// </summary>
         /// <returns>
-        /// A collection of <see cref="TestCaseVersion"/> objects. The results are returned as no-tracking queries.
+        /// A collection of <see cref="GetTestCaseResponse"/> objects representing the latest version per test case.
         /// </returns>
-        public virtual async Task<ICollection<TestCaseVersion>> GetAllAsync()
+        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllAsync()
         {
             _logger?.LogDebug("TestCaseService::GetAllAsync() start!");
 
-            return await _context.TestCaseVersions
-                .Include(_ => _.TestLevel)
+            var latestPerCase = _context.TestCaseVersions
+                .GroupBy(v => v.TestCaseId)
+                .Select(g => new { TestCaseId = g.Key, MaxVersion = g.Max(v => v.VersionNumber) });
+
+            var query = from v in _context.TestCaseVersions
+                        join m in latestPerCase on new { v.TestCaseId, v.VersionNumber } equals new { TestCaseId = m.TestCaseId, VersionNumber = m.MaxVersion }
+                        join tc in _context.TestCases on v.TestCaseId equals tc.Id
+                        select new GetTestCaseResponse
+                        {
+                            Id = v.Id,
+                            Code = tc.Code,
+                            Name = v.Name,
+                            Description = v.Description,
+                            TestLevelId = v.TestLevelId,
+                            VersionNumber = v.VersionNumber
+                        };
+
+            return await query
                 .AsNoTracking()
                 .ToListAsync();
         }
@@ -88,18 +108,13 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Creates a new version and associates it with an existing <see cref="Models.TestCase"/>.
+        /// Creates a new version for an existing test case identified by the request's code.
+        /// Uses a retry loop and a transaction to handle concurrency when adding the version.
         /// </summary>
-        /// <param name="testCaseId">The id of the existing test case to which the version will be added.</param>
-        /// <param name="name">The name/title of the new version.</param>
-        /// <param name="description">A textual description of the new version.</param>
-        /// <param name="testLevelId">The id of the test level associated with the new version.</param>
+        /// <param name="request">Request containing the code, name, description and test level id for the new version.</param>
         /// <param name="ct">Cancellation token used to cancel the operation.</param>
+        /// <returns>A <see cref="CreateTestCaseResponse"/> describing the newly created version.</returns>
         /// <exception cref="InvalidOperationException">Thrown when the specified test case does not exist.</exception>
-        /// <remarks>
-        /// This method loads the aggregate (<see cref="Models.TestCase"/>), calls its domain method
-        /// to add a version (so invariants are applied inside the model), then saves the unit of work.
-        /// </remarks>
         public async Task<CreateTestCaseResponse> CreateVersionForExistingCaseAsync(CreateTestCaseRequest request, CancellationToken ct = default)
         {
             _logger?.LogDebug("TestCaseService::CreateVersionForExistingCaseAsync() start!");
@@ -304,6 +319,80 @@ namespace TestManagement.API.Services
             };
             newTestCase.AddVersion(request.Name, request.Description, request.TestLevelId);
             _context.TestCases.Add(newTestCase);
+        }
+
+        /// <summary>
+        /// Updates a test case by creating a new version. If the request provides a new name or description
+        /// those values are used; otherwise the latest version's values are reused.
+        /// The method persists the new version and returns information about the created version.
+        /// </summary>
+        /// <param name="request">Request containing the test case code and optional name/description overrides.</param>
+        /// <param name="ct">Cancellation token to cancel the operation.</param>
+        /// <returns>
+        /// An <see cref="UpdateTestCaseResponse"/> describing the newly created version after update.
+        /// </returns>
+        /// <exception cref="Exception">Thrown when the test case or its versions cannot be found.</exception>
+        public async Task<UpdateTestCaseResponse> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestCaseService::UpdateAsync(UpdateTestCaseRequest) start!");
+
+            var isExists = _context.TestCases.Any(_ => _.Code == request.Code);
+            if (!isExists)
+            {
+                string message = $"Test case with code {request.Code} does not exist.";
+                _logger?.LogError(message);
+                throw new Exception(message);
+            }
+
+            // Load the test case including its versions so we can determine the latest version number
+            var testCase = await _context.TestCases
+                .Where(_ => _.Code == request.Code)
+                .Include(tc => tc.Versions)
+                .FirstOrDefaultAsync(ct);
+            if (testCase == null)
+            {
+                throw new Exception($"Test case with code {request.Code} not found after existence check.");
+            }
+
+            // Create a new version via the aggregate method
+            var latestVersion = testCase.Versions
+                .OrderByDescending(_ => _.VersionNumber)
+                .FirstOrDefault();
+            if (latestVersion == null)
+            {
+                throw new Exception($"No versions found for test case {request.Code}.");
+            }
+
+            string newName =
+                ((string.IsNullOrEmpty(request.Name)) || (string.IsNullOrWhiteSpace(request.Name))) ?
+                latestVersion.Name : request.Name;
+            string newDescription =
+                ((string.IsNullOrEmpty(request.Description)) || (string.IsNullOrWhiteSpace(request.Description))) ?
+                latestVersion.Description : request.Description;
+            testCase.AddVersion(newName, newDescription, latestVersion.TestLevelId);
+            await _context.SaveChangesAsync(ct);
+
+            testCase = await _context.TestCases
+                .Where(_ => _.Code == request.Code)
+                .FirstOrDefaultAsync(ct);
+            if (testCase == null)
+            {
+                throw new Exception($"Test case with code {request.Code} not found after updating.");
+            }
+
+            var newTestCaseVersion = testCase.Versions.OrderByDescending(_ => _.VersionNumber).FirstOrDefault();
+            if (newTestCaseVersion == null)
+            {
+                throw new Exception($"No versions found for test case {request.Code} after update.");
+            }
+            var response = new UpdateTestCaseResponse()
+            {
+                Code = request.Code,
+                Name = newTestCaseVersion.Name,
+                Description = newTestCaseVersion.Description,
+                VersionNumber = newTestCaseVersion.VersionNumber
+            };
+            return response;
         }
     }
 }
