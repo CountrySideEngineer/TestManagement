@@ -56,7 +56,7 @@ namespace TestManagement.API.Models
         /// <param name="description">A description for the new version.</param>
         /// <param name="testLevelId">Identifier of the test level associated with the version.</param>
         /// <exception cref="InvalidOperationException">Thrown when the existing versions collection cannot be used to determine the next version number.</exception>
-        public void AddVersion(string name, string description, int testLevelId)
+        public void AddVersion(string name, string description, long testLevelId)
         {
             TestCaseVersion newVersion = new TestCaseVersion
             {
