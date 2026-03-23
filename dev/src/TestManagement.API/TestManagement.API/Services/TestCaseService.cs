@@ -37,6 +37,47 @@ namespace TestManagement.API.Services
             _logger = logger;
         }
 
+        // Replace GetAllAsync implementation to load TestCase entities from the DbContext and map them
+        // to GetTestCaseResponse instances by selecting each TestCase's latest TestCaseVersion.
+        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllAsync()
+        {
+            _logger?.LogDebug("TestCaseService::GetAllAsync() start!");
+
+            // Load all TestCases with their Versions in a no-tracking query to avoid tracking overhead.
+            var testCases = await _context.TestCases
+                .Include(tc => tc.Versions)
+                .AsNoTracking()
+                .ToListAsync();
+
+            var responses = new List<GetTestCaseResponse>(testCases.Count);
+
+            foreach (var tc in testCases)
+            {
+                // Find latest version for the test case
+                var latestVersion = tc.Versions?.OrderByDescending(v => v.VersionNumber).FirstOrDefault();
+                if (latestVersion == null)
+                {
+                    // Skip test cases with no versions
+                    continue;
+                }
+
+                var responseItem = new GetTestCaseResponse
+                {
+                    Id = latestVersion.Id,
+                    Code = tc.Code,
+                    Name = latestVersion.Name,
+                    Description = latestVersion.Description,
+                    TestLevelId = latestVersion.TestLevelId,
+                    VersionNumber = latestVersion.VersionNumber
+                };
+
+                responses.Add(responseItem);
+            }
+
+            return responses;
+        }
+
+
         /// <summary>
         /// Retrieves only the latest TestCaseVersion for each TestCase (the version with the highest VersionNumber).
         /// Projects the results to <see cref="GetTestCaseResponse"/> and includes associated TestLevel information if needed.
@@ -45,7 +86,7 @@ namespace TestManagement.API.Services
         /// <returns>
         /// A collection of <see cref="GetTestCaseResponse"/> objects representing the latest version per test case.
         /// </returns>
-        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllAsync()
+        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllLatestVersionAsync()
         {
             _logger?.LogDebug("TestCaseService::GetAllAsync() start!");
 
