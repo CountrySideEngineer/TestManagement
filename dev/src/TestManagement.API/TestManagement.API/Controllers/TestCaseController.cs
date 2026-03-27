@@ -13,7 +13,15 @@ namespace TestManagement.API.Controllers
     [ApiController]
     public class TestCaseController : ControllerBase
     {
+        /// <summary>
+        /// Service layer instance that encapsulates business logic and data operations for test cases.
+        /// The controller delegates use-case operations to this service.
+        /// </summary>
         private readonly TestCaseService _testCaseService;
+
+        /// <summary>
+        /// Logger instance used for diagnostic and audit logging within the controller.
+        /// </summary>
         private readonly ILogger<TestCaseController> _logger;
 
         /// <summary>
@@ -90,6 +98,15 @@ namespace TestManagement.API.Controllers
             return responses;
         }
 
+        /// <summary>
+        /// Updates a test case by creating a new version. The request may include optional name and description
+        /// values; if omitted the latest version's values are reused. Returns the created version details.
+        /// </summary>
+        /// <param name="request">Request payload identifying the test case to update and optional fields to change.</param>
+        /// <param name="ct">Cancellation token to cancel the request.</param>
+        /// <returns>
+        /// The <see cref="UpdateTestCaseResponse"/> containing the new version information for the updated test case.
+        /// </returns>
         [HttpPost("Update")]
         public async Task<UpdateTestCaseResponse> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
         {
