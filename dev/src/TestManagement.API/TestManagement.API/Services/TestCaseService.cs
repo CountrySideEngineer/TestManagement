@@ -148,6 +148,28 @@ namespace TestManagement.API.Services
                 .ToListAsync();
         }
 
+        public virtual async Task<TestCaseVersion> GetLatestVersionByTestCaseIdAsync(int testCaseId)
+        {
+            _logger?.LogDebug("TestCaseService::GetLatestVersionByTestCaseIdAsync() start!");
+
+            try
+            {
+                var testCaseVersions = await _context.TestCaseVersions
+                    .Where(_ => _.TestCaseId == testCaseId)
+                    .OrderByDescending(_ => _.VersionNumber)
+                    .Include(_ => _.TestLevel)
+                    .AsNoTracking()
+                    .FirstAsync();
+
+                return testCaseVersions;
+            }
+            catch (Exception ex)
+            when ((ex is ArgumentNullException) || (ex is InvalidOperationException))
+            {
+                throw new InvalidOperationException(ex.Message);
+            }
+        }
+
         /// <summary>
         /// Creates a new version for an existing test case identified by the request's code.
         /// Uses a retry loop and a transaction to handle concurrency when adding the version.
