@@ -1,4 +1,7 @@
-﻿namespace TestManagement.API.Models
+﻿using Microsoft.AspNetCore.WebUtilities;
+using System.Security.Cryptography.X509Certificates;
+
+namespace TestManagement.API.Models
 {
     /// <summary>
     /// Represents a test execution which groups together execution items run in a specific environment.
@@ -36,11 +39,43 @@
         public Environment Environment { get; set; } = null!;
 
         // Backing field for the collection of execution items.
-        private readonly List<TestExecutionItem> _items = new();
+        private readonly List<Models.TestExecutionItem> _items = new();
 
         /// <summary>
         /// Read-only collection of individual test execution items that belong to this execution.
         /// </summary>
-        public IReadOnlyCollection<TestExecutionItem> Items => _items;
+        public IReadOnlyCollection<Models.TestExecutionItem> Items => _items;
+
+        public class TestExecutionItemInner
+        {
+            public long EnvId { get; set; } = 0;
+
+            public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
+
+            public ICollection<ExecutedTest> ExecutedTests { get; set; } = new List<ExecutedTest>();
+        }
+
+        public class ExecutedTest
+        {
+            public long TestCaseVersionId { get; set; } = 0;
+
+            public long TestStatusId { get; set; } = 0;
+        }
+
+        public void AddExecutionItem(long envId, DateTime executedAt, ICollection<ExecutedTest> executedTests)
+        {
+            var newItem = new TestExecutionItem
+            {
+                EnvironmentId = envId,
+                ExecutedAt = executedAt,
+                TestResults = executedTests.Select(et => new TestResult
+                {
+                    TestCaseVersionId = et.TestCaseVersionId,
+                    StatusId = et.TestStatusId,
+                    ExecutedAt = executedAt
+                }).ToList()
+            };
+            _items.Add(newItem);
+        }
     }
 }
