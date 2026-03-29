@@ -312,6 +312,9 @@ namespace TestManagement.API.Data
             entity.Property(_ => _.RunTime)
                 .IsRequired()
                 .HasMaxLength(100);
+
+            entity.HasIndex(_ => new { _.Name, _.Os, _.RunTime })
+                .IsUnique();
         }
 
         /// <summary>
