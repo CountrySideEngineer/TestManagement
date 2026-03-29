@@ -39,6 +39,28 @@ namespace TestManagement.API.Services
             return responses;
         }
 
+        public async Task<GetEnvironmentResponse> GetByIdAsync(int id)
+        {
+            _logger?.LogDebug("EnvironmentService::GetById() start!");
+            _logger?.LogDebug("id = {Id}", id);
 
+            try
+            {
+                var environment = await _dbContext.Environments.Where(_ => _.Id == id).FirstOrDefaultAsync();
+                var response = new GetEnvironmentResponse();
+                if (null != environment)
+                {
+                    response.Name = environment.Name;
+                    response.Os = environment.Os ?? string.Empty;
+                    response.RunTime = environment.RunTime ?? string.Empty;
+                }
+
+                return response;
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException();
+            }
+        }
     }
 }

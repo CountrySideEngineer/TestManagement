@@ -26,5 +26,13 @@ namespace TestManagement.API.Controllers
 
             return await _environmentService.GetAllAsync();
         }
+
+        [HttpGet("{id}")]
+        public async Task<GetEnvironmentResponse> GetById(int id)
+        {
+            _logger.LogDebug("EnvironmentController.GetAllAsync start!");
+
+            return await _environmentService.GetByIdAsync(id);
+        }
     }
 }
