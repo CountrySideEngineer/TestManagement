@@ -5,6 +5,8 @@
     /// </summary>
     public class Environment
     {
+        private readonly List<EnvironmentVersion> _versions = new List<EnvironmentVersion>();
+
         /// <summary>
         /// Unique identifier for the environment.
         /// </summary>
@@ -39,5 +41,45 @@
         /// Collection of test execution items that were run in this environment.
         /// </summary>
         public ICollection<TestExecutionItem> TestExecutionItems { get; set; } = new List<TestExecutionItem>();
+
+        public IReadOnlyCollection<EnvironmentVersion> Versions => _versions;
+
+        public virtual void AddVersion(string Os, string runTime)
+        {
+            EnvironmentVersion version = new EnvironmentVersion
+            {
+                Os = Os,
+                RunTime = runTime,
+                CreatedAt = DateTime.UtcNow,
+                UpdatedAt = DateTime.UtcNow,
+                EnvironmentId = this.Id,
+                IsLatest = true
+            };
+
+            if (_versions.Count < 1)
+            {
+                version.VersionNumber = 1;
+            }
+            else
+            {
+                try
+                {
+
+                }
+                catch (Exception ex)
+                when ((ex is ArgumentNullException) || (ex is InvalidOperationException))
+                {
+                    throw new InvalidOperationException("Failed to calculate new version number.", ex);
+                }
+                long newVersionNumber = Versions.Max(_ => _.VersionNumber) + 1;
+                version.VersionNumber = newVersionNumber;
+            }
+            
+            foreach (var versionItem in _versions)
+            {
+                versionItem.IsLatest = false;
+            }
+            _versions.Add(version);
+        }
     }
 }
