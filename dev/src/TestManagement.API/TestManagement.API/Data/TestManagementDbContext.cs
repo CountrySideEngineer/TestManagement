@@ -48,6 +48,8 @@ namespace TestManagement.API.Data
         /// </summary>
         public DbSet<Environment> Environments { get; set; }
 
+        public DbSet<EnvironmentVersion> EnvironmentVersions { get; set; }
+
         /// <summary>
         /// DbSet of test execution items.
         /// </summary>
@@ -70,6 +72,7 @@ namespace TestManagement.API.Data
             ConfigureTestCase(modelBuilder);
             ConfigureTestResult(modelBuilder);
             ConfigureTestStatus(modelBuilder);
+            ConfigureEnvironmentVersion(modelBuilder);
             ConfigureEnvironment(modelBuilder);
             ConfigureTestExecutionItem(modelBuilder);
             ConfigureTestExecution(modelBuilder);
@@ -305,16 +308,31 @@ namespace TestManagement.API.Data
                 .IsRequired()
                 .HasMaxLength(100);
 
+            entity.HasIndex(_ => new { _.Name })
+                .IsUnique();
+        }
+
+        private void ConfigureEnvironmentVersion(ModelBuilder builder)
+        {
+            var entity = builder.Entity<EnvironmentVersion>();
+            entity.HasKey(_ => _.Id);
+
             entity.Property(_ => _.Os)
-                .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(200);
 
             entity.Property(_ => _.RunTime)
-                .IsRequired()
-                .HasMaxLength(100);
+                .HasMaxLength(2000);
 
-            entity.HasIndex(_ => new { _.Name, _.Os, _.RunTime })
+            entity.Property(_ => _.VersionNumber)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.Os, _.RunTime, _.EnvironmentId, _.VersionNumber })
                 .IsUnique();
+
+            entity.HasOne(_ => _.Environment)
+                .WithMany(e => e.Versions)
+                .HasForeignKey(_ => _.EnvironmentId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>
@@ -330,7 +348,7 @@ namespace TestManagement.API.Data
                 .HasForeignKey(_ => _.TestExecutionId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            entity.HasOne(_ => _.Environment)
+            entity.HasOne(_ => _.EnvironmentVersion)
                 .WithMany(e => e.TestExecutionItems)
                 .HasForeignKey(_ => _.EnvironmentId)
                 .OnDelete(DeleteBehavior.Restrict);

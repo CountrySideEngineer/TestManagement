@@ -24,6 +24,8 @@
 
         public bool IsLatest { get; set; } = false;  
 
+        public Environment? Environment { get; set; }
+
         /// <summary>
         /// Collection of test execution items that were run in this environment.
         /// </summary>

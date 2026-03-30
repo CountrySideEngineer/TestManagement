@@ -23,17 +23,22 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("EnvironmentService::GetAllAsync() start!");
 
-            var envionments = await _dbContext.Environments.ToListAsync();
+            var envionments = await _dbContext.Environments
+                .Include(_ => _.Versions)
+                .ToListAsync();
             var responses = new List<GetEnvironmentResponse>();
             foreach (var environment in envionments )
             {
-                var response = new GetEnvironmentResponse
+                foreach (var version in environment.Versions)
                 {
-                    Name = environment.Name,
-                    Os = environment.Os ?? string.Empty,
-                    RunTime = environment.RunTime ?? string.Empty
-                };
-                responses.Add(response);
+                    var response = new GetEnvironmentResponse
+                    {
+                        Name = environment.Name,
+                        Os = version.Os,
+                        RunTime = version.RunTime
+                    };
+                    responses.Add(response);
+                }
             }
 
             return responses;
@@ -46,13 +51,17 @@ namespace TestManagement.API.Services
 
             try
             {
-                var environment = await _dbContext.Environments.Where(_ => _.Id == id).FirstOrDefaultAsync();
+                var environment = await _dbContext.Environments
+                    .Where(_ => _.Id == id)
+                    .Include(_ =>_.Versions)
+                    .FirstOrDefaultAsync();
                 var response = new GetEnvironmentResponse();
                 if (null != environment)
                 {
+                    var version = environment.Versions.OrderByDescending(_ => _.VersionNumber).FirstOrDefault();
                     response.Name = environment.Name;
-                    response.Os = environment.Os ?? string.Empty;
-                    response.RunTime = environment.RunTime ?? string.Empty;
+                    response.Os = version!.Os;
+                    response.RunTime = version.RunTime;
                 }
 
                 return response;

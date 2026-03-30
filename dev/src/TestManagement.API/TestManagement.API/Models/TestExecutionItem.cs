@@ -48,7 +48,7 @@
         /// <summary>
         /// Navigation property to the environment where this item was executed.
         /// </summary>
-        public Environment? Environment { get; set; } = null;
+        public EnvironmentVersion? EnvironmentVersion { get; set; } = null;
 
     }
 }

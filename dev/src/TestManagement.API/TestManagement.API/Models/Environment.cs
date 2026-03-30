@@ -27,11 +27,6 @@
         /// </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        /// <summary>
-        /// Collection of test execution items that were run in this environment.
-        /// </summary>
-        public ICollection<TestExecutionItem> TestExecutionItems { get; set; } = new List<TestExecutionItem>();
-
         public IReadOnlyCollection<EnvironmentVersion> Versions => _versions;
 
         public virtual void AddVersion(string Os, string runTime)
