@@ -18,16 +18,6 @@
         public string Name { get; set; } = null!;
 
         /// <summary>
-        /// Operating system details for the environment (optional).
-        /// </summary>
-        public string? Os { get; set; }
-
-        /// <summary>
-        /// Runtime or framework information for the environment (optional).
-        /// </summary>
-        public string? RunTime { get; set; }
-
-        /// <summary>
         /// The point in time when this record was created (UTC).
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
