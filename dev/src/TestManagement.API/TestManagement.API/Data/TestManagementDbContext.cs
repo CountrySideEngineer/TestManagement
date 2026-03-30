@@ -48,6 +48,9 @@ namespace TestManagement.API.Data
         /// </summary>
         public DbSet<Environment> Environments { get; set; }
 
+        /// <summary>
+        /// DbSet of environment versions (historical OS/runtime configurations for environments).
+        /// </summary>
         public DbSet<EnvironmentVersion> EnvironmentVersions { get; set; }
 
         /// <summary>
@@ -312,6 +315,9 @@ namespace TestManagement.API.Data
                 .IsUnique();
         }
 
+        /// <summary>
+        /// Configures the EnvironmentVersion entity mapping and relationships.
+        /// </summary>
         private void ConfigureEnvironmentVersion(ModelBuilder builder)
         {
             var entity = builder.Entity<EnvironmentVersion>();
