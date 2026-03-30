@@ -27,8 +27,17 @@
         /// </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+        /// <summary>
+        /// Read-only collection of versions associated with this environment.
+        /// </summary>
         public IReadOnlyCollection<EnvironmentVersion> Versions => _versions;
 
+        /// <summary>
+        /// Adds a new environment version record to the environment. The new version
+        /// will be assigned a sequential version number and marked as the latest.
+        /// </summary>
+        /// <param name="Os">Operating system details string for the new version.</param>
+        /// <param name="runTime">Runtime/framework details string for the new version.</param>
         public virtual void AddVersion(string Os, string runTime)
         {
             EnvironmentVersion version = new EnvironmentVersion
