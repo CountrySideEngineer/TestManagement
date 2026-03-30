@@ -4,12 +4,27 @@ using TestManagement.API.Features.Environment.Get;
 
 namespace TestManagement.API.Services
 {
+    /// <summary>
+    /// Service responsible for environment-related use cases.
+    /// Provides retrieval operations for environments and their historical versions.
+    /// </summary>
     public class EnvironmentService
     {
+        /// <summary>
+        /// Database context used to access environment and version data.
+        /// </summary>
         private readonly TestManagementDbContext _dbContext;
 
+        /// <summary>
+        /// Logger used for diagnostic and trace messages. May be null in some test scenarios.
+        /// </summary>
         private readonly ILogger<EnvironmentService>? _logger = null;
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="EnvironmentService"/>.
+        /// </summary>
+        /// <param name="dbContext">The <see cref="TestManagementDbContext"/> used for data access.</param>
+        /// <param name="logger">Logger instance for diagnostics.</param>
         public EnvironmentService(
             TestManagementDbContext dbContext,
             ILogger<EnvironmentService> logger
@@ -19,6 +34,12 @@ namespace TestManagement.API.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all environments with their versions and projects them to response DTOs.
+        /// </summary>
+        /// <returns>
+        /// A collection of <see cref="GetEnvironmentResponse"/> containing environment name and version details.
+        /// </returns>
         public async Task<ICollection<GetEnvironmentResponse>> GetAllAsync()
         {
             _logger?.LogDebug("EnvironmentService::GetAllAsync() start!");
@@ -44,6 +65,15 @@ namespace TestManagement.API.Services
             return responses;
         }
 
+        /// <summary>
+        /// Retrieves a single environment by id and returns the latest version information.
+        /// </summary>
+        /// <param name="id">Identifier of the environment to retrieve.</param>
+        /// <returns>
+        /// A <see cref="GetEnvironmentResponse"/> containing the environment name and the latest version's OS and runtime.
+        /// If the environment is not found an empty response DTO is returned.
+        /// </returns>
+        /// <exception cref="ArgumentException">Thrown when an error occurs while querying the database.</exception>
         public async Task<GetEnvironmentResponse> GetByIdAsync(int id)
         {
             _logger?.LogDebug("EnvironmentService::GetById() start!");
