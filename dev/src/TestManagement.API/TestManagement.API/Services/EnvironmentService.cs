@@ -2,6 +2,7 @@
 using TestManagement.API.Data;
 using TestManagement.API.Features.Environment.Create;
 using TestManagement.API.Features.Environment.Get;
+using TestManagement.API.Features.Environment.Update;
 
 namespace TestManagement.API.Services
 {
@@ -155,6 +156,53 @@ namespace TestManagement.API.Services
                 Os = createdEnvironment.Os,
                 RunTime = createdEnvironment.RunTime,
                 VersionNumber = createdEnvironment.VersionNumber
+            };
+            return response;
+        }
+
+        public async Task<UpdateEnvironmentResponse> UpdateAsync(UpdateEnvironmentRequest request, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("EnvironmentService::UpdateAsync() start!");
+            _logger?.LogDebug("request = {@Request}", request);
+
+            var isExists = await _dbContext.Environments.AnyAsync(_ => _.Name == request.Name);
+            if (!isExists)
+            {
+                throw new ArgumentException($"Environment with name '{request.Name}' does not exist.");
+            }
+
+            var environment = await _dbContext.Environments
+                .Where(_ => _.Name == request.Name)
+                .Include(_ => _.Versions)
+                .FirstOrDefaultAsync(ct);
+            if (null == environment)
+            {
+                throw new ArgumentException();
+            }
+
+            var latestEnvironment = environment.Versions
+                .OrderByDescending(_ => _.VersionNumber)
+                .FirstOrDefault();
+            if (null == latestEnvironment)
+            {
+                throw new Exception("No version exists for the environment.");
+            }
+
+            if ((latestEnvironment.Os == request.Os) && (latestEnvironment.RunTime == request.RunTime))
+            {
+                // No changes detected, throw an exception or return a specific response indicating no update was made.
+                throw new InvalidOperationException("No changes detected in the environment version.");
+            }
+            environment.AddVersion(request.Os, request.RunTime);
+            await _dbContext.SaveChangesAsync(ct);
+
+            var newVersion = environment.Versions.Max(_ => _.VersionNumber);
+            var response = new UpdateEnvironmentResponse
+            {
+                Name = environment.Name,
+                Os = request.Os,
+                RunTime = request.RunTime,
+                VersionNumber = newVersion
             };
             return response;
         }
