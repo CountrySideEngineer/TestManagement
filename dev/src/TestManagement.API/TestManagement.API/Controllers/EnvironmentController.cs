@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using TestManagement.API.Features.Environment.Create;
 using TestManagement.API.Features.Environment.Get;
+using TestManagement.API.Features.Environment.Update;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
@@ -42,6 +43,14 @@ namespace TestManagement.API.Controllers
             _logger.LogDebug("EnvironmentController.CreateAsync start!");
 
             return await _environmentService.CreateAsync(request, ct);
+        }
+
+        [HttpPut]
+        public async Task<UpdateEnvironmentResponse> UpdateAsync([FromBody] UpdateEnvironmentRequest request, CancellationToken ct = default)
+        {
+            _logger.LogDebug("EnvironmentController.UpdateAsync start!");
+
+            return await _environmentService.UpdateAsync(request, ct);
         }
     }
 }
