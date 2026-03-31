@@ -21,6 +21,9 @@
         /// </summary>
         public string RunTime { get; set; } = null!;
 
-        public long VersoinNumber { get; set; } = 0;
+        /// <summary>
+        /// Version number for the returned environment version.
+        /// </summary>
+        public long VersionNumber { get; set; } = 0;
     }
 }

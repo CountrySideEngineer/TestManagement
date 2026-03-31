@@ -58,7 +58,7 @@ namespace TestManagement.API.Services
                         Name = environment.Name,
                         Os = version.Os,
                         RunTime = version.RunTime,
-                        VersoinNumber = version.VersionNumber
+                        VersionNumber = version.VersionNumber
                     };
                     responses.Add(response);
                 }
@@ -104,6 +104,14 @@ namespace TestManagement.API.Services
             }
         }
 
+        /// <summary>
+        /// Creates a new environment with an initial version and persists it to the database.
+        /// </summary>
+        /// <param name="request">Request containing the environment name, OS and runtime information.</param>
+        /// <param name="ct">Cancellation token to cancel the operation.</param>
+        /// <returns>
+        /// A <see cref="CreateEnvironmentResponse"/> describing the created environment version.
+        /// </returns>
         public async Task<CreateEnvironmentResponse> CreateAsync(CreateEnvironmentRequest request, CancellationToken ct = default)
         {
             _logger?.LogDebug("EnvironmentService::CreateAsync() start!");
