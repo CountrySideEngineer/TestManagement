@@ -57,7 +57,8 @@ namespace TestManagement.API.Services
                     {
                         Name = environment.Name,
                         Os = version.Os,
-                        RunTime = version.RunTime
+                        RunTime = version.RunTime,
+                        VersoinNumber = version.VersionNumber
                     };
                     responses.Add(response);
                 }

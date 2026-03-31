@@ -20,5 +20,7 @@
         /// Runtime/framework string for the returned environment version.
         /// </summary>
         public string RunTime { get; set; } = null!;
+
+        public long VersoinNumber { get; set; } = 0;
     }
 }
