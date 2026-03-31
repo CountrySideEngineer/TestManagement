@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
+using TestManagement.API.Features.Environment.Create;
 using TestManagement.API.Features.Environment.Get;
 
 namespace TestManagement.API.Services
@@ -48,7 +49,7 @@ namespace TestManagement.API.Services
                 .Include(_ => _.Versions)
                 .ToListAsync();
             var responses = new List<GetEnvironmentResponse>();
-            foreach (var environment in envionments )
+            foreach (var environment in envionments)
             {
                 foreach (var version in environment.Versions)
                 {
@@ -83,7 +84,7 @@ namespace TestManagement.API.Services
             {
                 var environment = await _dbContext.Environments
                     .Where(_ => _.Id == id)
-                    .Include(_ =>_.Versions)
+                    .Include(_ => _.Versions)
                     .FirstOrDefaultAsync();
                 var response = new GetEnvironmentResponse();
                 if (null != environment)
@@ -100,6 +101,53 @@ namespace TestManagement.API.Services
             {
                 throw new ArgumentException();
             }
+        }
+
+        public async Task<CreateEnvironmentResponse> CreateAsync(CreateEnvironmentRequest request, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("EnvironmentService::CreateAsync() start!");
+            _logger?.LogDebug("request = {@Request}", request);
+
+            var isExists = await _dbContext.Environments.AnyAsync(_ => _.Name == request.Name, ct);
+            if (isExists)
+            {
+                throw new ArgumentException($"Environment with name '{request.Name}' already exists.");
+            }
+
+            var newEnvironment = new Models.Environment()
+            {
+                Name = request.Name
+            };
+            newEnvironment.AddVersion(request.Os, request.RunTime);
+            _dbContext.Environments.Add(newEnvironment);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync(ct);
+
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Error occurred while creating environment.");
+                throw;
+            }
+
+            var createdEnvironment = newEnvironment.Versions
+                .OrderByDescending(_ => _.VersionNumber)
+                .FirstOrDefault();
+            if (null == createdEnvironment)
+            {
+                throw new InvalidOperationException("Failed to create environment version.");
+            }
+            var response = new CreateEnvironmentResponse
+            {
+                Id = createdEnvironment.Id,
+                Name = newEnvironment.Name,
+                Os = createdEnvironment.Os,
+                RunTime = createdEnvironment.RunTime,
+                VersionNumber = createdEnvironment.VersionNumber
+            };
+            return response;
         }
     }
 }

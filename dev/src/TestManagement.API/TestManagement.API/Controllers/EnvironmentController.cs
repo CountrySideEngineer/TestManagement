@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
+using TestManagement.API.Features.Environment.Create;
 using TestManagement.API.Features.Environment.Get;
 using TestManagement.API.Services;
 
@@ -33,6 +34,14 @@ namespace TestManagement.API.Controllers
             _logger.LogDebug("EnvironmentController.GetAllAsync start!");
 
             return await _environmentService.GetByIdAsync(id);
+        }
+
+        [HttpPost]
+        public async Task<CreateEnvironmentResponse> CreateAsync([FromBody] CreateEnvironmentRequest request, CancellationToken ct = default)
+        {
+            _logger.LogDebug("EnvironmentController.CreateAsync start!");
+
+            return await _environmentService.CreateAsync(request, ct);
         }
     }
 }
