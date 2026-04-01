@@ -17,6 +17,8 @@
 
         public string Environment { get; set; } = null!;
 
+        public string Revision { get; set; } = string.Empty;
+
         public List<TestCaseExecution> TestCases { get; set; } = new();
     }
 }
