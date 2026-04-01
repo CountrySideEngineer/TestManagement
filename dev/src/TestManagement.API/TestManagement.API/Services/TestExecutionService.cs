@@ -27,10 +27,10 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("TestExecutionService.CreateAsync() start!");
 
-            var isExists = await _dbContext.TestExecutions.AnyAsync(_ => _.Revision == request.Revisoin);
+            var isExists = await _dbContext.TestExecutions.AnyAsync(_ => _.Revision == request.Revision);
             if (isExists)
             {
-                throw new Exception($"Test execution about {request.Revisoin} already exists.");
+                throw new Exception($"Test execution about {request.Revision} already exists.");
             }
 
             var testEnvironment = _dbContext.Environments.Where(_ => _.Name == request.Environment).First();
@@ -41,7 +41,7 @@ namespace TestManagement.API.Services
 
             var testExecution = new TestExecution()
             {
-                Revision = request.Revisoin,
+                Revision = request.Revision,
                 ExecutedAt = request.ExecutedAt,
                 EnvironmentId = testEnvironment.Id
             };
@@ -81,17 +81,18 @@ namespace TestManagement.API.Services
                 executedTests.Add(executedTest);
             }
             testExecution.AddExecutionItem(testEnvironment.Id, request.ExecutedAt, executedTests);
+            _dbContext.TestExecutions.Add(testExecution);
             try
             {
                 await _dbContext.SaveChangesAsync();
             }
             catch (Exception)
             {
-                throw new Exception($"Failed to save test execution about revision {request.Revisoin}.");
+                throw new Exception($"Failed to save test execution about revision {request.Revision}.");
             }
 
             var createdTestExecution = await _dbContext.TestExecutions
-                .Where(_ => _.Revision == request.Revisoin)
+                .Where(_ => _.Revision == request.Revision)
                 .Include(_ => _.Environment)
                 .Include(_ => _.Items)
                     .ThenInclude(i => i.TestResults)
