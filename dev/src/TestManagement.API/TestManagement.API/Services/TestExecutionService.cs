@@ -7,6 +7,9 @@ using TestManagement.API.Models;
 
 namespace TestManagement.API.Services
 {
+    /// <summary>
+    /// Service responsible for operations related to test executions.
+    /// </summary>
     public class TestExecutionService
     {
         private readonly TestManagementDbContext _dbContext;
@@ -14,6 +17,11 @@ namespace TestManagement.API.Services
         private readonly ILogger<TestExecutionService>? _logger = null;
 
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="TestExecutionService"/>.
+        /// </summary>
+        /// <param name="dbContext">Database context used for persistence.</param>
+        /// <param name="logger">Logger instance for the service.</param>
         public TestExecutionService(
             TestManagementDbContext dbContext,
             ILogger<TestExecutionService> logger
@@ -23,6 +31,13 @@ namespace TestManagement.API.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// Creates a new test execution with the specified request data and persists it to the database.
+        /// Validates that the environment, test cases and statuses exist before saving.
+        /// </summary>
+        /// <param name="request">The request DTO containing execution metadata and test case results.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>A DTO containing details of the created test execution.</returns>
         public virtual async Task<CreateTestExecutionResponse> CreateAsync(CreateTestExecutionRequest request, CancellationToken ct = default)
         {
             _logger?.LogDebug("TestExecutionService.CreateAsync() start!");
