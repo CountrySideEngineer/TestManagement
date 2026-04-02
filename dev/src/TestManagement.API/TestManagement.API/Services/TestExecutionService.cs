@@ -18,7 +18,6 @@ namespace TestManagement.API.Services
 
         private readonly ILogger<TestExecutionService>? _logger = null;
 
-
         /// <summary>
         /// Constructs a new instance of <see cref="TestExecutionService"/>.
         /// </summary>
@@ -44,16 +43,17 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("TestExecutionService.CreateAsync() start!");
 
-            var isExists = await _dbContext.TestExecutions.AnyAsync(_ => _.Revision == request.Revision);
-            if (isExists)
-            {
-                throw new Exception($"Test execution about {request.Revision} already exists.");
-            }
-
             var testEnvironment = _dbContext.Environments.Where(_ => _.Name == request.Environment).First();
             if (null == testEnvironment)
             {
                 throw new Exception($"Test environment {request.Environment} does not exists.");
+            }
+
+            var isExists = await _dbContext.TestExecutions
+                .AnyAsync(_ => _.Revision == request.Revision && _.EnvironmentId == testEnvironment.Id);
+            if (isExists)
+            {
+                throw new Exception($"Test execution about {request.Revision} already exists.");
             }
 
             var testExecution = new TestExecution()
@@ -62,41 +62,9 @@ namespace TestManagement.API.Services
                 ExecutedAt = request.ExecutedAt,
                 EnvironmentId = testEnvironment.Id
             };
-            var executedTests = new List<TestExecution.ExecutedTest>();
-            foreach (var testCaseItem in request.TestCases)
-            {
-                var testCaseVersions = _dbContext.TestCases
-                    .Where(_ => _.Code == testCaseItem.TestCaseCode)
-                    .Select(_ => _.Versions)
-                    .FirstOrDefault();
-                if (null == testCaseVersions)
-                {
-                    throw new Exception($"Test case about code {testCaseItem.TestCaseCode} does not exists.");
-                }
-                var testCaseVersionId = testCaseVersions?
-                    .Where(_ => _.VersionNumber == testCaseItem.TestCaseVersion)
-                    .Select(_ => _.Id)
-                    .FirstOrDefault();
-                if (0 == testCaseVersionId) 
-                {
-                    throw new Exception($"Test case about code {testCaseItem.TestCaseCode} and version {testCaseItem.TestCaseVersion} does not exists.");
-                }
-                var testStatusId = _dbContext.TestStatuses
-                    .Where(_ => _.Code == testCaseItem.TestStatusCode)
-                    .Select(_ => _.Id)
-                    .FirstOrDefault();
-                if (0 == testStatusId)
-                {
-                    throw new Exception($"Test status about code {testCaseItem.TestStatusCode} does not exists.");
-                }
 
-                var executedTest = new TestExecution.ExecutedTest()
-                {
-                    TestCaseVersionId = (long)testCaseVersionId!,
-                    TestStatusId = testStatusId
-                };
-                executedTests.Add(executedTest);
-            }
+            ICollection<TestExecution.ExecutedTest> executedTests = GetExecutedTestsFromRequest(request.TestCases);
+
             testExecution.AddExecutionItem(testEnvironment.Id, request.ExecutedAt, executedTests);
             _dbContext.TestExecutions.Add(testExecution);
             try
@@ -136,14 +104,21 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("TestExecutionService.UpdateAsync() start!");
 
-            var isExists = await _dbContext.TestExecutions.AnyAsync(_ => _.Revision == request.Revision);
+            var testEnvironment = _dbContext.Environments.Where(_ => _.Name == request.Environment).First();
+            if (null == testEnvironment)
+            {
+                throw new Exception($"Test environment {request.Environment} does not exists.");
+            }
+
+            var isExists = await _dbContext.TestExecutions
+                .AnyAsync(_ => _.Revision == request.Revision && _.EnvironmentId == testEnvironment.Id);
             if (!isExists)
             {
                 throw new Exception($"Test execution about {request.Revision} does not exist.");
             }
 
             var testExecution = await _dbContext.TestExecutions
-                .Where(_ => _.Environment.Name == request.Environment)
+                .Where(_ => _.Revision == request.Revision && _.EnvironmentId == testEnvironment.Id)
                 .Include(_ => _.Items)
                     .ThenInclude(i => i.TestResults)
                 .FirstOrDefaultAsync();
@@ -152,41 +127,8 @@ namespace TestManagement.API.Services
                 throw new Exception($"Test execution about {request.Revision} does not exist.");
             }
 
-            var executedTests = new List<TestExecution.ExecutedTest>();
-            foreach (var testCaseItem in request.TestCases)
-            {
-                var testCaseVersions = _dbContext.TestCases
-                    .Where(_ => _.Code == testCaseItem.TestCaseCode)
-                    .Select(_ => _.Versions)
-                    .FirstOrDefault();
-                if (null == testCaseVersions)
-                {
-                    throw new Exception($"Test case about code {testCaseItem.TestCaseCode} does not exists.");
-                }
-                var testCaseVersionId = testCaseVersions?
-                    .Where(_ => _.VersionNumber == testCaseItem.TestCaseVersion)
-                    .Select(_ => _.Id)
-                    .FirstOrDefault();
-                if (0 == testCaseVersionId)
-                {
-                    throw new Exception($"Test case about code {testCaseItem.TestCaseCode} and version {testCaseItem.TestCaseVersion} does not exists.");
-                }
-                var testStatusId = _dbContext.TestStatuses
-                    .Where(_ => _.Code == testCaseItem.TestStatusCode)
-                    .Select(_ => _.Id)
-                    .FirstOrDefault();
-                if (0 == testStatusId)
-                {
-                    throw new Exception($"Test status about code {testCaseItem.TestStatusCode} does not exists.");
-                }
+            ICollection<TestExecution.ExecutedTest> executedTests = GetExecutedTestsFromRequest(request.TestCases);
 
-                var executedTest = new TestExecution.ExecutedTest()
-                {
-                    TestCaseVersionId = (long)testCaseVersionId!,
-                    TestStatusId = testStatusId
-                };
-                executedTests.Add(executedTest);
-            }
             testExecution.AddExecutionItem(testExecution.EnvironmentId, request.ExecutedAt, executedTests);
             await _dbContext.SaveChangesAsync();
 
@@ -199,6 +141,64 @@ namespace TestManagement.API.Services
                 TestCases = request.TestCases
             };
             return response;
+        }
+
+        /// <summary>
+        /// Maps a collection of request test case execution DTOs to the domain executed test entities.
+        /// </summary>
+        /// <param name="testCaseExecutions">List of test case execution DTOs from the request.</param>
+        /// <returns>A collection of <see cref="TestExecution.ExecutedTest"/> entities ready to be persisted.</returns>
+        protected virtual ICollection<TestExecution.ExecutedTest> GetExecutedTestsFromRequest(List<TestCaseExecution> testCaseExecutions)
+        {
+            var executedTests = new List<TestExecution.ExecutedTest>();
+            foreach (var testCaseItem in testCaseExecutions)
+            {
+                TestExecution.ExecutedTest executedTest = GetExecutedTestFromExecution(testCaseItem);
+                executedTests.Add(executedTest);
+            }
+            return executedTests;
+        }
+
+        /// <summary>
+        /// Converts a single request test case execution DTO into a <see cref="TestExecution.ExecutedTest"/> entity.
+        /// Validates that the referenced test case version and status exist in the database.
+        /// </summary>
+        /// <param name="testCaseExecution">The DTO describing a single test case execution.</param>
+        /// <returns>The mapped <see cref="TestExecution.ExecutedTest"/> domain entity.</returns>
+        /// <exception cref="Exception">Thrown when the referenced test case, version or status does not exist.</exception>
+        protected virtual TestExecution.ExecutedTest GetExecutedTestFromExecution(TestCaseExecution testCaseExecution)
+        {
+            var testCaseVersions = _dbContext.TestCases
+                .Where(_ => _.Code == testCaseExecution.TestCaseCode)
+                .Select(_ => _.Versions)
+                .FirstOrDefault();
+            if (null == testCaseVersions)
+            {
+                throw new Exception($"Test case about code {testCaseExecution.TestCaseCode} does not exists.");
+            }
+            var testCaseVersionId = testCaseVersions?
+                .Where(_ => _.VersionNumber == testCaseExecution.TestCaseVersion)
+                .Select(_ => _.Id)
+                .FirstOrDefault();
+            if (0 == testCaseVersionId)
+            {
+                throw new Exception($"Test case about code {testCaseExecution.TestCaseCode} and version {testCaseExecution.TestCaseVersion} does not exists.");
+            }
+            var testStatusId = _dbContext.TestStatuses
+                .Where(_ => _.Code == testCaseExecution.TestStatusCode)
+                .Select(_ => _.Id)
+                .FirstOrDefault();
+            if (0 == testStatusId)
+            {
+                throw new Exception($"Test status about code {testCaseExecution.TestStatusCode} does not exists.");
+            }
+            var executedTest = new TestExecution.ExecutedTest()
+            {
+                TestCaseVersionId = (long)testCaseVersionId!,
+                TestStatusId = testStatusId
+            };
+
+            return executedTest;
         }
     }
 }
