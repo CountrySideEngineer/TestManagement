@@ -367,6 +367,9 @@ namespace TestManagement.API.Data
         {
             var entity = builder.Entity<TestExecution>();
             entity.HasKey(_ => _.Id);
+
+            entity.HasIndex(_ => new { _.Revision, _.EnvironmentId })
+                .IsUnique();
         }
     }
 }
