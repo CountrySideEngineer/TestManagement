@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Formats.Asn1;
 using TestManagement.API.Data;
 using TestManagement.API.Features.TestCases.Create;
 using TestManagement.API.Features.testExecutions.Create;
 using TestManagement.API.Features.TestExecutions.Create;
+using TestManagement.API.Features.TestExecutions.Update;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services
@@ -120,6 +122,82 @@ namespace TestManagement.API.Services
                 TestCases = request.TestCases
             };
 
+            return response;
+        }
+
+        /// <summary>
+        /// Updates an existing test execution by adding a new execution item.
+        /// Validates that the execution, environment, test cases and statuses exist before persisting changes.
+        /// </summary>
+        /// <param name="request">The request DTO containing the execution metadata and test case results to add.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>A DTO containing details of the updated test execution.</returns>
+        public virtual async Task<UpdateTestExecutionResponse> UpdateAsync(UpdateTestExecutionRequest request, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestExecutionService.UpdateAsync() start!");
+
+            var isExists = await _dbContext.TestExecutions.AnyAsync(_ => _.Revision == request.Revision);
+            if (!isExists)
+            {
+                throw new Exception($"Test execution about {request.Revision} does not exist.");
+            }
+
+            var testExecution = await _dbContext.TestExecutions
+                .Where(_ => _.Environment.Name == request.Environment)
+                .Include(_ => _.Items)
+                    .ThenInclude(i => i.TestResults)
+                .FirstOrDefaultAsync();
+            if (null == testExecution)
+            {
+                throw new Exception($"Test execution about {request.Revision} does not exist.");
+            }
+
+            var executedTests = new List<TestExecution.ExecutedTest>();
+            foreach (var testCaseItem in request.TestCases)
+            {
+                var testCaseVersions = _dbContext.TestCases
+                    .Where(_ => _.Code == testCaseItem.TestCaseCode)
+                    .Select(_ => _.Versions)
+                    .FirstOrDefault();
+                if (null == testCaseVersions)
+                {
+                    throw new Exception($"Test case about code {testCaseItem.TestCaseCode} does not exists.");
+                }
+                var testCaseVersionId = testCaseVersions?
+                    .Where(_ => _.VersionNumber == testCaseItem.TestCaseVersion)
+                    .Select(_ => _.Id)
+                    .FirstOrDefault();
+                if (0 == testCaseVersionId)
+                {
+                    throw new Exception($"Test case about code {testCaseItem.TestCaseCode} and version {testCaseItem.TestCaseVersion} does not exists.");
+                }
+                var testStatusId = _dbContext.TestStatuses
+                    .Where(_ => _.Code == testCaseItem.TestStatusCode)
+                    .Select(_ => _.Id)
+                    .FirstOrDefault();
+                if (0 == testStatusId)
+                {
+                    throw new Exception($"Test status about code {testCaseItem.TestStatusCode} does not exists.");
+                }
+
+                var executedTest = new TestExecution.ExecutedTest()
+                {
+                    TestCaseVersionId = (long)testCaseVersionId!,
+                    TestStatusId = testStatusId
+                };
+                executedTests.Add(executedTest);
+            }
+            testExecution.AddExecutionItem(testExecution.EnvironmentId, request.ExecutedAt, executedTests);
+            await _dbContext.SaveChangesAsync();
+
+            var response = new UpdateTestExecutionResponse()
+            {
+                TestExecutionId = testExecution.Id,
+                Environment = request.Environment,
+                ExecutedAt = request.ExecutedAt,
+                Revision = request.Revision,
+                TestCases = request.TestCases
+            };
             return response;
         }
     }
