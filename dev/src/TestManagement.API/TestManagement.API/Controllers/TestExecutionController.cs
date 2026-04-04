@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestManagement.API.Features.testExecutions.Create;
 using TestManagement.API.Features.TestExecutions.Create;
+using TestManagement.API.Features.TestExecutions.Get;
 using TestManagement.API.Features.TestExecutions.Update;
 using TestManagement.API.Services;
 
@@ -26,6 +27,15 @@ namespace TestManagement.API.Controllers
         {
             _logger = logger;
             _testExecutionService = testExecutionService;
+        }
+
+        [HttpGet]
+        public async Task<List<GetTestExecutionResponse>> GetAllAsync(CancellationToken ct = default)
+        {
+            _logger.LogDebug("TestExecutionController.GetAsync() start!");
+
+            var response = await _testExecutionService.GetAsync(ct);
+            return response;
         }
 
         /// <summary>

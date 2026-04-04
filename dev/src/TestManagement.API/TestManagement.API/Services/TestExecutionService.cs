@@ -5,6 +5,7 @@ using TestManagement.API.Features.TestCases.Create;
 using TestManagement.API.Features.testExecutions.Create;
 using TestManagement.API.Features.TestExecutions;
 using TestManagement.API.Features.TestExecutions.Create;
+using TestManagement.API.Features.TestExecutions.Get;
 using TestManagement.API.Features.TestExecutions.Update;
 using TestManagement.API.Models;
 
@@ -31,6 +32,35 @@ namespace TestManagement.API.Services
         {
             _dbContext = dbContext;
             _logger = logger;
+        }
+
+        public virtual async Task<List<GetTestExecutionResponse>> GetAsync(CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestExecutionService.GetAsync() start!");
+            var testExecutions = await _dbContext.TestExecutions
+                .Include(_ => _.Environment)
+                .Include(_ => _.Items)
+                    .ThenInclude(i => i.TestResults)
+                        .ThenInclude(i => i.TestCaseVersion)
+                            .ThenInclude(tc => tc.TestCase)
+                .Include(_ => _.Items)
+                    .ThenInclude(_ => _.TestResults)
+                        .ThenInclude(i => i.Status) 
+                .ToListAsync();
+            var response = testExecutions.Select(_ => new GetTestExecutionResponse()
+            {
+                TestExecutionId = _.Id,
+                Environment = _.Environment.Name,
+                ExecutedAt = _.ExecutedAt,
+                Revision = _.Revision,
+                TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
+                {
+                    TestCaseCode = tr.TestCaseVersion.TestCase.Code ?? string.Empty,
+                    TestCaseVersion = tr.TestCaseVersion.VersionNumber,
+                    TestStatusCode = tr.Status.Code
+                })).ToList()
+            }).ToList();
+            return response;
         }
 
         /// <summary>
