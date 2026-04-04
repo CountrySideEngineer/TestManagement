@@ -55,7 +55,7 @@ namespace TestManagement.API.Services
                 Revision = _.Revision,
                 TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
                 {
-                    TestCaseCode = tr.TestCaseVersion.TestCase.Code ?? string.Empty,
+                    TestCaseCode = tr.TestCaseVersion.TestCase!.Code,
                     TestCaseVersion = tr.TestCaseVersion.VersionNumber,
                     TestStatusCode = tr.Status.Code
                 })).ToList()
