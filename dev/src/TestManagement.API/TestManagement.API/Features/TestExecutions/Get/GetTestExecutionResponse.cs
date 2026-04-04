@@ -1,5 +1,9 @@
 ﻿namespace TestManagement.API.Features.TestExecutions.Get
 {
+    /// <summary>
+    /// Response DTO returned by the API when retrieving test execution records.
+    /// Contains metadata about the execution and a collection of executed test cases.
+    /// </summary>
     public class GetTestExecutionResponse
     {
         /// <summary>

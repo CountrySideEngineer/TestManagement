@@ -29,6 +29,12 @@ namespace TestManagement.API.Controllers
             _testExecutionService = testExecutionService;
         }
 
+        /// <summary>
+        /// Retrieves all test executions including their environments, items and test results.
+        /// This is a GET endpoint that returns a collection of execution summary DTOs.
+        /// </summary>
+        /// <param name="ct">Cancellation token to cancel the request.</param>
+        /// <returns>A list of <see cref="GetTestExecutionResponse"/> DTOs representing stored test executions.</returns>
         [HttpGet]
         public async Task<List<GetTestExecutionResponse>> GetAllAsync(CancellationToken ct = default)
         {

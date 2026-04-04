@@ -34,6 +34,12 @@ namespace TestManagement.API.Services
             _logger = logger;
         }
 
+        /// <summary>
+        /// Retrieves all test executions from the database including related environment, items and test results.
+        /// Maps domain entities to <see cref="GetTestExecutionResponse"/> DTOs.
+        /// </summary>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>A list of <see cref="GetTestExecutionResponse"/> instances.</returns>
         public virtual async Task<List<GetTestExecutionResponse>> GetAsync(CancellationToken ct = default)
         {
             _logger?.LogDebug("TestExecutionService.GetAsync() start!");
