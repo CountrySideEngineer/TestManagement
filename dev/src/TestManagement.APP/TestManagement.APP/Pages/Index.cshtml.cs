@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TestManagement.APP.Dto.TestExecution.Get;
 using TestManagement.APP.Models;
 using TestManagement.APP.Services;
 
@@ -6,58 +7,24 @@ namespace TestManagement.APP.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly DashboardApiClient _apiClient;
+        private readonly ILogger<IndexModel>? _logger;
 
-        public IndexModel(DashboardApiClient apiClient)
+        private readonly ITestExecutionService? _testExecutionService;
+
+        public IndexModel(
+            ILogger<IndexModel>? logger,
+            ITestExecutionService? testExecutionService
+            ) : base()
         {
-            _apiClient = apiClient;
-
-            Summary = new SummaryDto(0, 0, 0, 0);
+            _logger = logger;
+            _testExecutionService = testExecutionService;
         }
 
-        public SummaryDto? Summary { get; set; }
-        public TestRunDto TestRun { get; set; } = new TestRunDto();
-        public List<TestResultDto> TestResults { get; set; } = new List<TestResultDto>();
-
-        public string GetErrorRatePercent()
-            => Summary == null ? "--" : (Summary.ErrorNum * 100).ToString("F0") + "%";
-
-        public string GetPassRatePercent()
-        {
-            if ((Summary == null) || (0 == Summary.ExecutedNum))
-            {
-                return "--";
-            }
-            else
-            {
-                int passedRate = (((Summary.ExecutedNum - Summary.ErrorNum) * 100) / Summary.ExecutedNum);
-                string passedRateInStr = passedRate.ToString("F0") + "%";
-                return passedRateInStr;
-            }
-        }
-
-        public List<TestResultDto> GetTestResultsToDisplay()
-        {
-            if (TestResults == null)
-            {
-                return new();
-            }
-
-            if (10 < TestResults.Count)
-            {
-                return TestResults.GetRange(0, 10);
-            }
-            else
-            {
-                return TestResults;
-            }
-        }
+        public ICollection<GetTestExecutionResponse>? TestExecutions { get; set; }
 
         public async Task OnGetAsync()
         {
-            Summary = await _apiClient.GetSummaryAsync();
-            TestRun = await _apiClient.GetLatestTestRunAsync();
-            TestResults = await _apiClient.GetTestRecordsByTestRunAsync(TestRun.Id);
+            TestExecutions = await _testExecutionService!.GetTestExecutionsAsync();
         }
     }
 }

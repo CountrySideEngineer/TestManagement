@@ -16,14 +16,15 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using TestManagement.APP.Services.Option;
+using TestManagement.APP.Dto.TestExecution.Get;
 
 namespace TestManagement.APP.Pages.Upload
 {
     public class IndexModel : PageModel
     {
-        private readonly UploadFileParser _uploadFileParser;
+        private readonly ILogger<IndexModel>? _logger;
 
-        private readonly UploadApiClient _uploadApiClient;
+        private readonly ITestExecutionService? _testExecutionService;
 
         /// <summary>
         /// Constructor
@@ -31,12 +32,12 @@ namespace TestManagement.APP.Pages.Upload
         /// <param name="uploadFileParser">File parser object.</param>
         /// <param name="uploadApiClient">Test result upload API client.</param>
         public IndexModel(
-            UploadFileParser uploadFileParser, 
-            UploadApiClient uploadApiClient
+            ILogger<IndexModel>? logger,
+            ITestExecutionService? testExecutionService
             )
         {
-            _uploadFileParser = uploadFileParser;
-            _uploadApiClient = uploadApiClient;
+            _logger = logger;
+            _testExecutionService = testExecutionService;
         }
 
         [BindProperty]
@@ -66,64 +67,15 @@ namespace TestManagement.APP.Pages.Upload
         [BindProperty]
         public DateTime NewRevisionDate { get; set; } = DateTime.UtcNow;
 
+        public ICollection<GetTestExecutionResponse>? TestExecutions { get; set; }
+
         public async Task OnGetAsync()
         {
-            try
-            {
-                TestLevels = await _uploadApiClient.GetTestLevelAsync() ?? new List<TestLevelDto>();
-            }
-            catch (Exception)
-            {
-                // 取得失敗時は空リストにする（ログを追加する場合はここで）
-                TestLevels = new List<TestLevelDto>();
-            }
-
-            try
-            {
-                ExecutionInfos = await _testRunApiClient.GetTestRunsAsync() ?? new List<TestRunDto>();
-            }
-            catch (Exception)
-            {
-                ExecutionInfos = new List<TestRunDto>();
-            }
+            TestExecutions = await _testExecutionService!.GetTestExecutionsAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()
         {
-            if (UploadFiles == null || UploadFiles.Count == 0)
-            {
-                ModelState.AddModelError(string.Empty, "ファイルを選択してください。");
-                return Page();
-            }
-            if (null == SelectedTestLevelId)
-            {
-                ModelState.AddModelError(string.Empty, "テストレベルを選択してください。");
-                return Page();
-            }
-
-            var newTestRun = new TestRunDto()
-            {
-                Abstract = NewRevision,
-                ExecutedAt = NewRevisionDate.ToUniversalTime()
-            };
-            TestRunDto regTestRun = await _uploadApiClient.CreateTestRunAsync(newTestRun);
-            ParseOption parseOption = new ParseOption()
-            {
-                TestLevelId = SelectedTestLevelId,
-                RevisionId = regTestRun.Id
-            };
-            IList<TestResultDto> testResults = await _uploadFileParser.ParseAsync(UploadFiles, parseOption);
-            List<TestCaseDto> testCases = testResults.Select(r => r.TestCase!).ToList();
-            await _uploadApiClient.CreateTestCaseAsync(testCases);
-            await _uploadApiClient.ApplyTestCaseAsync(testCases);
-            foreach (var testResult in testResults)
-            {
-                if ((null != testResult.TestCase) && (0 != testResult.TestCase.Id))
-                {
-                    testResult.TestCaseId = testResult.TestCase.Id;
-                }
-            }
-            await _uploadApiClient.CreateTestResultAsync(testResults);
 
             return RedirectToPage("/index");
         }
