@@ -73,12 +73,6 @@ namespace TestManagement.APP.Pages.Upload
         {
             TestExecutions = await _testExecutionService!.GetTestExecutionsAsync();
         }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-
-            return RedirectToPage("/index");
-        }
     }
 }
 
