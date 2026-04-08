@@ -63,7 +63,12 @@ namespace TestManagement.API.Services
                 {
                     TestCaseCode = tr.TestCaseVersion.TestCase!.Code,
                     TestCaseVersion = tr.TestCaseVersion.VersionNumber,
-                    TestStatusCode = tr.Status.Code
+                    TestStatusCode = tr.Status.Code,
+                    IsPassed = tr.Status.IsSuccess,
+                    IsFailed = tr.Status.IsFailed,
+                    IsSkipped = tr.Status.IsSkipped,
+                    IsExcluded = tr.Status.IsExcluded,
+                    IsInProgress = tr.Status.IsInProgress
                 })).ToList()
             }).ToList();
 
