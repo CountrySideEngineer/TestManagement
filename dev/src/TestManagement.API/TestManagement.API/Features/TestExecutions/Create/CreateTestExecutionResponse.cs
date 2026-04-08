@@ -1,6 +1,4 @@
-﻿using TestManagement.API.Features.TestExecutions;
-
-namespace TestManagement.API.Features.testExecutions.Create
+﻿namespace TestManagement.API.Features.TestExecutions.Create
 {
     /// <summary>
     /// Response DTO returned after creating a test execution.

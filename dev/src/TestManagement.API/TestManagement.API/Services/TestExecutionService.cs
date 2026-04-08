@@ -1,8 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System.Formats.Asn1;
 using TestManagement.API.Data;
-using TestManagement.API.Features.TestCases.Create;
-using TestManagement.API.Features.testExecutions.Create;
 using TestManagement.API.Features.TestExecutions;
 using TestManagement.API.Features.TestExecutions.Create;
 using TestManagement.API.Features.TestExecutions.Get;
@@ -16,8 +13,14 @@ namespace TestManagement.API.Services
     /// </summary>
     public class TestExecutionService
     {
+        /// <summary>
+        /// Database context used to access and persist test execution related entities.
+        /// </summary>
         private readonly TestManagementDbContext _dbContext;
 
+        /// <summary>
+        /// Optional logger instance for diagnostic logging within the service.
+        /// </summary>
         private readonly ILogger<TestExecutionService>? _logger = null;
 
         /// <summary>
@@ -43,6 +46,7 @@ namespace TestManagement.API.Services
         public virtual async Task<List<GetTestExecutionResponse>> GetAsync(CancellationToken ct = default)
         {
             _logger?.LogDebug("TestExecutionService.GetAsync() start!");
+
             var testExecutions = await _dbContext.TestExecutions
                 .Include(_ => _.Environment)
                 .Include(_ => _.Items)

@@ -1,4 +1,4 @@
-﻿using TestManagement.API.Features.testExecutions.Create;
+﻿using TestManagement.API.Features.TestExecutions.Create;
 
 namespace TestManagement.API.Features.TestExecutions.Update
 {

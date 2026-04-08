@@ -20,14 +20,29 @@
         /// </summary>
         public string TestStatusCode { get; set; } = null!;
 
+        /// <summary>
+        /// Indicates whether the test case execution has failed.
+        /// </summary>
         public bool IsFailed = false;
 
+        /// <summary>
+        /// Indicates whether the test case execution was skipped.
+        /// </summary>
         public bool IsSkipped = false;
 
+        /// <summary>
+        /// Indicates whether the test case execution has passed.
+        /// </summary>
         public bool IsPassed = false;
 
+        /// <summary>
+        /// Indicates whether the test case execution is excluded from reporting.
+        /// </summary>
         public bool IsExcluded = false;
 
+        /// <summary>
+        /// Indicates whether the test case execution is currently in progress.
+        /// </summary>
         public bool IsInProgress = false;
     }
 }

@@ -26,12 +26,24 @@
         /// </summary>
         public bool IsSuccess { get; set; }
 
+        /// <summary>
+        /// Indicates whether this status represents a failed outcome.
+        /// </summary>
         public bool IsFailed { get; set; }
 
+        /// <summary>
+        /// Indicates whether this status represents a skipped outcome.
+        /// </summary>
         public bool IsSkipped { get; set; }
 
+        /// <summary>
+        /// Indicates whether this status should be excluded from reports or aggregates.
+        /// </summary>
         public bool IsExcluded { get; set; }
 
+        /// <summary>
+        /// Indicates whether this status represents an in-progress state.
+        /// </summary>
         public bool IsInProgress { get; set; }
 
         /// <summary>

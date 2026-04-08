@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TestManagement.API.Features.testExecutions.Create;
 using TestManagement.API.Features.TestExecutions.Create;
 using TestManagement.API.Features.TestExecutions.Get;
 using TestManagement.API.Features.TestExecutions.Update;
