@@ -26,6 +26,14 @@
         /// </summary>
         public bool IsSuccess { get; set; }
 
+        public bool IsFailed { get; set; }
+
+        public bool IsSkipped { get; set; }
+
+        public bool IsExcluded { get; set; }
+
+        public bool IsInProgress { get; set; }
+
         /// <summary>
         /// Indicates whether this status is terminal for a test's lifecycle (no further transitions expected).
         /// </summary>

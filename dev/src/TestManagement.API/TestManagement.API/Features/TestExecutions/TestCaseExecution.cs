@@ -19,5 +19,15 @@
         /// The status code resulting from the test execution (e.g. "Passed", "Failed").
         /// </summary>
         public string TestStatusCode { get; set; } = null!;
+
+        public bool IsFailed = false;
+
+        public bool IsSkipped = false;
+
+        public bool IsPassed = false;
+
+        public bool IsExcluded = false;
+
+        public bool IsInProgress = false;
     }
 }
