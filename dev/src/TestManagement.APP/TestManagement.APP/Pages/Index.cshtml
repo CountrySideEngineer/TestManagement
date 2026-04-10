@@ -5,6 +5,99 @@
 }
 
 <div class="container">
+    <div class="block">
+        <div class="block-title">最新の実行状況</div>
+        <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
+            <div class="summary-col" style="flex:0 0; max-width:50%; display:flex; padding:0; margin: 0 16px 0 0;">
+                <div class="chart-card d-flex align-items-center justify-content-center flex-fill" style="padding:0; margin:0;">
+                    <canvas id="summaryChart" aria-label="成功率と実行件数の円グラフ" style="display:block; width:100%; height:100%; padding:8px;"></canvas>
+                </div>
+            </div>
 
+            <div class="summary-col" style="flex:0 0 20%; max-width:50%; display:flex; flex-direction:column; padding:0;">
+                <div class="card" style="margin:0 0 8px 0;">
+                    <div class="card-title">成功率</div>
+                    <div class="card-value">@Model.DashboardViewModel?.LatestExecutionSummary?.SuccessRate %</div>
+                </div>
+
+                <div class="card" style="margin:8px 0 0 0;">
+                    <div class="card-title">実行件数</div>
+                    <div class="card-value">@Model.DashboardViewModel?.LatestExecutionSummary?.ExecutedNum 件</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 最近の実行結果 -->
+    <div class="block">
+        <div class="block-title">最近の実行結果</div>
+        <div class="recent-list">
+            @if (Model.DashboardViewModel?.RecentExecutions != null && Model.DashboardViewModel.RecentExecutions.Any())
+            {
+                <ul class="list-unstyled" style="margin:0; padding:0;">
+                    @foreach (var exec in Model.DashboardViewModel.RecentExecutions)
+                    {
+                        <li class="recent-item d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #eee;">
+                            <div class="exec-time" style="flex:0 0 220px;">
+                                <div class="small text-muted">@exec.ExecutedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div>
+                            </div>
+                            <div class="exec-revision" style="flex:1; padding-left:12px;">
+                                <div>Revision: <code>@exec.Revision</code></div>
+                            </div>
+                            <div class="exec-status" style="flex:0 0 120px; text-align:right;">
+                                @if (exec.HasFailure)
+                                {
+                                    <span class="badge bg-danger">失敗</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">成功</span>
+                                }
+                            </div>
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <div class="muted" style="padding:8px 0;">最近の実行はありません。</div>
+            }
+        </div>
+    </div>
+    
 
 </div>
+
+<script>
+    (function() {
+        // Summary counts from server
+        const executed = @(Model.DashboardViewModel?.LatestExecutionSummary?.ExecutedNum ?? 0);
+        const errors = @(Model.DashboardViewModel?.LatestExecutionSummary?.ErrorNum ?? 0);
+        const success = Math.max(0, executed - errors);
+
+        const ctx = document.getElementById('summaryChart');
+        if (!ctx) return;
+
+        const data = {
+            labels: ['成功', '失敗'],
+            datasets: [{
+                data: [success, errors],
+                backgroundColor: ['#2ecc71', '#e74c3c'],
+                hoverOffset: 6
+            }]
+        };
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,
+            options: {
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' },
+                    tooltip: { enabled: true }
+                },
+                cutout: '60%'
+            }
+        });
+    })();
+</script>
