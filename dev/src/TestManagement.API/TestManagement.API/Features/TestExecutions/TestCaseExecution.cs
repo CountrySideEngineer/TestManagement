@@ -23,26 +23,26 @@
         /// <summary>
         /// Indicates whether the test case execution has failed.
         /// </summary>
-        public bool IsFailed = false;
+        public bool IsFailed { get; set; } = false;
 
         /// <summary>
         /// Indicates whether the test case execution was skipped.
         /// </summary>
-        public bool IsSkipped = false;
+        public bool IsSkipped { get; set; } = false;
 
         /// <summary>
         /// Indicates whether the test case execution has passed.
         /// </summary>
-        public bool IsPassed = false;
+        public bool IsPassed { get; set; } = false;
 
         /// <summary>
         /// Indicates whether the test case execution is excluded from reporting.
         /// </summary>
-        public bool IsExcluded = false;
+        public bool IsExcluded { get; set; } = false;
 
         /// <summary>
         /// Indicates whether the test case execution is currently in progress.
         /// </summary>
-        public bool IsInProgress = false;
+        public bool IsInProgress { get; set; } = false;
     }
 }
