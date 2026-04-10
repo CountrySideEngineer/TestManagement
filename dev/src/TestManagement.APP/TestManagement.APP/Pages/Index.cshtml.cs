@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestManagement.APP.Dto.TestExecution.Get;
 using TestManagement.APP.Models;
 using TestManagement.APP.Services;
+using TestManagement.APP.ViewModel.Dashboard;
 
 namespace TestManagement.APP.Pages
 {
@@ -9,22 +10,22 @@ namespace TestManagement.APP.Pages
     {
         private readonly ILogger<IndexModel>? _logger;
 
-        private readonly ITestExecutionService? _testExecutionService;
+        private readonly IDashboardService? _dashboardService;
 
         public IndexModel(
             ILogger<IndexModel>? logger,
-            ITestExecutionService? testExecutionService
+            IDashboardService? dashboardService
             ) : base()
         {
             _logger = logger;
-            _testExecutionService = testExecutionService;
+            _dashboardService = dashboardService;
         }
 
-        public ICollection<GetTestExecutionResponse>? TestExecutions { get; set; }
+        public DashboardViewModel? DashboardViewModel { get; set; }
 
         public async Task OnGetAsync()
         {
-            TestExecutions = await _testExecutionService!.GetTestExecutionsAsync();
+            DashboardViewModel = await _dashboardService!.GetAsync();
         }
     }
 }
