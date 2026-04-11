@@ -19,16 +19,16 @@ namespace TestManagement.APP.Services
             _apiClient = apiClient;
         }
 
-        public virtual async Task<IList<ExecutionIndexViewModel>> GetExecutionAsync()
+        public virtual async Task<ICollection<ExecutionIndexViewModel>?> GetExecutionsAsync()
         {
             _logger.LogInformation("TestExecutionService::GetExecutionAsync() start!");
 
             ICollection<GetTestExecutionResponse>? testExecResponses = await _apiClient.GetTestExecutionsAsync();
 
-            var viewModels = new List<ExecutionIndexViewModel>();
-
             if (testExecResponses != null)
             {
+                var viewModels = new List<ExecutionIndexViewModel>();
+
                 foreach (var testExecResponse in testExecResponses)
                 {
                     var viewModel = new ExecutionIndexViewModel
@@ -37,6 +37,7 @@ namespace TestManagement.APP.Services
                         ExecutedAt = testExecResponse.ExecutedAt,
                         Environment = testExecResponse.Environment,
                         Revision = testExecResponse.Revision,
+                        PassedNum = testExecResponse.TestCases.Count(_ => _.IsPassed),
                         ErrorNum = testExecResponse.TestCases.Count(_ => _.IsFailed),
                         SkippedNum = testExecResponse.TestCases.Count(_ => _.IsSkipped),
                         ExcludedNum = testExecResponse.TestCases.Count(_ => _.IsExcluded),
@@ -44,8 +45,13 @@ namespace TestManagement.APP.Services
                     };
                     viewModels.Add(viewModel);
                 }
+
+                return viewModels;
             }
-            return viewModels;
+            else
+            {
+                return null;
+            }
         }
 
         public virtual async Task<ICollection<GetTestExecutionResponse>?> GetTestExecutionsAsync()
