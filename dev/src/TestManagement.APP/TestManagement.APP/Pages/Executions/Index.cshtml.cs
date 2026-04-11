@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestManagement.APP.Services;
+using TestManagement.APP.ViewModel.Executions;
 
 namespace TestManagement.APP.Pages.Executions
 {
@@ -9,6 +10,8 @@ namespace TestManagement.APP.Pages.Executions
         private readonly ILogger<IndexModel> _logger;
 
         private readonly ITestExecutionService _testExecutionService;
+
+        public IEnumerable<ExecutionIndexViewModel>? Executions { get; set; }
 
         public IndexModel(
             ILogger<IndexModel> logger,
@@ -19,10 +22,11 @@ namespace TestManagement.APP.Pages.Executions
             _testExecutionService = testExecutionService;
         }
 
-        public void OnGet()
+        public async void OnGetAsync()
         {
             _logger.LogInformation("IndexModel::OnGet() start!");
 
+            Executions = await _testExecutionService.GetExecutionsAsync();
         }
     }
 }

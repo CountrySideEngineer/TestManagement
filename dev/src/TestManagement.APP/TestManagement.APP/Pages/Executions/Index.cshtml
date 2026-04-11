@@ -2,3 +2,48 @@
 @model TestManagement.APP.Pages.Executions.IndexModel
 @{
 }
+
+<h1>Executions</h1>
+
+@if (Model.Executions == null || !Model.Executions.Any())
+{
+    <p>No executions found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Executed At (UTC)</th>
+                <th>Environment</th>
+                <th>Revision</th>
+                <th>Passed</th>
+                <th>Error</th>
+                <th>Skipped</th>
+                <th>Excluded</th>
+                <th>Executed</th>
+                <th>Success %</th>
+                <th>Failed %</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var execution in Model.Executions)
+            {
+                <tr>
+                    <td>@execution.TestExecutionId</td>
+                    <td>@execution.ExecutedAt.ToString("u")</td>
+                    <td>@execution.Environment</td>
+                    <td>@execution.Revision</td>
+                    <td>@execution.PassedNum</td>
+                    <td>@execution.ErrorNum</td>
+                    <td>@execution.SkippedNum</td>
+                    <td>@execution.ExcludedNum</td>
+                    <td>@execution.ExecutedNum</td>
+                    <td>@execution.SuccessRate</td>
+                    <td>@execution.FailedRate</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
