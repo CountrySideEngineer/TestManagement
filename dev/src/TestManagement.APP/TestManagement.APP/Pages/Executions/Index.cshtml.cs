@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestManagement.APP.Services;
 using TestManagement.APP.ViewModel.Executions;
@@ -22,7 +21,7 @@ namespace TestManagement.APP.Pages.Executions
             _testExecutionService = testExecutionService;
         }
 
-        public async void OnGetAsync()
+        public async Task OnGetAsync()
         {
             _logger.LogInformation("IndexModel::OnGet() start!");
 
