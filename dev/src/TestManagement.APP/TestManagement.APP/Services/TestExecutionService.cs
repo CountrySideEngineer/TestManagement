@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using System.Security.Cryptography;
 using TestManagement.APP.ApiClients;
 using TestManagement.APP.Dto.TestExecution.Get;
 using TestManagement.APP.ViewModel.Executions;
@@ -31,17 +32,27 @@ namespace TestManagement.APP.Services
 
                 foreach (var testExecResponse in testExecResponses)
                 {
+                    long pasedNum = testExecResponse.TestCases.Count(_ => _.IsPassed);
+                    long errorNum = testExecResponse.TestCases.Count(_ => _.IsFailed);
+                    long skippedNum = testExecResponse.TestCases.Count(_ => _.IsSkipped);
+                    long excludedNum = testExecResponse.TestCases.Count(_ => _.IsExcluded);
+                    long executedNum = pasedNum + errorNum;
+                    long passedRate = executedNum > 0 ? pasedNum * 100 / executedNum : 0;
+                    long failedRate = executedNum > 0 ? errorNum * 100 / executedNum : 0;
+
                     var viewModel = new ExecutionIndexViewModel
                     {
                         TestExecutionId = testExecResponse.TestExecutionId,
                         ExecutedAt = testExecResponse.ExecutedAt,
                         Environment = testExecResponse.Environment,
                         Revision = testExecResponse.Revision,
-                        PassedNum = testExecResponse.TestCases.Count(_ => _.IsPassed),
-                        ErrorNum = testExecResponse.TestCases.Count(_ => _.IsFailed),
-                        SkippedNum = testExecResponse.TestCases.Count(_ => _.IsSkipped),
-                        ExcludedNum = testExecResponse.TestCases.Count(_ => _.IsExcluded),
-                        ExecutedNum = testExecResponse.TestCases.Count(_ => _.IsPassed || _.IsFailed)
+                        PassedNum = pasedNum,
+                        ErrorNum = errorNum,
+                        SkippedNum = skippedNum,
+                        ExcludedNum = excludedNum,
+                        ExecutedNum = executedNum,
+                        SuccessRate = passedRate,
+                        FailedRate = failedRate
                     };
                     viewModels.Add(viewModel);
                 }
