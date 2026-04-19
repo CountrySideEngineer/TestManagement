@@ -11,39 +11,41 @@
 }
 else
 {
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Executed At (UTC)</th>
-                <th>Environment</th>
-                <th>Revision</th>
-                <th>Passed</th>
-                <th>Error</th>
-                <th>Skipped</th>
-                <th>Excluded</th>
-                <th>Executed</th>
-                <th>Success %</th>
-                <th>Failed %</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var execution in Model.Executions)
-            {
+    <div>
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>@execution.TestExecutionId</td>
-                    <td>@execution.ExecutedAt.ToString("u")</td>
-                    <td>@execution.Environment</td>
-                    <td>@execution.Revision</td>
-                    <td>@execution.PassedNum</td>
-                    <td>@execution.ErrorNum</td>
-                    <td>@execution.SkippedNum</td>
-                    <td>@execution.ExcludedNum</td>
-                    <td>@execution.ExecutedNum</td>
-                    <td>@execution.SuccessRate</td>
-                    <td>@execution.FailedRate</td>
+                    <th style="text-align:center;">Id</th>
+                    <th style="text-align:center;">Executed At (UTC)</th>
+                    <th style="text-align:center;">Environment</th>
+                    <th style="text-align:center;">Revision</th>
+                    <th style="text-align:center;">Passed</th>
+                    <th style="text-align:center;">Error</th>
+                    <th style="text-align:center;">Skipped</th>
+                    <th style="text-align:center;">Excluded</th>
+                    <th style="text-align:center;">Executed</th>
+                    <th style="text-align:center;">Success (%)</th>
+                    <th style="text-align:center;">Failed (%)</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var execution in Model.Executions)
+                {
+                    <tr>
+                        <td style="text-align:right;">@execution.TestExecutionId</td>
+                        <td style="text-align:left;">@execution.ExecutedAt.ToString("u")</td>
+                        <td style="text-align:left;">@execution.Environment</td>
+                        <td style="text-align:left;">@execution.Revision</td>
+                        <td style="text-align:right;">@execution.PassedNum</td>
+                        <td style="text-align:right;">@execution.ErrorNum</td>
+                        <td style="text-align:right;">@execution.SkippedNum</td>
+                        <td style="text-align:right;">@execution.ExcludedNum</td>
+                        <td style="text-align:right;">@execution.ExecutedNum</td>
+                        <td style="text-align:right;">@execution.SuccessRate</td>
+                        <td style="text-align:right;">@execution.FailedRate</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 }
