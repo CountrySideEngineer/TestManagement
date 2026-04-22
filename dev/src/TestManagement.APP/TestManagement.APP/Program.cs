@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.APP.ApiClients;
+using TestManagement.APP.ApiClients.Environment;
 using TestManagement.APP.Data;
 using TestManagement.APP.Data.Repositories.TestAnalysis;
 using TestManagement.APP.Services;
@@ -34,6 +35,7 @@ builder.Services.AddScoped<UploadApiClient>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 builder.Services.AddScoped<UploadFileParser>();
 builder.Services.AddScoped<ITestExecutionApiClient, TestExecutionApiClient>();
+builder.Services.AddScoped<IEnvironmentApiClient, EnvironmentApiClient>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
