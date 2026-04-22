@@ -8,5 +8,7 @@ namespace TestManagement.APP.Services
         Task<ICollection<ExecutionIndexViewModel>?> GetExecutionsAsync();
 
         Task<ICollection<GetTestExecutionResponse>?> GetTestExecutionsAsync();
+
+        Task<ExecutionCreateViewModel> GetExecutionCreateViewModelsAsync();
     }
 }
