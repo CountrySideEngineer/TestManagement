@@ -15,7 +15,8 @@
 
     <div class="form-group">
         <label asp-for="Environment"></label>
-        <input asp-for="Environment" class="form-control" />
+        <select asp-for="@Model.Environment" asp-items="@Model.EnvironmentSelectList" class="form-control">
+        </select>
         <span asp-validation-for="Environment" class="text-danger"></span>
     </div>
 
