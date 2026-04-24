@@ -1,7 +1,7 @@
 ﻿using TestManagement.APP.Dto.TestExecution.Get;
 using TestManagement.APP.ViewModel.Executions;
 
-namespace TestManagement.APP.Services
+namespace TestManagement.APP.Services.TestExecution
 {
     public interface ITestExecutionService
     {
