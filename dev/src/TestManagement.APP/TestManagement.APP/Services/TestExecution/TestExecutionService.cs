@@ -5,11 +5,10 @@ using TestManagement.APP.ApiClients;
 using TestManagement.APP.ApiClients.Environment;
 using TestManagement.APP.Dto.Environment.Get;
 using TestManagement.APP.Dto.TestExecution.Get;
-using TestManagement.APP.Services.TestExecution;
 using TestManagement.APP.ViewModel.Environment;
 using TestManagement.APP.ViewModel.Executions;
 
-namespace TestManagement.APP.Services
+namespace TestManagement.APP.Services.TestExecution
 {
     public class TestExecutionService : ITestExecutionService
     {
@@ -17,16 +16,12 @@ namespace TestManagement.APP.Services
 
         private readonly ITestExecutionApiClient _apiClient;
 
-        private readonly IEnvironmentApiClient _envApiClient;
-
         public TestExecutionService(
             ILogger<TestExecutionService> logger,
-            ITestExecutionApiClient apiClient,
-            IEnvironmentApiClient envApiClient)
+            ITestExecutionApiClient apiClient)
         {
             _logger = logger;
             _apiClient = apiClient;
-            _envApiClient = envApiClient;
         }
 
         public virtual async Task<ICollection<ExecutionIndexViewModel>?> GetExecutionsAsync()
@@ -72,31 +67,6 @@ namespace TestManagement.APP.Services
             {
                 return null;
             }
-        }
-
-        public virtual async Task<ExecutionCreateViewModel> GetExecutionCreateViewModelsAsync()
-        {
-            _logger.LogInformation("TestExecutionService::GetExecutionCreateViewModelsAsync() start!");
-
-            var viewModel = new ExecutionCreateViewModel();
-
-            IList<GetEnvironmentResponse> environments = await _envApiClient.GetEnvironmentsAsync();
-            if (null != environments)
-            {
-                var environmentModels = new List<EnvironmentModel>();
-                foreach (var environment in environments)
-                {
-                    var environmentModel = new EnvironmentModel
-                    {
-                        EnvironmentId = environment.EnvironmentId,
-                        DisplayName = $"{environment.Name} / {environment.Os} - ({environment.RunTime})"
-                    };
-                    environmentModels.Add(environmentModel);
-                }
-                viewModel.Environments = environmentModels;
-            }
-
-            return viewModel;
         }
 
         public virtual async Task<ICollection<GetTestExecutionResponse>?> GetTestExecutionsAsync()
