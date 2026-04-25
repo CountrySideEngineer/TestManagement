@@ -1,4 +1,5 @@
-﻿using TestManagement.APP.ApiClients.Environment;
+﻿using System;
+using TestManagement.APP.ApiClients.Environment;
 using TestManagement.APP.Dto.Environment.Get;
 using TestManagement.APP.ViewModel.Environment;
 
@@ -26,7 +27,7 @@ namespace TestManagement.APP.Services.Environment
             IList<EnvironmentModel> environmentViewModels = environmentResponses.Select(environmentResponse => new EnvironmentModel
             {
                 EnvironmentId = environmentResponse.EnvironmentId,
-                DisplayName = environmentResponse.Name
+                DisplayName = $"{environmentResponse.Name} / {environmentResponse.Os} - ({environmentResponse.RunTime})"
             }).ToList();
 
             return environmentViewModels;
