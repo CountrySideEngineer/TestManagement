@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TestManagement.APP.Services.Environment;
 using TestManagement.APP.Services.TestExecution;
+using TestManagement.APP.ViewModel.Environment;
 using TestManagement.APP.ViewModel.Executions;
 
 namespace TestManagement.APP.Pages.Executions
@@ -10,7 +12,7 @@ namespace TestManagement.APP.Pages.Executions
 
         private readonly ITestExecutionService _testExecutionService;
 
-        public IEnumerable<ExecutionIndexViewModel>? Executions { get; set; }
+        public IEnumerable<ExecutionIndexViewModel>? Executions { get; set; } = new List<ExecutionIndexViewModel>();
 
         public IndexModel(
             ILogger<IndexModel> logger,
