@@ -4,6 +4,7 @@ using TestManagement.APP.ApiClients.Environment;
 using TestManagement.APP.Data;
 using TestManagement.APP.Data.Repositories.TestAnalysis;
 using TestManagement.APP.Services;
+using TestManagement.APP.Services.Environment;
 using TestManagement.APP.Services.TestExecution;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,7 @@ builder.Services.AddScoped<UploadFileParser>();
 builder.Services.AddScoped<ITestExecutionApiClient, TestExecutionApiClient>();
 builder.Services.AddScoped<IEnvironmentApiClient, EnvironmentApiClient>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
+builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 
 var app = builder.Build();
