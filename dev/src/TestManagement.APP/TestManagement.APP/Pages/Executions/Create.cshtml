@@ -15,7 +15,21 @@
 
     <div class="form-group">
         <label asp-for="Environment"></label>
-        <select asp-for="@Model.Environment" asp-items="@Model.EnvironmentSelectList" class="form-control">
+        <select asp-for="Environment" class="form-control">
+            @if (Model.Environments != null)
+            {
+                foreach (var env in Model.Environments)
+                {
+                    if (env.Name == Model.Environment)
+                    {
+                        <option value="@env.Name" selected>@env.DisplayName</option>
+                    }
+                    else
+                    {
+                        <option value="@env.Name">@env.DisplayName</option>
+                    }
+                }
+            }
         </select>
         <span asp-validation-for="Environment" class="text-danger"></span>
     </div>

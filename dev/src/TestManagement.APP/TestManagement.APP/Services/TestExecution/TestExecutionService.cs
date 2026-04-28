@@ -5,6 +5,7 @@ using TestManagement.APP.ApiClients;
 using TestManagement.APP.ApiClients.Environment;
 using TestManagement.APP.Dto.Environment.Get;
 using TestManagement.APP.Dto.TestExecution.Get;
+using TestManagement.APP.Dto.TestExecution.Post;
 using TestManagement.APP.ViewModel.Environment;
 using TestManagement.APP.ViewModel.Executions;
 
@@ -84,6 +85,22 @@ namespace TestManagement.APP.Services.TestExecution
             var testExecutions = await _apiClient.GetTestExecutionsAsync();
 
             return null;
+        }
+
+        public virtual async Task<PostTestExecutionResponse?> CreateExecutionAsync(DateTime executedAt, string environment, string revision)
+        {
+            _logger.LogInformation("TestExecutionService::CreateExecutionAsync() start!");
+
+            var request = new Dto.TestExecution.Post.PostTestExecutionRequest
+            {
+                ExecutedAt = executedAt,
+                Environment = environment,
+                Revision = revision
+            };
+
+            var result = await _apiClient.CreateTestExecutionAsync(request);
+
+            return result;
         }
     }
 }

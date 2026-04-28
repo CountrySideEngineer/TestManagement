@@ -27,6 +27,9 @@ namespace TestManagement.APP.Services.Environment
             IList<EnvironmentModel> environmentViewModels = environmentResponses.Select(environmentResponse => new EnvironmentModel
             {
                 EnvironmentId = environmentResponse.EnvironmentId,
+                Name = environmentResponse.Name,
+                Os = environmentResponse.Os,
+                RunTime = environmentResponse.RunTime,
                 DisplayName = $"{environmentResponse.Name} / {environmentResponse.Os} - ({environmentResponse.RunTime})"
             }).ToList();
 
