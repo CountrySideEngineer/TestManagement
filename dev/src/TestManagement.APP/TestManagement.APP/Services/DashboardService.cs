@@ -5,12 +5,27 @@ using TestManagement.APP.ViewModel.Dashboard;
 
 namespace TestManagement.APP.Services
 {
+    /// <summary>
+    /// Service used by the application to build dashboard view models.
+    /// Aggregates test execution data and projects it into view models consumed by the UI.
+    /// </summary>
     public class DashboardService : IDashboardService
     {
+        /// <summary>
+        /// Logger instance used to produce diagnostic messages for the service.
+        /// </summary>
         private readonly ILogger<TestExecutionService> _logger;
 
+        /// <summary>
+        /// API client used to retrieve test execution DTOs from the backend.
+        /// </summary>
         private readonly ITestExecutionApiClient _apiClient;
 
+        /// <summary>
+        /// Constructs a new <see cref="DashboardService"/> instance.
+        /// </summary>
+        /// <param name="logger">Logger provided by dependency injection.</param>
+        /// <param name="apiClient">API client used to query test executions.</param>
         public DashboardService(
             ILogger<TestExecutionService> logger, 
             ITestExecutionApiClient apiClient
@@ -20,6 +35,11 @@ namespace TestManagement.APP.Services
             _apiClient = apiClient;
         }
 
+        /// <summary>
+        /// Builds the dashboard view model by fetching test executions and calculating
+        /// aggregated metrics for the latest run and several recent runs.
+        /// </summary>
+        /// <returns>A <see cref="DashboardViewModel"/> containing the latest execution summary and recent executions.</returns>
         public virtual async Task<DashboardViewModel> GetAsync()
         {
             _logger.LogDebug("DashboardService::GetAsync() start!");

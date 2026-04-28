@@ -8,6 +8,9 @@ namespace TestManagement.APP.Dto.TestExecution.Post
     /// </summary>
     public class PostTestExecutionResponse
     {
+        /// <summary>
+        /// The created test execution returned by the API. Contains the generated id and other metadata.
+        /// </summary>
         public GetTestExecutionResponse CreatedExecution { get; set; } = new GetTestExecutionResponse();
     }
 }

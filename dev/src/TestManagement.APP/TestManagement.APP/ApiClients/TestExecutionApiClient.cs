@@ -4,11 +4,27 @@ using TestManagement.APP.Dto.TestExecution.Post;
 
 namespace TestManagement.APP.ApiClients
 {
+    /// <summary>
+    /// API client for operations related to test executions.
+    /// Provides methods to query and create test execution records via the Test API.
+    /// </summary>
     public class TestExecutionApiClient : ITestExecutionApiClient
     {
+        /// <summary>
+        /// Logger for diagnostic and tracing messages.
+        /// </summary>
         private readonly ILogger<TestExecutionApiClient> _logger;
+
+        /// <summary>
+        /// HttpClient instance configured for the Test API (named client "TestApiClient").
+        /// </summary>
         private readonly HttpClient _httpClient;
 
+        /// <summary>
+        /// Initializes a new instance of <see cref="TestExecutionApiClient"/>.
+        /// </summary>
+        /// <param name="logger">Logger provided by dependency injection.</param>
+        /// <param name="httpClientFactory">Factory used to create the HttpClient for API calls.</param>
         public TestExecutionApiClient(
             ILogger<TestExecutionApiClient> logger,
             IHttpClientFactory httpClientFactory)
@@ -17,6 +33,11 @@ namespace TestManagement.APP.ApiClients
             _httpClient = httpClientFactory.CreateClient("TestApiClient");
         }
 
+        /// <summary>
+        /// Retrieves all test executions from the Test API.
+        /// Returns an empty list when no executions are available.
+        /// </summary>
+        /// <returns>A list of <see cref="GetTestExecutionResponse"/> or an empty list.</returns>
         public virtual async Task<IList<GetTestExecutionResponse>?> GetTestExecutionsAsync()
         {
             _logger?.LogDebug("TestExecutionApiClient::GetTestExecutionsAsync() start!");
@@ -28,6 +49,12 @@ namespace TestManagement.APP.ApiClients
             return result;
         }
 
+        /// <summary>
+        /// Creates a new test execution by posting <paramref name="request"/> to the API.
+        /// Returns the created execution response on success, otherwise <c>null</c> when the request failed.
+        /// </summary>
+        /// <param name="request">The request payload describing the test execution to create.</param>
+        /// <returns>The created <see cref="PostTestExecutionResponse"/> or <c>null</c> on failure.</returns>
         public virtual async Task<global::TestManagement.APP.Dto.TestExecution.Post.PostTestExecutionResponse?> CreateTestExecutionAsync(global::TestManagement.APP.Dto.TestExecution.Post.PostTestExecutionRequest request)
         {
             _logger?.LogDebug("TestExecutionApiClient::CreateTestExecutionAsync() start!");
