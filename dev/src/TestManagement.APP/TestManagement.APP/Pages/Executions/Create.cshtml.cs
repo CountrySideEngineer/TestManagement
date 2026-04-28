@@ -79,6 +79,11 @@ namespace TestManagement.APP.Pages.Executions
         public string Revision { get; set; } = string.Empty;
 
         /// <summary>
+        /// Collection of available environments.
+        /// </summary>
+        public ICollection<EnvironmentModel> Environments { get; set; } = new List<EnvironmentModel>();
+
+        /// <summary>
         /// Handles GET requests. Loads available environments and prepares the SelectList.
         /// </summary>
         public async Task OnGetAsync()
@@ -86,7 +91,7 @@ namespace TestManagement.APP.Pages.Executions
             _logger.LogInformation("CreateModel::OnGetAsync() start!");
 
             ICollection<EnvironmentModel>? envs = await _environmentService.GetEnvironmentsAsync();
-            ICollection<EnvironmentModel> Environments = envs!;
+            Environments = envs!;
             EnvironmentSelectList = new SelectList(Environments, "DisplayName", "DisplayName", Environments.ElementAt(0));
         }
 
