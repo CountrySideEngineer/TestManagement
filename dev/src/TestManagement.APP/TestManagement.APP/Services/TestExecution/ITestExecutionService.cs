@@ -10,6 +10,6 @@ namespace TestManagement.APP.Services.TestExecution
 
         Task<ICollection<GetTestExecutionResponse>?> GetTestExecutionsAsync();
 
-        Task<global::TestManagement.APP.Dto.TestExecution.Post.PostTestExecutionResponse?> CreateExecutionAsync(DateTime executedAt, string environment, string revision);
+        Task<PostTestExecutionResponse?> CreateExecutionAsync(DateTime executedAt, string environment, string revision);
     }
 }

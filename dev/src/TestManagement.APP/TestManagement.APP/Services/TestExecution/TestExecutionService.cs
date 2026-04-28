@@ -1,12 +1,6 @@
-﻿using Microsoft.AspNetCore.WebUtilities;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
-using TestManagement.APP.ApiClients;
-using TestManagement.APP.ApiClients.Environment;
-using TestManagement.APP.Dto.Environment.Get;
+﻿using TestManagement.APP.ApiClients;
 using TestManagement.APP.Dto.TestExecution.Get;
 using TestManagement.APP.Dto.TestExecution.Post;
-using TestManagement.APP.ViewModel.Environment;
 using TestManagement.APP.ViewModel.Executions;
 
 namespace TestManagement.APP.Services.TestExecution
@@ -91,7 +85,7 @@ namespace TestManagement.APP.Services.TestExecution
         {
             _logger.LogInformation("TestExecutionService::CreateExecutionAsync() start!");
 
-            var request = new Dto.TestExecution.Post.PostTestExecutionRequest
+            var request = new PostTestExecutionRequest
             {
                 ExecutedAt = executedAt,
                 Environment = environment,
