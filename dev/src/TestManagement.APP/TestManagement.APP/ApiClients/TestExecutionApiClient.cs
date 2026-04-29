@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Storage;
-using TestManagement.APP.Dto.TestExecution.Get;
+﻿using TestManagement.APP.Dto.TestExecution.Get;
 using TestManagement.APP.Dto.TestExecution.Post;
 
 namespace TestManagement.APP.ApiClients
@@ -55,7 +54,7 @@ namespace TestManagement.APP.ApiClients
         /// </summary>
         /// <param name="request">The request payload describing the test execution to create.</param>
         /// <returns>The created <see cref="PostTestExecutionResponse"/> or <c>null</c> on failure.</returns>
-        public virtual async Task<global::TestManagement.APP.Dto.TestExecution.Post.PostTestExecutionResponse?> CreateTestExecutionAsync(global::TestManagement.APP.Dto.TestExecution.Post.PostTestExecutionRequest request)
+        public virtual async Task<PostTestExecutionResponse?> CreateTestExecutionAsync(PostTestExecutionRequest request)
         {
             _logger?.LogDebug("TestExecutionApiClient::CreateTestExecutionAsync() start!");
 
@@ -67,7 +66,7 @@ namespace TestManagement.APP.ApiClients
                 return null;
             }
 
-            var result = await response.Content.ReadFromJsonAsync<global::TestManagement.APP.Dto.TestExecution.Post.PostTestExecutionResponse>();
+            var result = await response.Content.ReadFromJsonAsync<PostTestExecutionResponse>();
 
             if (result != null && result.CreatedExecution != null)
             {
