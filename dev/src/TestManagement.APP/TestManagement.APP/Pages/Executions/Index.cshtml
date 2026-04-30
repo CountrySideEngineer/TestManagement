@@ -3,7 +3,7 @@
 @{
 }
 
-<h1>Executions</h1>
+<h1>テスト実行一覧</h1>
 
 @if (Model.Executions == null || !Model.Executions.Any())
 {
@@ -15,17 +15,17 @@ else
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th style="text-align:center;">Id</th>
-                    <th style="text-align:center;">Executed At (UTC)</th>
-                    <th style="text-align:center;">Environment</th>
-                    <th style="text-align:center;">Revision</th>
-                    <th style="text-align:center;">Passed</th>
-                    <th style="text-align:center;">Error</th>
-                    <th style="text-align:center;">Skipped</th>
-                    <th style="text-align:center;">Excluded</th>
-                    <th style="text-align:center;">Executed</th>
-                    <th style="text-align:center;">Success (%)</th>
-                    <th style="text-align:center;">Failed (%)</th>
+                    <th style="text-align:center;">No.</th>
+                    <th style="text-align:center;">実行日 (UTC)</th>
+                    <th style="text-align:center;">実行環境</th>
+                    <th style="text-align:center;">リビジョン</th>
+                    <th style="text-align:center;">成功</th>
+                    <th style="text-align:center;">失敗</th>
+                    <th style="text-align:center;">スキップ</th>
+                    <th style="text-align:center;">対象外</th>
+                    <th style="text-align:center;">実行数</th>
+                    <th style="text-align:center;">成功率 (%)</th>
+                    <th style="text-align:center;">失敗率 (%)</th>
                 </tr>
             </thead>
             <tbody>
@@ -33,9 +33,9 @@ else
                 {
                     <tr>
                         <td style="text-align:right;">@execution.TestExecutionId</td>
-                        <td style="text-align:left;">@execution.ExecutedAt.ToString("u")</td>
-                        <td style="text-align:left;">@execution.Environment</td>
-                        <td style="text-align:left;">@execution.Revision</td>
+                        <td style="text-align:center;">@execution.ExecutedAt.ToString("u")</td>
+                        <td style="text-align:center;">@execution.Environment</td>
+                        <td style="text-align:right;">@execution.Revision</td>
                         <td style="text-align:right;">@execution.PassedNum</td>
                         <td style="text-align:right;">@execution.ErrorNum</td>
                         <td style="text-align:right;">@execution.SkippedNum</td>
@@ -50,5 +50,5 @@ else
     </div>
 }
 <div class="mt-3">
-    <a asp-page="./Create" class="btn btn-primary">New Execution</a>
+    <a asp-page="./Create" class="btn btn-primary">新規テスト実行</a>
 </div>
