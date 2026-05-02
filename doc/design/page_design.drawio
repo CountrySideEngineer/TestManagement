@@ -1,4 +1,4 @@
-<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="2">
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2" pages="3">
   <diagram name="トップページ" id="yZEaaLazP_KleFFMp-Zf">
     <mxGraphModel dx="1426" dy="875" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
@@ -347,6 +347,62 @@
         </mxCell>
         <mxCell id="TE6d0zni9_flbgCpClF--0" value="新規テスト実行" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.buttons.button;strokeColor=#666666;fontColor=#ffffff;mainText=;buttonStyle=round;fontSize=12;fontStyle=1;fillColor=#008cff;whiteSpace=wrap;" vertex="1" parent="ps9UJIehlcJtnQG1aXIX-2">
           <mxGeometry x="20" y="360" width="120" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram name="新規テスト実行登録" id="Q3wX02I2meU88b1p-GXI">
+    <mxGraphModel dx="599" dy="875" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="PHVrf0oCuiXvNeyVbZ74-0" />
+        <mxCell id="PHVrf0oCuiXvNeyVbZ74-1" parent="PHVrf0oCuiXvNeyVbZ74-0" />
+        <mxCell id="InQ3I8e73YxlsI5Mhas0-0" value="" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.browserWindow;rSize=0;strokeColor=#666666;strokeColor2=#008cff;strokeColor3=#c4c4c4;mainText=,;recursiveResize=0;fontSize=16;" vertex="1" parent="PHVrf0oCuiXvNeyVbZ74-1">
+          <mxGeometry x="881" y="80" width="720" height="800" as="geometry" />
+        </mxCell>
+        <mxCell id="InQ3I8e73YxlsI5Mhas0-7" value="Page 1" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;fontSize=17;fontColor=#666666;align=left;whiteSpace=wrap;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="60" y="12" width="110" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="InQ3I8e73YxlsI5Mhas0-8" value="https://TestManagement/Executions/Create" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.containers.anchor;rSize=0;fontSize=17;fontColor=#666666;align=left;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="130" y="60" width="340" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="InQ3I8e73YxlsI5Mhas0-14" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry y="110" width="720" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="InQ3I8e73YxlsI5Mhas0-15" value="ダッシュボード" style="shape=rectangle;strokeColor=none;fillColor=none;linkText=;fontSize=17;fontColor=#0000ff;fontStyle=4;html=1;align=center;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="20" y="125" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="InQ3I8e73YxlsI5Mhas0-16" value="ホーム" style="shape=rectangle;strokeColor=none;fillColor=none;linkText=;fontSize=17;fontColor=#0000ff;fontStyle=4;html=1;align=center;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="170" y="125" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="InQ3I8e73YxlsI5Mhas0-17" value="プライバシー" style="shape=rectangle;strokeColor=none;fillColor=none;linkText=;fontSize=17;fontColor=#0000ff;fontStyle=4;html=1;align=center;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="260" y="125" width="130" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Xf1s29ObXYktxbjHNFyX-0" value="新規テスト実行登録" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="20" y="190" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Xf1s29ObXYktxbjHNFyX-2" value="YYYY/MM/DD HH:mm:ss" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="29" y="280" width="181" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Xf1s29ObXYktxbjHNFyX-1" value="実行日" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="29" y="240" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Xf1s29ObXYktxbjHNFyX-3" value="実行環境" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="29" y="330" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Xf1s29ObXYktxbjHNFyX-25" value="ENV_001/Win11 - 25H22" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.forms.comboBox;strokeColor=#999999;fillColor=#ddeeff;align=left;fillColor2=#aaddff;mainText=;fontColor=#666666;fontSize=17;spacingLeft=3;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="29" y="360" width="280" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Xf1s29ObXYktxbjHNFyX-26" value="リビジョン" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=17;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="29" y="410" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Xf1s29ObXYktxbjHNFyX-54" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="29" y="440" width="281" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="DA9hiLDG56tk7sl9pGme-0" value="テスト実行登録" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.buttons.button;strokeColor=#666666;fontColor=#ffffff;mainText=;buttonStyle=round;fontSize=12;fontStyle=1;fillColor=#008cff;whiteSpace=wrap;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="35" y="500" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="DA9hiLDG56tk7sl9pGme-1" value="キャンセル" style="strokeWidth=1;shadow=0;dashed=0;align=center;html=1;shape=mxgraph.mockup.buttons.button;strokeColor=#666666;fontColor=#ffffff;mainText=;buttonStyle=round;fontSize=12;fontStyle=1;fillColor=#808080;whiteSpace=wrap;" vertex="1" parent="InQ3I8e73YxlsI5Mhas0-0">
+          <mxGeometry x="170" y="500" width="120" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
