@@ -82,6 +82,11 @@ body {
     font-weight: bold;
 }
 
+.card-value-small {
+    font-size: 18px;
+    font-weight: bold;
+}
+
 .block {
     border: 1px solid #dcdcdc;
     border-radius: 8px;

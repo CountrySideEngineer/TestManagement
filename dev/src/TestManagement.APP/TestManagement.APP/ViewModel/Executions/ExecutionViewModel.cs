@@ -2,7 +2,7 @@
 
 namespace TestManagement.APP.ViewModel.Executions
 {
-    public class ExecutionIndexViewModel
+    public class ExecutionViewModel
     {
         /// <summary>
         /// The identifier of the created test execution record.
