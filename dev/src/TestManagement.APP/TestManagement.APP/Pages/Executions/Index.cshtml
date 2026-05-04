@@ -26,6 +26,7 @@ else
                     <th style="text-align:center;">実行数</th>
                     <th style="text-align:center;">成功率 (%)</th>
                     <th style="text-align:center;">失敗率 (%)</th>
+                    <th style="text-align:center;">-</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +44,9 @@ else
                         <td style="text-align:right;">@execution.ExecutedNum</td>
                         <td style="text-align:right;">@execution.SuccessRate</td>
                         <td style="text-align:right;">@execution.FailedRate</td>
+                        <td style="text-align:center;">
+                            <a asp-page="/ExecutionUpload/Index" asp-route-id="@execution.TestExecutionId" class="btn btn-sm btn-primary">詳細/更新</a>
+                        </td>
                     </tr>
                 }
             </tbody>

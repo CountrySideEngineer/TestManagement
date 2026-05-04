@@ -25,7 +25,7 @@ namespace TestManagement.APP.Pages.Executions
         /// <summary>
         /// List of executions exposed to the Razor page. May be empty.
         /// </summary>
-        public IEnumerable<ExecutionIndexViewModel>? Executions { get; set; } = new List<ExecutionIndexViewModel>();
+        public IEnumerable<ExecutionViewModel>? Executions { get; set; } = new List<ExecutionViewModel>();
 
         /// <summary>
         /// Creates a new instance of the <see cref="IndexModel"/>.
