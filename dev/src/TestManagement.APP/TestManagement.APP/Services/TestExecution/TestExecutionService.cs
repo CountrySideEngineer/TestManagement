@@ -36,11 +36,11 @@ namespace TestManagement.APP.Services.TestExecution
         }
 
         /// <summary>
-        /// Retrieves executions and projects them into <see cref="ExecutionIndexViewModel"/> objects.
+        /// Retrieves executions and projects them into <see cref="ExecutionViewModel"/> objects.
         /// Calculates summary statistics such as passed/failed counts and rates.
         /// </summary>
         /// <returns>A collection of execution view models, or null when no data is available.</returns>
-        public virtual async Task<ICollection<ExecutionIndexViewModel>?> GetExecutionsAsync()
+        public virtual async Task<ICollection<ExecutionViewModel>?> GetExecutionsAsync()
         {
             _logger.LogInformation("TestExecutionService::GetExecutionAsync() start!");
 
@@ -48,7 +48,7 @@ namespace TestManagement.APP.Services.TestExecution
 
             if (testExecResponses != null)
             {
-                var viewModels = new List<ExecutionIndexViewModel>();
+                var viewModels = new List<ExecutionViewModel>();
 
                 foreach (var testExecResponse in testExecResponses)
                 {
@@ -60,7 +60,7 @@ namespace TestManagement.APP.Services.TestExecution
                     long passedRate = executedNum > 0 ? pasedNum * 100 / executedNum : 0;
                     long failedRate = executedNum > 0 ? errorNum * 100 / executedNum : 0;
 
-                    var viewModel = new ExecutionIndexViewModel
+                    var viewModel = new ExecutionViewModel
                     {
                         TestExecutionId = testExecResponse.TestExecutionId,
                         ExecutedAt = testExecResponse.ExecutedAt,
@@ -95,6 +95,42 @@ namespace TestManagement.APP.Services.TestExecution
 
             var testExecutions = await _apiClient.GetTestExecutionsAsync();
             return testExecutions;
+        }
+
+        public async Task<ExecutionViewModel?> GetTestExecutionByIdAsync(long testExecutionId)
+        {
+            _logger.LogInformation("TestExecutionService::GetTestExecutionByIdAsync() start!");
+
+            GetTestExecutionResponse? response = await _apiClient.GetTestExecutionsByIdAsync(testExecutionId);
+            if (response is not null)
+            {
+                long pasedNum = response.TestCases.Count(_ => _.IsPassed);
+                long errorNum = response.TestCases.Count(_ => _.IsFailed);
+                long skippedNum = response.TestCases.Count(_ => _.IsSkipped);
+                long excludedNum = response.TestCases.Count(_ => _.IsExcluded);
+                long executedNum = pasedNum + errorNum;
+                long passedRate = executedNum > 0 ? pasedNum * 100 / executedNum : 0;
+                long failedRate = executedNum > 0 ? errorNum * 100 / executedNum : 0;
+                var viewModel = new ExecutionViewModel
+                {
+                    TestExecutionId = response.TestExecutionId,
+                    ExecutedAt = response.ExecutedAt,
+                    Environment = response.Environment,
+                    Revision = response.Revision,
+                    PassedNum = pasedNum,
+                    ErrorNum = errorNum,
+                    SkippedNum = skippedNum,
+                    ExcludedNum = excludedNum,
+                    ExecutedNum = executedNum,
+                    SuccessRate = passedRate,
+                    FailedRate = failedRate
+                };
+                return viewModel;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         /// <summary>
