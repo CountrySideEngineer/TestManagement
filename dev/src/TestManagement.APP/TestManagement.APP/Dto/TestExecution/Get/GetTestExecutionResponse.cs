@@ -17,6 +17,12 @@
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
+        /// The identifier of the environment where the test execution was run.
+        /// Useful for internal references and joining with environment metadata.
+        /// </summary>
+        public long EnvironmentId { get; set; } = 0;
+
+        /// <summary>
         /// The target environment for the test execution (e.g. "staging", "production").
         /// </summary>
         public string Environment { get; set; } = null!;
