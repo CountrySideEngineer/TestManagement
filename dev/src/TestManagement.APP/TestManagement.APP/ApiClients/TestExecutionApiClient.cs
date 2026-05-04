@@ -79,5 +79,39 @@ namespace TestManagement.APP.ApiClients
 
             return result;
         }
+
+        public virtual async Task<GetTestExecutionResponse?> GetTestExecutionsByIdAsync(long id)
+        {
+            _logger?.LogDebug("TestExecutionApiClient::GetTestExecutionsByIdAsync() start!");
+
+            string url = $"api/testexecution/{id}";
+
+            var response = await _httpClient.GetAsync(url);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger?.LogWarning("TestExecutionApiClient::GetTestExecutionsByIdAsync() failed with status {StatusCode} for id {Id}", response.StatusCode, id);
+                throw new HttpRequestException($"Failed to get test execution with id {id}. Status code: {response.StatusCode}");
+            }
+    
+            var result = response.Content.ReadFromJsonAsync<GetTestExecutionResponse>().Result;
+            if (result == null)
+            {
+                _logger?.LogWarning("TestExecutionApiClient::GetTestExecutionsByIdAsync() returned null for id {Id}", id);
+                throw new InvalidOperationException($"Received null response when fetching test execution with id {id}");
+            }
+    
+            return result;
+        }
+
+
+        //Task<IList<GetTestExecutionResponse>?> ITestExecutionApiClient.GetTestExecutionsAsync()
+        //{
+        //    throw new NotImplementedException();
+        //}
+
+        //Task<PostTestExecutionResponse?> ITestExecutionApiClient.CreateTestExecutionAsync(PostTestExecutionRequest request)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }
