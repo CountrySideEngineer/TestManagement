@@ -1,4 +1,6 @@
-﻿namespace TestManagement.API.Features.TestExecutions.Get
+﻿using System.Diagnostics.Eventing.Reader;
+
+namespace TestManagement.API.Features.TestExecutions.Get
 {
     /// <summary>
     /// Response DTO returned by the API when retrieving test execution records.
@@ -15,6 +17,12 @@
         /// The UTC date and time when the test execution occurred.
         /// </summary>
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// The identifier of the environment where the test execution was run.
+        /// Useful for internal references and joining with environment metadata.
+        /// </summary>
+        public long EnvironmentId { get; set; } = 0;
 
         /// <summary>
         /// The target environment for the test execution (e.g. "staging", "production").

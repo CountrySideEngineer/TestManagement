@@ -56,10 +56,11 @@ namespace TestManagement.API.Services
                 .Include(_ => _.Items)
                     .ThenInclude(_ => _.TestResults)
                         .ThenInclude(i => i.Status) 
-                .ToListAsync();
+                .ToListAsync(ct);
             var response = testExecutions.Select(_ => new GetTestExecutionResponse()
             {
                 TestExecutionId = _.Id,
+                EnvironmentId = _.Environment.Id,
                 Environment = _.Environment.Name,
                 ExecutedAt = _.ExecutedAt,
                 Revision = _.Revision,
@@ -75,6 +76,52 @@ namespace TestManagement.API.Services
                     IsInProgress = tr.Status.IsInProgress
                 })).ToList()
             }).ToList();
+
+
+            return response;
+        }
+
+        /// <summary>
+        /// Retrieves a single test execution by its identifier including related environment, items and test results.
+        /// Maps the domain entity to a <see cref="GetTestExecutionResponse"/> DTO.
+        /// </summary>
+        /// <param name="id">Identifier of the test execution to retrieve.</param>
+        /// <param name="ct">Cancellation token.</param>
+        /// <returns>The mapped <see cref="GetTestExecutionResponse"/> if found; otherwise an empty/default instance.</returns>
+        public virtual async Task<GetTestExecutionResponse> GetByIdAsync(long id, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestExecutionService.GetByIdAsync() start!");
+
+            var testExecutions = await _dbContext.TestExecutions
+                .Where(_ => _.Id == id)
+                .Include(_ => _.Environment)
+                .Include(_ => _.Items)
+                    .ThenInclude(i => i.TestResults)
+                        .ThenInclude(i => i.TestCaseVersion)
+                            .ThenInclude(tc => tc.TestCase)
+                .Include(_ => _.Items)
+                    .ThenInclude(_ => _.TestResults)
+                        .ThenInclude(i => i.Status)
+                .ToListAsync(ct);
+            var response = testExecutions.Select(_ => new GetTestExecutionResponse()
+            {
+                TestExecutionId = _.Id,
+                EnvironmentId = _.Environment.Id,
+                Environment = _.Environment.Name,
+                ExecutedAt = _.ExecutedAt,
+                Revision = _.Revision,
+                TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
+                {
+                    TestCaseCode = tr.TestCaseVersion.TestCase!.Code,
+                    TestCaseVersion = tr.TestCaseVersion.VersionNumber,
+                    TestStatusCode = tr.Status.Code,
+                    IsPassed = tr.Status.IsSuccess,
+                    IsFailed = tr.Status.IsFailed,
+                    IsSkipped = tr.Status.IsSkipped,
+                    IsExcluded = tr.Status.IsExcluded,
+                    IsInProgress = tr.Status.IsInProgress
+                })).ToList()
+            }).FirstOrDefault() ?? new GetTestExecutionResponse();
 
             return response;
         }

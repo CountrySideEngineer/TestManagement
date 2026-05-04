@@ -44,6 +44,22 @@ namespace TestManagement.API.Controllers
         }
 
         /// <summary>
+        /// Retrieves a single test execution by its identifier.
+        /// Returns the execution summary if found; otherwise returns an empty DTO.
+        /// </summary>
+        /// <param name="id">The identifier of the test execution to retrieve.</param>
+        /// <param name="ct">Cancellation token to cancel the request.</param>
+        /// <returns>An instance of <see cref="GetTestExecutionResponse"/> for the requested execution, or an empty instance when not found.</returns>
+        [HttpGet("{id}")]
+        public async Task<GetTestExecutionResponse> GetByIdAsync(long id, CancellationToken ct = default)
+        {
+            _logger.LogDebug("TestExecutionController.GetAsync() start!");
+
+            var response = await _testExecutionService.GetByIdAsync(id, ct);
+            return response;
+        }
+
+        /// <summary>
         /// Creates a new test execution record from the provided request DTO.
         /// This is a POST endpoint that returns the created execution details.
         /// </summary>
