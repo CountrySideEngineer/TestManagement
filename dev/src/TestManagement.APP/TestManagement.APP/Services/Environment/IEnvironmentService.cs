@@ -5,6 +5,6 @@ namespace TestManagement.APP.Services.Environment
 {
     public interface IEnvironmentService
     {
-        Task<ICollection<EnvironmentModel>?> GetEnvironmentsAsync();
+        Task<ICollection<EnvironmentViewModel>?> GetEnvironmentsAsync();
     }
 }

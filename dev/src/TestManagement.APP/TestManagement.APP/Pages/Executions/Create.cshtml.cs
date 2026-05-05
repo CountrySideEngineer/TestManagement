@@ -70,7 +70,7 @@ namespace TestManagement.APP.Pages.Executions
         /// <summary>
         /// SelectList of available environments used by the Razor view to populate a dropdown.
         /// </summary>
-        public SelectList EnvironmentSelectList = new SelectList(new List<TestManagement.APP.ViewModel.Environment.EnvironmentModel>(), "DisplayName", "DisplayName");
+        public SelectList EnvironmentSelectList = new SelectList(new List<TestManagement.APP.ViewModel.Environment.EnvironmentViewModel>(), "DisplayName", "DisplayName");
 
         /// <summary>
         /// Revision identifier (e.g. commit SHA) bound from the form.
@@ -81,7 +81,7 @@ namespace TestManagement.APP.Pages.Executions
         /// <summary>
         /// Collection of available environments.
         /// </summary>
-        public ICollection<EnvironmentModel> Environments { get; set; } = new List<EnvironmentModel>();
+        public ICollection<EnvironmentViewModel> Environments { get; set; } = new List<EnvironmentViewModel>();
 
         /// <summary>
         /// Handles GET requests. Loads available environments and prepares the SelectList.
@@ -90,7 +90,7 @@ namespace TestManagement.APP.Pages.Executions
         {
             _logger.LogInformation("CreateModel::OnGetAsync() start!");
 
-            ICollection<EnvironmentModel>? envs = await _environmentService.GetEnvironmentsAsync();
+            ICollection<EnvironmentViewModel>? envs = await _environmentService.GetEnvironmentsAsync();
             Environments = envs!;
             EnvironmentSelectList = new SelectList(Environments, "DisplayName", "DisplayName", Environments.ElementAt(0));
         }
@@ -104,7 +104,7 @@ namespace TestManagement.APP.Pages.Executions
         {
             _logger.LogInformation("CreateModel::OnPostAsync() start!");
 
-            ICollection<EnvironmentModel>? environments = await _environmentService.GetEnvironmentsAsync();
+            ICollection<EnvironmentViewModel>? environments = await _environmentService.GetEnvironmentsAsync();
             string environmentName = environments?
                 .Where(_ => _.Name == Environment)
                 .Select(_ => _.Name)

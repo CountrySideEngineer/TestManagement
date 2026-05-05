@@ -4,7 +4,7 @@ namespace TestManagement.APP.ViewModel.Executions
 {
     public class ExecutionCreateViewModel
     {
-        public IList<EnvironmentModel> Environments { get; set; } = new List<EnvironmentModel>();
+        public IList<EnvironmentViewModel> Environments { get; set; } = new List<EnvironmentViewModel>();
 
         public ExecutionCreateViewModel() { }
     }

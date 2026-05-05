@@ -35,16 +35,16 @@ namespace TestManagement.APP.Services.Environment
         }
 
         /// <summary>
-        /// Retrieves environments from the API and maps them to <see cref="EnvironmentModel"/> instances.
+        /// Retrieves environments from the API and maps them to <see cref="EnvironmentViewModel"/> instances.
         /// Returns null if the API client returns null.
         /// </summary>
-        /// <returns>A collection of <see cref="EnvironmentModel"/>, or null.</returns>
-        public async Task<ICollection<EnvironmentModel>?> GetEnvironmentsAsync()
+        /// <returns>A collection of <see cref="EnvironmentViewModel"/>, or null.</returns>
+        public async Task<ICollection<EnvironmentViewModel>?> GetEnvironmentsAsync()
         {
             _logger.LogDebug("EnvironmentService::GetEnvironmentsAsync() start!");
 
             IList<GetEnvironmentResponse> environmentResponses = await _apiClient.GetEnvironmentsAsync();
-            IList<EnvironmentModel> environmentViewModels = environmentResponses.Select(environmentResponse => new EnvironmentModel
+            IList<EnvironmentViewModel> environmentViewModels = environmentResponses.Select(environmentResponse => new EnvironmentViewModel
             {
                 EnvironmentId = environmentResponse.EnvironmentId,
                 Name = environmentResponse.Name,
