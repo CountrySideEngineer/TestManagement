@@ -32,6 +32,9 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             _environmentService = environmentService;
         }
 
+        [BindProperty]
+        public List<IFormFile> UploadFiles { get; set; } = new List<IFormFile>();
+
         public ExecutionViewModel ExecutionViewModel { get; set; } = new ExecutionViewModel();
 
         public EnvironmentViewModel EnvironmentViewModel { get;set; } = new EnvironmentViewModel();

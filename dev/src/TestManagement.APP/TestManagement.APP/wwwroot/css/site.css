@@ -122,16 +122,29 @@ th {
 .status-failure { color: #e74c3c; font-weight: bold; }
 .status-skipped { color: #f1c40f; font-weight: bold; }
 
+/*アップロードボタンのスタイルを無効にする。*/
+.file-button {
+    background: #0984e3;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    margin-top: 6px;
+}
+
 .upload-btn {
-  background: #0984e3;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  text-decoration: none;
-  display: inline-block;
+    background: #0984e3;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: none;
+    display: inline-block;
 }
 
 /* simple modal */

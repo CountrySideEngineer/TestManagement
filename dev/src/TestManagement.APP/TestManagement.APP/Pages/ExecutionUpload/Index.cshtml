@@ -67,8 +67,26 @@
                         </tbody>
                     </table>
                 </div>
-
             </div>
         </div>
+    </div>
+    <div class="block">
+        <div class="block-title">テスト結果登録</div>
+        <div class="card">
+            <div class="card-title">ファイルの選択</div>
+            <div style="margin-bottom: 8px;">
+                <label for="fileInput" class="file-button">
+                    テスト結果ファイルの選択
+                    <input id="fileInput" type="file" asp-for="UploadFiles" multiple style="display:none;"/>
+                </label>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-title">ファイルの選択</div>
+            <div style="margin-bottom:8px;">
+                <input type="submit" class="upload-btn" value="アップロード開始" />
+            </div>
+        </div>
+
     </div>
 </div>
