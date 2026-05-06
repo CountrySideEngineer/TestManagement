@@ -9,6 +9,9 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http.HttpResults;
 using TestManagement.APP.ViewModel.Executions;
+using TestManagement.APP.Services.Environment;
+using TestManagement.APP.ViewModel.Environment;
+using System.Diagnostics.Eventing.Reader;
 
 namespace TestManagement.APP.Pages.ExecutionUpload
 {
@@ -16,30 +19,22 @@ namespace TestManagement.APP.Pages.ExecutionUpload
     {
         private readonly ILogger<IndexModel>? _logger;
         private readonly ITestExecutionService? _testExecutionService;
+        private readonly IEnvironmentService? _environmentService;
 
         public IndexModel(
             ILogger<IndexModel>? logger, 
-            ITestExecutionService? testExecutionService)
+            ITestExecutionService? testExecutionService,
+            IEnvironmentService? environmentService
+            )
         {
             _logger = logger;
             _testExecutionService = testExecutionService;
+            _environmentService = environmentService;
         }
-
-        [BindProperty]
-        public List<IFormFile> UploadFiles { get; set; } = new List<IFormFile>();
-
-        [BindProperty]
-        public string Revision { get; set; } = string.Empty;
-
-        [BindProperty]
-        public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
-
-        [BindProperty]
-        public string Environment { get; set; } = string.Empty;
 
         public ExecutionViewModel ExecutionViewModel { get; set; } = new ExecutionViewModel();
 
-        public ICollection<GetTestExecutionResponse>? TestExecutions { get; set; }
+        public EnvironmentViewModel EnvironmentViewModel { get;set; } = new EnvironmentViewModel();
 
         public async Task OnGetAsync(long id)
         {
@@ -47,6 +42,12 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             if (testExecution is not null)
             {
                 ExecutionViewModel = testExecution;
+            }
+            string envName = ExecutionViewModel.Environment;
+            var env = await _environmentService!.GetLatestEnvironmentByNameAsync(envName);
+            if (env is not null)
+            {
+                EnvironmentViewModel = env;
             }
         }
     }

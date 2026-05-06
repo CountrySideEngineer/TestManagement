@@ -32,6 +32,23 @@ namespace TestManagement.APP.ApiClients.Environment
         }
 
         /// <summary>
+        /// Retrieves environments that match the provided name from the Test API.
+        /// </summary>
+        /// <param name="request">A <see cref="GetEnvironmentRequest"/> containing the name to search for.</param>
+        /// <returns>A list of <see cref="GetEnvironmentResponse"/> objects. Returns an empty list if no matches are found.</returns>
+        public async Task<IList<GetEnvironmentResponse>> GetEnvironmentsByNameAsync(GetEnvironmentRequest request)
+        {
+            _logger.LogInformation("EnvironmentApiClient::GetEnvironmentByNameAsync() start! Name: {Request.Name}", request.Name);
+
+            string apiUrl = $"api/environment/name/{request.Name}";
+            var responses = await _httpClient!
+                .GetFromJsonAsync<List<GetEnvironmentResponse>>(apiUrl) ??
+                    new List<GetEnvironmentResponse>();
+
+            return responses;
+        }
+
+        /// <summary>
         /// Retrieves the list of environments from the remote API.
         /// Returns an empty list if the API returns no data.
         /// </summary>

@@ -6,23 +6,6 @@
     ViewData["Title"] = "実行アップロード";
 }
 
-@{
-    var exec = Model.TestExecutions?.FirstOrDefault();
-    var execId = exec?.TestExecutionId ?? 0;
-    var env = exec?.Environment ?? Model.Environment ?? "-";
-    var executed = exec?.TestCases?.Count(tc => tc.IsPassed || tc.IsFailed || tc.IsSkipped || tc.IsInProgress) ?? 0;
-    var total = exec?.TestCases?.Count ?? 0;
-    var percent = total > 0 ? (int)Math.Round((double)executed / total * 100) : 0;
-    string status = "Unknown";
-    if (exec != null)
-    {
-        if (exec.TestCases.Any(tc => tc.IsInProgress)) status = "Running";
-        else if (exec.TestCases.Any(tc => tc.IsFailed)) status = "Failed";
-        else if (exec.TestCases.All(tc => tc.IsPassed)) status = "OK";
-        else status = "Pending";
-    }
-}
-
 <div class="container">
     <div class="block">
         <div class="block-title">実行環境/リビジョン情報</div>
@@ -40,10 +23,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td style="text-align:center">ENV_001</td>
-                                <td style="text-align:center">Windows11</td>
-                                <td style="text-align:center">24H12</td>
-                                <td style="text-align:center">Rev.123</td>
+                                <td style="text-align:center">@Model.EnvironmentViewModel.Name</td>
+                                <td style="text-align:center">@Model.EnvironmentViewModel.Os</td>
+                                <td style="text-align:center">@Model.EnvironmentViewModel.RunTime</td>
+                                <td style="text-align:center">@Model.ExecutionViewModel.Revision</td>
                             </tr>
                         </tbody>
                     </table>
@@ -89,109 +72,3 @@
         </div>
     </div>
 </div>
-
-<!--
-    <div class="panel">
-        <h2>TestExecution #@execId</h2>
-        <div class="meta">
-            <div><strong>Environment:</strong> @env</div>
-            <div><strong>Status:</strong> @status</div>
-        </div>
-
-        <div class="progress-block">
-            <div class="label">Progress:</div>
-            <div class="progress">
-                <div class="bar" style="width:@percent%;">&nbsp;</div>
-            </div>
-            <div class="counts">Executed: @executed / @total</div>
-        </div>
-
-        <form method="post" enctype="multipart/form-data">
-            <div class="upload-section">
-                <label>Upload XML Files:</label>
-                <input id="fileInput" type="file" asp-for="UploadFiles" multiple />
-                <div class="actions">
-                    <input type="submit" value="Upload" class="btn primary" />
-                </div>
-            </div>
-        </form>
-
-        <div class="controls">
-            <button class="btn">Import History</button>
-            <button class="btn">Unknown Results</button>
-        </div>
-
-        <div class="table-block">
-            <div class="table-header">
-                <div class="search">
-                    <input id="searchInput" placeholder="Search..." />
-                    <button id="searchBtn">Search</button>
-                </div>
-            </div>
-
-            <table class="results">
-                <thead>
-                    <tr>
-                        <th>TestCaseName</th>
-                        <th>Status</th>
-                        <th>Detail</th>
-                    </tr>
-                </thead>
-                <tbody id="resultsBody">
-                    @if (exec != null && exec.TestCases != null)
-                    {
-                        foreach (var tc in exec.TestCases)
-                        {
-                            var name = tc.TestCaseCode;
-                            var st = tc.IsInProgress ? "Running" : tc.IsPassed ? "OK" : tc.IsFailed ? "NG" : tc.IsSkipped ? "Skipped" : "Pending";
-                            <tr>
-                                <td>@name</td>
-                                <td>@st</td>
-                                <td><button class="btn small" data-code="@tc.TestCaseCode">View</button></td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr><td colspan="3">No test cases available.</td></tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
-
-<style>
-    .panel { padding:16px; border:1px solid #ddd; border-radius:6px; max-width:900px; }
-    .meta { display:flex; gap:24px; margin-bottom:12px; }
-    .progress { background:#eee; height:18px; border-radius:6px; overflow:hidden; width:60%; }
-    .progress .bar { background:#2ecc71; height:100%; }
-    .counts { margin-top:6px; color:#666; }
-    .upload-section { margin:12px 0; }
-    .btn { padding:6px 10px; margin-right:8px; }
-    .btn.primary { background:#0078d4; color:#fff; border:none; }
-    .btn.small { padding:4px 8px; }
-    .table-block { margin-top:16px; }
-    table.results { width:100%; border-collapse:collapse; }
-    table.results th, table.results td { border:1px solid #ddd; padding:8px; text-align:left; }
-    .search { display:flex; gap:6px; }
-    input#searchInput { padding:6px; }
-</style>
-
-<script>
-    (function(){
-        var searchBtn = document.getElementById('searchBtn');
-        var searchInput = document.getElementById('searchInput');
-        var rows = Array.from(document.querySelectorAll('#resultsBody tr'));
-        function applyFilter(){
-            var q = (searchInput.value || '').toLowerCase();
-            rows.forEach(function(r){
-                var txt = r.innerText.toLowerCase();
-                r.style.display = txt.indexOf(q) >=0 ? '' : 'none';
-            });
-        }
-        if (searchBtn) searchBtn.addEventListener('click', function(e){ e.preventDefault(); applyFilter(); });
-        if (searchInput) searchInput.addEventListener('input', applyFilter);
-    })();
-</script>
--->
