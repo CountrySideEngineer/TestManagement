@@ -52,12 +52,26 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="id">Identifier of the environment to retrieve.</param>
         /// <returns>A <see cref="GetEnvironmentResponse"/> DTO with the latest version details.</returns>
-        [HttpGet("{id}")]
+        [HttpGet("id/{id}")]
         public async Task<GetEnvironmentResponse> GetById(int id)
         {
-            _logger.LogDebug("EnvironmentController.GetAllAsync start!");
+            _logger.LogDebug("EnvironmentController.GetByIdAsync start!");
 
             return await _environmentService.GetByIdAsync(id);
+        }
+
+        /// <summary>
+        /// Retrieves all environment versions that match the specified environment name.
+        /// Returns a collection of version DTOs for environments with the given name.
+        /// </summary>
+        /// <param name="name">The environment name to query for (case-sensitive depending on the data store).</param>
+        /// <returns>A collection of <see cref="GetEnvironmentResponse"/> instances representing matching environment versions.</returns>
+        [HttpGet("name/{name}")]
+        public async Task<ICollection<GetEnvironmentResponse>> GetByName(string name)
+        {
+            _logger.LogDebug("EnvironmentController.GetByNameAsync start!");
+
+            return await _environmentService.GetByNameAsync(name);
         }
 
         /// <summary>

@@ -106,6 +106,44 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
+        /// Retrieves all versions for environments that match the provided name.
+        /// </summary>
+        /// <param name="name">The environment name to search for.</param>
+        /// <returns>
+        /// A collection of <see cref="GetEnvironmentResponse"/> DTOs representing each matching environment version.
+        /// If no environments match the given name an empty collection is returned.
+        /// </returns>
+        /// <exception cref="ArgumentException">Thrown when an error occurs while querying the database.</exception>
+        public async Task<ICollection<GetEnvironmentResponse>> GetByNameAsync(string name)
+        {
+            _logger?.LogDebug("EnvironmentService::GetByNameAsync() start!");
+            _logger?.LogDebug("name = {Name}", name);
+            try
+            {
+                var environments = await _dbContext.Environments
+                    .Where(e => e.Name == name)
+                    .Include(e => e.Versions)
+                    .ToListAsync();
+
+                var responses = environments
+                    .SelectMany(env => env.Versions.Select(version => new GetEnvironmentResponse
+                    {
+                        Name = env.Name,
+                        Os = version.Os,
+                        RunTime = version.RunTime,
+                        VersionNumber = version.VersionNumber
+                    }))
+                    .ToList();
+
+                return responses;
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException();
+            }
+        }
+
+        /// <summary>
         /// Creates a new environment with an initial version and persists it to the database.
         /// </summary>
         /// <param name="request">Request containing the environment name, OS and runtime information.</param>
