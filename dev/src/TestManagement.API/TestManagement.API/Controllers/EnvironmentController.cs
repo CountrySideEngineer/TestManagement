@@ -53,7 +53,7 @@ namespace TestManagement.API.Controllers
         /// <param name="id">Identifier of the environment to retrieve.</param>
         /// <returns>A <see cref="GetEnvironmentResponse"/> DTO with the latest version details.</returns>
         [HttpGet("id/{id}")]
-        public async Task<GetEnvironmentResponse> GetById(int id)
+        public async Task<ICollection<GetEnvironmentResponse>> GetById(int id)
         {
             _logger.LogDebug("EnvironmentController.GetByIdAsync start!");
 

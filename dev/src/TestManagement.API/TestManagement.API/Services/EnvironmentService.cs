@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using TestManagement.API.Data;
 using TestManagement.API.Features.Environment.Create;
 using TestManagement.API.Features.Environment.Get;
@@ -56,10 +57,13 @@ namespace TestManagement.API.Services
                 {
                     var response = new GetEnvironmentResponse
                     {
+                        Id = environment.Id,
                         Name = environment.Name,
                         Os = version.Os,
                         RunTime = version.RunTime,
-                        VersionNumber = version.VersionNumber
+                        VersionNumber = version.VersionNumber,
+                        VersionId = version.Id,
+                        IsLatest = version.IsLatest
                     };
                     responses.Add(response);
                 }
@@ -69,35 +73,43 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Retrieves a single environment by id and returns the latest version information.
+        /// Retrieves all versions for the environment identified by the given id and projects
+        /// each version to a <see cref="GetEnvironmentResponse"/> DTO.
         /// </summary>
         /// <param name="id">Identifier of the environment to retrieve.</param>
+        /// <param name="ct">Cancellation token.</param>
         /// <returns>
-        /// A <see cref="GetEnvironmentResponse"/> containing the environment name and the latest version's OS and runtime.
-        /// If the environment is not found an empty response DTO is returned.
+        /// A collection of <see cref="GetEnvironmentResponse"/> where each item represents
+        /// a version of the requested environment. If the environment or its versions are
+        /// not found an empty collection is returned.
         /// </returns>
         /// <exception cref="ArgumentException">Thrown when an error occurs while querying the database.</exception>
-        public async Task<GetEnvironmentResponse> GetByIdAsync(int id)
+        public async Task<ICollection<GetEnvironmentResponse>> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            _logger?.LogDebug("EnvironmentService::GetById() start!");
+            _logger?.LogDebug("EnvironmentService::GetByIdAsync() start!");
             _logger?.LogDebug("id = {Id}", id);
 
             try
             {
-                var environment = await _dbContext.Environments
-                    .Where(_ => _.Id == id)
-                    .Include(_ => _.Versions)
-                    .FirstOrDefaultAsync();
-                var response = new GetEnvironmentResponse();
-                if (null != environment)
-                {
-                    var version = environment.Versions.OrderByDescending(_ => _.VersionNumber).FirstOrDefault();
-                    response.Name = environment.Name;
-                    response.Os = version!.Os;
-                    response.RunTime = version.RunTime;
-                }
+                var environments = await _dbContext.Environments
+                    .Where(e => e.Id == id)
+                    .Include(e => e.Versions)
+                    .ToListAsync(ct);
 
-                return response;
+                var responses = environments
+                    .SelectMany(env => env.Versions.Select(version => new GetEnvironmentResponse
+                    {
+                        Id = env.Id,
+                        Name = env.Name,
+                        Os = version.Os,
+                        RunTime = version.RunTime,
+                        VersionNumber = version.VersionNumber,
+                        VersionId = version.Id,
+                        IsLatest = version.IsLatest
+                    }))
+                    .ToList();
+
+                return responses;
             }
             catch (Exception)
             {
@@ -109,12 +121,13 @@ namespace TestManagement.API.Services
         /// Retrieves all versions for environments that match the provided name.
         /// </summary>
         /// <param name="name">The environment name to search for.</param>
+        /// <param name="ct">Cancellation token to cancel the database query.</param>
         /// <returns>
         /// A collection of <see cref="GetEnvironmentResponse"/> DTOs representing each matching environment version.
         /// If no environments match the given name an empty collection is returned.
         /// </returns>
         /// <exception cref="ArgumentException">Thrown when an error occurs while querying the database.</exception>
-        public async Task<ICollection<GetEnvironmentResponse>> GetByNameAsync(string name)
+        public async Task<ICollection<GetEnvironmentResponse>> GetByNameAsync(string name, CancellationToken ct = default)
         {
             _logger?.LogDebug("EnvironmentService::GetByNameAsync() start!");
             _logger?.LogDebug("name = {Name}", name);
@@ -131,7 +144,9 @@ namespace TestManagement.API.Services
                         Name = env.Name,
                         Os = version.Os,
                         RunTime = version.RunTime,
-                        VersionNumber = version.VersionNumber
+                        VersionNumber = version.VersionNumber,
+                        VersionId = version.Id,
+                        IsLatest = version.IsLatest
                     }))
                     .ToList();
 
