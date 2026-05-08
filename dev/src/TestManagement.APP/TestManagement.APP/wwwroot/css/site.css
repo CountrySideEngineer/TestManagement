@@ -132,7 +132,7 @@ th {
     cursor: pointer;
     font-weight: bold;
     text-decoration: none;
-    margin-top: 6px;
+    display: inline-block;
 }
 
 .upload-btn {

@@ -22,7 +22,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
         private readonly IEnvironmentService? _environmentService;
 
         public IndexModel(
-            ILogger<IndexModel>? logger, 
+            ILogger<IndexModel>? logger,
             ITestExecutionService? testExecutionService,
             IEnvironmentService? environmentService
             )
@@ -37,7 +37,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
 
         public ExecutionViewModel ExecutionViewModel { get; set; } = new ExecutionViewModel();
 
-        public EnvironmentViewModel EnvironmentViewModel { get;set; } = new EnvironmentViewModel();
+        public EnvironmentViewModel EnvironmentViewModel { get; set; } = new EnvironmentViewModel();
 
         public async Task OnGetAsync(long id)
         {
@@ -52,6 +52,43 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             {
                 EnvironmentViewModel = env;
             }
+        }
+
+        public async Task<IActionResult> OnPostAsync()
+        {
+            if (UploadFiles.Count == 0)
+            {
+                ModelState.AddModelError(string.Empty, "Please select at least one file to upload.");
+                return Page();
+            }
+
+            foreach (var fileItem in UploadFiles)
+            {
+                using var stream = fileItem.OpenReadStream();
+                using var content = new MultipartFormDataContent();
+                var streamContent = new StreamContent(stream);
+                content.Add(streamContent, "file", fileItem.FileName);
+
+                using var reader = new StreamReader(stream);
+                string fileCont = reader.ReadToEnd();
+
+                _logger?.LogInformation(fileCont);
+
+            }
+
+            return Page();
+            //try
+            //{
+            //    await _testExecutionService!.UploadTestExecutionFilesAsync(id, UploadFiles);
+            //    TempData["SuccessMessage"] = "Files uploaded successfully.";
+            //    return RedirectToPage("/ExecutionDetails/Index", new { id });
+            //}
+            //catch (Exception ex)
+            //{
+            //    _logger?.LogError(ex, "Error uploading files for test execution with ID {TestExecutionId}", id);
+            //    ModelState.AddModelError(string.Empty, "An error occurred while uploading the files. Please try again.");
+            //    return Page();
+            //}
         }
     }
 }
