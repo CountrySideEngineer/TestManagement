@@ -3,12 +3,26 @@ using TestManagement.APP.Dto.TestLevel.Get;
 
 namespace TestManagement.APP.ApiClients.TestLevel
 {
+    /// <summary>
+    /// API client responsible for retrieving test level data from the remote Test API.
+    /// </summary>
     public class TestLevelApiClient : ITestLevelApiClient
     {
+        /// <summary>
+        /// Logger used for diagnostic messages from this client.
+        /// </summary>
         private readonly ILogger<TestLevelApiClient> _logger;
 
+        /// <summary>
+        /// HttpClient instance configured for the Test API.
+        /// </summary>
         private readonly HttpClient _httpClient;
 
+        /// <summary>
+        /// Creates a new instance of <see cref="TestLevelApiClient"/>.
+        /// </summary>
+        /// <param name="logger">Logger instance provided by DI.</param>
+        /// <param name="httpClient">An <see cref="HttpClient"/> configured for the Test API.</param>
         public TestLevelApiClient(
             ILogger<TestLevelApiClient> logger, 
             HttpClient httpClient)
@@ -17,6 +31,11 @@ namespace TestManagement.APP.ApiClients.TestLevel
             _httpClient = httpClient;
         }
 
+        /// <summary>
+        /// Retrieves the list of test levels from the remote API.
+        /// Returns an empty list if the API returns no data.
+        /// </summary>
+        /// <returns>A list of <see cref="GetTestLevelResponse"/> objects.</returns>
         public async Task<IList<GetTestLevelResponse>> GetTestLevelAsync()
         {
             _logger.LogInformation("TestLevelApiClient::GetTestLevelAsync");

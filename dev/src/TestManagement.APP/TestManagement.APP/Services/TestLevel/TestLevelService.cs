@@ -7,12 +7,27 @@ using TestManagement.APP.ViewModel.TestLevel;
 
 namespace TestManagement.APP.Services.TestLevel
 {
+    /// <summary>
+    /// Service that provides test level related operations for the application.
+    /// Coordinates calls to the API client and maps DTOs to view models.
+    /// </summary>
     public class TestLevelService : ITestLevelService
     {
+        /// <summary>
+        /// Logger used to record diagnostic information for this service.
+        /// </summary>
         private readonly ILogger<TestLevelService> _logger;
 
+        /// <summary>
+        /// API client used to fetch test level information from the backend.
+        /// </summary>
         private readonly ITestLevelApiClient _apiClient;
 
+        /// <summary>
+        /// Constructs a new instance of <see cref="TestLevelService"/>.
+        /// </summary>
+        /// <param name="logger">Logger instance provided by DI.</param>
+        /// <param name="apiClient">API client for test level data.</param>
         public TestLevelService(
             ILogger<TestLevelService> logger, 
             ITestLevelApiClient apiClient) : base()
@@ -21,6 +36,11 @@ namespace TestManagement.APP.Services.TestLevel
             _apiClient = apiClient;
         }
 
+        /// <summary>
+        /// Retrieves test levels from the API and maps them to <see cref="TestLevelViewModel"/> instances.
+        /// Returns an empty collection if the API returns null or no entries.
+        /// </summary>
+        /// <returns>A collection of <see cref="TestLevelViewModel"/>.</returns>
         public async Task<ICollection<TestLevelViewModel>> GetTestLevelAsync()
         {
             _logger.LogInformation("TestLevelService::GetTestLevelAsync() start!");
