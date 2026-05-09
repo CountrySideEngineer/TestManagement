@@ -22,13 +22,13 @@ namespace TestManagement.APP.ApiClients.TestLevel
         /// Creates a new instance of <see cref="TestLevelApiClient"/>.
         /// </summary>
         /// <param name="logger">Logger instance provided by DI.</param>
-        /// <param name="httpClient">An <see cref="HttpClient"/> configured for the Test API.</param>
+        /// <param name="httpClientFactory">Factory used to create an <see cref="HttpClient"/> for the API.</param>
         public TestLevelApiClient(
-            ILogger<TestLevelApiClient> logger, 
-            HttpClient httpClient)
+            ILogger<TestLevelApiClient> logger,
+            IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient("TestApiClient");
         }
 
         /// <summary>
