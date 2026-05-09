@@ -12,6 +12,9 @@ using TestManagement.APP.ViewModel.Executions;
 using TestManagement.APP.Services.Environment;
 using TestManagement.APP.ViewModel.Environment;
 using System.Diagnostics.Eventing.Reader;
+using TestManagement.APP.ViewModel.TestLevel;
+using TestManagement.APP.ApiClients.TestLevel;
+using TestManagement.APP.Services.TestLevel;
 
 namespace TestManagement.APP.Pages.ExecutionUpload
 {
@@ -20,20 +23,28 @@ namespace TestManagement.APP.Pages.ExecutionUpload
         private readonly ILogger<IndexModel>? _logger;
         private readonly ITestExecutionService? _testExecutionService;
         private readonly IEnvironmentService? _environmentService;
+        private readonly ITestLevelService? _testLevelService;
 
         public IndexModel(
             ILogger<IndexModel>? logger,
             ITestExecutionService? testExecutionService,
-            IEnvironmentService? environmentService
+            IEnvironmentService? environmentService,
+            ITestLevelService? testLevelService
             )
         {
             _logger = logger;
             _testExecutionService = testExecutionService;
             _environmentService = environmentService;
+            _testLevelService = testLevelService;
         }
 
         [BindProperty]
         public List<IFormFile> UploadFiles { get; set; } = new List<IFormFile>();
+
+        public ICollection<TestLevelViewModel> TestLevels { get; set; } = new List<TestLevelViewModel>();
+
+        [BindProperty]
+        public long? SelectedTestLevelId { get; set; } = 0;
 
         public ExecutionViewModel ExecutionViewModel { get; set; } = new ExecutionViewModel();
 
@@ -52,6 +63,8 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             {
                 EnvironmentViewModel = env;
             }
+
+            TestLevels = await _testLevelService!.GetTestLevelAsync();
         }
 
         public async Task<IActionResult> OnPostAsync()
@@ -73,7 +86,6 @@ namespace TestManagement.APP.Pages.ExecutionUpload
                 string fileCont = reader.ReadToEnd();
 
                 _logger?.LogInformation(fileCont);
-
             }
 
             return Page();
