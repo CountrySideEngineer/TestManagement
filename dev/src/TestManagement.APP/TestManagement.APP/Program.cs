@@ -1,11 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.APP.ApiClients;
 using TestManagement.APP.ApiClients.Environment;
+using TestManagement.APP.ApiClients.TestLevel;
 using TestManagement.APP.Data;
 using TestManagement.APP.Data.Repositories.TestAnalysis;
 using TestManagement.APP.Services;
 using TestManagement.APP.Services.Environment;
 using TestManagement.APP.Services.TestExecution;
+using TestManagement.APP.Services.TestLevel;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,7 +33,6 @@ builder.Services.AddRazorPages()
     });
 builder.Services.AddScoped<TestRunApiClient>();
 builder.Services.AddScoped<TestCaseApiClient>();
-builder.Services.AddScoped<TestLevelApiClient>();
 builder.Services.AddScoped<DashboardApiClient>();
 builder.Services.AddScoped<UploadApiClient>();
 builder.Services.AddScoped<IRequestRepository, RequestRepository>();
@@ -41,6 +42,8 @@ builder.Services.AddScoped<IEnvironmentApiClient, EnvironmentApiClient>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
+builder.Services.AddScoped<ITestLevelService, TestLevelService>();
+builder.Services.AddScoped<ITestLevelApiClient, TestLevelApiClient>();
 
 var app = builder.Build();
 
