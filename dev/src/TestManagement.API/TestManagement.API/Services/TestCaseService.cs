@@ -357,6 +357,65 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
+        /// Ensures that each test case described in the provided requests exists in the database.
+        /// For any request where a test case with the same code does not already exist, a new test case
+        /// with an initial version will be prepared and persisted. Existing test cases are left unchanged.
+        /// </summary>
+        /// <param name="requests">Collection of create requests to process.</param>
+        /// <param name="ct">Cancellation token to cancel the operation.</param>
+        /// <returns>
+        /// A collection of <see cref="CreateTestCaseResponse"/> objects representing the current
+        /// latest version for each requested test case. Newly created items will contain the newly
+        /// created version information; pre-existing items will return their current latest version.
+        /// </returns>
+        /// <remarks>
+        /// This method performs existence checks and only adds new entities for codes that are not present.
+        /// All created entities are persisted in a single SaveChanges call when any creations occur.
+        /// </remarks>
+        public async Task<ICollection<CreateTestCaseResponse>> CreateIfNotExistsAsync(ICollection<CreateTestCaseRequest> requests, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestCaseService::CreateIfNotExistsAsync(ICollection<CreateTestCaseRequest> requests, CancellationToken tc) start!");
+
+            long okCount = 0;
+            foreach (var request in requests)
+            {
+                var regItem = _context.TestCases.Include(_ => _.Versions).Where(_ => _.Code == request.Code).First() ?? null;
+                if (null != regItem)
+                {
+                    // If a test case with the same code already exists, we skip creating a new one and can optionally log this occurrence.
+                }
+                else
+                {
+                    CreateWithoutSave(request);
+                    okCount++;
+                }
+            }
+            if (0 < okCount)
+            {
+                await _context.SaveChangesAsync(ct);
+            }
+
+            var responses = new List<CreateTestCaseResponse>();
+            foreach (var request in requests)
+            {
+                var testCase = _context.TestCases.Where(_ => _.Code == request.Code).First();
+                var testCaseVersion = testCase.Versions.Where(_ => _.IsLatest).First();
+                var response = new CreateTestCaseResponse()
+                {
+                    Id = testCase.Id,
+                    Code = testCase.Code,
+                    Name = testCaseVersion.Name,
+                    Description = testCaseVersion.Description,
+                    TestLevelId = testCaseVersion.TestLevelId,
+                    VersionNumber = testCaseVersion.VersionNumber
+                };
+                responses.Add(response);
+            }
+
+            return responses;
+        }
+
+        /// <summary>
         /// Prepares and adds a new <see cref="TestCase"/> with its initial version to the DbContext without persisting.
         /// </summary>
         /// <param name="request">Request containing the code, name, description and test level id for the new test case.</param>
