@@ -305,42 +305,82 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("TestCaseService::Create(ICollection<CreateTestCaseRequest>) start!");
 
-            var oks = new List<CreateTestCaseRequest>();
-            var ngs = new List<CreateTestCaseRequest>();
+            // Load existing codes once to avoid N+1 queries
+            var requestedCodes = requests.Select(r => r.Code).ToList();
+            var existingCodes = new HashSet<string>(await _context.TestCases
+                .Where(tc => requestedCodes.Contains(tc.Code))
+                .Select(tc => tc.Code)
+                .ToListAsync(ct));
+
+            var notExistingTestCases = new List<CreateTestCaseRequest>();
+            var existingTestCases = new List<CreateTestCaseRequest>();
+            var newTestCases = new List<TestCase>();
 
             foreach (var request in requests)
             {
-                try
+                if (existingCodes.Contains(request.Code))
                 {
-                    CreateWithoutSave(request);
-                    oks.Add(request);
+                    existingTestCases.Add(request);
+                    continue;
                 }
-                catch (Exception)
+
+                // Prepare new entity without performing DB existence checks per item
+                var newTestCase = new TestCase()
                 {
-                    ngs.Add(request);
-                }
+                    Code = request.Code,
+                    IsActive = true
+                };
+                newTestCase.AddVersion(request.Name, request.Description, request.TestLevelId);
+                newTestCases.Add(newTestCase);
+                notExistingTestCases.Add(request);
+
+                // Prevent duplicates within the same batch
+                existingCodes.Add(request.Code);
             }
-            if (0 < oks.Count)
+
+            if (newTestCases.Count > 0)
             {
+                _context.TestCases.AddRange(newTestCases);
                 await _context.SaveChangesAsync(ct);
             }
 
+            // Reload all test cases for the requested codes in a single query (includes newly created)
+            var loadedTestCases = await _context.TestCases
+                .Where(tc => requestedCodes.Contains(tc.Code))
+                .Include(tc => tc.Versions)
+                .ToListAsync(ct);
+            var tcMap = loadedTestCases.ToDictionary(tc => tc.Code, tc => tc);
+
             var responses = new List<CreateTestCaseResponse>();
-            foreach (var ok in oks)
+            foreach (var ok in notExistingTestCases)
             {
-                var testCase = _context.TestCases.Where(_ => _.Code == ok.Code).First();
-                var response = new CreateTestCaseResponse()
+                if (!tcMap.TryGetValue(ok.Code, out var testCase))
+                {
+                    responses.Add(new CreateTestCaseResponse
+                    {
+                        Id = -1,
+                        Code = ok.Code,
+                        Name = ok.Name,
+                        Description = ok.Description,
+                        TestLevelId = ok.TestLevelId,
+                        VersionNumber = 0
+                    });
+                    continue;
+                }
+
+                var createdTestCaseVersion = testCase.Versions.OrderByDescending(v => v.VersionNumber).FirstOrDefault();
+                responses.Add(new CreateTestCaseResponse()
                 {
                     Id = testCase.Id,
                     Code = ok.Code,
-                    Name = ok.Name,
-                    Description = ok.Description,
-                    TestLevelId = ok.TestLevelId,
-                    VersionNumber = 1
-                };
-                responses.Add(response);
+                    Name = createdTestCaseVersion?.Name ?? ok.Name,
+                    Description = createdTestCaseVersion?.Description ?? ok.Description,
+                    TestLevelId = createdTestCaseVersion?.TestLevelId ?? ok.TestLevelId,
+                    VersionNumber = createdTestCaseVersion?.VersionNumber ?? 1
+                });
             }
-            foreach (var ng in ngs)
+
+            foreach (var ng in existingTestCases)
             {
                 var response = new CreateTestCaseResponse()
                 {
@@ -353,6 +393,7 @@ namespace TestManagement.API.Services
                 };
                 responses.Add(response);
             }
+
             return responses;
         }
 
@@ -376,30 +417,81 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("TestCaseService::CreateIfNotExistsAsync(ICollection<CreateTestCaseRequest> requests, CancellationToken tc) start!");
 
-            long okCount = 0;
+            // Prepare requested codes and load existing test cases once
+            var requestedCodes = requests.Select(r => r.Code).ToList();
+            var existingTestCases = await _context.TestCases
+                .Where(tc => requestedCodes.Contains(tc.Code))
+                .Include(tc => tc.Versions)
+                .ToListAsync(ct);
+
+            var existingCodes = new HashSet<string>(existingTestCases.Select(tc => tc.Code));
+            var newEntities = new List<TestCase>();
+
             foreach (var request in requests)
             {
-                var regItem = _context.TestCases.Include(_ => _.Versions).Where(_ => _.Code == request.Code).First() ?? null;
-                if (null != regItem)
+                if (existingCodes.Contains(request.Code))
                 {
-                    // If a test case with the same code already exists, we skip creating a new one and can optionally log this occurrence.
+                    // Already exists, skip
+                    continue;
                 }
-                else
+
+                var newTestCase = new TestCase()
                 {
-                    CreateWithoutSave(request);
-                    okCount++;
-                }
-            }
-            if (0 < okCount)
-            {
-                await _context.SaveChangesAsync(ct);
+                    Code = request.Code,
+                    IsActive = true
+                };
+                newTestCase.AddVersion(request.Name, request.Description, request.TestLevelId);
+                newEntities.Add(newTestCase);
+                existingCodes.Add(request.Code); // prevent duplicates within the batch
             }
 
+            if (newEntities.Count > 0)
+            {
+                _context.TestCases.AddRange(newEntities);
+                await _context.SaveChangesAsync(ct);
+
+                // Reload to include newly created entities and their versions
+                existingTestCases = await _context.TestCases
+                    .Where(tc => requestedCodes.Contains(tc.Code))
+                    .Include(tc => tc.Versions)
+                    .ToListAsync(ct);
+            }
+
+            var tcMap = existingTestCases.ToDictionary(tc => tc.Code, tc => tc);
             var responses = new List<CreateTestCaseResponse>();
+
             foreach (var request in requests)
             {
-                var testCase = _context.TestCases.Where(_ => _.Code == request.Code).First();
-                var testCaseVersion = testCase.Versions.Where(_ => _.IsLatest).First();
+                if (!tcMap.TryGetValue(request.Code, out var testCase))
+                {
+                    // Shouldn't happen, but return a failed entry
+                    responses.Add(new CreateTestCaseResponse
+                    {
+                        Id = -1,
+                        Code = request.Code,
+                        Name = request.Name,
+                        Description = request.Description,
+                        TestLevelId = request.TestLevelId,
+                        VersionNumber = 0
+                    });
+                    continue;
+                }
+
+                var testCaseVersion = testCase.Versions.FirstOrDefault(v => v.IsLatest) ?? testCase.Versions.OrderByDescending(v => v.VersionNumber).FirstOrDefault();
+                if (testCaseVersion == null)
+                {
+                    responses.Add(new CreateTestCaseResponse
+                    {
+                        Id = testCase.Id,
+                        Code = testCase.Code,
+                        Name = request.Name,
+                        Description = request.Description,
+                        TestLevelId = request.TestLevelId,
+                        VersionNumber = 0
+                    });
+                    continue;
+                }
+
                 var response = new CreateTestCaseResponse()
                 {
                     Id = testCase.Id,
