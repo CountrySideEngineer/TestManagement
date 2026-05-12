@@ -418,14 +418,14 @@ namespace TestManagement.API.Services
             _logger?.LogDebug("TestCaseService::CreateIfNotExistsAsync(ICollection<CreateTestCaseRequest> requests, CancellationToken tc) start!");
 
             // Prepare requested codes and load existing test cases once
-            var requestedCodes = requests.Select(r => r.Code).ToList();
+            var requestedCodes = requests.Select(_ => _.Code).ToList();
             var existingTestCases = await _context.TestCases
-                .Where(tc => requestedCodes.Contains(tc.Code))
-                .Include(tc => tc.Versions)
+                .Where(_ => requestedCodes.Contains(_.Code))
+                .Include(_ => _.Versions)
                 .ToListAsync(ct);
 
             var existingCodes = new HashSet<string>(existingTestCases.Select(tc => tc.Code));
-            var newEntities = new List<TestCase>();
+            var newTestCases = new List<TestCase>();
 
             foreach (var request in requests)
             {
@@ -441,13 +441,13 @@ namespace TestManagement.API.Services
                     IsActive = true
                 };
                 newTestCase.AddVersion(request.Name, request.Description, request.TestLevelId);
-                newEntities.Add(newTestCase);
+                newTestCases.Add(newTestCase);
                 existingCodes.Add(request.Code); // prevent duplicates within the batch
             }
 
-            if (newEntities.Count > 0)
+            if (newTestCases.Count > 0)
             {
-                _context.TestCases.AddRange(newEntities);
+                _context.TestCases.AddRange(newTestCases);
                 await _context.SaveChangesAsync(ct);
 
                 // Reload to include newly created entities and their versions
