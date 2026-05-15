@@ -99,6 +99,29 @@ namespace TestManagement.API.Controllers
         }
 
         /// <summary>
+        /// Attempts to create multiple test cases from the provided requests only if they do not already exist, and returns per-request responses.
+        /// </summary>
+        /// <param name="requests">Collection of <see cref="CreateTestCaseRequest"/> objects to process.</param>
+        /// <returns>
+        /// A collection of <see cref="CreateTestCaseResponse"/> objects describing the result for each request.
+        /// Successful entries contain the created test case id and version information. Failed entries will have
+        /// Id = -1 and VersionNumber = 0 to indicate failure.
+        /// </returns>
+        /// <remarks>
+        /// The controller delegates processing to the service layer which performs validation and persistence.
+        /// The returned collection preserves one response per input request.
+        /// </remarks>
+        [HttpPost("CreateIfNotExists")]
+        public async Task<ICollection<CreateTestCaseResponse>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        {
+            _logger.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
+
+            var responses = await _testCaseService.CreateIfNotExistsAsync(requests);
+
+            return responses;
+        }
+
+        /// <summary>
         /// Updates a test case by creating a new version. The request may include optional name and description
         /// values; if omitted the latest version's values are reused. Returns the created version details.
         /// </summary>
