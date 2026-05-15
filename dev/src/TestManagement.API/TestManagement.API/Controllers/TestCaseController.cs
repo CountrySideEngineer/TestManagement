@@ -111,7 +111,7 @@ namespace TestManagement.API.Controllers
         /// The controller delegates processing to the service layer which performs validation and persistence.
         /// The returned collection preserves one response per input request.
         /// </remarks>
-        [HttpPost("CreateIfNotExists")]
+        [HttpPost("Bulk/CreateIfNotExists")]
         public async Task<ICollection<CreateTestCaseResponse>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
         {
             _logger.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
