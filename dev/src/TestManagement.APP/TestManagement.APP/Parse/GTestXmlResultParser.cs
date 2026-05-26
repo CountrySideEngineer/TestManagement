@@ -73,5 +73,20 @@ namespace TestManagement.APP.Parse
 
             return result;
         }
+
+        public async Task<ICollection<ParsedTestResult>> ParseAsync(string content)
+        {
+            var results = await Task.Run<ICollection<ParsedTestResult>>(() =>
+            {
+                XDocument xdoc = XDocument.Parse(content);
+                IEnumerable<XElement> testCaseElements = xdoc.Descendants("testcase");
+
+                ICollection<ParsedTestResult> results = [.. ParseTestCases(testCaseElements)];
+
+                return results;
+            });
+
+            return results;
+        }
     }
 }
