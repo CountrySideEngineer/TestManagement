@@ -4,7 +4,7 @@ namespace TestManagement.APP.Dto.TestResult.Import
 {
     public class ImportTestResultRequest
     {
-        public required string Source { get; init; } = string.Empty;
+        public required ITestResultSource Source { get; init; }
 
         public required ITestResultParser Parser { get; init; }
     }
