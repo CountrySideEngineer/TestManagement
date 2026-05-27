@@ -2,8 +2,8 @@
 {
     public interface ITestResultSource
     {
-        Task<Stream> OpenAsync(string path, CancellationToken ct = default);
+        Task<Stream> OpenAsync(CancellationToken ct = default);
 
-        Stream Open(string path);
+        Stream Open();
     }
 }

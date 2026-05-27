@@ -2,17 +2,41 @@
 
 namespace TestManagement.APP.Infrastructure.TestResultSource
 {
+    /// <summary>
+    /// Concrete implementation of ITestResultSource that reads test results from a file.
+    /// </summary>
     public class FileTestResultSource : ITestResultSource
     {
-        public Stream Open(string path)
+        /// <summary>
+        /// Path to the file containing the test results.
+        /// This should be set through the constructor and is immutable after that.
+        /// </summary>
+        private readonly string _path = string.Empty;
+
+        /// <summary>
+        /// Constructs a new instance of FileTestResultSource with the specified file path.
+        /// </summary>
+        /// <param name="path">The path to the file containing the test results.</param>
+        /// <exception cref="ArgumentNullException">Thrown if the provided path is null.</exception>
+        public FileTestResultSource(string path)
         {
-            if (!File.Exists(path))
+            this._path = path ?? throw new ArgumentNullException(nameof(path));
+        }
+
+        /// <summary>
+        /// Opens a stream to read the test results from the specified file path.
+        /// </summary>
+        /// <returns>A stream for reading the test results.</returns>
+        /// <exception cref="FileNotFoundException">Thrown if the file at the specified path does not exist.</exception>
+        public Stream Open()
+        {
+            if (!File.Exists(_path))
             {
-                throw new FileNotFoundException($"The file at path '{path}' was not found.");
+                throw new FileNotFoundException($"The file at path '{_path}' was not found.");
             }
 
             Stream stream = new FileStream(
-                path,
+                _path,
                 FileMode.Open,
                 FileAccess.Read,
                 FileShare.Read,
@@ -22,15 +46,21 @@ namespace TestManagement.APP.Infrastructure.TestResultSource
             return stream;
         }
 
-        public Task<Stream> OpenAsync(string path, CancellationToken ct = default)
+        /// <summary>
+        /// Opens a stream to read the test results from the specified file path asynchronously.
+        /// </summary>
+        /// <param name="ct">A cancellation token that can be used to cancel the operation.</param>
+        /// <returns>A task that represents the asynchronous operation. The task result contains a stream for reading the test results.</returns>
+        /// <exception cref="FileNotFoundException">Thrown if the file at the specified path does not exist.</exception>
+        public Task<Stream> OpenAsync(CancellationToken ct = default)
         {
-            if (!File.Exists(path))
+            if (!File.Exists(_path))
             {
-                throw new FileNotFoundException($"The file at path '{path}' was not found.");
+                throw new FileNotFoundException($"The file at path '{_path}' was not found.");
             }
 
             Stream stream = new FileStream(
-                path, 
+                _path, 
                 FileMode.Open, 
                 FileAccess.Read, 
                 FileShare.Read, 
