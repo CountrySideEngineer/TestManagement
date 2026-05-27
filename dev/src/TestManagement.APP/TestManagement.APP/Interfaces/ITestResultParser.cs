@@ -4,8 +4,8 @@ namespace TestManagement.APP.Interfaces
 {
     public interface ITestResultParser
     {
-        ICollection<ParsedTestResult> Parse(string content);
+        ICollection<ParsedTestResult> Parse(Stream stream);
 
-        Task<ICollection<ParsedTestResult>> ParseAsync(string content);
+        Task<ICollection<ParsedTestResult>> ParseAsync(Stream stream, CancellationToken ct = default);
     }
 }

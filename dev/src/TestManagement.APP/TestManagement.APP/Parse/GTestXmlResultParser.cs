@@ -74,7 +74,7 @@ namespace TestManagement.APP.Parse
             return result;
         }
 
-        public async Task<ICollection<ParsedTestResult>> ParseAsync(string content)
+        public virtual async Task<ICollection<ParsedTestResult>> ParseAsync(string content, CancellationToken ct = default)
         {
             var results = await Task.Run<ICollection<ParsedTestResult>>(() =>
             {
@@ -85,6 +85,26 @@ namespace TestManagement.APP.Parse
 
                 return results;
             });
+
+            return results;
+        }
+
+        public virtual async Task<ICollection<ParsedTestResult>> ParseAsync(Stream stream, CancellationToken ct = default)
+        {
+            using var reader = new StreamReader(stream);
+            string content = await reader.ReadToEndAsync();
+
+            var results = await ParseAsync(content, ct);
+
+            return results;
+        }
+
+        public virtual ICollection<ParsedTestResult> Parse(Stream stream)
+        {
+            using var reader = new StreamReader(stream);
+            string content = reader.ReadToEnd();
+
+            ICollection<ParsedTestResult> results = Parse(content);
 
             return results;
         }
