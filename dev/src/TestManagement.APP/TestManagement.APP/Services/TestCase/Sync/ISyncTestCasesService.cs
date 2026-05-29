@@ -1,7 +1,7 @@
 ﻿using TestManagement.APP.Dto.TestCase.Post;
 using TestManagement.APP.Dto.TestResult;
 
-namespace TestManagement.APP.Services.TestCase
+namespace TestManagement.APP.Services.TestCase.Sync
 {
     public interface ISyncTestCasesService
     {
