@@ -1,5 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
+using TestManagement.APP.Dto.TestResult;
 using TestManagement.APP.Dto.TestResult.Import;
+using TestManagement.APP.Services.TestCase.Sync;
 using TestManagement.APP.Services.TestExecution.Register;
 
 namespace TestManagement.APP.Services.TestExecution.Import
@@ -12,9 +14,12 @@ namespace TestManagement.APP.Services.TestExecution.Import
 
         private readonly IRegisterTestExecutionService _registerTestExecutionService;
 
+        private readonly ISyncTestCasesService _syncTestCaseService;
+
         public ImportTestResultService(
             ISyncTestCasesService syncTestCaseSerice, 
             IRegisterTestExecutionService registerTestExecutionService,
+            ISyncTestCasesService syncTestCasesService,
             ILogger<ImportTestResultService> logger
             )
         {
@@ -24,12 +29,31 @@ namespace TestManagement.APP.Services.TestExecution.Import
             _registerTestExecutionService = registerTestExecutionService
                 ?? throw new ArgumentNullException(nameof(registerTestExecutionService));
 
+            _syncTestCaseService = syncTestCasesService
+                ?? throw new ArgumentNullException(nameof(syncTestCasesService));
+
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public Task<ImportTestResultResponse> ImportTestResultAsync(ImportTestResultRequest request, CancellationToken ct = default)
+        public async Task<ImportTestResultResponse> ImportAsync(
+            ImportTestResultRequest request, 
+            CancellationToken ct = default)
         {
-            throw new NotImplementedException();
+            _logger.LogInformation("Start to import test result from source {Source} with parser {Parser}", 
+                request.Source.GetType().Name, request.Parser.GetType().Name);
+
+            ArgumentNullException.ThrowIfNull(request);
+
+            await using var stream = await request.Source.OpenAsync();
+            ICollection<ParsedTestResult> parsedTestResults = await request.Parser.ParseAsync(stream, ct);
+
+            // Sync test cases to make sure all test cases in test result exist in database
+            await _syncTestCaseService.SyncTestCasesAsync(parsedTestResults);
+
+            // Register test execution for each test result
+            await _registerTestExecutionService.RegisterTestExecutionAsync(parsedTestResults, ct);
+
+            return null;
         }
     }
 }

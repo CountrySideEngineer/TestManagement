@@ -4,8 +4,8 @@ namespace TestManagement.APP.Services.TestExecution.Import
 {
     public interface IImportTestResultService
     {
-        Task<ImportTestResultResponse> ImportTestResultAsync(
-            ImportTestResultRequest request, 
+        Task<ImportTestResultResponse> ImportAsync(
+            ImportTestResultRequest request,
             CancellationToken ct = default);
     }
 }
