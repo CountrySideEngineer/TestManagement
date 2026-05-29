@@ -1,12 +1,17 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.APP.ApiClients;
 using TestManagement.APP.ApiClients.Environment;
+using TestManagement.APP.ApiClients.TestCase;
 using TestManagement.APP.ApiClients.TestLevel;
+using TestManagement.APP.ApiClients.TestResult;
 using TestManagement.APP.Data;
 using TestManagement.APP.Data.Repositories.TestAnalysis;
 using TestManagement.APP.Services;
 using TestManagement.APP.Services.Environment;
+using TestManagement.APP.Services.TestCase.Sync;
 using TestManagement.APP.Services.TestExecution;
+using TestManagement.APP.Services.TestExecution.Import;
+using TestManagement.APP.Services.TestExecution.Register;
 using TestManagement.APP.Services.TestLevel;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -44,6 +49,12 @@ builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ITestLevelService, TestLevelService>();
 builder.Services.AddScoped<ITestLevelApiClient, TestLevelApiClient>();
+builder.Services.AddScoped<ITestCaseSyncApiClient, TestCaseSyncApiClient>();
+builder.Services.AddScoped<ITestExecutionApiClient, TestExecutionApiClient>();
+builder.Services.AddScoped<ITestResultApiClient, TestResultApiClient>();
+builder.Services.AddScoped<IRegisterTestExecutionService, RegisterTestExecutionService>();
+builder.Services.AddScoped<IImportTestResultService, ImportTestResultService>();
+builder.Services.AddScoped<ISyncTestCasesService, SyncTestCasesService>();
 
 var app = builder.Build();
 
