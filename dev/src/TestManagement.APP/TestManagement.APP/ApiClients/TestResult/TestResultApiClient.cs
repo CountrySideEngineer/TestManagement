@@ -1,4 +1,5 @@
 ﻿using TestManagement.APP.Dto.TestCase.Post;
+using TestManagement.APP.Dto.TestResult.Post;
 
 namespace TestManagement.APP.ApiClients.TestResult
 {
@@ -16,7 +17,7 @@ namespace TestManagement.APP.ApiClients.TestResult
             _httpClient = httpClientFactory.CreateClient("TestApiClient");
         }
 
-        public async Task<IEnumerable<PostTestCaseResponse>> CreateTestResultAsync(IEnumerable<PostTestCaseRequest> requests, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<PostTestResultResponse>> CreateTestResultAsync(IEnumerable<PostTestResultRequest> requests, CancellationToken cancellationToken = default)
         {
             _logger.LogDebug("Creating test results with {Count} requests", requests.Count());
 
@@ -30,7 +31,7 @@ namespace TestManagement.APP.ApiClients.TestResult
             }
             else
             {
-                var result = await response.Content.ReadFromJsonAsync<IEnumerable<PostTestCaseResponse>>(cancellationToken: cancellationToken);
+                var result = await response.Content.ReadFromJsonAsync<IEnumerable<PostTestResultResponse>>(cancellationToken: cancellationToken);
 
                 return result;
             }
