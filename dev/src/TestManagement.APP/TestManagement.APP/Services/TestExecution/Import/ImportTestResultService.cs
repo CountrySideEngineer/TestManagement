@@ -3,6 +3,7 @@ using TestManagement.APP.Dto.TestResult;
 using TestManagement.APP.Dto.TestResult.Import;
 using TestManagement.APP.Services.TestCase.Sync;
 using TestManagement.APP.Services.TestExecution.Register;
+using TestManagement.APP.ViewModel;
 
 namespace TestManagement.APP.Services.TestExecution.Import
 {
@@ -36,6 +37,8 @@ namespace TestManagement.APP.Services.TestExecution.Import
         }
 
         public async Task<ImportTestResultResponse> ImportAsync(
+            long envId,
+            long testId,
             ImportTestResultRequest request, 
             CancellationToken ct = default)
         {
@@ -48,7 +51,7 @@ namespace TestManagement.APP.Services.TestExecution.Import
             ICollection<ParsedTestResult> parsedTestResults = await request.Parser.ParseAsync(stream, ct);
 
             // Sync test cases to make sure all test cases in test result exist in database
-            await _syncTestCaseService.SyncTestCasesAsync(parsedTestResults);
+            IEnumerable<TestCaseViewModel> testCases = await _syncTestCaseService.SyncTestCasesAsync(parsedTestResults);
 
             // Register test execution for each test result
             await _registerTestExecutionService.RegisterTestExecutionAsync(parsedTestResults, ct);
