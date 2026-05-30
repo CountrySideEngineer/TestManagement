@@ -1,5 +1,6 @@
 ﻿using TestManagement.APP.Dto.TestCase.Post;
 using TestManagement.APP.Dto.TestResult;
+using TestManagement.APP.ViewModel;
 
 namespace TestManagement.APP.Services.TestCase.Sync
 {
@@ -10,6 +11,6 @@ namespace TestManagement.APP.Services.TestCase.Sync
         /// </summary>
         /// <param name="syncTestCaseRequests">The collection of test case requests to synchronize.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        Task SyncTestCasesAsync(IEnumerable<ParsedTestResult> syncTestCaseRequests);
+        Task<IEnumerable<TestCaseViewModel>> SyncTestCasesAsync(IEnumerable<ParsedTestResult> syncTestCaseRequests);
     }
 }

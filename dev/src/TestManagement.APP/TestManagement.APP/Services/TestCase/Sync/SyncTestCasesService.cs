@@ -1,6 +1,7 @@
 ﻿using TestManagement.APP.ApiClients.TestCase;
 using TestManagement.APP.Dto.TestCase.Post;
 using TestManagement.APP.Dto.TestResult;
+using TestManagement.APP.ViewModel;
 
 namespace TestManagement.APP.Services.TestCase.Sync
 {
@@ -17,7 +18,7 @@ namespace TestManagement.APP.Services.TestCase.Sync
             _apiClient = apiClient;
         }
 
-        public async Task SyncTestCasesAsync(IEnumerable<ParsedTestResult> testResults)
+        public async Task<IEnumerable<TestCaseViewModel>> SyncTestCasesAsync(IEnumerable<ParsedTestResult> testResults)
         {
             _logger.LogDebug("SyncTestCasesService::SyncTestCasesAsync() start!");
 
@@ -32,12 +33,20 @@ namespace TestManagement.APP.Services.TestCase.Sync
                     TestLevelId = 1
                 };
                 requests.Add(request);
-
             }
 
-            var result = await _apiClient.SyncAsync(requests);
+            IEnumerable<PostTestCaseResponse> responses = await _apiClient.SyncAsync(requests);
+            var viewModels = responses.Select(r => new TestCaseViewModel
+            {
+                Id = r.Id,
+                Code = r.Code,
+                Name = r.Name,
+                Description = r.Description,
+                TestLevelId = r.TestLevelId,
+                VersionNumber = r.VersionNumber
+            });
 
-            return;
+            return viewModels;
         }
     }
 }
