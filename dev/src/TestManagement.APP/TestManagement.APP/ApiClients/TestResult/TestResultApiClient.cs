@@ -22,7 +22,7 @@ namespace TestManagement.APP.ApiClients.TestResult
             _logger.LogDebug("Creating test results with {Count} requests", requests.Count());
 
             var response = await _httpClient
-                .PostAsJsonAsync("/api/testresult/bulk", requests, cancellationToken);
+                .PostAsJsonAsync("api/testresult/bulk", requests, cancellationToken);
 
             if (!response.IsSuccessStatusCode)
             {
