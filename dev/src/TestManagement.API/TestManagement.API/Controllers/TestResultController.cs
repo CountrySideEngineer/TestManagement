@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestManagement.API.Models;
 using TestManagement.API.Models.Report.Xml;
+using TestManagement.API.Models.Requests;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
@@ -27,7 +28,7 @@ namespace TestManagement.API.Controllers
             return Ok(testResults);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetByIdAsync")]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             _logger.LogDebug("TestResultController.GetById() start!");
@@ -37,13 +38,26 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync(TestResult testResult)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateTestResultRequest request)
         {
             _logger.LogDebug("TestResultController.Create() start!");
 
+            // Map request DTO to domain model
+            var testResult = new TestResult
+            {
+                TestCaseVersionId = request.TestCaseVersionId,
+                TestExecutionItemId = request.TestExecutionItemId,
+                StatusId = request.StatusId,
+                ActualResult = request.ActualResult ?? string.Empty,
+                Message = request.Message,
+                ExecutedAt = request.ExecutedAt ?? DateTime.UtcNow
+            };
+
             await _testResultService.CreateAsync(testResult);
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = testResult.Id }, testResult);
+            var resultAction = CreatedAtRoute(nameof(GetByIdAsync), new { id = testResult.Id }, testResult);
+
+            return resultAction;
         }
 
         [HttpPost("Bulk")]
