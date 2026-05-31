@@ -29,7 +29,7 @@ namespace TestManagement.API.Data.Repositories
 
             return await _context.TestResults
                 .Include(_ => _.TestCaseVersion)
-                .Include(_ => _.TestExecutionItem)
+                //.Include(_ => _.TestExecutionItem)
                 .ToListAsync();
         }
 
@@ -40,7 +40,7 @@ namespace TestManagement.API.Data.Repositories
             return await _context.TestResults
                 .Where(_ => _.Id == id)
                 .Include(_ => _.TestCaseVersion)
-                .Include(_ => _.TestExecutionItem)
+                //.Include(_ => _.TestExecutionItem)
                 .FirstAsync();
         }
 
