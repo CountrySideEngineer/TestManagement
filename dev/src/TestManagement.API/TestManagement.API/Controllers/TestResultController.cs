@@ -61,9 +61,24 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulkAsync(List<CreateTestResultRequest> testResults)
+        public async Task<IActionResult> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests)
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
+
+            var testResults = new List<CreateTestResultRequest>();
+            foreach (var request in requests)
+            {
+                var testResult = new CreateTestResultRequest
+                {
+                    TestCaseVersionId = request.TestCaseVersionId,
+                    TestExecutionItemId = request.TestExecutionItemId,
+                    StatusId = request.StatusId,
+                    ActualResult = request.ActualResult ?? string.Empty,
+                    Message = request.Message,
+                    ExecutedAt = request.ExecutedAt ?? DateTime.UtcNow
+                };
+                testResults.Add(testResult);
+            }
 
             await _testResultService.CreateAsync(testResults);
 
