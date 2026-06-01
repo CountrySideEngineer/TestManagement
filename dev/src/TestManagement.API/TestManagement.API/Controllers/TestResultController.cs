@@ -43,7 +43,7 @@ namespace TestManagement.API.Controllers
             _logger.LogDebug("TestResultController.Create() start!");
 
             // Map request DTO to domain model
-            var testResult = new TestResult
+            var testResult = new CreateTestResultRequest
             {
                 TestCaseVersionId = request.TestCaseVersionId,
                 TestExecutionItemId = request.TestExecutionItemId,
@@ -61,7 +61,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulkAsync(List<TestResult> testResults)
+        public async Task<IActionResult> CreateBulkAsync(List<CreateTestResultRequest> testResults)
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
