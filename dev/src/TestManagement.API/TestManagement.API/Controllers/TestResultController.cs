@@ -38,7 +38,7 @@ namespace TestManagement.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateTestResultRequest request)
+        public async Task<IActionResult> CreateAsync([FromBody] TestResultCreateRequest request)
         {
             _logger.LogDebug("TestResultController.Create() start!");
 

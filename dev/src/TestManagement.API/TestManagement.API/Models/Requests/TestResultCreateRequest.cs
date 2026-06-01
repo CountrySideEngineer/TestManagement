@@ -5,7 +5,7 @@ namespace TestManagement.API.Models.Requests
     /// <summary>
     /// DTO for creating a TestResult via API.
     /// </summary>
-    public class CreateTestResultRequest
+    public class TestResultCreateRequest
     {
         /// <summary>
         /// Identifier of the test case version that the result relates to.
