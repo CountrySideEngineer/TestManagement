@@ -37,5 +37,23 @@
         /// whether the test case execution resulted in a failure,
         /// </summary>
         public bool IsFailed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the version number of the corresponding test case.
+        /// This value is populated when test cases are synchronized with the backend.
+        /// </summary>
+        public int VersionNumber { get; set; }
+
+        /// <summary>
+        /// Gets or sets the environment identifier associated with the parsed test result.
+        /// This is populated from the import request's envId.
+        /// </summary>
+        public long ExecId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the test identifier associated with the parsed test result.
+        /// This is populated from the import request's testId.
+        /// </summary>
+        public long TestLvId { get; set; }
     }
 }

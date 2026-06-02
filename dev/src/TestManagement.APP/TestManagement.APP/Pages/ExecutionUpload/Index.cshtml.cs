@@ -46,7 +46,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
         }
 
         [BindProperty]
-        public long EnvId { get; set; } = 0;
+        public long ExecId { get; set; } = 0;
 
         [BindProperty]
         public List<IFormFile> UploadFiles { get; set; } = new List<IFormFile>();
@@ -62,8 +62,8 @@ namespace TestManagement.APP.Pages.ExecutionUpload
 
         public async Task OnGetAsync(long id)
         {
-            EnvId = id;
-            var testExecution = await _testExecutionService!.GetTestExecutionByIdAsync(id);
+            ExecId = id;
+            var testExecution = await _testExecutionService!.GetTestExecutionByIdAsync(ExecId);
             if (testExecution is not null)
             {
                 ExecutionViewModel = testExecution;
@@ -83,7 +83,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             // If id is provided as a route/form value, use it to populate EnvId so it is available during POST handling
             if (id.HasValue)
             {
-                EnvId = id.Value;
+                ExecId = id.Value;
             }
 
             // If selectedTestLevelId is provided as a route/form value, populate the bound property
@@ -119,7 +119,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
                     }
 
                     long testLevelId = SelectedTestLevelId ?? 0;
-                    await _importTestResultService.ImportAsync(EnvId, testLevelId, request);
+                    await _importTestResultService.ImportAsync(ExecId, testLevelId, request);
                     _logger?.LogInformation("Imported test results from uploaded file {FileName}", fileItem.FileName);
                 }
                 catch (Exception ex)

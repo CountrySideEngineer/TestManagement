@@ -68,7 +68,8 @@ namespace TestManagement.APP.Parse
                 Name = name,
                 Description = className,
                 ExecutedAt = executedAt,
-                IsFailed = isFailed
+                IsFailed = isFailed,
+                Status = isFailed ? "Failed" : "Passed"
             };
 
             return result;
