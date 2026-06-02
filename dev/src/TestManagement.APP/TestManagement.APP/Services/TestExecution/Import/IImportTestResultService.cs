@@ -1,0 +1,13 @@
+﻿using TestManagement.APP.Dto.TestResult.Import;
+
+namespace TestManagement.APP.Services.TestExecution.Import
+{
+    public interface IImportTestResultService
+    {
+        Task<ImportTestResultResponse> ImportAsync(
+            long envId,
+            long testId,
+            ImportTestResultRequest request,
+            CancellationToken ct = default);
+    }
+}

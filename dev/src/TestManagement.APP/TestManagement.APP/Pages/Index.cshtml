@@ -5,10 +5,8 @@
 }
 
 <div class="container">
-
     <div class="block">
-        <div class="block-title">プロジェクトサマリ</div>
-        <!-- プロジェクトサマリ -->
+        <div class="block-title">最新の実行状況</div>
         <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
             <div class="summary-col" style="flex:0 0; max-width:50%; display:flex; padding:0; margin: 0 16px 0 0;">
                 <div class="chart-card d-flex align-items-center justify-content-center flex-fill" style="padding:0; margin:0;">
@@ -19,12 +17,12 @@
             <div class="summary-col" style="flex:0 0 20%; max-width:50%; display:flex; flex-direction:column; padding:0;">
                 <div class="card" style="margin:0 0 8px 0;">
                     <div class="card-title">成功率</div>
-                    <div class="card-value">@Model.GetPassRatePercent()</div>
+                    <div class="card-value">@Model.DashboardViewModel?.LatestExecutionSummary?.SuccessRate %</div>
                 </div>
 
                 <div class="card" style="margin:8px 0 0 0;">
                     <div class="card-title">実行件数</div>
-                    <div class="card-value">@Model.Summary?.ExecutedNum 件</div>
+                    <div class="card-value">@Model.DashboardViewModel?.LatestExecutionSummary?.ExecutedNum 件</div>
                 </div>
             </div>
         </div>
@@ -33,79 +31,55 @@
     <!-- 最近の実行結果 -->
     <div class="block">
         <div class="block-title">最近の実行結果</div>
-
-
-        @* 先頭に TestRun の概要を表示 *@
-        @if (Model.TestRun != null && Model.TestRun.Id != 0)
-        {
-            <div class="card" style="display:inline-block; width:auto; max-width:100%; margin-bottom:12px;">
-                <div class="card-title">テスト実行情報</div>
-                <div>実行ID: <strong>@Model.TestRun.Id</strong></div>
-                <div>実行日時: <strong>@Model.TestRun.ExecutedAt.ToString("yyyy/MM/dd")</strong></div>
-                @if (!string.IsNullOrEmpty(Model.TestRun.Environment) && (!string.IsNullOrWhiteSpace(Model.TestRun.Environment)))
-                {
-                    <div>環境: <strong>@Model.TestRun.Environment</strong></div>
-                }
-                @if (!string.IsNullOrWhiteSpace(Model.TestRun.Notes))
-                {
-                    <div style="margin-top:6px;">備考: <span>@Model.TestRun.Notes</span></div>
-                }
-            </div>
-        }
-
-        @if (Model.TestResults == null || !Model.TestResults.Any())
-        {
-            <div>データがありません。</div>
-        }
-        else
-        {
-            <table class="table-header-center">
-                <thead>
-                    <tr>
-                        <th>実行日</th>
-                        <th>ID</th>
-                        <th>名前</th>
-                        <th>実行結果</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var tr in Model.GetTestResultsToDisplay())
+        <div class="recent-list">
+            @if (Model.DashboardViewModel?.RecentExecutions != null && Model.DashboardViewModel.RecentExecutions.Any())
+            {
+                <ul class="list-unstyled" style="margin:0; padding:0;">
+                    @foreach (var exec in Model.DashboardViewModel.RecentExecutions)
                     {
-                        var statusClass = tr.Status == TestManagement.APP.Models.TestStatus.Success ? "status-success"
-                            : tr.Status == TestManagement.APP.Models.TestStatus.Failure ? "status-failure"
-                            : "status-skipped";
-
-                        <tr>
-                            <td class="text-center">@tr.ExecutedAt.ToString("yyyy/MM/dd hh:mm:ss")</td>
-                            <td class="col-right">@tr.TestCaseId</td>
-                            <td>@tr.TestCase!.Title</td>
-                            <td class="@statusClass text-center">@tr.Status.ToString()</td>
-                        </tr>
+                        <li class="recent-item d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #eee;">
+                            <div class="exec-time" style="flex:0 0 220px;">
+                                <div class="small text-muted">@exec.ExecutedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div>
+                            </div>
+                            <div class="exec-revision" style="flex:1; padding-left:12px;">
+                                <div>Revision: <code>@exec.Revision</code></div>
+                            </div>
+                            <div class="exec-status" style="flex:0 0 120px; text-align:right;">
+                                @if (exec.HasFailure)
+                                {
+                                    <span class="badge bg-danger">失敗</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-success">成功</span>
+                                }
+                            </div>
+                        </li>
                     }
-                </tbody>
-            </table>
-        }
-    </div>
-
-    @* ページ下部：ファイル選択画面への遷移ボタンとアップロード結果通知 *@
-    <div class="page-footer">
-        @if (TempData["UploadMessage"] is string msg)
-        {
-            <div class="notice">@msg</div>
-        }
-        <div style="margin-top:8px;">
-        <a asp-page="/TestRuns/Index" class="upload-btn" style="margin-right:8px;">テスト実行一覧</a>
-        <a asp-page="/TestCases/Index" class="upload-btn" style="margin-right:8px;">テストケース一覧</a>
-        <a asp-page="/Upload/Index" class="upload-btn">テスト実行結果の登録</a>
+                </ul>
+            }
+            else
+            {
+                <div class="muted" style="padding:8px 0;">最近の実行はありません。</div>
+            }
         </div>
     </div>
+
+    <div class="block">
+        <div class="block-title">実行結果追加</div>
+        <div style="padding:8px 0;">
+            <a asp-page="/Executions/Index" class="btn btn-primary">テスト実行登録</a>
+        </div>
+    </div>
+    
+
 </div>
 
 <script>
     (function() {
         // Summary counts from server
-        const executed = @(Model.Summary?.ExecutedNum ?? 0);
-        const errors = @(Model.Summary?.ErrorNum ?? 0);
+        const executed = @(Model.DashboardViewModel?.LatestExecutionSummary?.ExecutedNum ?? 0);
+        const errors = @(Model.DashboardViewModel?.LatestExecutionSummary?.ErrorNum ?? 0);
         const success = Math.max(0, executed - errors);
 
         const ctx = document.getElementById('summaryChart');

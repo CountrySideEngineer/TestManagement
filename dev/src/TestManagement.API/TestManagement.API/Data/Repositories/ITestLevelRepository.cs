@@ -5,5 +5,7 @@ namespace TestManagement.API.Data.Repositories
     public interface ITestLevelRepository
     {
         Task<ICollection<TestLevel>> GetAllAsync();
+
+        Task AddAsync(TestLevel testLevel);
     }
 }

@@ -6,24 +6,38 @@ using System;
 using TestManagement.APP.Data;
 using TestManagement.APP.Data.Repositories.TestAnalysis;
 using TestManagement.APP.Models.TestAnalysis;
-using TestManagement.APP.Services;
 using TestManagement.APP.Models;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Net.Http.Json;
+using TestManagement.APP.Services.Option;
+using TestManagement.APP.Dto.TestExecution.Get;
+using TestManagement.APP.Services.TestExecution;
 
 namespace TestManagement.APP.Pages.Upload
 {
     public class IndexModel : PageModel
     {
-        private readonly IRequestRepository _repository;
+        private readonly ILogger<IndexModel>? _logger;
 
-        private readonly TestLevelApiClient _apiClient;
+        private readonly ITestExecutionService? _testExecutionService;
 
-        public IndexModel(IRequestRepository repository, TestLevelApiClient apiClient)
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="uploadFileParser">File parser object.</param>
+        /// <param name="uploadApiClient">Test result upload API client.</param>
+        public IndexModel(
+            ILogger<IndexModel>? logger,
+            ITestExecutionService? testExecutionService
+            )
         {
-            _repository = repository;
-            _apiClient = apiClient;
+            _logger = logger;
+            _testExecutionService = testExecutionService;
         }
 
         [BindProperty]
@@ -32,71 +46,32 @@ namespace TestManagement.APP.Pages.Upload
         // 画面に表示するテストレベル一覧
         public List<TestLevelDto> TestLevels { get; set; } = new List<TestLevelDto>();
 
+        // 実行情報一覧（UI のドロップダウンで使用）
+        public IList<TestRunDto> ExecutionInfos { get; set; } = new List<TestRunDto>();
+
         // ドロップダウンの選択値（必要なら POST 時に利用可能）
         [BindProperty]
         public int? SelectedTestLevelId { get; set; }
 
+        // ドロップダウン選択: 実行情報のId
+        [BindProperty]
+        public int? SelectedExecutionInfoId { get; set; }
+
+        // ラジオで選択されたモード（"new" または "existing"）を受け取る
+        [BindProperty]
+        public string ExecutionMode { get; set; } = "new";
+
+        [BindProperty]
+        public string NewRevision { get; set; } = string.Empty;
+
+        [BindProperty]
+        public DateTime NewRevisionDate { get; set; } = DateTime.UtcNow;
+
+        public ICollection<GetTestExecutionResponse>? TestExecutions { get; set; }
+
         public async Task OnGetAsync()
         {
-            try
-            {
-                TestLevels = await _apiClient.GetTestLevelsAsync() ?? new List<TestLevelDto>();
-            }
-            catch (Exception)
-            {
-                // 取得失敗時は空リストにする（ログを追加する場合はここで）
-                TestLevels = new List<TestLevelDto>();
-            }
-        }
-
-        public async Task<IActionResult> OnPostAsync()
-        {
-            if (UploadFiles == null || UploadFiles.Count == 0)
-            {
-                ModelState.AddModelError(string.Empty, "ファイルを選択してください。");
-                return Page();
-            }
-            if (null == SelectedTestLevelId)
-            {
-                ModelState.AddModelError(string.Empty, "テストレベルを選択してください。");
-                return Page();
-            }
-
-            // 指定されたファイルを格納するディレクトリを作成する。
-            // ディレクトリ名は、タイムスタンプで一意に決定する。
-            DateTime timeStamp = DateTime.UtcNow;
-            string driveRoot = Path.GetPathRoot(Directory.GetCurrentDirectory())!;
-            string uploadPath = Path.Combine(driveRoot, "Uploads", timeStamp.ToString("yyyyMMdd_HHmmssfff"));
-            Directory.CreateDirectory(uploadPath);
-
-            // 作成したディレクトリに、ファイルをアップロードする。
-            foreach (var fileItem in UploadFiles)
-            {
-                using var stream = fileItem.OpenReadStream();
-                using var content = new MultipartFormDataContent();
-                var streamContent = new StreamContent(stream);
-                content.Add(streamContent, "file", fileItem.FileName);
-
-                string filePath = Path.Combine(uploadPath, fileItem.FileName);
-                using (FileStream fileStream = new FileStream(filePath, FileMode.OpenOrCreate))
-                {
-                    await fileItem.CopyToAsync(fileStream);
-                }
-                ;
-            }
-
-            // 新規要求を発行する。
-            var newRequest = new Request()
-            {
-                DirectoryPath = uploadPath,
-                StatusId = 1,
-                ResultId = 1,
-                TestLevelId = (int)SelectedTestLevelId
-            };
-            await _repository.AddAsync(newRequest);
-
-            //TempData["UploadMessage"] = $"{started} 件のアップロードを開始しました。処理状況はダッシュボードで確認してください。";
-            return RedirectToPage("/Dashboard");
+            TestExecutions = await _testExecutionService!.GetTestExecutionsAsync();
         }
     }
 }

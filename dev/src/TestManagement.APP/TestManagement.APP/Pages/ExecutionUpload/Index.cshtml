@@ -1,0 +1,220 @@
+@page
+@model IndexModel
+@using System.Linq
+@using System
+@{
+    ViewData["Title"] = "実行アップロード";
+}
+
+<div class="container">
+    <form method="post" enctype="multipart/form-data">
+        <!-- Preserve the Id passed on GET so it is available on POST -->
+        <input asp-for="ExecId" type="hidden" />
+        <!-- Also include a hidden field named 'id' so OnPostAsync(long? id) can receive it as an argument -->
+        <input type="hidden" name="id" value="@Model.ExecId" />
+        <div class="block">
+            <div class="block-title">実行環境/リビジョン情報</div>
+            <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
+                <div class="summary-col" style="flex:0 0 100%; max-width:100%; display:flex; flex-direction:column; padding:0;">
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center">名前</th>
+                                    <th style="text-align:center">OS</th>
+                                    <th style="text-align:center">RunTime</th>
+                                    <th style="text-align:center">リビジョン</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:center">@Model.EnvironmentViewModel.Name</td>
+                                    <td style="text-align:center">@Model.EnvironmentViewModel.Os</td>
+                                    <td style="text-align:center">@Model.EnvironmentViewModel.RunTime</td>
+                                    <td style="text-align:center">@Model.ExecutionViewModel.Revision</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="block">
+            <div class="block-title">実行結果集計</div>
+            <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
+                <div class="summary-col" style="flex:0 0 100%; max-width:100%; display:flex; flex-direction:column; padding:0;">
+                    <div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="text-align:center;">実行日</th>
+                                    <th style="text-align:center;">成功</th>
+                                    <th style="text-align:center;">失敗</th>
+                                    <th style="text-align:center;">スキップ</th>
+                                    <th style="text-align:center;">対象外</th>
+                                    <th style="text-align:center;">実行数</th>
+                                    <th style="text-align:center;">成功(%)</th>
+                                    <th style="text-align:center;">失敗(%)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.ExecutedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.PassedNum</td>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.ErrorNum</td>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.SkippedNum</td>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.ExecutedNum</td>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.ExecutedNum</td>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.SuccessRate</td>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.FailedRate</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="block">
+            <div class="block-title">テストレベル</div>
+            <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
+                <div class="summary-col" style="flex:0 0 100%; max-width:100%; display:flex; flex-direction:column; padding:0;">
+                    <div style="margin-bottom:8px;">
+                        @if (Model.TestLevels != null && Model.TestLevels.Any())
+                        {
+                            <div style="margin:0;">
+                                <select id="testLevelSelect" asp-for="SelectedTestLevelId" style="flex:0 0 20%; display:block; max-width:60%; padding:8px; margin-top:6px;">
+                                    @foreach (var level in Model.TestLevels)
+                                    {
+                                        <option value="@level.Id">
+                                            @level.Name
+                                        </option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="color:#e74c3c; margin:8px 0;">テストレベルを取得できませんでした。</div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="block">
+            <div class="block-title">テスト結果登録</div>
+            <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;margin-bottom:8px;">
+                <div class="summary-col" style="flex:0 0 auto; max-width:50%; display:flex; padding:0; margin: 0 16px 0 0;">
+                    <div>
+                        <label for="fileInput" class="file-button">
+                            ファイルの選択
+                            <input id="fileInput" type="file" asp-for="UploadFiles" multiple style="display:none;" />
+                        </label>
+                    </div>
+                </div>
+                <div class="summary-col" style="flex:0 0 auto; max-width:50%; display:flex; padding:0; margin: 0 16px 0 0;">
+                    <div>
+                        <input type="submit" class="upload-btn" value="アップロード" />
+                    </div>
+                </div>
+            </div>
+            <!-- fileInputで選択されたファイルの一覧を、テーブルで表示する。 -->
+            <div id="fileDialogStatus" style="color:#333; visibility:collapse; height:0px;">ファイルが選択されていません。</div>
+            <div id="fileListContainer"></div>
+        </div>
+    </form>
+
+    <script>
+        (function(){
+            const fileInput = document.getElementById('fileInput');
+            const fileListContainer = document.getElementById('fileListContainer');
+            const statusEl = document.getElementById('fileDialogStatus');
+            const fileCard = document.getElementById('fileCard');
+
+            function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function (t) { return {'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[t]; }); }
+
+            // 選択済みファイルを保持する配列
+            const selectedFiles = [];
+
+            function fileId(f){
+                return `${f.name}|${f.size}|${f.lastModified}`;
+            }
+
+            function render(){
+                if(!selectedFiles || selectedFiles.length === 0){
+                    // ファイル未選択ならカードを非表示
+                    if(fileCard) fileCard.style.display = 'none';
+                    fileListContainer.innerHTML = '';
+                    return;
+                }
+                if(fileCard) fileCard.style.display = 'block';
+                const rows = selectedFiles.map(f => {
+                    const size = (f.size / 1024).toFixed(2) + ' KB';
+                    const m = f.lastModified ? new Date(f.lastModified).toLocaleString() : '';
+                    return `<tr><td style="padding:4px;">${escapeHtml(f.name)}</td><td style="padding:4px;text-align:right;">${size}</td><td style="padding:4px;">${escapeHtml(m)}</td></tr>`;
+                }).join('');
+                fileListContainer.innerHTML = `<table style="width:100%;border-collapse:collapse;"><thead><tr><th style="text-align:left">ファイル名</th><th style="text-align:right">サイズ</th><th style="text-align:left">更新日時</th></tr></thead><tbody>${rows}</tbody></table>`;
+            }
+
+            let dialogOpen = false;
+
+            fileInput.addEventListener('click', function(){
+                dialogOpen = true;
+                statusEl.textContent = 'ファイル選択ダイアログを開きました...';
+            });
+
+            fileInput.addEventListener('change', function(){
+                const newFiles = Array.from(fileInput.files || []);
+                if(newFiles.length === 0){
+                    // キャンセルされた
+                    statusEl.textContent = '選択はキャンセルされました';
+                    dialogOpen = false;
+                    return;
+                }
+
+                // 追加されたファイルを selectedFiles に取り込む（重複は除外）
+                const existingIds = new Set(selectedFiles.map(f => fileId(f)));
+                let added = 0;
+                for(const f of newFiles){
+                    const id = fileId(f);
+                    if(!existingIds.has(id)){
+                        selectedFiles.push(f);
+                        existingIds.add(id);
+                        added++;
+                    }
+                }
+
+                // 重複が念のため発生している場合は一意化（保険）
+                const unique = [];
+                const seen = new Set();
+                for(const f of selectedFiles){
+                    const id = fileId(f);
+                    if(!seen.has(id)){
+                        unique.push(f);
+                        seen.add(id);
+                    }
+                }
+                selectedFiles.length = 0;
+                selectedFiles.push(...unique);
+
+                render();
+                statusEl.textContent = added > 0 ? `${added} 個のファイルを追加しました` : '同じファイルは追加されませんでした';
+                dialogOpen = false;
+            });
+
+            window.addEventListener('focus', function(){
+                if(dialogOpen){
+                    dialogOpen = false;
+                    statusEl.textContent = 'ファイル選択ダイアログが閉じられました';
+                    render();
+                }
+            });
+
+            // 初期表示
+            render();
+        })();
+    </script>
+</div>

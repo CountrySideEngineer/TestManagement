@@ -6,10 +6,15 @@
 
         public DateTime ExecutedAt { get; set; }
 
+        public string Abstract { get; set; } = string.Empty;
+
         public string Environment { get; set; } = string.Empty;
 
         public string Notes { get; set; } = string.Empty;
 
         public ICollection<TestResultDto> TestResults { get; set; } = new List<TestResultDto>();
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     }
 }

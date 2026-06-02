@@ -4,12 +4,12 @@ namespace TestManagement.API.Data.Repositories
 {
     public interface ITestCaseRepository
     {
-        Task<ICollection<TestCase>> GetAllAsync();
+        Task<ICollection<TestCaseVersion>> GetAllAsync();
 
-        Task<ICollection<TestCase>> GetByIdAsync(int testLevelId);
+        Task<ICollection<TestCaseVersion>> GetByIdAsync(int testLevelId);
 
-        Task AddAsync(TestCase testCase);
+        Task AddAsync(TestCaseVersion testCase);
 
-        Task AddAsync(ICollection<TestCase> testCases);
+        Task AddAsync(ICollection<TestCaseVersion> testCases);
     }
 }
