@@ -33,12 +33,6 @@
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Gets or sets a value indicating
-        /// whether the test case execution resulted in a failure,
-        /// </summary>
-        public bool IsFailed { get; set; }
-
-        /// <summary>
         /// Gets or sets the version number of the corresponding test case.
         /// This value is populated when test cases are synchronized with the backend.
         /// </summary>
@@ -55,5 +49,31 @@
         /// This is populated from the import request's testId.
         /// </summary>
         public long TestLvId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the test status denotes that the test was executed (run).
+        /// </summary>
+        public bool IsStatusRun { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the test result is marked as completed.
+        /// </summary>
+        public bool IsResultCompleted { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the test result was skipped and not executed.
+        /// </summary>
+        public bool IsResultSkipped { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the test result is suppressed (intentionally not reported).
+        /// </summary>
+        public bool IsResultSuppressed { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating
+        /// whether the test case execution resulted in a failure,
+        /// </summary>
+        public bool IsFailed { get; set; }
     }
 }

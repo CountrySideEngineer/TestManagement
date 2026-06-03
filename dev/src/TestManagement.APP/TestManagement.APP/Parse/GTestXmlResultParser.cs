@@ -5,6 +5,10 @@ using TestManagement.APP.Interfaces;
 
 namespace TestManagement.APP.Parse
 {
+    /// <summary>
+    /// Parser for Google Test XML result files. This class converts XML test case
+    /// elements into <see cref="ParsedTestResult"/> objects.
+    /// </summary>
     public class GTestXmlResultParser : ITestResultParser
     {
         /// <summary>
@@ -23,7 +27,7 @@ namespace TestManagement.APP.Parse
             XDocument xdoc = XDocument.Parse(content);
             IEnumerable<XElement> testCaseElements = xdoc.Descendants("testcase");
 
-            ICollection<ParsedTestResult> results = [.. ParseTestCases(testCaseElements)];
+            ICollection<ParsedTestResult> results = ParseTestCases(testCaseElements).ToList();
             return results;
         }
 
@@ -60,21 +64,87 @@ namespace TestManagement.APP.Parse
                 executedAt = DateTime.SpecifyKind(executedAt, DateTimeKind.Utc);
             }
 
-            bool isFailed = testCaseElement.Element("failure") != null;
-
-            ParsedTestResult result = new ParsedTestResult
+            var result = new ParsedTestResult()
             {
                 Code = $"{className}::{name}",
                 Name = name,
                 Description = className,
                 ExecutedAt = executedAt,
-                IsFailed = isFailed,
-                Status = isFailed ? "Failed" : "Passed"
             };
+            ParseTestCaseResult(testCaseElement, result);
+            result.Status = result.IsFailed ? "Failed" : (result.IsStatusRun ? "Passed" : "Not Run");
 
             return result;
         }
 
+        /// <summary>
+        /// Parses status and result attributes on a test case XML element and updates
+        /// the provided <see cref="ParsedTestResult"/> instance with the derived
+        /// status flags (run, completed, skipped, suppressed and failed).
+        /// </summary>
+        /// <param name="testCaseElement">The XML element that represents a single test case.</param>
+        /// <param name="testResult">The parsed test result instance to update.</param>
+        protected virtual void ParseTestCaseResult(XElement testCaseElement, ParsedTestResult testResult)
+        {
+            string status = testCaseElement.Attribute("status")?.Value ?? string.Empty;
+            string result = testCaseElement.Attribute("result")?.Value ?? string.Empty;
+
+            if ("run" == status)
+            {
+                // Test case was executed, determine pass/fail based on result
+                if ("completed" == result)
+                {
+                    testResult.IsStatusRun = true;
+                    testResult.IsResultCompleted = true;
+                    testResult.IsResultSkipped = false;
+                    testResult.IsResultSuppressed = false;
+
+                    if (null == testCaseElement.Element("failure"))
+                    {
+                        testResult.IsFailed = false;
+                    }
+                    else
+                    {
+                        testResult.IsFailed = true;
+                    }
+                }
+                else if ("skipped" == result)
+                {
+                    testResult.IsStatusRun = true;
+                    testResult.IsResultCompleted = false;
+                    testResult.IsResultSkipped = true;
+                    testResult.IsResultSuppressed = false;
+                    testResult.IsFailed = false;
+                }
+                else
+                {
+                    throw new InvalidDataException();
+                }
+            }
+            else if ("notrun" == status)
+            {
+                if ("suppressed" == result)
+                {
+                    testResult.IsStatusRun = false;
+                    testResult.IsResultCompleted = false;
+                    testResult.IsResultSkipped = false;
+                    testResult.IsResultSuppressed = true;
+                    testResult.IsFailed = false;
+                }
+                else
+                {
+                    throw new InvalidDataException();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously parses Google Test XML content and returns a collection of
+        /// <see cref="ParsedTestResult"/> objects representing the parsed test cases.
+        /// </summary>
+        /// <param name="content">The XML content to parse.</param>
+        /// <param name="ct">A cancellation token to cancel the operation.</param>
+        /// <returns>A task that resolves to a collection of parsed test results.</returns>
         public virtual async Task<ICollection<ParsedTestResult>> ParseAsync(string content, CancellationToken ct = default)
         {
             var results = await Task.Run<ICollection<ParsedTestResult>>(() =>
@@ -82,14 +152,21 @@ namespace TestManagement.APP.Parse
                 XDocument xdoc = XDocument.Parse(content);
                 IEnumerable<XElement> testCaseElements = xdoc.Descendants("testcase");
 
-                ICollection<ParsedTestResult> results = [.. ParseTestCases(testCaseElements)];
+                ICollection<ParsedTestResult> results = ParseTestCases(testCaseElements).ToList();
 
                 return results;
-            });
+            }, ct);
 
             return results;
         }
 
+        /// <summary>
+        /// Asynchronously reads the provided stream and parses its XML content into
+        /// a collection of <see cref="ParsedTestResult"/> instances.
+        /// </summary>
+        /// <param name="stream">Stream containing the XML content.</param>
+        /// <param name="ct">A cancellation token to cancel the operation.</param>
+        /// <returns>A task that resolves to a collection of parsed test results.</returns>
         public virtual async Task<ICollection<ParsedTestResult>> ParseAsync(Stream stream, CancellationToken ct = default)
         {
             using var reader = new StreamReader(stream);
@@ -100,6 +177,12 @@ namespace TestManagement.APP.Parse
             return results;
         }
 
+        /// <summary>
+        /// Synchronously reads the provided stream and parses its XML content into
+        /// a collection of <see cref="ParsedTestResult"/> instances.
+        /// </summary>
+        /// <param name="stream">Stream containing the XML content to parse.</param>
+        /// <returns>Collection of parsed test results.</returns>
         public virtual ICollection<ParsedTestResult> Parse(Stream stream)
         {
             using var reader = new StreamReader(stream);
