@@ -72,7 +72,7 @@ namespace TestManagement.APP.Parse
                 ExecutedAt = executedAt,
             };
             ParseTestCaseResult(testCaseElement, result);
-            result.Status = result.IsFailed ? "Failed" : (result.IsStatusRun ? "Passed" : "Not Run");
+            result.StatusCode = result.IsFailed ? "Failed" : (result.IsStatusRun ? "Passed" : "Not Run");
 
             return result;
         }
