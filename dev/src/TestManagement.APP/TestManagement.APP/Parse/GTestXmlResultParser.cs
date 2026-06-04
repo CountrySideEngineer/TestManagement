@@ -71,8 +71,19 @@ namespace TestManagement.APP.Parse
                 Description = className,
                 ExecutedAt = executedAt,
             };
-            ParseTestCaseResult(testCaseElement, result);
-            result.StatusCode = result.IsFailed ? "Failed" : (result.IsStatusRun ? "Passed" : "Not Run");
+            // Use a TryParse-style method to avoid exceptions for normal control flow.
+            // If parsing the status/result fails (invalid or unexpected values), mark
+            // the test result as unknown/failed in a consistent way.
+            bool parsed = TryParseTestCaseResult(testCaseElement, result);
+            if (!parsed)
+            {
+                result.IsStatusRun = false;
+                result.IsResultCompleted = false;
+                result.IsResultSkipped = false;
+                result.IsResultSuppressed = false;
+                result.IsFailed = true;
+                result.Status = TestResultStatus.Unknown;
+            }
 
             return result;
         }
@@ -84,7 +95,17 @@ namespace TestManagement.APP.Parse
         /// </summary>
         /// <param name="testCaseElement">The XML element that represents a single test case.</param>
         /// <param name="testResult">The parsed test result instance to update.</param>
-        protected virtual void ParseTestCaseResult(XElement testCaseElement, ParsedTestResult testResult)
+        /// <summary>
+        /// Attempts to parse status and result attributes on a test case XML element
+        /// and updates the provided <see cref="ParsedTestResult"/> instance with
+        /// derived status flags. Returns <c>true</c> when parsing succeeds and the
+        /// combination of attributes is recognized; otherwise returns <c>false</c>.
+        /// This avoids using exceptions for normal control flow.
+        /// </summary>
+        /// <param name="testCaseElement">The XML element that represents a single test case.</param>
+        /// <param name="testResult">The parsed test result instance to update.</param>
+        /// <returns>True if parsing succeeded; false if the status/result combination is unrecognized.</returns>
+        protected virtual bool TryParseTestCaseResult(XElement testCaseElement, ParsedTestResult testResult)
         {
             string status = testCaseElement.Attribute("status")?.Value ?? string.Empty;
             string result = testCaseElement.Attribute("result")?.Value ?? string.Empty;
@@ -102,11 +123,15 @@ namespace TestManagement.APP.Parse
                     if (null == testCaseElement.Element("failure"))
                     {
                         testResult.IsFailed = false;
+                        testResult.Status = TestResultStatus.Passed;
                     }
                     else
                     {
                         testResult.IsFailed = true;
+                        testResult.Status = TestResultStatus.Failed;
                     }
+
+                    return true;
                 }
                 else if ("skipped" == result)
                 {
@@ -115,11 +140,13 @@ namespace TestManagement.APP.Parse
                     testResult.IsResultSkipped = true;
                     testResult.IsResultSuppressed = false;
                     testResult.IsFailed = false;
+                    testResult.Status = TestResultStatus.Skipped;
+
+                    return true;
                 }
-                else
-                {
-                    throw new InvalidDataException();
-                }
+
+                // Unrecognized 'result' value for status 'run'
+                return false;
             }
             else if ("notrun" == status)
             {
@@ -130,12 +157,17 @@ namespace TestManagement.APP.Parse
                     testResult.IsResultSkipped = false;
                     testResult.IsResultSuppressed = true;
                     testResult.IsFailed = false;
+                    testResult.Status = TestResultStatus.Suppressed;
+
+                    return true;
                 }
-                else
-                {
-                    throw new InvalidDataException();
-                }
+
+                // Unrecognized 'result' value for status 'notrun'
+                return false;
             }
+
+            // Unrecognized 'status' value
+            return false;
         }
 
         /// <summary>
