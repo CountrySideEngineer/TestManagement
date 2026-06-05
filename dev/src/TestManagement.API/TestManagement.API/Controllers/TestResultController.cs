@@ -74,12 +74,12 @@ namespace TestManagement.API.Controllers
             _logger.LogDebug("TestResultController.Create() start!");
 
             // Map request DTO to domain model
-            var testResult = new CreateTestResultRequest
+            var testResult = new TestResult
             {
                 TestCaseVersionId = request.TestCaseVersionId,
                 TestExecutionItemId = request.TestExecutionItemId,
-                StatusId = request.StatusId,
-                ActualResult = request.ActualResult ?? string.Empty,
+                TestResultStatus = request.TestResultStatus,
+                ActualResult = request.TestResultStatus,
                 Message = request.Message,
                 ExecutedAt = request.ExecutedAt ?? DateTime.UtcNow
             };
@@ -102,15 +102,15 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
-            var testResults = new List<CreateTestResultRequest>();
+            var testResults = new List<TestResult>();
             foreach (var request in requests)
             {
-                var testResult = new CreateTestResultRequest
+                var testResult = new TestResult
                 {
                     TestCaseVersionId = request.TestCaseVersionId,
                     TestExecutionItemId = request.TestExecutionItemId,
-                    StatusId = request.StatusId,
-                    ActualResult = request.ActualResult ?? string.Empty,
+                    TestResultStatus = request.TestResultStatus,
+                    ActualResult = request.TestResultStatus,
                     Message = request.Message,
                     ExecutedAt = request.ExecutedAt ?? DateTime.UtcNow
                 };

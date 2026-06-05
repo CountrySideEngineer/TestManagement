@@ -68,7 +68,7 @@ namespace TestManagement.API.Models
             {
                 EnvironmentId = envId,
                 ExecutedAt = executedAt,
-                TestResults = executedTests.Select(et => new CreateTestResultRequest
+                TestResults = executedTests.Select(et => new TestResult
                 {
                     TestCaseVersionId = et.TestCaseVersionId,
                     StatusId = et.TestStatusId,

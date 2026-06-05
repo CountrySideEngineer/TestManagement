@@ -22,28 +22,28 @@ namespace TestManagement.API.Services
             _xmlConverter = xmlConverter;
         }
 
-        public async Task<ICollection<Models.CreateTestResultRequest>> GetAllAsync()
+        public async Task<ICollection<Models.TestResult>> GetAllAsync()
         {
             _logger.LogDebug("TestResultService::GetAllAsync() start!");
 
             return await _testResultRepository.GetAllAsyc();
         }
 
-        public async Task<Models.CreateTestResultRequest> GetByIdAsync(int id)
+        public async Task<Models.TestResult> GetByIdAsync(int id)
         {
             _logger.LogDebug("TestResultService::GetByIdAsync() start!");
 
             return await _testResultRepository.GetByIdAsync(id);
         }
 
-        public async Task CreateAsync(Models.CreateTestResultRequest result)
+        public async Task CreateAsync(Models.TestResult result)
         {
             _logger.LogDebug("TestResultService::Create() start!");
     
             await _testResultRepository.AddAsync(result);
         }
 
-        public async Task CreateAsync(ICollection<CreateTestResultRequest> results)
+        public async Task CreateAsync(ICollection<TestResult> results)
         {
             _logger.LogDebug("TestResultService::Create() start!");
 
@@ -59,7 +59,7 @@ namespace TestManagement.API.Services
             await _testResultRepository.AddAsync(results);
         }
 
-        public async Task<ICollection<CreateTestResultRequest>> ConvertSuitesAsync(TestSuitesXml suites, CancellationToken cancellationToken = default)
+        public async Task<ICollection<TestResult>> ConvertSuitesAsync(TestSuitesXml suites, CancellationToken cancellationToken = default)
         {
             _logger.LogDebug("TestResultService::ConvertSuitesAsync() start!");
 

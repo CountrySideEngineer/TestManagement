@@ -69,6 +69,6 @@
         /// <summary>
         /// Navigation property to related test results that have this status.
         /// </summary>
-        public ICollection<CreateTestResultRequest> TestResults { get; set; } = new List<CreateTestResultRequest>();
+        public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
     }
 }

@@ -29,8 +29,8 @@ namespace TestManagement.APP.Services.TestExecution.Register
                 var request = new PostTestResultRequest
                 {
                     TestExecutionItemId = 1,
-                    TestCaseVersionId = 1,
-                    StatusId = 1,
+                    TestCaseVersionNumber = 1,
+                    TestResultStatus = TestResultStatus.Unknown
                 };
                 requests.Add(request);
             }

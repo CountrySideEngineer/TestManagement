@@ -20,17 +20,6 @@ namespace TestManagement.API.Models.Requests
         public long TestExecutionItemId { get; set; }
 
         /// <summary>
-        /// Identifier of the test status (for example: Passed, Failed, Skipped) applied to this result.
-        /// </summary>
-        [Required]
-        public long StatusId { get; set; }
-
-        /// <summary>
-        /// The actual observed result produced by the test (optional free-text field).
-        /// </summary>
-        public string ActualResult { get; set; } = string.Empty;
-
-        /// <summary>
         /// Optional diagnostic or contextual message associated with the test result.
         /// </summary>
         public string? Message { get; set; }
@@ -39,5 +28,7 @@ namespace TestManagement.API.Models.Requests
         /// The UTC date and time when the test was executed. If not provided, the current time may be used by the server.
         /// </summary>
         public DateTime? ExecutedAt { get; set; }
+
+        public string TestResultStatus { get; set; } = string.Empty;
     }
 }

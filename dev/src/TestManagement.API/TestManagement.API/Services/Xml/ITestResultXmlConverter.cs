@@ -9,6 +9,6 @@ namespace TestManagement.API.Services.Xml
         /// Convert parsed XML test suites into a collection of domain TestResult entities.
         /// Note: caller is responsible for resolving TestCaseId/TestRunId and any persistence concerns.
         /// </summary>
-        Task<ICollection<CreateTestResultRequest>> ConvertAsync(TestSuitesXml suites, CancellationToken cancellationToken = default);
+        Task<ICollection<TestResult>> ConvertAsync(TestSuitesXml suites, CancellationToken cancellationToken = default);
     }
 }

@@ -55,38 +55,26 @@ namespace TestManagement.APP.Services.TestExecution.Import
             // Sync test cases to make sure all test cases in test result exist in database
             IEnumerable<TestCaseViewModel> testCases = await _syncTestCaseService.SyncTestCasesAsync(parsedTestResults);
 
-            // Convert test case 
-
-
-
-
-
-
-
-            // Map VersionNumber from synchronized TestCaseViewModel back to parsed test results
-            var versionByCode = testCases
-                .Where(tc => !string.IsNullOrEmpty(tc.Code))
-                .ToDictionary(tc => tc.Code, tc => tc.VersionNumber, StringComparer.OrdinalIgnoreCase);
-
-            var requests = new List<PostTestResultRequest>();
-            foreach (var parsed in parsedTestResults)
+            // Convert test case view model to dto as PostTestResultRequest.
+            var testResultRequests = new List<PostTestResultRequest>();
+            foreach (var testCase in testCases)
             {
-                if (!string.IsNullOrEmpty(parsed.Code) && versionByCode.TryGetValue(parsed.Code, out var version))
+                var parsedTestResult = 
+                    parsedTestResults.FirstOrDefault(r => 
+                        string.Equals(r.Code, testCase.Code, StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(r.Name, testCase.Name, StringComparison.OrdinalIgnoreCase));
+
+                var requestItem = new PostTestResultRequest
                 {
-                    parsed.VersionNumber = version;
-                }
-                //var requestItem = new PostTestResultRequest
-                //{
-                //    ActualResult = string.Empty,
-                //    TestCaseVersionId = versionByCode.TryGetValue(parsed.Code, out var ver) ? ver : 0,
-                //    ExecutedAt = parsed.ExecutedAt,
-                //    Message = parsed.Name,
-                //    StatusId = MapStatus(parsed.Status),
-                //    TestExecutionItemId = 0 // This will be set in RegisterTestExecutionService
-                //}
-                // Set environment and test identifiers from method arguments
-                parsed.ExecId = execId;
-                parsed.TestLvId = testLvId;
+                    TestExecutionItemId = execId,
+                    TestCaseId = testCase.Id,
+                    TestCaseVersionNumber = testCase.VersionNumber,
+                    TestLevelId = testLvId,
+                    Message = string.Empty,
+                    ExecutedAt = parsedTestResult!.ExecutedAt,
+                    TestResultStatus = parsedTestResult.Status
+                };
+                testResultRequests.Add(requestItem);
             }
 
             // Register test execution for each test result

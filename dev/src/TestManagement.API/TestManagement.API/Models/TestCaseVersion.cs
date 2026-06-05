@@ -57,11 +57,11 @@ namespace TestManagement.API.Models
         public bool IsLatest { get; set; } = true;
 
         /// <summary>
-        /// Navigation property to related <see cref="CreateTestResultRequest"/> objects.
+        /// Navigation property to related <see cref="TestResult"/> objects.
         /// This property is ignored during JSON serialization to avoid circular references.
         /// </summary>
         [JsonIgnore]
-        public ICollection<CreateTestResultRequest> Results { get; set; } = new List<CreateTestResultRequest>();
+        public ICollection<TestResult> Results { get; set; } = new List<TestResult>();
 
         /// <summary>
         /// Navigation property to the <see cref="TestLevel"/> associated with this version.

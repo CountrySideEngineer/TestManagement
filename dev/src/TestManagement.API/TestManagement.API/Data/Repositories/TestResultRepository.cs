@@ -23,7 +23,7 @@ namespace TestManagement.API.Data.Repositories
             _logger = logger;
         }
 
-        public async Task<ICollection<CreateTestResultRequest>> GetAllAsyc()
+        public async Task<ICollection<TestResult>> GetAllAsyc()
         {
             _logger.LogInformation("TestResultRepository::GetAllAsyc() start!");
 
@@ -33,7 +33,7 @@ namespace TestManagement.API.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<CreateTestResultRequest> GetByIdAsync(int id)
+        public async Task<TestResult> GetByIdAsync(int id)
         {
             _logger.LogInformation("TestResultRepository::GetByIdAsync() start!");
 
@@ -44,7 +44,7 @@ namespace TestManagement.API.Data.Repositories
                 .FirstAsync();
         }
 
-        public async Task AddAsync(CreateTestResultRequest result)
+        public async Task AddAsync(TestResult result)
         {
             _logger.LogInformation("TestResultRepository::AddAsync() start!");
 
@@ -57,7 +57,7 @@ namespace TestManagement.API.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task AddAsync(ICollection<CreateTestResultRequest> results)
+        public async Task AddAsync(ICollection<TestResult> results)
         {
             _logger.LogInformation("TestResultRepository::AddAsync() start!");
 

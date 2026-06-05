@@ -1,4 +1,6 @@
-﻿namespace TestManagement.APP.Dto.TestCase.Post
+﻿using TestManagement.APP.Dto.TestResult;
+
+namespace TestManagement.APP.Dto.TestCase.Post
 {
     /// <summary>
     /// Response returned after creating a new test case, containing the details of the created test case,
