@@ -61,8 +61,6 @@ namespace TestManagement.API.Models
         /// </summary>
         public TestStatus Status { get; set; } = null!;
 
-        public string TestResultStatus { get; set; } = string.Empty;
-
         /// <summary>
         /// Timestamp when the test was executed (UTC).
         /// </summary>

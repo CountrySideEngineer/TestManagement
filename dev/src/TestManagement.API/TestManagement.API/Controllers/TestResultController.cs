@@ -78,7 +78,6 @@ namespace TestManagement.API.Controllers
             {
                 TestCaseVersionId = request.TestCaseVersionId,
                 TestExecutionItemId = request.TestExecutionItemId,
-                TestResultStatus = request.TestResultStatus,
                 ActualResult = request.TestResultStatus,
                 Message = request.Message,
                 ExecutedAt = request.ExecutedAt ?? DateTime.UtcNow
@@ -109,7 +108,6 @@ namespace TestManagement.API.Controllers
                 {
                     TestCaseVersionId = request.TestCaseVersionId,
                     TestExecutionItemId = request.TestExecutionItemId,
-                    TestResultStatus = request.TestResultStatus,
                     ActualResult = request.TestResultStatus,
                     Message = request.Message,
                     ExecutedAt = request.ExecutedAt ?? DateTime.UtcNow
