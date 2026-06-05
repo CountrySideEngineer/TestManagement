@@ -30,6 +30,6 @@ namespace TestManagement.APP.Dto.TestResult.Post
         /// </summary>
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
-        public TestResultStatus TestResultStatus { get; set; } = TestResultStatus.Unknown;
+        public string TestResultStatus { get; set; } = string.Empty;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using TestManagement.APP.Dto.TestResult;
+using TestManagement.APP.Dto.TestResult.Register;
 
 namespace TestManagement.APP.Services.TestExecution.Register
 {
@@ -11,7 +12,7 @@ namespace TestManagement.APP.Services.TestExecution.Register
             /// <param name="testResults">The collection of parsed test results to register.</param>
             /// <returns>A task representing the asynchronous operation.</returns>
             Task RegisterTestExecutionAsync(
-                IEnumerable<ParsedTestResult> testResults,
+                IEnumerable<RegisterTestResultRequest> testResults,
                 CancellationToken ct = default);
     }
 }

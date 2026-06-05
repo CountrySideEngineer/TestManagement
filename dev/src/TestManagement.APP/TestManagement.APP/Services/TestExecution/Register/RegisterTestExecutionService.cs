@@ -2,6 +2,7 @@
 using TestManagement.APP.ApiClients.TestResult;
 using TestManagement.APP.Dto.TestResult;
 using TestManagement.APP.Dto.TestResult.Post;
+using TestManagement.APP.Dto.TestResult.Register;
 
 namespace TestManagement.APP.Services.TestExecution.Register
 {
@@ -19,7 +20,9 @@ namespace TestManagement.APP.Services.TestExecution.Register
             _testResultApiClient = testResultApiClient;
         }
 
-        public async Task RegisterTestExecutionAsync(IEnumerable<ParsedTestResult> testResults, CancellationToken ct = default)
+        public async Task RegisterTestExecutionAsync(
+            IEnumerable<RegisterTestResultRequest> testResults,
+            CancellationToken ct = default)
         {
             _logger.LogDebug("Registering test execution with {Count} test results", testResults.Count());
 
@@ -30,7 +33,7 @@ namespace TestManagement.APP.Services.TestExecution.Register
                 {
                     TestExecutionItemId = 1,
                     TestCaseVersionNumber = 1,
-                    TestResultStatus = TestResultStatus.Unknown
+                    TestResultStatus = TestResultStatus.Unknown.ToString()
                 };
                 requests.Add(request);
             }
