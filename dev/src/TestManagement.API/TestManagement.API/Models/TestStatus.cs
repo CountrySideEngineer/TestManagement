@@ -1,4 +1,6 @@
-﻿namespace TestManagement.API.Models
+﻿using System.Text.Json.Serialization;
+
+namespace TestManagement.API.Models
 {
     /// <summary>
     /// Represents the status of a test result (for example: Passed, Failed, Skipped).
@@ -69,6 +71,7 @@
         /// <summary>
         /// Navigation property to related test results that have this status.
         /// </summary>
+        [JsonIgnore]
         public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
     }
 }

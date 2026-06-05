@@ -8,27 +8,38 @@ namespace TestManagement.API.Models.Requests
     public class TestResultCreateRequest
     {
         /// <summary>
-        /// Identifier of the test case version that the result relates to.
+        /// Foreign key referencing the test execution item that triggered this result.
         /// </summary>
-        [Required]
-        public long TestCaseVersionId { get; set; }
-
-        /// <summary>
-        /// Identifier of the execution item (a specific execution run) that this result belongs to.
-        /// </summary>
-        [Required]
         public long TestExecutionItemId { get; set; }
 
         /// <summary>
-        /// Optional diagnostic or contextual message associated with the test result.
+        /// Foreign key referencing the specific <see cref="TestCaseId"/> executed.
+        /// </summary>
+        public long TestCaseId { get; set; } = 0;
+
+        /// <summary>
+        /// Version number of the test case that was executed.
+        /// </summary>
+        public long TestCaseVersionNumber { get; set; } = 0;
+
+        /// <summary>
+        /// Identifier for the test level or environment (for example, unit, integration, system).
+        /// </summary>
+        public long TestLevelId { get; set; } = 0;
+
+        /// <summary>
+        /// Optional message or details associated with the test execution (for example, error stack trace or additional notes).
         /// </summary>
         public string? Message { get; set; }
 
         /// <summary>
-        /// The UTC date and time when the test was executed. If not provided, the current time may be used by the server.
+        /// Timestamp when the test was executed (UTC).
         /// </summary>
-        public DateTime? ExecutedAt { get; set; }
+        public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
+        /// <summary>
+        /// Status of the test result (for example, "Passed", "Failed", "Skipped").
+        /// </summary>
         public string TestResultStatus { get; set; } = string.Empty;
     }
 }

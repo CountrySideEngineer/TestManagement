@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TestManagement.API.Features.TestCases.Create;
 using TestManagement.API.Models;
 using TestManagement.API.Models.Report.Xml;
 using TestManagement.API.Models.Requests;
+using TestManagement.API.Models.Requests.TestResult;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
@@ -73,21 +75,19 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestResultController.Create() start!");
 
-            // Map request DTO to domain model
-            var testResult = new TestResult
+            var testResultRequest = new CreateTestResultRequest()
             {
-                TestCaseVersionId = request.TestCaseVersionId,
                 TestExecutionItemId = request.TestExecutionItemId,
-                ActualResult = request.TestResultStatus,
+                TestCaseId = request.TestCaseId,
+                TestCaseVersionNumber = request.TestCaseVersionNumber,
+                TestLevelId = request.TestLevelId,
                 Message = request.Message,
-                ExecutedAt = request.ExecutedAt ?? DateTime.UtcNow
+                ExecutedAt = request.ExecutedAt,
+                TestResultStatus = request.TestResultStatus 
             };
+            await _testResultService.CreateAsync(testResultRequest);
 
-            await _testResultService.CreateAsync(testResult);
-
-            var resultAction = CreatedAtRoute(nameof(GetByIdAsync), new { id = testResult.Id }, testResult);
-
-            return resultAction;
+            return Ok();
         }
 
         /// <summary>
@@ -101,23 +101,25 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
-            var testResults = new List<TestResult>();
+            var testResults = new List<CreateTestResultRequest>();
             foreach (var request in requests)
             {
-                var testResult = new TestResult
+                var testResultRequest = new CreateTestResultRequest()
                 {
-                    TestCaseVersionId = request.TestCaseVersionId,
                     TestExecutionItemId = request.TestExecutionItemId,
-                    ActualResult = request.TestResultStatus,
+                    TestCaseId = request.TestCaseId,
+                    TestCaseVersionNumber = request.TestCaseVersionNumber,
+                    TestLevelId = request.TestLevelId,
                     Message = request.Message,
-                    ExecutedAt = request.ExecutedAt ?? DateTime.UtcNow
+                    ExecutedAt = request.ExecutedAt,
+                    TestResultStatus = request.TestResultStatus
                 };
-                testResults.Add(testResult);
+                testResults.Add(testResultRequest);
             }
 
             await _testResultService.CreateAsync(testResults);
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = testResults[0].Id }, testResults);
+            return Ok();
         }
 
         /// <summary>
@@ -133,7 +135,7 @@ namespace TestManagement.API.Controllers
             _logger.LogDebug("TestResultController.CreateFromXml() start!");
 
             // Convert and persist XML suites to TestResult entities using service
-            await _testResultService.CreateAsync(suites);
+            //await _testResultService.CreateAsync(suites);
 
             return Ok();
         }
