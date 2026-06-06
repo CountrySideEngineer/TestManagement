@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
 using TestManagement.API.Data.Repositories;
+using TestManagement.API.Features.TestResult.Create;
 using TestManagement.API.Models;
 using TestManagement.API.Models.Report.Xml;
-using TestManagement.API.Models.Requests.TestResult;
 using TestManagement.API.Services.Xml;
 
 namespace TestManagement.API.Services
@@ -35,6 +35,10 @@ namespace TestManagement.API.Services
             _xmlConverter = xmlConverter;
             _logger = logger;
         }
+
+
+
+
         public async Task<ICollection<Models.TestResult>> GetAllAsync()
         {
             _logger.LogDebug("TestResultService::GetAllAsync() start!");

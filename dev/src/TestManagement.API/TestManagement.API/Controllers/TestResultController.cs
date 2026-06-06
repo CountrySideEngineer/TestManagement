@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TestManagement.API.Features.TestCases.Create;
-using TestManagement.API.Models;
+using TestManagement.API.Features.TestResult.Create;
 using TestManagement.API.Models.Report.Xml;
 using TestManagement.API.Models.Requests;
-using TestManagement.API.Models.Requests.TestResult;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
