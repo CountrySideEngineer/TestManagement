@@ -38,7 +38,7 @@ namespace TestManagement.API.Services
         }
 
         // Load all TestCase entities including their Versions and map to GetTestCaseResponseWithVrersion DTOs.
-        public virtual async Task<ICollection<GetTestCaseResponseWithVrersion>> GetAllAsync()
+        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllAsync()
         {
             _logger?.LogDebug("TestCaseService::GetAllAsync() start!");
 
@@ -48,20 +48,20 @@ namespace TestManagement.API.Services
                 .AsNoTracking()
                 .ToListAsync();
 
-            var responses = testCases.Select(tc => new GetTestCaseResponseWithVrersion
+            var responses = testCases.Select(tc => new GetTestCaseResponse
             {
                 Id = tc.Id,
                 Code = tc.Code,
-                Versions = tc.Versions.Select(v => new GetTestCaseResponseWithVrersion.TestCaseVersionItem
+                Versions = tc.Versions.Select(tcv => new GetTestCaseResponse.TestCaseVersionItem
                 {
-                    Id = v.Id,
-                    Name = v.Name,
-                    Description = v.Description,
-                    VersionNumber = v.VersionNumber,
-                    TestLevelId = v.TestLevelId,
-                    IsLatest = v.IsLatest,
-                    CreatedAt = v.CreatedAt,
-                    UpdatedAt = v.UpdatedAt
+                    Id = tcv.Id,
+                    Name = tcv.Name,
+                    Description = tcv.Description,
+                    VersionNumber = tcv.VersionNumber,
+                    TestLevelId = tcv.TestLevelId,
+                    IsLatest = tcv.IsLatest,
+                    CreatedAt = tcv.CreatedAt,
+                    UpdatedAt = tcv.UpdatedAt
                 }).ToList()
             }).ToList();
 
@@ -90,12 +90,22 @@ namespace TestManagement.API.Services
                         join tc in _context.TestCases on v.TestCaseId equals tc.Id
                         select new GetTestCaseResponse
                         {
-                            Id = v.Id,
+                            Id = tc.Id,
                             Code = tc.Code,
-                            Name = v.Name,
-                            Description = v.Description,
-                            TestLevelId = v.TestLevelId,
-                            VersionNumber = v.VersionNumber
+                            Versions = new List<GetTestCaseResponse.TestCaseVersionItem>
+                            {
+                                new GetTestCaseResponse.TestCaseVersionItem
+                                {
+                                    Id = v.Id,
+                                    Name = v.Name,
+                                    Description = v.Description,
+                                    VersionNumber = v.VersionNumber,
+                                    TestLevelId = v.TestLevelId,
+                                    IsLatest = v.IsLatest,
+                                    CreatedAt = v.CreatedAt,
+                                    UpdatedAt = v.UpdatedAt
+                                }
+                            }
                         };
 
             return await query
