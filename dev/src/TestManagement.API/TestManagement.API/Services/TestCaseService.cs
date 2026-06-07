@@ -37,9 +37,8 @@ namespace TestManagement.API.Services
             _logger = logger;
         }
 
-        // Replace GetAllAsync implementation to load TestCase entities from the DbContext and map them
-        // to GetTestCaseResponse instances by selecting each TestCase's latest TestCaseVersion.
-        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllAsync()
+        // Load all TestCase entities including their Versions and map to GetTestCaseResponseWithVrersion DTOs.
+        public virtual async Task<ICollection<GetTestCaseResponseWithVrersion>> GetAllAsync()
         {
             _logger?.LogDebug("TestCaseService::GetAllAsync() start!");
 
@@ -49,30 +48,22 @@ namespace TestManagement.API.Services
                 .AsNoTracking()
                 .ToListAsync();
 
-            var responses = new List<GetTestCaseResponse>(testCases.Count);
-
-            foreach (var tc in testCases)
+            var responses = testCases.Select(tc => new GetTestCaseResponseWithVrersion
             {
-                // Find latest version for the test case
-                var latestVersion = tc.Versions?.OrderByDescending(v => v.VersionNumber).FirstOrDefault();
-                if (latestVersion == null)
+                Id = tc.Id,
+                Code = tc.Code,
+                Versions = tc.Versions.Select(v => new GetTestCaseResponseWithVrersion.TestCaseVersionItem
                 {
-                    // Skip test cases with no versions
-                    continue;
-                }
-
-                var responseItem = new GetTestCaseResponse
-                {
-                    Id = latestVersion.Id,
-                    Code = tc.Code,
-                    Name = latestVersion.Name,
-                    Description = latestVersion.Description,
-                    TestLevelId = latestVersion.TestLevelId,
-                    VersionNumber = latestVersion.VersionNumber
-                };
-
-                responses.Add(responseItem);
-            }
+                    Id = v.Id,
+                    Name = v.Name,
+                    Description = v.Description,
+                    VersionNumber = v.VersionNumber,
+                    TestLevelId = v.TestLevelId,
+                    IsLatest = v.IsLatest,
+                    CreatedAt = v.CreatedAt,
+                    UpdatedAt = v.UpdatedAt
+                }).ToList()
+            }).ToList();
 
             return responses;
         }
@@ -137,7 +128,7 @@ namespace TestManagement.API.Services
         /// <returns>
         /// A collection of <see cref="TestCaseVersion"/> for the specified test case id.
         /// </returns>
-        public virtual async Task<ICollection<TestCaseVersion>> GetByTestCaseIdAsync(int testCaseId)
+        public virtual async Task<ICollection<TestCaseVersion>> GetByTestCaseIdAsync(long testCaseId)
         {
             _logger?.LogDebug("TestCaseService::GetByTestCaseIdAsync() start!");
 
@@ -148,7 +139,24 @@ namespace TestManagement.API.Services
                 .ToListAsync();
         }
 
-        public virtual async Task<TestCaseVersion> GetLatestVersionByTestCaseIdAsync(int testCaseId)
+        /// <summary>
+        /// Retrieves a single <see cref="TestCaseVersion"/> by its primary key identifier.
+        /// </summary>
+        /// <param name="id">Identifier of the test case version.</param>
+        /// <returns>The matching <see cref="TestCaseVersion"/> or null if not found.</returns>
+        public virtual async Task<TestCaseVersion?> GetByVersionIdAsync(long id)
+        {
+            _logger?.LogDebug("TestCaseService::GetByVersionIdAsync() start!");
+
+            return await _context.TestCaseVersions
+                .Where(v => v.Id == id)
+                .Include(v => v.TestLevel)
+                .Include(v => v.TestCase)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+        }
+
+        public virtual async Task<TestCaseVersion> GetLatestVersionByTestCaseIdAsync(long testCaseId)
         {
             _logger?.LogDebug("TestCaseService::GetLatestVersionByTestCaseIdAsync() start!");
 
