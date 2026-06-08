@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestManagement.API.Features.TestCases.Create;
+using TestManagement.API.Features.TestCases.Get;
 using TestManagement.API.Features.TestCases.Update;
 using TestManagement.API.Models;
 using TestManagement.API.Services;
@@ -40,11 +41,11 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <returns>HTTP 200 with the collection of test case versions.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllTestCasesAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            _logger.LogDebug("TestCaseController.GetAllTestCases() start!");
+            _logger.LogDebug("TestCaseController.GetAllAsync() start!");
 
-            var testCases = await _testCaseService.GetAllAsync();
+            ICollection<GetTestCaseResponse> testCases = await _testCaseService.GetAllAsync();
             return Ok(testCases);
         }
 
@@ -56,7 +57,7 @@ namespace TestManagement.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetByIdAsync(long id)
         {
-            _logger.LogDebug("TestCaseController.GetById() start!");
+            _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
 
             var testCases = await _testCaseService.GetByTestCaseIdAsync(id);
             return Ok(testCases);
