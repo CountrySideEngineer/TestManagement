@@ -96,7 +96,7 @@ namespace TestManagement.API.Services
         /// </summary>
         /// <param name="request">The request containing test result data.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task CreateAsync(CreateTestResultRequest request)
+        public async Task<CreateTestResultResponse> CreateAsync(CreateTestResultRequest request)
         {
             _logger.LogDebug("TestResultService::Create() start!");
 
@@ -118,7 +118,21 @@ namespace TestManagement.API.Services
 
             _dbContext.TestResults.Add(testResult);
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
+
+            var response = new CreateTestResultResponse()
+            {
+                ResultId = testResult.Id,
+                TestExecutionItemId = testResult.TestExecutionItemId,
+                TestCaseId = request.TestCaseId,
+                TestCaseVersionNumber = request.TestCaseVersionNumber,
+                TestLevelId = request.TestLevelId,
+                ExecutedAt = request.ExecutedAt,
+                Message = request.Message,
+                TestResultStatus = request.TestResultStatus
+            };
+
+            return response;
         }
 
         /// <summary>

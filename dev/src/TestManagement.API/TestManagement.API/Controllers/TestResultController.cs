@@ -83,9 +83,9 @@ namespace TestManagement.API.Controllers
                 ExecutedAt = request.ExecutedAt,
                 TestResultStatus = request.TestResultStatus 
             };
-            await _testResultService.CreateAsync(testResultRequest);
+            var response = await _testResultService.CreateAsync(testResultRequest);
 
-            return Ok();
+            return Ok(response);
         }
 
         /// <summary>
