@@ -168,10 +168,11 @@ namespace TestManagement.API.Services
         /// </summary>
         /// <param name="requests">Collection of test result creation requests.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task CreateAsync(ICollection<CreateTestResultRequest> requests)
+        public async Task<ICollection<CreateTestResultResponse>> CreateAsync(ICollection<CreateTestResultRequest> requests)
         {
             _logger.LogDebug("TestResultService::Create() start!");
 
+            var testResults = new List<Models.TestResult>();
             foreach (var requestItem in requests)
             {
                 var testResult = new Models.TestResult();
@@ -191,9 +192,33 @@ namespace TestManagement.API.Services
                 testResult.ExecutedAt = requestItem.ExecutedAt;
 
                 _dbContext.TestResults.Add(testResult);
+                testResults.Add(testResult);
             }
 
-            _dbContext.SaveChanges();
+            await _dbContext.SaveChangesAsync();
+
+            var responses = new List<CreateTestResultResponse>();
+            foreach (var testResultItem in testResults)
+            {
+                string testResultStatus = await _dbContext.TestStatuses
+                    .Where(_ => _.Id == testResultItem.StatusId)
+                    .Select(_ => _.Code)
+                    .FirstOrDefaultAsync() ?? string.Empty;
+                var response = new CreateTestResultResponse()
+                {
+                    ResultId = testResultItem.Id,
+                    TestExecutionItemId = testResultItem.TestExecutionItemId,
+                    TestCaseId = testResultItem.TestCaseVersion?.TestCaseId ?? 0,
+                    TestCaseVersionNumber = testResultItem.TestCaseVersion?.VersionNumber ?? 0,
+                    TestLevelId = testResultItem.TestCaseVersion?.TestLevel?.Id ?? 0,
+                    ExecutedAt = testResultItem.ExecutedAt,
+                    Message = testResultItem.Message,
+                    TestResultStatus = testResultStatus
+                };
+                responses.Add(response);
+            }
+
+            return responses;
         }
     }
 }
