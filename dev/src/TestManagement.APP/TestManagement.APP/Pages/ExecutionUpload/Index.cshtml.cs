@@ -49,6 +49,9 @@ namespace TestManagement.APP.Pages.ExecutionUpload
         public long ExecId { get; set; } = 0;
 
         [BindProperty]
+        public long ExecItemId { get; set; } = 0;
+
+        [BindProperty]
         public List<IFormFile> UploadFiles { get; set; } = new List<IFormFile>();
 
         public ICollection<TestLevelViewModel> TestLevels { get; set; } = new List<TestLevelViewModel>();
@@ -63,12 +66,13 @@ namespace TestManagement.APP.Pages.ExecutionUpload
         public async Task OnGetAsync(long id)
         {
             ExecId = id;
-            var testExecution = await _testExecutionService!.GetTestExecutionByIdAsync(ExecId);
+            ExecutionViewModel? testExecution = await _testExecutionService!.GetTestExecutionByIdAsync(ExecId);
             if (testExecution is not null)
             {
                 ExecutionViewModel = testExecution;
             }
             string envName = ExecutionViewModel.Environment;
+            ExecItemId = ExecutionViewModel.TestExecutionItemId;
             var env = await _environmentService!.GetLatestEnvironmentByNameAsync(envName);
             if (env is not null)
             {
@@ -78,7 +82,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             TestLevels = await _testLevelService!.GetTestLevelAsync();
         }
 
-        public async Task<IActionResult> OnPostAsync(long? id, long? selectedTestLevelId)
+        public async Task<IActionResult> OnPostAsync(long? id, long? selectedTestLevelId, long? itemId)
         {
             // If id is provided as a route/form value, use it to populate EnvId so it is available during POST handling
             if (id.HasValue)

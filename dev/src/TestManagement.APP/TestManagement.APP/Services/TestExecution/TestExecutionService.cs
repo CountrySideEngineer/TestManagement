@@ -114,6 +114,7 @@ namespace TestManagement.APP.Services.TestExecution
                 var viewModel = new ExecutionViewModel
                 {
                     TestExecutionId = response.TestExecutionId,
+                    TestExecutionItemId = response.TestExecutionItemId,
                     ExecutedAt = response.ExecutedAt,
                     Environment = response.Environment,
                     Revision = response.Revision,
