@@ -9,6 +9,8 @@ namespace TestManagement.APP.ViewModel.Executions
         /// </summary>
         public long TestExecutionId { get; set; } = 0;
 
+        public long TestExecutionItemId { get; set; } = 0;
+
         /// <summary>
         /// The UTC date and time when the test execution occurred.
         /// </summary>

@@ -1,6 +1,48 @@
 ﻿namespace TestManagement.APP.Dto.TestResult
 {
     /// <summary>
+    /// Enumerates the possible statuses for a parsed test result.
+    /// Use these values to represent the overall outcome or state of a test execution.
+    /// </summary>
+    public enum TestResultStatus
+    {
+        /// <summary>
+        /// Test executed and passed successfully.
+        /// </summary>
+        Passed,
+
+        /// <summary>
+        /// Test executed and failed.
+        /// </summary>
+        Failed,
+
+        /// <summary>
+        /// Test was skipped and therefore not executed.
+        /// </summary>
+        Skipped,
+
+        /// <summary>
+        /// Test execution is currently in progress.
+        /// </summary>
+        InPgress,
+
+        /// <summary>
+        /// Test was not executed (no run occurred).
+        /// </summary>
+        Not_executed,
+
+        /// <summary>
+        /// Test result has been suppressed and should not be reported.
+        /// </summary>
+        Suppressed,
+
+        /// <summary>
+        /// The status is unknown or could not be determined.
+        /// </summary>
+        Unknown
+    }
+
+    /// <summary>
     /// Represents a parsed test result with details about the test case execution.
     /// </summary>
     public class ParsedTestResult
@@ -25,18 +67,12 @@
         /// Gets or sets the status of the test result,
         /// indicating whether the test case passed, failed, or was skipped.
         /// </summary>
-        public string Status { get; set; } = string.Empty;
+        public string StatusCode { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets or sets the timestamp indicating when the test case was executed,
         /// </summary>
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Gets or sets a value indicating
-        /// whether the test case execution resulted in a failure,
-        /// </summary>
-        public bool IsFailed { get; set; }
 
         /// <summary>
         /// Gets or sets the version number of the corresponding test case.
@@ -55,5 +91,38 @@
         /// This is populated from the import request's testId.
         /// </summary>
         public long TestLvId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the test status denotes that the test was executed (run).
+        /// </summary>
+        public bool IsStatusRun { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the test result is marked as completed.
+        /// </summary>
+        public bool IsResultCompleted { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the test result was skipped and not executed.
+        /// </summary>
+        public bool IsResultSkipped { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the test result is suppressed (intentionally not reported).
+        /// </summary>
+        public bool IsResultSuppressed { get; set; } = false;
+
+        /// <summary>
+        /// Gets or sets a value indicating
+        /// whether the test case execution resulted in a failure,
+        /// </summary>
+        public bool IsFailed { get; set; }
+
+        /// <summary>
+        /// Gets or sets the enumerated status of the test result.
+        /// Use this value to determine whether the test passed, failed, was skipped,
+        /// suppressed, or remains unknown. Defaults to <see cref="TestResultStatus.Unknown"/>.
+        /// </summary>
+        public TestResultStatus Status { get; set; } = TestResultStatus.Unknown;
     }
 }

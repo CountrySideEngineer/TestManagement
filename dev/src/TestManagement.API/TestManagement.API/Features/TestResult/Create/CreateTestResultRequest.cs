@@ -1,11 +1,6 @@
-using System.ComponentModel.DataAnnotations;
-
-namespace TestManagement.API.Models.Requests
+﻿namespace TestManagement.API.Features.TestResult.Create
 {
-    /// <summary>
-    /// DTO for creating a TestResult via API.
-    /// </summary>
-    public class TestResultCreateRequest
+    public class CreateTestResultRequest
     {
         /// <summary>
         /// Foreign key referencing the test execution item that triggered this result.

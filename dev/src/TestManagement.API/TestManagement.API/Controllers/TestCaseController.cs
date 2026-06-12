@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestManagement.API.Features.TestCases.Create;
+using TestManagement.API.Features.TestCases.Get;
 using TestManagement.API.Features.TestCases.Update;
 using TestManagement.API.Models;
 using TestManagement.API.Services;
@@ -40,11 +41,11 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <returns>HTTP 200 with the collection of test case versions.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllTestCasesAsync()
+        public async Task<IActionResult> GetAllAsync()
         {
-            _logger.LogDebug("TestCaseController.GetAllTestCases() start!");
+            _logger.LogDebug("TestCaseController.GetAllAsync() start!");
 
-            var testCases = await _testCaseService.GetAllAsync();
+            ICollection<GetTestCaseResponse> testCases = await _testCaseService.GetAllAsync();
             return Ok(testCases);
         }
 
@@ -54,12 +55,30 @@ namespace TestManagement.API.Controllers
         /// <param name="id">Identifier of the test level to filter test cases by.</param>
         /// <returns>HTTP 200 with the collection of matching test case versions.</returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<IActionResult> GetByIdAsync(long id)
         {
-            _logger.LogDebug("TestCaseController.GetById() start!");
+            _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
 
-            var testCases = await _testCaseService.GetByTestLevelIdAsync(id);
+            var testCases = await _testCaseService.GetByTestCaseIdAsync(id);
             return Ok(testCases);
+        }
+
+        /// <summary>
+        /// Returns the test case version that corresponds to the provided version id.
+        /// </summary>
+        /// <param name="id">Identifier (long) of the test case version to retrieve.</param>
+        /// <returns>HTTP 200 with the matching <see cref="TestManagement.API.Models.TestCaseVersion"/> or 404 if not found.</returns>
+        [HttpGet("Version/{id}")]
+        public async Task<IActionResult> GetByVersionIdAsync(long id)
+        {
+            _logger.LogDebug("TestCaseController.GetByVersionIdAsync() start!");
+
+            var testCaseVersion = await _testCaseService.GetByVersionIdAsync(id);
+            if (testCaseVersion == null)
+            {
+                return NotFound();
+            }
+            return Ok(testCaseVersion);
         }
 
         /// <summary>

@@ -19,6 +19,11 @@
         public long TestCaseVersionNumber { get; set; } = 0;
 
         /// <summary>
+        /// Identifier for the test level/category associated with this test result.
+        /// </summary>
+        public long TestLevelId { get; set; } = 0;
+
+        /// <summary>
         /// Optional message or details associated with the test execution (for example, error stack trace or additional notes).
         /// </summary>
         public string? Message { get; set; }

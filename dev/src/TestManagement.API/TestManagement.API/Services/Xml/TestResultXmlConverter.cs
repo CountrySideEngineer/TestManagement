@@ -5,18 +5,18 @@ namespace TestManagement.API.Services.Xml
 {
     public class TestResultXmlConverter : ITestResultXmlConverter
     {
-        public Task<ICollection<CreateTestResultRequest>> ConvertAsync(TestSuitesXml suites, CancellationToken cancellationToken = default)
+        public Task<ICollection<TestResult>> ConvertAsync(TestSuitesXml suites, CancellationToken cancellationToken = default)
         {
-            var results = new List<CreateTestResultRequest>();
+            var results = new List<TestResult>();
 
             if (suites == null)
-                return Task.FromResult((ICollection<CreateTestResultRequest>)results);
+                return Task.FromResult((ICollection<TestResult>)results);
 
             foreach (var suite in suites.TestItems)
             {
                 foreach (var tc in suite.TestCases)
                 {
-                    var result = new CreateTestResultRequest()
+                    var result = new TestResult()
                     {
                         ActualResult = tc.Failure?.Message ?? tc.Result ?? string.Empty,
                         Status = MapStatus(tc),
@@ -30,7 +30,7 @@ namespace TestManagement.API.Services.Xml
                 }
             }
 
-            return Task.FromResult((ICollection<CreateTestResultRequest>)results);
+            return Task.FromResult((ICollection<TestResult>)results);
         }
 
         private TestStatus MapStatus(TestCaseXml tc)

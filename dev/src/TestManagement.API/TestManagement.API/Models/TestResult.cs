@@ -7,7 +7,7 @@ namespace TestManagement.API.Models
     /// Represents the result of executing a specific test case version during a test run.
     /// Contains execution metadata, status, and any messages produced by the execution.
     /// </summary>
-    public class CreateTestResultRequest
+    public class TestResult
     {
         /// <summary>
         /// Primary key identifier for the test result.

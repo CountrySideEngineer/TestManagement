@@ -10,8 +10,10 @@
     <form method="post" enctype="multipart/form-data">
         <!-- Preserve the Id passed on GET so it is available on POST -->
         <input asp-for="ExecId" type="hidden" />
+        <input asp-for="ExecItemId" type="hidden" />
         <!-- Also include a hidden field named 'id' so OnPostAsync(long? id) can receive it as an argument -->
         <input type="hidden" name="id" value="@Model.ExecId" />
+        <input type="hidden" name="itemId" value="@Model.ExecItemId" />
         <div class="block">
             <div class="block-title">ŽÀsŠÂ‹«/ƒŠƒrƒWƒ‡ƒ“î•ñ</div>
             <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">

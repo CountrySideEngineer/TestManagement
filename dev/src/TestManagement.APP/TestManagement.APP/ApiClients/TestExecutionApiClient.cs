@@ -42,7 +42,7 @@ namespace TestManagement.APP.ApiClients
             _logger?.LogDebug("TestExecutionApiClient::GetTestExecutionsAsync() start!");
 
             var result = await _httpClient!
-                .GetFromJsonAsync<List<GetTestExecutionResponse>>("api/testexecution") ?? 
+                .GetFromJsonAsync<List<GetTestExecutionResponse>>("api/TestExecution") ?? 
                     new List<GetTestExecutionResponse>();
 
             return result;

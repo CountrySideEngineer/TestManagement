@@ -36,7 +36,7 @@ namespace TestManagement.API.Data
         /// <summary>
         /// DbSet of test results.
         /// </summary>
-        public DbSet<CreateTestResultRequest> TestResults { get; set; }
+        public DbSet<TestResult> TestResults { get; set; }
 
         /// <summary>
         /// DbSet of test statuses.
@@ -205,7 +205,7 @@ namespace TestManagement.API.Data
         /// </summary>
         private void ConfigureTestResult(ModelBuilder builder)
         {
-            var entity = builder.Entity<CreateTestResultRequest>();
+            var entity = builder.Entity<TestResult>();
             entity.HasKey(_ => _.Id);
 
             entity.HasOne(_ => _.TestExecutionItem)

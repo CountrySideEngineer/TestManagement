@@ -38,7 +38,7 @@
         /// <summary>
         /// Collection of test results associated with this execution item.
         /// </summary>
-        public ICollection<CreateTestResultRequest> TestResults { get; set; } = new List<CreateTestResultRequest>();
+        public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
 
         /// <summary>
         /// Navigation property to the parent test execution.

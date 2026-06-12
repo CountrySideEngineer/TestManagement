@@ -1,24 +1,49 @@
-﻿using System.Runtime.CompilerServices;
-using System.Linq;
+﻿using System.Linq;
+using System.Runtime.CompilerServices;
 using TestManagement.APP.Dto.TestResult;
 using TestManagement.APP.Dto.TestResult.Import;
+using TestManagement.APP.Dto.TestResult.Post;
+using TestManagement.APP.Dto.TestResult.Register;
 using TestManagement.APP.Services.TestCase.Sync;
 using TestManagement.APP.Services.TestExecution.Register;
 using TestManagement.APP.ViewModel;
-using TestManagement.APP.Dto.TestResult.Post;
 
 namespace TestManagement.APP.Services.TestExecution.Import
 {
+    /// <summary>
+    /// Service for importing test results from various sources.
+    /// Handles parsing, synchronizing test cases, and registering test execution results.
+    /// </summary>
     public class ImportTestResultService : IImportTestResultService
     {
+        /// <summary>
+        /// Logger for recording diagnostic information and errors.
+        /// </summary>
         private readonly ILogger<ImportTestResultService> _logger;
 
+        /// <summary>
+        /// Service for synchronizing test cases to ensure they exist in the database.
+        /// </summary>
         private readonly ISyncTestCasesService _syncTestCaseSerice;
 
+        /// <summary>
+        /// Service for registering test execution results.
+        /// </summary>
         private readonly IRegisterTestExecutionService _registerTestExecutionService;
 
+        /// <summary>
+        /// Service for synchronizing test cases (duplicate of <see cref="_syncTestCaseSerice"/> for consistency).
+        /// </summary>
         private readonly ISyncTestCasesService _syncTestCaseService;
 
+        /// <summary>
+        /// Constructs an instance of <see cref="ImportTestResultService"/>.
+        /// </summary>
+        /// <param name="syncTestCaseSerice">Service for synchronizing test cases.</param>
+        /// <param name="registerTestExecutionService">Service for registering test execution results.</param>
+        /// <param name="syncTestCasesService">Alternative service for synchronizing test cases.</param>
+        /// <param name="logger">Logger for diagnostics.</param>
+        /// <exception cref="ArgumentNullException">Thrown if any required dependency is null.</exception>
         public ImportTestResultService(
             ISyncTestCasesService syncTestCaseSerice, 
             IRegisterTestExecutionService registerTestExecutionService,
@@ -38,8 +63,19 @@ namespace TestManagement.APP.Services.TestExecution.Import
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        /// <summary>
+        /// Imports test results from the provided source asynchronously.
+        /// Parses the source data, synchronizes test cases, and registers the test execution results.
+        /// </summary>
+        /// <param name="execId">Identifier of the test execution.</param>
+        /// <param name="execItemId">Identifier of the test execution item.</param>
+        /// <param name="testLvId">Identifier of the test level.</param>
+        /// <param name="request">Import request containing the source and parser.</param>
+        /// <param name="ct">Cancellation token for the asynchronous operation.</param>
+        /// <returns>An <see cref="ImportTestResultResponse"/> indicating the result of the import.</returns>
         public async Task<ImportTestResultResponse> ImportAsync(
             long execId,
+            long execItemId,
             long testLvId,
             ImportTestResultRequest request, 
             CancellationToken ct = default)
@@ -55,42 +91,30 @@ namespace TestManagement.APP.Services.TestExecution.Import
             // Sync test cases to make sure all test cases in test result exist in database
             IEnumerable<TestCaseViewModel> testCases = await _syncTestCaseService.SyncTestCasesAsync(parsedTestResults);
 
-            // Convert test case 
-
-
-
-
-
-
-
-            // Map VersionNumber from synchronized TestCaseViewModel back to parsed test results
-            var versionByCode = testCases
-                .Where(tc => !string.IsNullOrEmpty(tc.Code))
-                .ToDictionary(tc => tc.Code, tc => tc.VersionNumber, StringComparer.OrdinalIgnoreCase);
-
-            var requests = new List<PostTestResultRequest>();
-            foreach (var parsed in parsedTestResults)
+            // Convert test case view model to dto as PostTestResultRequest.
+            var testResultRequests = new List<RegisterTestResultRequest>();
+            foreach (var testCase in testCases)
             {
-                if (!string.IsNullOrEmpty(parsed.Code) && versionByCode.TryGetValue(parsed.Code, out var version))
+                var parsedTestResult = 
+                    parsedTestResults.FirstOrDefault(r => 
+                        string.Equals(r.Code, testCase.Code, StringComparison.OrdinalIgnoreCase) &&
+                        string.Equals(r.Name, testCase.Name, StringComparison.OrdinalIgnoreCase));
+
+                var requestItem = new RegisterTestResultRequest
                 {
-                    parsed.VersionNumber = version;
-                }
-                //var requestItem = new PostTestResultRequest
-                //{
-                //    ActualResult = string.Empty,
-                //    TestCaseVersionId = versionByCode.TryGetValue(parsed.Code, out var ver) ? ver : 0,
-                //    ExecutedAt = parsed.ExecutedAt,
-                //    Message = parsed.Name,
-                //    StatusId = MapStatus(parsed.Status),
-                //    TestExecutionItemId = 0 // This will be set in RegisterTestExecutionService
-                //}
-                // Set environment and test identifiers from method arguments
-                parsed.ExecId = execId;
-                parsed.TestLvId = testLvId;
+                    TestExecutionItemId = execItemId,
+                    TestCaseId = testCase.Id,
+                    TestCaseVersionNumber = testCase.VersionNumber,
+                    TestLevelId = testLvId,
+                    Message = string.Empty,
+                    ExecutedAt = parsedTestResult!.ExecutedAt,
+                    Status = parsedTestResult.Status.ToString()
+                };
+                testResultRequests.Add(requestItem);
             }
 
             // Register test execution for each test result
-            await _registerTestExecutionService.RegisterTestExecutionAsync(parsedTestResults, ct);
+            await _registerTestExecutionService.RegisterTestExecutionAsync(testResultRequests, ct);
 
             return null;
         }
