@@ -41,6 +41,7 @@ namespace TestManagement.APP.Services.TestExecution.Import
 
         public async Task<ImportTestResultResponse> ImportAsync(
             long execId,
+            long execItemId,
             long testLvId,
             ImportTestResultRequest request, 
             CancellationToken ct = default)
@@ -67,7 +68,7 @@ namespace TestManagement.APP.Services.TestExecution.Import
 
                 var requestItem = new RegisterTestResultRequest
                 {
-                    TestExecutionItemId = execId,
+                    TestExecutionItemId = execItemId,
                     TestCaseId = testCase.Id,
                     TestCaseVersionNumber = testCase.VersionNumber,
                     TestLevelId = testLvId,

@@ -89,6 +89,10 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             {
                 ExecId = id.Value;
             }
+            if (itemId.HasValue)
+            {
+                ExecItemId = itemId.Value;
+            }
 
             // If selectedTestLevelId is provided as a route/form value, populate the bound property
             if (selectedTestLevelId.HasValue)
@@ -123,7 +127,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
                     }
 
                     long testLevelId = SelectedTestLevelId ?? 0;
-                    await _importTestResultService.ImportAsync(ExecId, testLevelId, request);
+                    await _importTestResultService.ImportAsync(ExecId, ExecItemId, testLevelId, request);
                     _logger?.LogInformation("Imported test results from uploaded file {FileName}", fileItem.FileName);
                 }
                 catch (Exception ex)
