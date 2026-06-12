@@ -78,7 +78,6 @@ namespace TestManagement.API.Services
                 })).ToList()
             }).ToList();
 
-
             return response;
         }
 
@@ -218,7 +217,7 @@ namespace TestManagement.API.Services
                 .Where(_ => _.Revision == request.Revision && _.EnvironmentId == testEnvironment.Id)
                 .Include(_ => _.Items)
                     .ThenInclude(i => i.TestResults)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
             if (null == testExecution)
             {
                 throw new Exception($"Test execution about {request.Revision} does not exist.");
