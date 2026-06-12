@@ -16,10 +16,12 @@ namespace TestManagement.API.Services
         /// including creation, retrieval and mapping to response DTOs.
         /// </summary>
         private readonly ITestResultRepository _testResultRepository;
+
         /// <summary>
         /// Repository used to access and manipulate test result entities.
         /// </summary>
         private readonly ITestResultXmlConverter _xmlConverter;
+
         /// <summary>
         /// Converter responsible for transforming test result XML data to domain models and vice versa.
         /// </summary>

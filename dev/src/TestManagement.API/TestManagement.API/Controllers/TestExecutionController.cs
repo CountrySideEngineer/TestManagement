@@ -13,8 +13,14 @@ namespace TestManagement.API.Controllers
     /// </summary>
     public class TestExecutionController : ControllerBase
     {
+        /// <summary>
+        /// Logger for recording diagnostic and operational messages for the controller.
+        /// </summary>
         private readonly ILogger<TestExecutionController> _logger;
 
+        /// <summary>
+        /// Service responsible for handling test execution operations and business logic.
+        /// </summary>
         private readonly TestExecutionService _testExecutionService;
 
         /// <summary>
