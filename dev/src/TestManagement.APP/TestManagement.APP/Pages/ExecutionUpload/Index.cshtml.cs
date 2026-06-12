@@ -22,14 +22,45 @@ using TestManagement.APP.Dto.TestResult.Import;
 
 namespace TestManagement.APP.Pages.ExecutionUpload
 {
+    /// <summary>
+    /// Page model for the execution upload page. Handles displaying execution details,
+    /// binding uploaded files and invoking the import pipeline for test results.
+    /// </summary>
     public class IndexModel : PageModel
     {
+        /// <summary>
+        /// Logger instance for logging page-level events and errors.
+        /// </summary>
         private readonly ILogger<IndexModel>? _logger;
+
+        /// <summary>
+        /// Service for retrieving test execution information.
+        /// </summary>
         private readonly ITestExecutionService? _testExecutionService;
+
+        /// <summary>
+        /// Service for retrieving environment information.
+        /// </summary>
         private readonly IEnvironmentService? _environmentService;
+
+        /// <summary>
+        /// Service for retrieving available test levels.
+        /// </summary>
         private readonly ITestLevelService? _testLevelService;
+
+        /// <summary>
+        /// Service responsible for importing test results from provided sources.
+        /// </summary>
         private readonly IImportTestResultService? _importTestResultService;
 
+        /// <summary>
+        /// Constructs an instance of <see cref="IndexModel"/> with required services.
+        /// </summary>
+        /// <param name="logger">Logger for diagnostics.</param>
+        /// <param name="testExecutionService">Service to access test execution data.</param>
+        /// <param name="environmentService">Service to access environment data.</param>
+        /// <param name="testLevelService">Service to access test level data.</param>
+        /// <param name="importTestResultService">Service that performs import of test results.</param>
         public IndexModel(
             ILogger<IndexModel>? logger,
             ITestExecutionService? testExecutionService,
@@ -45,30 +76,62 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             _importTestResultService = importTestResultService;
         }
 
+        /// <summary>
+        /// Bound property for the current test execution identifier.
+        /// Populated from route or form on GET/POST.
+        /// </summary>
         [BindProperty]
         public long ExecId { get; set; } = 0;
 
+        /// <summary>
+        /// Bound property for the specific test execution item identifier associated with the execution.
+        /// </summary>
+        [BindProperty]
+        public long ExecItemId { get; set; } = 0;
+
+        /// <summary>
+        /// Files uploaded by the user for import. Bound from the form file input.
+        /// </summary>
         [BindProperty]
         public List<IFormFile> UploadFiles { get; set; } = new List<IFormFile>();
 
+        /// <summary>
+        /// Collection of available test levels to present in the UI for selection.
+        /// </summary>
         public ICollection<TestLevelViewModel> TestLevels { get; set; } = new List<TestLevelViewModel>();
 
+        /// <summary>
+        /// Currently selected test level identifier. Nullable when no selection has been made.
+        /// Bound from the form submission.
+        /// </summary>
         [BindProperty]
         public long? SelectedTestLevelId { get; set; } = 0;
 
+        /// <summary>
+        /// View model representing the test execution being displayed on the page.
+        /// </summary>
         public ExecutionViewModel ExecutionViewModel { get; set; } = new ExecutionViewModel();
 
+        /// <summary>
+        /// View model representing the environment associated with the current test execution.
+        /// </summary>
         public EnvironmentViewModel EnvironmentViewModel { get; set; } = new EnvironmentViewModel();
 
+        /// <summary>
+        /// Handles GET requests for the execution upload page. Loads execution details,
+        /// the associated environment and the available test levels.
+        /// </summary>
+        /// <param name="id">Identifier of the test execution to load.</param>
         public async Task OnGetAsync(long id)
         {
             ExecId = id;
-            var testExecution = await _testExecutionService!.GetTestExecutionByIdAsync(ExecId);
+            ExecutionViewModel? testExecution = await _testExecutionService!.GetTestExecutionByIdAsync(ExecId);
             if (testExecution is not null)
             {
                 ExecutionViewModel = testExecution;
             }
             string envName = ExecutionViewModel.Environment;
+            ExecItemId = ExecutionViewModel.TestExecutionItemId;
             var env = await _environmentService!.GetLatestEnvironmentByNameAsync(envName);
             if (env is not null)
             {
@@ -78,12 +141,24 @@ namespace TestManagement.APP.Pages.ExecutionUpload
             TestLevels = await _testLevelService!.GetTestLevelAsync();
         }
 
-        public async Task<IActionResult> OnPostAsync(long? id, long? selectedTestLevelId)
+        /// <summary>
+        /// Handles POST requests for uploading test result files. Validates inputs,
+        /// wraps uploaded files into sources, and calls the import service for each file.
+        /// </summary>
+        /// <param name="id">Optional test execution identifier from route or form.</param>
+        /// <param name="selectedTestLevelId">Optional selected test level identifier from form.</param>
+        /// <param name="itemId">Optional test execution item identifier from route or form.</param>
+        /// <returns>An <see cref="IActionResult"/> representing the result of the POST action.</returns>
+        public async Task<IActionResult> OnPostAsync(long? id, long? selectedTestLevelId, long? itemId)
         {
             // If id is provided as a route/form value, use it to populate EnvId so it is available during POST handling
             if (id.HasValue)
             {
                 ExecId = id.Value;
+            }
+            if (itemId.HasValue)
+            {
+                ExecItemId = itemId.Value;
             }
 
             // If selectedTestLevelId is provided as a route/form value, populate the bound property
@@ -119,7 +194,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
                     }
 
                     long testLevelId = SelectedTestLevelId ?? 0;
-                    await _importTestResultService.ImportAsync(ExecId, testLevelId, request);
+                    await _importTestResultService.ImportAsync(ExecId, ExecItemId, testLevelId, request);
                     _logger?.LogInformation("Imported test results from uploaded file {FileName}", fileItem.FileName);
                 }
                 catch (Exception ex)

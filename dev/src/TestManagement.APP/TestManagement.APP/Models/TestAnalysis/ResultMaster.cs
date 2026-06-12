@@ -5,16 +5,32 @@ namespace TestManagement.APP.Models.TestAnalysis
 {
     public class ResultMaster
     {
+        /// <summary>
+        /// Primary identifier for the result master record.
+        /// </summary>
         [Key]
         public int Id { get; set; }
 
+        /// <summary>
+        /// Human-readable name for this result type (e.g. "Passed", "Failed").
+        /// </summary>
         [Required]
         public string Name { get; set; } = string.Empty;
 
+        /// <summary>
+        /// UTC timestamp when this result master record was created.
+        /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary>
+        /// UTC timestamp when this result master record was last updated.
+        /// </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-        // Navigation property to related Request objects.
+        /// <summary>
+        /// Navigation property containing related <see cref="Request"/> entities.
+        /// This collection is ignored during JSON serialization to avoid cycles.
+        /// </summary>
         [JsonIgnore]
         public ICollection<Request> Requests { get; set; } = new List<Request>();
     }

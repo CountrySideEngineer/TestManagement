@@ -64,6 +64,7 @@ namespace TestManagement.API.Services
                 Environment = _.Environment.Name,
                 ExecutedAt = _.ExecutedAt,
                 Revision = _.Revision,
+                TestExecutionItemId = _.Items.FirstOrDefault()?.Id ?? 0,
                 TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
                 {
                     TestCaseCode = tr.TestCaseVersion.TestCase!.Code,
@@ -110,6 +111,7 @@ namespace TestManagement.API.Services
                 Environment = _.Environment.Name,
                 ExecutedAt = _.ExecutedAt,
                 Revision = _.Revision,
+                TestExecutionItemId = _.Items.FirstOrDefault()?.Id ?? 0,
                 TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
                 {
                     TestCaseCode = tr.TestCaseVersion.TestCase!.Code,
@@ -175,7 +177,8 @@ namespace TestManagement.API.Services
                 .Include(_ => _.Environment)
                 .Include(_ => _.Items)
                     .ThenInclude(i => i.TestResults)
-                .FirstOrDefaultAsync();
+                .Include(_ => _.Items)
+                .FirstOrDefaultAsync(ct);
             var response = new CreateTestExecutionResponse()
             {
                 TestExecutionId = createdTestExecution!.Id,

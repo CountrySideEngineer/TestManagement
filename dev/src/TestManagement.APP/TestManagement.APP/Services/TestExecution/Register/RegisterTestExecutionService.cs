@@ -6,12 +6,27 @@ using TestManagement.APP.Dto.TestResult.Register;
 
 namespace TestManagement.APP.Services.TestExecution.Register
 {
+    /// <summary>
+    /// Service for registering test execution results.
+    /// Converts test result data and communicates with the test result API client for persistence.
+    /// </summary>
     public class RegisterTestExecutionService : IRegisterTestExecutionService
     {
+        /// <summary>
+        /// Logger for recording diagnostic information and errors.
+        /// </summary>
         private readonly ILogger<RegisterTestExecutionService> _logger;
 
+        /// <summary>
+        /// API client for communicating with the test result endpoint.
+        /// </summary>
         private readonly ITestResultApiClient _testResultApiClient;
 
+        /// <summary>
+        /// Constructs an instance of <see cref="RegisterTestExecutionService"/>.
+        /// </summary>
+        /// <param name="logger">Logger for diagnostics.</param>
+        /// <param name="testResultApiClient">API client for test result operations.</param>
         public RegisterTestExecutionService(
             ILogger<RegisterTestExecutionService> logger, 
             ITestResultApiClient testResultApiClient)
@@ -20,6 +35,12 @@ namespace TestManagement.APP.Services.TestExecution.Register
             _testResultApiClient = testResultApiClient;
         }
 
+        /// <summary>
+        /// Registers test execution results by converting them to API requests and persisting them asynchronously.
+        /// </summary>
+        /// <param name="testResults">Collection of test results to register.</param>
+        /// <param name="ct">Cancellation token for the asynchronous operation.</param>
+        /// <returns>A task representing the asynchronous operation.</returns>
         public async Task RegisterTestExecutionAsync(
             IEnumerable<RegisterTestResultRequest> testResults,
             CancellationToken ct = default)
