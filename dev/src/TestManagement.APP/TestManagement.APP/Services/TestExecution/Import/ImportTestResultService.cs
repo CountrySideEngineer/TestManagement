@@ -10,16 +10,40 @@ using TestManagement.APP.ViewModel;
 
 namespace TestManagement.APP.Services.TestExecution.Import
 {
+    /// <summary>
+    /// Service for importing test results from various sources.
+    /// Handles parsing, synchronizing test cases, and registering test execution results.
+    /// </summary>
     public class ImportTestResultService : IImportTestResultService
     {
+        /// <summary>
+        /// Logger for recording diagnostic information and errors.
+        /// </summary>
         private readonly ILogger<ImportTestResultService> _logger;
 
+        /// <summary>
+        /// Service for synchronizing test cases to ensure they exist in the database.
+        /// </summary>
         private readonly ISyncTestCasesService _syncTestCaseSerice;
 
+        /// <summary>
+        /// Service for registering test execution results.
+        /// </summary>
         private readonly IRegisterTestExecutionService _registerTestExecutionService;
 
+        /// <summary>
+        /// Service for synchronizing test cases (duplicate of <see cref="_syncTestCaseSerice"/> for consistency).
+        /// </summary>
         private readonly ISyncTestCasesService _syncTestCaseService;
 
+        /// <summary>
+        /// Constructs an instance of <see cref="ImportTestResultService"/>.
+        /// </summary>
+        /// <param name="syncTestCaseSerice">Service for synchronizing test cases.</param>
+        /// <param name="registerTestExecutionService">Service for registering test execution results.</param>
+        /// <param name="syncTestCasesService">Alternative service for synchronizing test cases.</param>
+        /// <param name="logger">Logger for diagnostics.</param>
+        /// <exception cref="ArgumentNullException">Thrown if any required dependency is null.</exception>
         public ImportTestResultService(
             ISyncTestCasesService syncTestCaseSerice, 
             IRegisterTestExecutionService registerTestExecutionService,
@@ -39,6 +63,16 @@ namespace TestManagement.APP.Services.TestExecution.Import
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        /// <summary>
+        /// Imports test results from the provided source asynchronously.
+        /// Parses the source data, synchronizes test cases, and registers the test execution results.
+        /// </summary>
+        /// <param name="execId">Identifier of the test execution.</param>
+        /// <param name="execItemId">Identifier of the test execution item.</param>
+        /// <param name="testLvId">Identifier of the test level.</param>
+        /// <param name="request">Import request containing the source and parser.</param>
+        /// <param name="ct">Cancellation token for the asynchronous operation.</param>
+        /// <returns>An <see cref="ImportTestResultResponse"/> indicating the result of the import.</returns>
         public async Task<ImportTestResultResponse> ImportAsync(
             long execId,
             long execItemId,

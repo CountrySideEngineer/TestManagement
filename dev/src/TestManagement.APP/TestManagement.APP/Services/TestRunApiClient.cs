@@ -8,15 +8,30 @@ using TestManagement.APP.Models;
 
 namespace TestManagement.APP.Services
 {
+    /// <summary>
+    /// API client for interacting with test run endpoints.
+    /// Provides methods to retrieve and create test runs, including associating test results.
+    /// </summary>
     public class TestRunApiClient
     {
+        /// <summary>
+        /// HTTP client used to make requests to the test API.
+        /// </summary>
         private readonly HttpClient _httpClient;
 
+        /// <summary>
+        /// Constructs an instance of <see cref="TestRunApiClient"/>.
+        /// </summary>
+        /// <param name="httpClientFactory">Factory for creating configured HTTP clients.</param>
         public TestRunApiClient(IHttpClientFactory httpClientFactory)
         {
             _httpClient = httpClientFactory.CreateClient("TestApiClient");
         }
 
+        /// <summary>
+        /// Retrieves all test runs from the API along with their associated test results.
+        /// </summary>
+        /// <returns>A list of <see cref="TestRunDto"/> objects with associated test results, or an empty list if retrieval fails.</returns>
         public async Task<List<TestRunDto>> GetTestRunsAsync()
         {
             List<TestRunDto>? testRuns = await _httpClient.GetFromJsonAsync<List<TestRunDto>>("api/testrun");

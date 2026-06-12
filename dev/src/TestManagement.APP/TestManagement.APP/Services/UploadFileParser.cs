@@ -9,8 +9,19 @@ using TestManagement.APP.Services.Option;
 
 namespace TestManagement.APP.Services
 {
+    /// <summary>
+    /// Parser for uploaded test result files.
+    /// Extracts test result information from XML files and converts them to <see cref="TestResultDto"/> objects.
+    /// </summary>
     public class UploadFileParser
     {
+        /// <summary>
+        /// Parses test result data from uploaded files asynchronously.
+        /// Processes XML test case data and converts it to a collection of <see cref="TestResultDto"/> objects.
+        /// </summary>
+        /// <param name="files">Collection of uploaded files to parse.</param>
+        /// <param name="option">Parsing options specifying test level and revision information.</param>
+        /// <returns>A list of <see cref="TestResultDto"/> containing parsed test results from all valid files.</returns>
         public async Task<IList<TestResultDto>> ParseAsync(IEnumerable<IFormFile> files, ParseOption option)
         {
             var results = new List<TestResultDto>();
