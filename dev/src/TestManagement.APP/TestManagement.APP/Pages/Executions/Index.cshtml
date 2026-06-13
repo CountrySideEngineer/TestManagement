@@ -16,9 +16,21 @@ else
             <thead>
                 <tr>
                     <th style="text-align:center;">No.</th>
-                    <th style="text-align:center;">実行日 (UTC)</th>
-                    <th style="text-align:center;">実行環境</th>
-                    <th style="text-align:center;">リビジョン</th>
+                    <th style="text-align:center;">
+                        <button id="sortExecutedAt" type="button" class="btn p-0 sort-button" data-order="desc" aria-label="実行日でソート">
+                            実行日 (UTC) <span id="sortArrow">▼</span>
+                        </button>
+                    </th>
+                    <th style="text-align:center;">
+                        <button id="sortEnvironment" type="button" class="btn p-0 sort-button" data-order="desc" aria-label="実行環境でソート">
+                            実行環境 <span id="sortEnvArrow"></span>
+                        </button>
+                    </th>
+                    <th style="text-align:center;">
+                        <button id="sortRevision" type="button" class="btn p-0 sort-button" data-order="desc" aria-label="リビジョンでソート">
+                            リビジョン <span id="sortRevArrow"></span>
+                        </button>
+                    </th>
                     <th style="text-align:center;">成功</th>
                     <th style="text-align:center;">失敗</th>
                     <th style="text-align:center;">スキップ</th>
@@ -53,6 +65,90 @@ else
         </table>
     </div>
 }
+<script>
+    (function () {
+        function parseExecutedAt(text) {
+            if (!text) return NaN;
+            var t = text.trim();
+            if (t.indexOf(' ') >= 0 && t.indexOf('T') < 0) {
+                t = t.replace(' ', 'T');
+            }
+            var d = Date.parse(t);
+            return isNaN(d) ? NaN : d;
+        }
+
+        function getCellText(row, colIndex) {
+            return (row.cells[colIndex] && row.cells[colIndex].textContent) ? row.cells[colIndex].textContent.trim() : '';
+        }
+
+        function sortTableByColumn(colIndex, type, btn) {
+            var tbody = document.querySelector('table.table tbody');
+            if (!tbody) return;
+            var rows = Array.prototype.slice.call(tbody.querySelectorAll('tr'));
+
+            rows.sort(function (a, b) {
+                var aText = getCellText(a, colIndex);
+                var bText = getCellText(b, colIndex);
+
+                if (type === 'date') {
+                    var aVal = parseExecutedAt(aText);
+                    var bVal = parseExecutedAt(bText);
+                    if (isNaN(aVal) && isNaN(bVal)) return 0;
+                    if (isNaN(aVal)) return 1;
+                    if (isNaN(bVal)) return -1;
+                    return aVal - bVal;
+                }
+
+                // string compare (case-insensitive, locale aware, numeric aware)
+                return aText.localeCompare(bText, undefined, { sensitivity: 'base', numeric: true });
+            });
+
+            // Determine toggle behavior: attribute 'data-order' initial 'desc' means currently descending
+            var currentOrder = btn.getAttribute('data-order') || 'desc';
+
+            // Clear other sort buttons (reset their arrow and set them to default state)
+            var allSortButtons = document.querySelectorAll('button.sort-button');
+            allSortButtons.forEach(function (b) {
+                if (b !== btn) {
+                    b.setAttribute('data-order', 'desc');
+                    var s = b.querySelector('span');
+                    if (s) s.textContent = '';
+                }
+            });
+
+            var arrowSpan = btn.querySelector('span');
+            if (currentOrder === 'desc') {
+                // switch to ascending (rows already sorted ascending)
+                btn.setAttribute('data-order', 'asc');
+                if (arrowSpan) arrowSpan.textContent = '▲';
+            } else {
+                // switch to descending
+                rows.reverse();
+                btn.setAttribute('data-order', 'desc');
+                if (arrowSpan) arrowSpan.textContent = '▼';
+            }
+
+            rows.forEach(function (r) { tbody.appendChild(r); });
+        }
+
+        var btnDate = document.getElementById('sortExecutedAt');
+        var btnEnv = document.getElementById('sortEnvironment');
+        var btnRev = document.getElementById('sortRevision');
+        if (btnDate) {
+            // initialize arrow for date (default descending shown)
+            var arrow = document.getElementById('sortArrow');
+            if (arrow && arrow.textContent.trim() === '') arrow.textContent = '▼';
+            btnDate.addEventListener('click', function () { sortTableByColumn(1, 'date', btnDate); });
+        }
+        if (btnEnv) {
+            btnEnv.addEventListener('click', function () { sortTableByColumn(2, 'string', btnEnv); });
+        }
+        if (btnRev) {
+            btnRev.addEventListener('click', function () { sortTableByColumn(3, 'string', btnRev); });
+        }
+    })();
+</script>
+
 <div class="mt-3">
     <a asp-page="./Create" class="btn btn-primary">新規テスト実行</a>
 </div>
