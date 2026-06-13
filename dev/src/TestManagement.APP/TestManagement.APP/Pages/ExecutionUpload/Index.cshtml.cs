@@ -149,27 +149,12 @@ namespace TestManagement.APP.Pages.ExecutionUpload
         /// <param name="selectedTestLevelId">Optional selected test level identifier from form.</param>
         /// <param name="itemId">Optional test execution item identifier from route or form.</param>
         /// <returns>An <see cref="IActionResult"/> representing the result of the POST action.</returns>
-        public async Task<IActionResult> OnPostAsync(long? id, long? selectedTestLevelId, long? itemId)
+        public async Task<IActionResult> OnPostAsync()
         {
-            // If id is provided as a route/form value, use it to populate EnvId so it is available during POST handling
-            if (id.HasValue)
-            {
-                ExecId = id.Value;
-            }
-            if (itemId.HasValue)
-            {
-                ExecItemId = itemId.Value;
-            }
-
-            // If selectedTestLevelId is provided as a route/form value, populate the bound property
-            if (selectedTestLevelId.HasValue)
-            {
-                SelectedTestLevelId = selectedTestLevelId.Value;
-            }
             if (UploadFiles.Count == 0)
             {
                 ModelState.AddModelError(string.Empty, "Please select at least one file to upload.");
-                return Page();
+                return RedirectToPage("./Index", new { id = ExecId });
             }
 
             foreach (var fileItem in UploadFiles)
@@ -190,7 +175,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
                     {
                         _logger?.LogError("IImportTestResultService is not available via DI.");
                         ModelState.AddModelError(string.Empty, "Import service is not available.");
-                        return Page();
+                        return RedirectToPage();
                     }
 
                     long testLevelId = SelectedTestLevelId ?? 0;
@@ -201,24 +186,13 @@ namespace TestManagement.APP.Pages.ExecutionUpload
                 {
                     _logger?.LogError(ex, "Error importing uploaded file {FileName}", fileItem.FileName);
                     ModelState.AddModelError(string.Empty, $"Failed to import file {fileItem.FileName}: {ex.Message}");
-                    return Page();
+
+                    return RedirectToPage("./Index", new { id = ExecId });
                 }
             }
 
             TempData["SuccessMessage"] = "Files imported successfully.";
-            return Page();
-            //try
-            //{
-            //    await _testExecutionService!.UploadTestExecutionFilesAsync(id, UploadFiles);
-            //    TempData["SuccessMessage"] = "Files uploaded successfully.";
-            //    return RedirectToPage("/ExecutionDetails/Index", new { id });
-            //}
-            //catch (Exception ex)
-            //{
-            //    _logger?.LogError(ex, "Error uploading files for test execution with ID {TestExecutionId}", id);
-            //    ModelState.AddModelError(string.Empty, "An error occurred while uploading the files. Please try again.");
-            //    return Page();
-            //}
+            return RedirectToPage("./Index", new { id = ExecId });
         }
     }
 }
