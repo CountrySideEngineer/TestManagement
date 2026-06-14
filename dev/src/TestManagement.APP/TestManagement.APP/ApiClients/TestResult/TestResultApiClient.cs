@@ -33,7 +33,8 @@ namespace TestManagement.APP.ApiClients.TestResult
             {
                 var result = await response.Content.ReadFromJsonAsync<IEnumerable<PostTestResultResponse>>(cancellationToken: cancellationToken);
 
-                return result;
+                return result ?? Array.Empty<PostTestResultResponse>();
+                
             }
         }
     }

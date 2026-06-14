@@ -1,9 +1,9 @@
-﻿namespace TestManagement.APP.Dto.TestResult.Post
+﻿namespace TestManagement.APP.Dto.TestResult.Register
 {
-    public class PostTestResultResponse
+    public class RegisterTestResultResponse
     {
         /// <summary>
-        /// Created test result identifier.
+        /// Test result identifier generated upon successful registration of the test result.
         /// </summary>
         public long TestResultId { get; set; }
 
@@ -13,17 +13,18 @@
         public long TestExecutionItemId { get; set; }
 
         /// <summary>
-        /// Foreign key referencing the specific <see cref="TestCaseId"/> executed.
+        /// Test case identifier associated with this test result.
+        /// This is used to link the result to the specific test case executed.
         /// </summary>
         public long TestCaseId { get; set; } = 0;
 
         /// <summary>
-        /// Version number of the test case that was executed.
+        /// Foreign key referencing the specific <see cref="TestCaseVersion"/> executed.
         /// </summary>
         public long TestCaseVersionNumber { get; set; } = 0;
 
         /// <summary>
-        /// Identifier for the test level or environment (for example, unit, integration, system).
+        /// Identifier for the test level/category associated with this test result.
         /// </summary>
         public long TestLevelId { get; set; } = 0;
 
@@ -33,13 +34,13 @@
         public string? Message { get; set; }
 
         /// <summary>
+        /// Status of the test result, indicating whether the test case passed, failed, or was skipped.
+        /// </summary>
+        public string Status { get; set; } = string.Empty;
+
+        /// <summary>
         /// Timestamp when the test was executed (UTC).
         /// </summary>
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Status of the test result (for example, "Passed", "Failed", "Skipped").
-        /// </summary>
-        public string TestResultStatus { get; set; } = string.Empty;
     }
 }

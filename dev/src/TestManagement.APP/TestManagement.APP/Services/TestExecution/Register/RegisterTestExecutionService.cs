@@ -41,7 +41,7 @@ namespace TestManagement.APP.Services.TestExecution.Register
         /// <param name="testResults">Collection of test results to register.</param>
         /// <param name="ct">Cancellation token for the asynchronous operation.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task RegisterTestExecutionAsync(
+        public async Task<IEnumerable<RegisterTestResultResponse>> RegisterTestExecutionAsync(
             IEnumerable<RegisterTestResultRequest> testResults,
             CancellationToken ct = default)
         {
@@ -63,7 +63,24 @@ namespace TestManagement.APP.Services.TestExecution.Register
                 requests.Add(request);
             }
 
-            var result = await _testResultApiClient.CreateTestResultAsync(requests, ct);
+            var results = await _testResultApiClient.CreateTestResultAsync(requests, ct);
+            List<RegisterTestResultResponse> responses = new List<RegisterTestResultResponse>();
+            foreach (var result in results)
+            {
+                var response = new RegisterTestResultResponse
+                {
+                    TestResultId = result.TestResultId,
+                    TestExecutionItemId = result.TestExecutionItemId,
+                    TestCaseId = result.TestCaseId,
+                    TestCaseVersionNumber = result.TestCaseVersionNumber,
+                    TestLevelId = result.TestLevelId,
+                    Message = result.Message,
+                    Status = result.TestResultStatus,
+                    ExecutedAt = result.ExecutedAt
+                };
+                responses.Add(response);
+            }
+            return responses;
         }
     }
 }

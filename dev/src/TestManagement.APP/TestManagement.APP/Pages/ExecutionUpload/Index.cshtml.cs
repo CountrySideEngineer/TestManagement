@@ -179,7 +179,7 @@ namespace TestManagement.APP.Pages.ExecutionUpload
                     }
 
                     long testLevelId = SelectedTestLevelId ?? 0;
-                    await _importTestResultService.ImportAsync(ExecId, ExecItemId, testLevelId, request);
+                    var responses = await _importTestResultService.ImportAsync(ExecId, ExecItemId, testLevelId, request);
                     _logger?.LogInformation("Imported test results from uploaded file {FileName}", fileItem.FileName);
                 }
                 catch (Exception ex)

@@ -1,11 +1,11 @@
-﻿namespace TestManagement.APP.Dto.TestResult.Post
+﻿namespace TestManagement.API.Models.Requests
 {
-    public class PostTestResultResponse
+    public class TestResultCreateResponse
     {
         /// <summary>
         /// Created test result identifier.
         /// </summary>
-        public long TestResultId { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
         /// Foreign key referencing the test execution item that triggered this result.

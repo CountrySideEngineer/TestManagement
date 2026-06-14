@@ -22,17 +22,12 @@ namespace TestManagement.APP.Services.TestExecution.Import
         private readonly ILogger<ImportTestResultService> _logger;
 
         /// <summary>
-        /// Service for synchronizing test cases to ensure they exist in the database.
-        /// </summary>
-        private readonly ISyncTestCasesService _syncTestCaseSerice;
-
-        /// <summary>
         /// Service for registering test execution results.
         /// </summary>
         private readonly IRegisterTestExecutionService _registerTestExecutionService;
 
         /// <summary>
-        /// Service for synchronizing test cases (duplicate of <see cref="_syncTestCaseSerice"/> for consistency).
+        /// Service for synchronizing test cases (duplicate of <see cref="_syncTestCaseService"/> for consistency).
         /// </summary>
         private readonly ISyncTestCasesService _syncTestCaseService;
 
@@ -51,7 +46,7 @@ namespace TestManagement.APP.Services.TestExecution.Import
             ILogger<ImportTestResultService> logger
             )
         {
-            _syncTestCaseSerice = syncTestCaseSerice
+            _syncTestCaseService = syncTestCaseSerice
                 ?? throw new ArgumentNullException(nameof(syncTestCaseSerice));
 
             _registerTestExecutionService = registerTestExecutionService
@@ -73,7 +68,7 @@ namespace TestManagement.APP.Services.TestExecution.Import
         /// <param name="request">Import request containing the source and parser.</param>
         /// <param name="ct">Cancellation token for the asynchronous operation.</param>
         /// <returns>An <see cref="ImportTestResultResponse"/> indicating the result of the import.</returns>
-        public async Task<ImportTestResultResponse> ImportAsync(
+        public async Task<IEnumerable<ImportTestResultResponse>?> ImportAsync(
             long execId,
             long execItemId,
             long testLvId,
@@ -114,9 +109,20 @@ namespace TestManagement.APP.Services.TestExecution.Import
             }
 
             // Register test execution for each test result
-            await _registerTestExecutionService.RegisterTestExecutionAsync(testResultRequests, ct);
+            var reponses = await _registerTestExecutionService.RegisterTestExecutionAsync(testResultRequests, ct);
+            if (null != reponses)
+            {
+                _logger.LogInformation("Successfully imported {Count} test results for execution item {ExecItemId}", 
+                    reponses.Count(), execItemId);
 
-            return null;
+                return new List<ImportTestResultResponse>();
+            }
+            else
+            {
+                _logger.LogWarning("No test results were imported for execution item {ExecItemId}", execItemId);
+
+                return null;
+            }
         }
     }
 }
