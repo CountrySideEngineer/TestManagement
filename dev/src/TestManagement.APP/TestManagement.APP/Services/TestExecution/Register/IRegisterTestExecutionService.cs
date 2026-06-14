@@ -11,7 +11,7 @@ namespace TestManagement.APP.Services.TestExecution.Register
             /// </summary>
             /// <param name="testResults">The collection of parsed test results to register.</param>
             /// <returns>A task representing the asynchronous operation.</returns>
-            Task RegisterTestExecutionAsync(
+            Task<IEnumerable<RegisterTestResultResponse>> RegisterTestExecutionAsync(
                 IEnumerable<RegisterTestResultRequest> testResults,
                 CancellationToken ct = default);
     }

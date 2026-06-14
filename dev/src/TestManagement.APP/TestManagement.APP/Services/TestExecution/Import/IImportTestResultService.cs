@@ -16,7 +16,7 @@ namespace TestManagement.APP.Services.TestExecution.Import
         /// <param name="request">Import request containing the source and parser.</param>
         /// <param name="ct">Cancellation token for the asynchronous operation.</param>
         /// <returns>An <see cref="ImportTestResultResponse"/> indicating the result of the import.</returns>
-        Task<ImportTestResultResponse> ImportAsync(
+        Task<IEnumerable<ImportTestResultResponse>?> ImportAsync(
             long execId,
             long execItemId,
             long testId,
