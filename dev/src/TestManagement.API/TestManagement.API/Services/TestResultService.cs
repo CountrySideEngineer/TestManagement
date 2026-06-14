@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Eventing.Reader;
 using TestManagement.API.Data;
 using TestManagement.API.Data.Repositories;
 using TestManagement.API.Features.TestResult.Create;
@@ -206,13 +207,20 @@ namespace TestManagement.API.Services
                     .Where(_ => _.Id == testResultItem.StatusId)
                     .Select(_ => _.Code)
                     .FirstOrDefaultAsync() ?? string.Empty;
+                var testCaseVersion = await _dbContext.TestCaseVersions
+                    .Where(_ => _.Id == testResultItem.TestCaseVersionId)
+                    .FirstOrDefaultAsync();
+                long testCaseId = testCaseVersion?.TestCaseId ?? 0;
+                long versionNumber = testCaseVersion?.VersionNumber ?? 0;
+                long testLevelId = testCaseVersion?.TestLevelId ?? 0;
+
                 var response = new CreateTestResultResponse()
                 {
                     ResultId = testResultItem.Id,
                     TestExecutionItemId = testResultItem.TestExecutionItemId,
-                    TestCaseId = testResultItem.TestCaseVersion?.TestCaseId ?? 0,
-                    TestCaseVersionNumber = testResultItem.TestCaseVersion?.VersionNumber ?? 0,
-                    TestLevelId = testResultItem.TestCaseVersion?.TestLevel?.Id ?? 0,
+                    TestCaseId = testCaseId,
+                    TestCaseVersionNumber = versionNumber,
+                    TestLevelId = testLevelId,
                     ExecutedAt = testResultItem.ExecutedAt,
                     Message = testResultItem.Message,
                     TestResultStatus = testResultStatus

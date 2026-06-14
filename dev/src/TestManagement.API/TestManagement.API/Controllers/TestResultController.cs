@@ -95,7 +95,7 @@ namespace TestManagement.API.Controllers
         /// <param name="requests">A collection of test result creation requests.</param>
         /// <returns>An IActionResult with HTTP 201 Created status and the created test results.</returns>
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests)
+        public async Task<ICollection<TestResultCreateResponse>> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests)
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
@@ -115,9 +115,26 @@ namespace TestManagement.API.Controllers
                 testResults.Add(testResultRequest);
             }
 
-            await _testResultService.CreateAsync(testResults);
+            var testResultResponses = await _testResultService.CreateAsync(testResults);
 
-            return Ok();
+            var responses = new List<TestResultCreateResponse>();
+            foreach (var testResultResponse in testResultResponses)
+            {
+                var response = new TestResultCreateResponse()
+                {
+                    Id = testResultResponse.ResultId,
+                    TestExecutionItemId = testResultResponse.TestExecutionItemId,
+                    TestCaseId = testResultResponse.TestCaseId,
+                    TestCaseVersionNumber = testResultResponse.TestCaseVersionNumber,
+                    TestLevelId = testResultResponse.TestLevelId,
+                    Message = testResultResponse.Message,
+                    ExecutedAt = testResultResponse.ExecutedAt,
+                    TestResultStatus = testResultResponse.TestResultStatus
+                };
+                responses.Add(response);
+            }
+
+            return responses;
         }
 
         /// <summary>
