@@ -182,6 +182,17 @@ th {
   display: inline-block;
 }
 
+/* Header for execution info (Às“ú / ƒŠƒrƒWƒ‡ƒ“) */
+.exec-header {
+    color: #000;
+    font-size: 14px; /* 2px larger than .small default */
+}
+
+/* Value styling for execution info to indent relative to header */
+.exec-value {
+    margin-left: 16px;
+}
+
 /* Utility: center table headers */
 .table-header-center th {
   text-align: center;
