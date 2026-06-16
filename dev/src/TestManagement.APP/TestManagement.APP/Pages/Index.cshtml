@@ -7,6 +7,21 @@
 <div class="container">
     <div class="block">
         <div class="block-title">最新の実行状況</div>
+        <!--リビジョン情報-->
+        <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
+            @if (Model.DashboardViewModel?.LatestExecutionSummary != null)
+            {
+                <div class="p-2" style="flex:0 0 220px;">
+                    <div class="small exec-header">実行日時：</div>
+                    <div class="small text-muted exec-value">@Model.DashboardViewModel.LatestExecutionSummary.ExecutedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div>
+                </div>
+                <div class="p-2" style="flex:1; padding-left:12px;">
+                    <div class="small exec-header">リビジョン：</div>
+                    <div class="exec-value"><code>@Model.DashboardViewModel.LatestExecutionSummary.Revision</code></div>
+                </div>
+            }
+        </div>
+
         <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
             <div class="summary-col" style="flex:0 0; max-width:50%; display:flex; padding:0; margin: 0 16px 0 0;">
                 <div class="chart-card d-flex align-items-center justify-content-center flex-fill" style="padding:0; margin:0;">
@@ -35,6 +50,12 @@
             @if (Model.DashboardViewModel?.RecentExecutions != null && Model.DashboardViewModel.RecentExecutions.Any())
             {
                 <ul class="list-unstyled" style="margin:0; padding:0;">
+                    <!-- Column headers -->
+                    <li class="recent-item recent-header d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #ddd; font-weight:600;">
+                        <div class="exec-time" style="flex:0 0 220px; text-align:left;">実行日時</div>
+                        <div class="exec-revision" style="flex:1; padding-left:12px; text-align:left;">リビジョン</div>
+                        <div class="exec-status" style="flex:0 0 120px; text-align:right;">実行結果</div>
+                    </li>
                     @foreach (var exec in Model.DashboardViewModel.RecentExecutions)
                     {
                         <li class="recent-item d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #eee;">
