@@ -6,7 +6,7 @@
     ViewData["Title"] = "実行アップロード";
 }
 
-<h1>テスト実行 詳細/更新</h1>
+<h1>テスト実行結果 アップロード</h1>
 
 <div class="container">
     <form method="post" enctype="multipart/form-data">
@@ -16,27 +16,30 @@
         <div class="block">
             <div class="block-title">実行環境/リビジョン情報</div>
             <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
-                <div class="summary-col" style="flex:0 0 100%; max-width:100%; display:flex; flex-direction:column; padding:0;">
-                    <div>
-                        <table>
-                            <thead>
+                <div class="card" style="margin:0px 8px 0 0;">
+                    <div class="card-title">実行環境</div>
+                    <div class="card-value" style="font-size: 20px;">
+                        <div>
+                            <table>
                                 <tr>
                                     <th style="text-align:center">名前</th>
-                                    <th style="text-align:center">OS</th>
-                                    <th style="text-align:center">RunTime</th>
-                                    <th style="text-align:center">リビジョン</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
                                     <td style="text-align:center">@Model.EnvironmentViewModel.Name</td>
-                                    <td style="text-align:center">@Model.EnvironmentViewModel.Os</td>
-                                    <td style="text-align:center">@Model.EnvironmentViewModel.RunTime</td>
-                                    <td style="text-align:center">@Model.ExecutionViewModel.Revision</td>
                                 </tr>
-                            </tbody>
-                        </table>
+                                <tr>
+                                    <th style="text-align:center">OS</th>
+                                    <td style="text-align:center">@Model.EnvironmentViewModel.Os</td>
+                                </tr>
+                                <tr>
+                                    <th style="text-align:center">RunTime</th>
+                                    <td style="text-align:center">@Model.EnvironmentViewModel.RunTime</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
+                </div>
+                <div class="card" style="margin: 0 0 0 8px;">
+                    <div class="card-title">リビジョン</div>
+                    <div class="card-value">@Model.ExecutionViewModel.Revision</div>
                 </div>
             </div>
         </div>
@@ -49,7 +52,6 @@
                         <table>
                             <thead>
                                 <tr>
-                                    <th style="text-align:center;">実行日</th>
                                     <th style="text-align:center;">成功</th>
                                     <th style="text-align:center;">失敗</th>
                                     <th style="text-align:center;">スキップ</th>
@@ -61,7 +63,6 @@
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td style="text-align:center;">@Model.ExecutionViewModel.ExecutedAt.ToString("yyyy/MM/dd HH:mm:ss")</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.PassedNum</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.ErrorNum</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.SkippedNum</td>
