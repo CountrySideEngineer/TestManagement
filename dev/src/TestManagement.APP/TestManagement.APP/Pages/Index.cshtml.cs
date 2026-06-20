@@ -48,7 +48,32 @@ namespace TestManagement.APP.Pages
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task OnGetAsync()
         {
-            DashboardViewModel = await _dashboardService!.GetAsync();
+            try
+            {
+                DashboardViewModel = await _dashboardService!.GetAsync();
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger?.LogWarning(ex, "Failed to retrieve dashboard data due to a communication error.");
+                ViewData["ErrorMessage"] = "データの取得に失敗しました(通信エラー)" +
+                    "後ほど再実行してください。";
+
+                DashboardViewModel = null;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger?.LogWarning(ex, "The dashboard request timed out.");
+                ViewData["ErrorMessage"] = "ダッシュボード取得がタイムアウトしました。";
+
+                DashboardViewModel = null;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Failed to retrieve dashboard data due to an unexpected error.");
+                ViewData["ErrorMessage"] = "予期せぬエラーが発生しました。管理者に問い合わせてください。";
+
+                DashboardViewModel = null;
+            }
         }
     }
 }
