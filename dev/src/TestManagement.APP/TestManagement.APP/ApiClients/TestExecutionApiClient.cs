@@ -1,4 +1,5 @@
-﻿using TestManagement.APP.Dto.TestExecution.Get;
+﻿using System.Text.Json;
+using TestManagement.APP.Dto.TestExecution.Get;
 using TestManagement.APP.Dto.TestExecution.Post;
 
 namespace TestManagement.APP.ApiClients
@@ -41,11 +42,27 @@ namespace TestManagement.APP.ApiClients
         {
             _logger?.LogDebug("TestExecutionApiClient::GetTestExecutionsAsync() start!");
 
-            var result = await _httpClient!
-                .GetFromJsonAsync<List<GetTestExecutionResponse>>("api/TestExecution") ?? 
-                    new List<GetTestExecutionResponse>();
+            try
+            {
+                var result = await _httpClient.GetFromJsonAsync<List<GetTestExecutionResponse>>("api/TestExecution");
+                return result ?? new List<GetTestExecutionResponse>();
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger?.LogWarning(ex, "TestExecutionApiClient::GetTestExecutionsAsync() failed to connect to the API.");
+                throw;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger?.LogWarning(ex, "TestExecutionApiClient::GetTestExecutionsAsync() timeout connection to the API.");
+                throw;
+            }
+            catch (JsonException ex)
+            {
+                _logger?.LogWarning(ex, "TestExecutionApiClient::GetTestExecutionsAsync() failed to deserialize the API response.");
+                throw;
+            }
 
-            return result;
         }
 
         /// <summary>
@@ -90,28 +107,21 @@ namespace TestManagement.APP.ApiClients
             if (!response.IsSuccessStatusCode)
             {
                 _logger?.LogWarning("TestExecutionApiClient::GetTestExecutionsByIdAsync() failed with status {StatusCode} for id {Id}", response.StatusCode, id);
-                throw new HttpRequestException($"Failed to get test execution with id {id}. Status code: {response.StatusCode}");
+
+                return null;
+                //throw new HttpRequestException($"Failed to get test execution with id {id}. Status code: {response.StatusCode}");
             }
     
             var result = response.Content.ReadFromJsonAsync<GetTestExecutionResponse>().Result;
             if (result == null)
             {
                 _logger?.LogWarning("TestExecutionApiClient::GetTestExecutionsByIdAsync() returned null for id {Id}", id);
-                throw new InvalidOperationException($"Received null response when fetching test execution with id {id}");
+
+                return null;
+                //throw new InvalidOperationException($"Received null response when fetching test execution with id {id}");
             }
     
             return result;
         }
-
-
-        //Task<IList<GetTestExecutionResponse>?> ITestExecutionApiClient.GetTestExecutionsAsync()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //Task<PostTestExecutionResponse?> ITestExecutionApiClient.CreateTestExecutionAsync(PostTestExecutionRequest request)
-        //{
-        //    throw new NotImplementedException();
-        //}
     }
 }

@@ -1,4 +1,5 @@
-﻿using TestManagement.APP.ApiClients;
+﻿using System.Text.Json;
+using TestManagement.APP.ApiClients;
 using TestManagement.APP.Dto.TestExecution.Get;
 using TestManagement.APP.Services.TestExecution;
 using TestManagement.APP.ViewModel.Dashboard;
@@ -40,44 +41,70 @@ namespace TestManagement.APP.Services
         /// aggregated metrics for the latest run and several recent runs.
         /// </summary>
         /// <returns>A <see cref="DashboardViewModel"/> containing the latest execution summary and recent executions.</returns>
-        public virtual async Task<DashboardViewModel> GetAsync()
+        public virtual async Task<DashboardViewModel?> GetAsync()
         {
             _logger.LogDebug("DashboardService::GetAsync() start!");
 
-            var testExecution = await _apiClient.GetTestExecutionsAsync();
-
-            GetTestExecutionResponse latestExecution = testExecution?.OrderByDescending(_ => _.ExecutedAt).FirstOrDefault()!;
-
-            long errNum = latestExecution.TestCases.Where(_ => _.IsFailed).Count();
-            long skipped = latestExecution.TestCases.Where(_ => _.IsSkipped).Count();
-            long excluded = latestExecution.TestCases.Where(_ => _.IsExcluded).Count();
-            long passed = latestExecution.TestCases.Where(_ => _.IsPassed).Count();
-
-            var latestSummaryViewModel = new LatestExecutionSummaryViewModel
+            try
             {
-                Revision = latestExecution.Revision,
-                EnvironmentName = latestExecution.Environment,
-                ErrorNum = errNum,
-                SkippedNum = skipped,
-                ExcludedNum = excluded,
-                ExecutedNum = (errNum + passed),
-                SuccessRate = (errNum + passed) > 0 ? (passed * 100 / (errNum + passed)) : 0,
-                FailedRate = (errNum + passed) > 0 ? (errNum * 100 / (errNum + passed)) : 0,
-                ExecutedAt = latestExecution?.ExecutedAt ?? DateTime.MinValue
-            };
-            var recentExecutions = testExecution?.OrderByDescending(_ => _.ExecutedAt).Take(new Range(1, 5)).Select(_ => new RecentExecutionViewModel()
-            {
-                Revision = _.Revision,
-                ExecutedAt = _.ExecutedAt,
-                HasFailure = _.TestCases.Any(_ => _.TestStatusCode == "Failed")
-            });
+                var testExecution = await _apiClient.GetTestExecutionsAsync();
+                if ((null == testExecution) || (!testExecution.Any()))
+                {
+                    _logger.LogWarning("No test execution found.");
 
-            var viewModel = new DashboardViewModel
+                    return null;
+                }
+
+                GetTestExecutionResponse? latestExecution = testExecution?.OrderByDescending(_ => _.ExecutedAt).FirstOrDefault();
+                if (null == latestExecution)
+                {
+                    _logger.LogWarning("No test executions found.");
+                    return null;
+                }
+                else
+                {
+                    long errNum = latestExecution.TestCases.Where(_ => _.IsFailed).Count();
+                    long skipped = latestExecution.TestCases.Where(_ => _.IsSkipped).Count();
+                    long excluded = latestExecution.TestCases.Where(_ => _.IsExcluded).Count();
+                    long passed = latestExecution.TestCases.Where(_ => _.IsPassed).Count();
+
+                    var latestSummaryViewModel = new LatestExecutionSummaryViewModel
+                    {
+                        Revision = latestExecution.Revision,
+                        EnvironmentName = latestExecution.Environment,
+                        ErrorNum = errNum,
+                        SkippedNum = skipped,
+                        ExcludedNum = excluded,
+                        ExecutedNum = (errNum + passed),
+                        SuccessRate = (errNum + passed) > 0 ? (passed * 100 / (errNum + passed)) : 0,
+                        FailedRate = (errNum + passed) > 0 ? (errNum * 100 / (errNum + passed)) : 0,
+                        ExecutedAt = latestExecution?.ExecutedAt ?? DateTime.MinValue
+                    };
+                    var recentExecutions = testExecution?.OrderByDescending(_ => _.ExecutedAt).Take(new Range(1, 5)).Select(_ => new RecentExecutionViewModel()
+                    {
+                        Revision = _.Revision,
+                        ExecutedAt = _.ExecutedAt,
+                        HasFailure = _.TestCases.Any(_ => _.TestStatusCode == "Failed")
+                    });
+
+                    var viewModel = new DashboardViewModel
+                    {
+                        LatestExecutionSummary = latestSummaryViewModel,
+                        RecentExecutions = recentExecutions
+                    };
+                    return viewModel;
+                }
+            }
+            catch (HttpRequestException ex)
             {
-                LatestExecutionSummary = latestSummaryViewModel,
-                RecentExecutions = recentExecutions
-            };
-            return viewModel;
+                _logger?.LogWarning(ex, "Connection to API failed.");
+                return null;
+            }
+            catch (JsonException ex)
+            {
+                _logger?.LogWarning(ex, "Failed to parse the API response JSON.");
+                return null;
+            }
         }
     }
 }

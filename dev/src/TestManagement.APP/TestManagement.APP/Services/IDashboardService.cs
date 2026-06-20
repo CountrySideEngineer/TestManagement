@@ -11,6 +11,6 @@ namespace TestManagement.APP.Services
         /// Retrieves dashboard view model data asynchronously.
         /// </summary>
         /// <returns>A task representing the asynchronous operation, containing a <see cref="DashboardViewModel"/>.</returns>
-        Task<DashboardViewModel> GetAsync();
+        Task<DashboardViewModel?> GetAsync();
     }
 }
