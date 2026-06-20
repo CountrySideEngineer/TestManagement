@@ -11,6 +11,10 @@
         /// </summary>
         public long TestExecutionId { get; set; } = 0;
 
+        /// <summary>
+        /// The identifier for a specific item within the test execution.
+        /// Useful for referencing or joining detailed execution item records.
+        /// </summary>
         public long TestExecutionItemId { get; set; } = 0;
 
         /// <summary>
