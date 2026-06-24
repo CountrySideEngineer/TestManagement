@@ -1,0 +1,31 @@
+﻿@page
+@model TestManagement.APP.Pages.Environments.CreateModel
+
+<h1>実行環境を登録</h1>
+
+<form method="post">
+    <div class="mb-3">
+        <label asp-for="Environment.Name" class="form-label">環境の名前</label>
+        <input asp-for="Environment.Name" class="form-control" />
+        <span asp-validation-for="Environment.Name" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Environment.Os" class="form-label">OSの名前</label>
+        <input asp-for="Environment.Os" class="form-control" />
+        <span asp-validation-for="Environment.Os" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Environment.RunTime" class="form-label">ランタイムのバージョン</label>
+        <input asp-for="Environment.RunTime" class="form-control" />
+        <span asp-validation-for="Environment.RunTime" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">登録</button>
+    <a asp-page="/Index" class="btn btn-secondary ms-2">キャンセル</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
