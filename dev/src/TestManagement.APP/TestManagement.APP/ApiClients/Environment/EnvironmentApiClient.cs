@@ -1,10 +1,14 @@
 ﻿using System.Runtime.CompilerServices;
 using TestManagement.APP.Dto.Environment.Get;
+using TestManagement.APP.Dto.Environment.Post;
+using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
 
 namespace TestManagement.APP.ApiClients.Environment
 {
     /// <summary>
-    /// API client responsible for retrieving environment information from the Test API.
+    /// API client responsible for environment-related HTTP calls to the Test API.
+    /// Implements <see cref="IEnvironmentApiClient"/> and performs JSON serialization.
     /// </summary>
     public class EnvironmentApiClient : IEnvironmentApiClient
     {
@@ -62,6 +66,19 @@ namespace TestManagement.APP.ApiClients.Environment
                     new List<GetEnvironmentResponse>();
 
             return result;
+        }
+
+        /// <summary>
+        /// Creates a new environment by posting the provided request to the API.
+        /// Throws an exception if the remote call does not return a success status code.
+        /// </summary>
+        /// <param name="request">The environment data to create.</param>
+        public async Task CreateEnvironmentAsync(PostEnvironmentRequest request)
+        {
+            _logger?.LogInformation("EnvironmentApiClient::CreateEnvironmentAsync() start! Name: {Name}", request.Name);
+
+            var response = await _httpClient.PostAsJsonAsync("api/environment", request);
+            response.EnsureSuccessStatusCode();
         }
     }
 }
