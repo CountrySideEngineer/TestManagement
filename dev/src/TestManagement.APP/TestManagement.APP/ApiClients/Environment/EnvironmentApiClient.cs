@@ -69,16 +69,37 @@ namespace TestManagement.APP.ApiClients.Environment
         }
 
         /// <summary>
-        /// Creates a new environment by posting the provided request to the API.
-        /// Throws an exception if the remote call does not return a success status code.
+        /// Creates a new environment by posting the specified <see cref="PostEnvironmentRequest"/> to the Test API.
         /// </summary>
         /// <param name="request">The environment data to create.</param>
-        public async Task CreateEnvironmentAsync(PostEnvironmentRequest request)
+        /// <returns>
+        /// A <see cref="PostEnvironmentResponse"/> representing the created environment on success; otherwise <c>null</c> if the HTTP request failed or the response contained no content.
+        /// </returns>
+        /// <remarks>
+        /// Sends a JSON POST to the "api/environment" endpoint using the configured <see cref="HttpClient"/>.
+        /// The method logs an informational message at start, logs a warning if the HTTP response is unsuccessful,
+        /// and returns null in failure cases. On success, the response content is deserialized to <see cref="PostEnvironmentResponse"/>.
+        /// </remarks>
+        public async Task<PostEnvironmentResponse?> CreateEnvironmentAsync(PostEnvironmentRequest request)
         {
             _logger?.LogInformation("EnvironmentApiClient::CreateEnvironmentAsync() start! Name: {Name}", request.Name);
 
             var response = await _httpClient.PostAsJsonAsync("api/environment", request);
-            response.EnsureSuccessStatusCode();
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger?.LogWarning("EnvironmentApiClient::CreateEnvironmentAsync() failed with status code {StatusCode}.", response.StatusCode);
+
+                return null;
+            }
+
+            var result = response.Content.ReadFromJsonAsync<PostEnvironmentResponse>().Result;
+            if (null == result)
+            {
+                _logger?.LogWarning("EnvironmentApiClient::CreateEnvironmentAsync() returned null.");
+
+                return null;
+            }
+            return result;
         }
     }
 }
