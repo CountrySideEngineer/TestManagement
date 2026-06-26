@@ -35,7 +35,7 @@ namespace TestManagement.APP.Pages.Environments
             if (_environmentService is null)
             {
                 _logger?.LogError("IEnvironmentApiClient is not available via DI.");
-                ModelState.AddModelError(string.Empty, "ƒT[ƒrƒX‚ª—˜—p‚Å‚«‚Ü‚¹‚ñB");
+                ModelState.AddModelError(string.Empty, "ã‚µãƒ¼ãƒ“ã‚¹ãŒåˆ©ç”¨ã§ãã¾ã›ã‚“ã€‚");
                 return Page();
             }
 
@@ -48,13 +48,13 @@ namespace TestManagement.APP.Pages.Environments
                     RunTime = Environment.RunTime
                 };
                 await _environmentService.CreateEnvironmentAsync(request);
-                TempData["SuccessMessage"] = "ŠÂ‹«‚ğ“o˜^‚µ‚Ü‚µ‚½B";
+                TempData["SuccessMessage"] = "ç’°å¢ƒã‚’ç™»éŒ²ã—ã¾ã—ãŸã€‚";
                 return RedirectToPage("/Index");
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "ŠÂ‹«“o˜^‚É¸”s‚µ‚Ü‚µ‚½B");
-                ModelState.AddModelError(string.Empty, $"ŠÂ‹«“o˜^‚É¸”s‚µ‚Ü‚µ‚½: {ex.Message}");
+                _logger?.LogError(ex, "ç’°å¢ƒç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸã€‚");
+                ModelState.AddModelError(string.Empty, $"ç’°å¢ƒç™»éŒ²ã«å¤±æ•—ã—ã¾ã—ãŸ: {ex.Message}");
                 return Page();
             }
         }

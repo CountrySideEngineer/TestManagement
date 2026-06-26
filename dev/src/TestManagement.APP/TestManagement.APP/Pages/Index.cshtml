@@ -1,13 +1,13 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "ŠJ”­ÒŒü‚¯ƒ_ƒbƒVƒ…ƒ{[ƒh";
+    ViewData["Title"] = "é–‹ç™ºè€…å‘ã‘ãƒ€ãƒƒã‚·ãƒ¥ãƒœãƒ¼ãƒ‰";
 }
 
 <div class="container">
     <div class="block">
-        <div class="block-title">ÅV‚ÌÀsó‹µ</div>
-        <!--ƒŠƒrƒWƒ‡ƒ“î•ñ-->
+        <div class="block-title">æœ€æ–°ã®å®Ÿè¡ŒçŠ¶æ³</div>
+        <!--ãƒªãƒ“ã‚¸ãƒ§ãƒ³æƒ…å ±-->
         <div class="lattest-exec">
             @if (null != Model.DashboardViewModel)
             {
@@ -15,11 +15,11 @@
                 {
                     <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
                         <div class="p-2" style="flex:0 0 220px;">
-                            <div class="small exec-header">Às“úF</div>
+                            <div class="small exec-header">å®Ÿè¡Œæ—¥æ™‚ï¼š</div>
                             <div class="small text-muted exec-value">@Model.DashboardViewModel.LatestExecutionSummary.ExecutedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div>
                         </div>
                         <div class="p-2" style="flex:1; padding-left:12px;">
-                            <div class="small exec-header">ƒŠƒrƒWƒ‡ƒ“F</div>
+                            <div class="small exec-header">ãƒªãƒ“ã‚¸ãƒ§ãƒ³ï¼š</div>
                             <div class="exec-value"><code>@Model.DashboardViewModel.LatestExecutionSummary.Revision</code></div>
                         </div>
                     </div>
@@ -29,19 +29,19 @@
                         <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
                             <div class="summary-col" style="flex:1; max-width:100%; display:flex; padding:0; margin: 0 8px 0 0;">
                                 <div class="chart-card d-flex align-items-center justify-content-center flex-fill" style="padding:0; margin:0;">
-                                    <canvas id="summaryChart" aria-label="¬Œ÷—¦‚ÆÀsŒ”‚Ì‰~ƒOƒ‰ƒt" style="display:block; width:100%; height:100%; padding:8px;"></canvas>
+                                    <canvas id="summaryChart" aria-label="æˆåŠŸç‡ã¨å®Ÿè¡Œä»¶æ•°ã®å††ã‚°ãƒ©ãƒ•" style="display:block; width:100%; height:100%; padding:8px;"></canvas>
                                 </div>
                             </div>
 
                             <div class="summary-col" style="flex:1; max-width:100%; display:flex; flex-direction:column; padding:0; white-space: nowrap;">
                                 <div class="card" style="margin:0 0 4px 0; align-content: center">
-                                    <div class="card-title">¬Œ÷—¦F</div>
+                                    <div class="card-title">æˆåŠŸç‡ï¼š</div>
                                     <div class="card-value" style="text-align:right;">@Model.DashboardViewModel.LatestExecutionSummary?.SuccessRate %</div>
                                 </div>
 
                                 <div class="card" style="margin:4px 0 0 0;">
-                                    <div class="card-title">ÀsŒ”F</div>
-                                    <div class="card-value" style="text-align:right">@Model.DashboardViewModel.LatestExecutionSummary?.ExecutedNum Œ</div>
+                                    <div class="card-title">å®Ÿè¡Œä»¶æ•°ï¼š</div>
+                                    <div class="card-value" style="text-align:right">@Model.DashboardViewModel.LatestExecutionSummary?.ExecutedNum ä»¶</div>
                                 </div>
                             </div>
                         </div>
@@ -50,24 +50,24 @@
             }
             else
             {
-                <div class="muted" style="padding:8px 0;">Å‹ß‚ÌÀs‚Í‚ ‚è‚Ü‚¹‚ñB</div>
+                <div class="muted" style="padding:8px 0;">æœ€è¿‘ã®å®Ÿè¡Œã¯ã‚ã‚Šã¾ã›ã‚“ã€‚</div>
             }
         </div>
 
     </div>
 
-    <!-- Å‹ß‚ÌÀsŒ‹‰Ê -->
+    <!-- æœ€è¿‘ã®å®Ÿè¡Œçµæœ -->
     <div class="block">
-        <div class="block-title">Å‹ß‚ÌÀsŒ‹‰Ê</div>
+        <div class="block-title">æœ€è¿‘ã®å®Ÿè¡Œçµæœ</div>
         <div class="recent-list">
             @if (Model.DashboardViewModel?.RecentExecutions != null && Model.DashboardViewModel.RecentExecutions.Any())
             {
                 <ul class="list-unstyled" style="margin:0; padding:0;">
                     <!-- Column headers -->
                     <li class="recent-item recent-header d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #ddd; font-weight:600;">
-                        <div class="exec-time" style="flex:0 0 220px; text-align:left;">Às“ú</div>
-                        <div class="exec-revision" style="flex:1; padding-left:12px; text-align:left;">ƒŠƒrƒWƒ‡ƒ“</div>
-                        <div class="exec-status" style="flex:0 0 120px; text-align:right;">ÀsŒ‹‰Ê</div>
+                        <div class="exec-time" style="flex:0 0 220px; text-align:left;">å®Ÿè¡Œæ—¥æ™‚</div>
+                        <div class="exec-revision" style="flex:1; padding-left:12px; text-align:left;">ãƒªãƒ“ã‚¸ãƒ§ãƒ³</div>
+                        <div class="exec-status" style="flex:0 0 120px; text-align:right;">å®Ÿè¡Œçµæœ</div>
                     </li>
                     @foreach (var exec in Model.DashboardViewModel.RecentExecutions)
                     {
@@ -81,11 +81,11 @@
                             <div class="exec-status" style="flex:0 0 120px; text-align:right;">
                                 @if (exec.HasFailure)
                                 {
-                                    <span class="badge bg-danger">¸”s</span>
+                                    <span class="badge bg-danger">å¤±æ•—</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-success">¬Œ÷</span>
+                                    <span class="badge bg-success">æˆåŠŸ</span>
                                 }
                             </div>
                         </li>
@@ -94,15 +94,15 @@
             }
             else
             {
-                <div class="muted" style="padding:8px 0;">Å‹ß‚ÌÀs‚Í‚ ‚è‚Ü‚¹‚ñB</div>
+                <div class="muted" style="padding:8px 0;">æœ€è¿‘ã®å®Ÿè¡Œã¯ã‚ã‚Šã¾ã›ã‚“ã€‚</div>
             }
         </div>
     </div>
 
     <div class="block">
-        <div class="block-title">ÀsŒ‹‰Ê’Ç‰Á</div>
+        <div class="block-title">å®Ÿè¡Œçµæœè¿½åŠ </div>
         <div style="padding:8px 0;">
-            <a asp-page="/Executions/Index" class="btn btn-primary">ƒeƒXƒgÀs“o˜^</a>
+            <a asp-page="/Executions/Index" class="btn btn-primary">ãƒ†ã‚¹ãƒˆå®Ÿè¡Œç™»éŒ²</a>
         </div>
     </div>
 
@@ -120,7 +120,7 @@
         if (!ctx) return;
 
         const data = {
-            labels: ['¬Œ÷', '¸”s'],
+            labels: ['æˆåŠŸ', 'å¤±æ•—'],
             datasets: [{
                 data: [success, errors],
                 backgroundColor: ['#2ecc71', '#e74c3c'],
