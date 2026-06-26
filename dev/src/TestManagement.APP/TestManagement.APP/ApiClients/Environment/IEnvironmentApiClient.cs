@@ -1,4 +1,5 @@
 ﻿using TestManagement.APP.Dto.Environment.Get;
+using TestManagement.APP.Dto.Environment.Post;
 
 namespace TestManagement.APP.ApiClients.Environment
 {
@@ -6,5 +7,6 @@ namespace TestManagement.APP.ApiClients.Environment
     {
         Task<IList<GetEnvironmentResponse>> GetEnvironmentsAsync();
         Task<IList<GetEnvironmentResponse>> GetEnvironmentsByNameAsync(GetEnvironmentRequest request);
+        Task<PostEnvironmentResponse?> CreateEnvironmentAsync(PostEnvironmentRequest request);
     }
 }

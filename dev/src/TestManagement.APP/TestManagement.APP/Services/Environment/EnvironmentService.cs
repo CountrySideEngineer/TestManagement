@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Microsoft.VisualBasic;
+using System;
+using System.Xml.Linq;
 using TestManagement.APP.ApiClients.Environment;
+using TestManagement.APP.Dto.Environment.Create;
 using TestManagement.APP.Dto.Environment.Get;
+using TestManagement.APP.Dto.Environment.Post;
 using TestManagement.APP.ViewModel.Environment;
 
 namespace TestManagement.APP.Services.Environment
@@ -109,6 +113,34 @@ namespace TestManagement.APP.Services.Environment
                 }).First();
 
             return environmentViewModel;
+        }
+
+        public async Task<CreateEnvironmentResponse?> CreateEnvironmentAsync(CreateEnvironmentRequest request)
+        {
+            _logger.LogDebug("EnvironmentService::CreateEnvironmentAsync() start!");
+
+            var postRequest = new PostEnvironmentRequest()
+            {
+                Name = request.Name,
+                Os = request.Os,
+                RunTime = request.RunTime,
+            };
+
+
+            var apiResponse = await _apiClient.CreateEnvironmentAsync(postRequest);
+            if (null == apiResponse)
+            {
+                return null;
+            }
+
+            var response = new CreateEnvironmentResponse()
+            {
+                Id = apiResponse.Id,
+                Name = apiResponse.Name,
+                Os = apiResponse.Os,
+                RunTime = apiResponse.RunTime,
+            };
+            return response;
         }
     }
 }
