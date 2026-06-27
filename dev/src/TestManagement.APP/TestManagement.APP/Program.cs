@@ -31,7 +31,6 @@ builder.Services.AddRazorPages()
     {
         options.Conventions.AddPageRoute("/", "");
     });
-builder.Services.AddScoped<UploadFileParser>();
 builder.Services.AddScoped<ITestExecutionApiClient, TestExecutionApiClient>();
 builder.Services.AddScoped<IEnvironmentApiClient, EnvironmentApiClient>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
