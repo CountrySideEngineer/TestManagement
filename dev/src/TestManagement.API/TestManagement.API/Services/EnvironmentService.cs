@@ -1,5 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
+using System.ComponentModel;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using TestManagement.API.Data;
 using TestManagement.API.Features.Environment.Create;
 using TestManagement.API.Features.Environment.Get;
@@ -11,7 +14,7 @@ namespace TestManagement.API.Services
     /// Service responsible for environment-related use cases.
     /// Provides retrieval operations for environments and their historical versions.
     /// </summary>
-    public class EnvironmentService
+    public class EnvironmentService : IEnvironmentService
     {
         /// <summary>
         /// Database context used to access environment and version data.
@@ -47,28 +50,25 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("EnvironmentService::GetAllAsync() start!");
 
-            var envionments = await _dbContext.Environments
+            var environments = await _dbContext.Environments
                 .Include(_ => _.Versions)
                 .ToListAsync();
-            var responses = new List<GetEnvironmentResponse>();
-            foreach (var environment in envionments)
-            {
-                foreach (var version in environment.Versions)
+
+            ICollection<GetEnvironmentResponse> responses = environments
+                .Select(env => new GetEnvironmentResponse
                 {
-                    var response = new GetEnvironmentResponse
+                    Id = env.Id,
+                    Name = env.Name,
+                    Versions = env.Versions.Select(version => new Features.Environment.EnvironmentVersion
                     {
-                        Id = environment.Id,
-                        Name = environment.Name,
+                        VersionNumber = version.VersionNumber,
                         Os = version.Os,
                         RunTime = version.RunTime,
-                        VersionNumber = version.VersionNumber,
-                        VersionId = version.Id,
                         IsLatest = version.IsLatest
-                    };
-                    responses.Add(response);
-                }
-            }
-
+                    })
+                    .ToList()
+                })
+                .ToList();
             return responses;
         }
 
@@ -95,18 +95,21 @@ namespace TestManagement.API.Services
                     .Where(e => e.Id == id)
                     .Include(e => e.Versions)
                     .ToListAsync(ct);
-
-                var responses = environments
-                    .SelectMany(env => env.Versions.Select(version => new GetEnvironmentResponse
+                
+                ICollection<GetEnvironmentResponse> responses = environments
+                    .Select(env => new GetEnvironmentResponse
                     {
                         Id = env.Id,
                         Name = env.Name,
-                        Os = version.Os,
-                        RunTime = version.RunTime,
-                        VersionNumber = version.VersionNumber,
-                        VersionId = version.Id,
-                        IsLatest = version.IsLatest
-                    }))
+                        Versions = env.Versions.Select(version => new Features.Environment.EnvironmentVersion
+                        {
+                            VersionNumber = version.VersionNumber,
+                            Os = version.Os,
+                            RunTime = version.RunTime,
+                            IsLatest = version.IsLatest
+                        })
+                        .ToList()
+                    })
                     .ToList();
 
                 return responses;
@@ -138,16 +141,20 @@ namespace TestManagement.API.Services
                     .Include(e => e.Versions)
                     .ToListAsync();
 
-                var responses = environments
-                    .SelectMany(env => env.Versions.Select(version => new GetEnvironmentResponse
+                ICollection<GetEnvironmentResponse> responses = environments
+                    .Select(env => new GetEnvironmentResponse
                     {
+                        Id = env.Id,
                         Name = env.Name,
-                        Os = version.Os,
-                        RunTime = version.RunTime,
-                        VersionNumber = version.VersionNumber,
-                        VersionId = version.Id,
-                        IsLatest = version.IsLatest
-                    }))
+                        Versions = env.Versions.Select(version => new Features.Environment.EnvironmentVersion
+                        {
+                            VersionNumber = version.VersionNumber,
+                            Os = version.Os,
+                            RunTime = version.RunTime,
+                            IsLatest = version.IsLatest
+                        })
+                        .ToList()
+                    })
                     .ToList();
 
                 return responses;
@@ -187,7 +194,6 @@ namespace TestManagement.API.Services
             try
             {
                 await _dbContext.SaveChangesAsync(ct);
-
             }
             catch (Exception ex)
             {
@@ -195,20 +201,18 @@ namespace TestManagement.API.Services
                 throw;
             }
 
-            var createdEnvironment = newEnvironment.Versions
-                .OrderByDescending(_ => _.VersionNumber)
-                .FirstOrDefault();
-            if (null == createdEnvironment)
-            {
-                throw new InvalidOperationException("Failed to create environment version.");
-            }
             var response = new CreateEnvironmentResponse
             {
-                Id = createdEnvironment.Id,
+                Id = newEnvironment.Id,
                 Name = newEnvironment.Name,
-                Os = createdEnvironment.Os,
-                RunTime = createdEnvironment.RunTime,
-                VersionNumber = createdEnvironment.VersionNumber
+                Version = new Features.Environment.EnvironmentVersion
+                {
+                    Id = newEnvironment.Versions.ElementAt(0).EnvironmentId,
+                    Os = newEnvironment.Versions.ElementAt(0).Os,
+                    RunTime = newEnvironment.Versions.ElementAt(0).RunTime,
+                    VersionNumber = newEnvironment.Versions.ElementAt(0).VersionNumber,
+                    IsLatest = newEnvironment.Versions.ElementAt(0).IsLatest
+                }
             };
             return response;
         }

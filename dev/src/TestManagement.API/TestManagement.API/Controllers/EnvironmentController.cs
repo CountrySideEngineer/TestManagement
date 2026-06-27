@@ -18,7 +18,7 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Service that encapsulates environment-related use cases and data access.
         /// </summary>
-        private readonly EnvironmentService _environmentService;
+        private readonly IEnvironmentService _environmentService;
 
         /// <summary>
         /// Logger used for diagnostic messages within the controller.
@@ -30,7 +30,10 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="logger">Logger instance used for diagnostic messages.</param>
         /// <param name="environmentService">Service that provides environment use-cases.</param>
-        public EnvironmentController(ILogger<EnvironmentController> logger, EnvironmentService environmentService)
+        public EnvironmentController(
+            ILogger<EnvironmentController> logger, 
+            IEnvironmentService environmentService
+            )
         {
             _logger = logger;
             _environmentService = environmentService;
@@ -53,12 +56,12 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="id">Identifier of the environment to retrieve.</param>
         /// <returns>A <see cref="GetEnvironmentResponse"/> DTO with the latest version details.</returns>
-        [HttpGet("id/{id}")]
-        public async Task<IActionResult> GetById(int id)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetByIdAsync(int id, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.GetByIdAsync start!");
 
-            ICollection<GetEnvironmentResponse> responses = await _environmentService.GetByIdAsync(id);
+            ICollection<GetEnvironmentResponse> responses = await _environmentService.GetByIdAsync(id, ct);
             return Ok(responses);
         }
 
@@ -69,11 +72,11 @@ namespace TestManagement.API.Controllers
         /// <param name="name">The environment name to query for (case-sensitive depending on the data store).</param>
         /// <returns>A collection of <see cref="GetEnvironmentResponse"/> instances representing matching environment versions.</returns>
         [HttpGet("name/{name}")]
-        public async Task<IActionResult> GetByName(string name)
+        public async Task<IActionResult> GetByNameAsync(string name, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.GetByNameAsync start!");
 
-            ICollection<GetEnvironmentResponse> responses = await _environmentService.GetByNameAsync(name);
+            ICollection<GetEnvironmentResponse> responses = await _environmentService.GetByNameAsync(name, ct);
             return Ok(responses);
         }
 

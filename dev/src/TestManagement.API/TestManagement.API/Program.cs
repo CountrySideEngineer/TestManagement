@@ -19,7 +19,7 @@ builder.Services.AddScoped<TestLevelService>();
 builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
 builder.Services.AddScoped<TestCaseService>();
 builder.Services.AddScoped<TestExecutionService>();
-builder.Services.AddScoped<EnvironmentService>();
+builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 
 // XML converter
 builder.Services.AddScoped<ITestResultXmlConverter, TestResultXmlConverter>();
