@@ -1,10 +1,14 @@
 ﻿using System.Runtime.CompilerServices;
 using TestManagement.APP.Dto.Environment.Get;
+using TestManagement.APP.Dto.Environment.Post;
+using System.Net.Http.Json;
+using Microsoft.Extensions.Logging;
 
 namespace TestManagement.APP.ApiClients.Environment
 {
     /// <summary>
-    /// API client responsible for retrieving environment information from the Test API.
+    /// API client responsible for environment-related HTTP calls to the Test API.
+    /// Implements <see cref="IEnvironmentApiClient"/> and performs JSON serialization.
     /// </summary>
     public class EnvironmentApiClient : IEnvironmentApiClient
     {
@@ -61,6 +65,40 @@ namespace TestManagement.APP.ApiClients.Environment
                 .GetFromJsonAsync<List<GetEnvironmentResponse>>("api/environment") ?? 
                     new List<GetEnvironmentResponse>();
 
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a new environment by posting the specified <see cref="PostEnvironmentRequest"/> to the Test API.
+        /// </summary>
+        /// <param name="request">The environment data to create.</param>
+        /// <returns>
+        /// A <see cref="PostEnvironmentResponse"/> representing the created environment on success; otherwise <c>null</c> if the HTTP request failed or the response contained no content.
+        /// </returns>
+        /// <remarks>
+        /// Sends a JSON POST to the "api/environment" endpoint using the configured <see cref="HttpClient"/>.
+        /// The method logs an informational message at start, logs a warning if the HTTP response is unsuccessful,
+        /// and returns null in failure cases. On success, the response content is deserialized to <see cref="PostEnvironmentResponse"/>.
+        /// </remarks>
+        public async Task<PostEnvironmentResponse?> CreateEnvironmentAsync(PostEnvironmentRequest request)
+        {
+            _logger?.LogInformation("EnvironmentApiClient::CreateEnvironmentAsync() start! Name: {Name}", request.Name);
+
+            var response = await _httpClient.PostAsJsonAsync("api/environment", request);
+            if (!response.IsSuccessStatusCode)
+            {
+                _logger?.LogWarning("EnvironmentApiClient::CreateEnvironmentAsync() failed with status code {StatusCode}.", response.StatusCode);
+
+                return null;
+            }
+
+            var result = response.Content.ReadFromJsonAsync<PostEnvironmentResponse>().Result;
+            if (null == result)
+            {
+                _logger?.LogWarning("EnvironmentApiClient::CreateEnvironmentAsync() returned null.");
+
+                return null;
+            }
             return result;
         }
     }

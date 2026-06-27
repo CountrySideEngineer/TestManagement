@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestManagement.APP.Services.Environment;
 using TestManagement.APP.Services.TestExecution;
+using TestManagement.APP.ViewModel.Dashboard;
 using TestManagement.APP.ViewModel.Environment;
 using TestManagement.APP.ViewModel.Executions;
 
@@ -48,7 +49,32 @@ namespace TestManagement.APP.Pages.Executions
         {
             _logger.LogInformation("IndexModel::OnGet() start!");
 
-            Executions = await _testExecutionService.GetExecutionsAsync();
+            try
+            {
+                Executions = await _testExecutionService.GetExecutionsAsync();
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger?.LogWarning(ex, "Failed to retrieve dashboard data due to a communication error.");
+                ViewData["ErrorMessage"] = "データの取得に失敗しました(通信エラー)" +
+                    "後ほど再実行してください。";
+
+                Executions = null;
+            }
+            catch (TaskCanceledException ex)
+            {
+                _logger?.LogWarning(ex, "The dashboard request timed out.");
+                ViewData["ErrorMessage"] = "ダッシュボード取得がタイムアウトしました。";
+
+                Executions = null;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Failed to retrieve dashboard data due to an unexpected error.");
+                ViewData["ErrorMessage"] = "予期せぬエラーが発生しました。管理者に問い合わせてください。";
+
+                Executions = null;
+            }
         }
     }
 }

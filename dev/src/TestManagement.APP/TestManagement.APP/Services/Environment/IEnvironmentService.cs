@@ -1,4 +1,5 @@
-﻿using TestManagement.APP.Dto.Environment.Get;
+﻿using TestManagement.APP.Dto.Environment.Create;
+using TestManagement.APP.Dto.Environment.Get;
 using TestManagement.APP.ViewModel.Environment;
 
 namespace TestManagement.APP.Services.Environment
@@ -28,5 +29,14 @@ namespace TestManagement.APP.Services.Environment
         /// <param name="name">The name of the environment to retrieve.</param>
         /// <returns>The latest <see cref="EnvironmentViewModel"/> matching the name, or null if not found.</returns>
         Task<EnvironmentViewModel?> GetLatestEnvironmentByNameAsync(string name);
+
+        /// <summary>
+        /// Creates a new environment using the provided <see cref="CreateEnvironmentRequest"/>.
+        /// </summary>
+        /// <param name="request">The request containing the details of the environment to create.</param>
+        /// <returns>
+        /// A <see cref="CreateEnvironmentResponse"/> representing the created environment on success; otherwise <c>null</c> if the operation fails.
+        /// </returns>
+        Task<CreateEnvironmentResponse?> CreateEnvironmentAsync(CreateEnvironmentRequest request);
     }
 }

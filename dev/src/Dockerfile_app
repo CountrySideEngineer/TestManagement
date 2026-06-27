@@ -1,16 +1,3 @@
-# Build analysis application 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 as build_analysis
-
-# COPY source code of application.
-COPY ./TestManagement.Analyze.APP /Source/
-
-# Change working directory to the sample project folder.
-WORKDIR /Source/TestManagement.Analyze.APP
-
-# build the application.
-RUN dotnet restore && \
-    dotnet publish -c debug -o /App --no-restore
-
 # Build application 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 as build_application
 
@@ -28,27 +15,12 @@ RUN dotnet restore && \
 # It can not build application, only run it to avoid change the application or api.
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
-RUN apt-get update && \
-    apt-get install -y cron
+RUN apt-get update
 
 # Copy application from "build" containers.
-# Copy analye application.
-WORKDIR /App/analyze
-COPY --from=build_analysis /App ./
-# pass.txt file is common for both analysis and api application.
-# So copy the file in copying api application.
-
 WORKDIR /App/application
 COPY --from=build_application /App ./
 COPY ./TestManagement.APP/TestManagement.APP/pass.txt /etc/pass.txt
-
-# Add cron job to execute the application periodically
-RUN echo "*/1 * * * * root dotnet /App/analyze/TestManagement.Analyze.APP.dll" > /etc/cron.d/testmanagement-cron && \
-    chmod 0644 /etc/cron.d/testmanagement-cron && \
-    crontab /etc/cron.d/testmanagement-cron
-
-# Ensure cron service is started
-CMD ["/bin/bash", "-c", "cron && tail -f /dev/null"]
 
 # Start 
 ENTRYPOINT ["dotnet", "TestManagement.APP.dll"]
