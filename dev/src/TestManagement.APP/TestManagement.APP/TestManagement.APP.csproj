@@ -31,7 +31,6 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Pages\Upload\" />
   </ItemGroup>
 
 </Project>
