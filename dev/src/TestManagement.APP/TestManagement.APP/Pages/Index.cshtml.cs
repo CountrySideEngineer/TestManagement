@@ -1,6 +1,4 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using TestManagement.APP.Dto.TestExecution.Get;
-using TestManagement.APP.Models;
 using TestManagement.APP.Services;
 using TestManagement.APP.ViewModel.Dashboard;
 
