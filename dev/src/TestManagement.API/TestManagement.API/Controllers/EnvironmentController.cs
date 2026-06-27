@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Npgsql.Replication;
 using System.Runtime.CompilerServices;
 using TestManagement.API.Features.Environment.Create;
 using TestManagement.API.Features.Environment.Get;
@@ -53,11 +54,12 @@ namespace TestManagement.API.Controllers
         /// <param name="id">Identifier of the environment to retrieve.</param>
         /// <returns>A <see cref="GetEnvironmentResponse"/> DTO with the latest version details.</returns>
         [HttpGet("id/{id}")]
-        public async Task<ICollection<GetEnvironmentResponse>> GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
             _logger.LogDebug("EnvironmentController.GetByIdAsync start!");
 
-            return await _environmentService.GetByIdAsync(id);
+            ICollection<GetEnvironmentResponse> responses = await _environmentService.GetByIdAsync(id);
+            return Ok(responses);
         }
 
         /// <summary>
@@ -67,11 +69,12 @@ namespace TestManagement.API.Controllers
         /// <param name="name">The environment name to query for (case-sensitive depending on the data store).</param>
         /// <returns>A collection of <see cref="GetEnvironmentResponse"/> instances representing matching environment versions.</returns>
         [HttpGet("name/{name}")]
-        public async Task<ICollection<GetEnvironmentResponse>> GetByName(string name)
+        public async Task<IActionResult> GetByName(string name)
         {
             _logger.LogDebug("EnvironmentController.GetByNameAsync start!");
 
-            return await _environmentService.GetByNameAsync(name);
+            ICollection<GetEnvironmentResponse> responses = await _environmentService.GetByNameAsync(name);
+            return Ok(responses);
         }
 
         /// <summary>
@@ -81,11 +84,12 @@ namespace TestManagement.API.Controllers
         /// <param name="ct">Cancellation token to cancel the operation.</param>
         /// <returns>A <see cref="CreateEnvironmentResponse"/> describing the created environment version.</returns>
         [HttpPost]
-        public async Task<CreateEnvironmentResponse> CreateAsync([FromBody] CreateEnvironmentRequest request, CancellationToken ct = default)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateEnvironmentRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.CreateAsync start!");
 
-            return await _environmentService.CreateAsync(request, ct);
+            CreateEnvironmentResponse response = await _environmentService.CreateAsync(request, ct);
+            return Ok(response);
         }
 
         /// <summary>
@@ -95,11 +99,12 @@ namespace TestManagement.API.Controllers
         /// <param name="ct">Cancellation token to cancel the operation.</param>
         /// <returns>An <see cref="UpdateEnvironmentResponse"/> describing the created version.</returns>
         [HttpPut]
-        public async Task<UpdateEnvironmentResponse> UpdateAsync([FromBody] UpdateEnvironmentRequest request, CancellationToken ct = default)
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateEnvironmentRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.UpdateAsync start!");
 
-            return await _environmentService.UpdateAsync(request, ct);
+            UpdateEnvironmentResponse response = await _environmentService.UpdateAsync(request, ct);
+            return Ok(response);
         }
     }
 }

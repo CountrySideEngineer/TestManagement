@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TestManagement.API.Models;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
@@ -41,7 +42,7 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestLevelController.GetAllTestLevels() start!");
 
-            var testLevels = await _testLevelService.GetAllAsync();
+            ICollection<TestLevel> testLevels = await _testLevelService.GetAllAsync();
             return Ok(testLevels);
         }
     }

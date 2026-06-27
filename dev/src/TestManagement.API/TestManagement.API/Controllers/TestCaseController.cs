@@ -87,11 +87,11 @@ namespace TestManagement.API.Controllers
         /// <param name="request">Request payload containing code, name, description and test level id.</param>
         /// <returns>Response containing the created test case version details.</returns>
         [HttpPost]
-        public async Task<CreateTestCaseResponse> CreateAsync([FromBody] CreateTestCaseRequest request)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateTestCaseRequest request)
         {
             _logger.LogDebug("TestCaseController.Create() start!");
             var response = await _testCaseService.CreateAsync(request);
-            return response;
+            return Ok(response);
         }
 
         /// <summary>
@@ -108,13 +108,12 @@ namespace TestManagement.API.Controllers
         /// The returned collection preserves one response per input request.
         /// </remarks>
         [HttpPost("Bulk")]
-        public async Task<ICollection<CreateTestCaseResponse>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        public async Task<IActionResult> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
             var responses = await _testCaseService.CreateAsync(requests);
-
-            return responses;
+            return Ok(responses);
         }
 
         /// <summary>
@@ -131,13 +130,12 @@ namespace TestManagement.API.Controllers
         /// The returned collection preserves one response per input request.
         /// </remarks>
         [HttpPost("Bulk/CreateIfNotExists")]
-        public async Task<ICollection<CreateTestCaseResponse>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        public async Task<IActionResult> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
         {
             _logger.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
 
             var responses = await _testCaseService.CreateIfNotExistsAsync(requests);
-
-            return responses;
+            return Ok(responses);
         }
 
         /// <summary>
@@ -150,13 +148,12 @@ namespace TestManagement.API.Controllers
         /// The <see cref="UpdateTestCaseResponse"/> containing the new version information for the updated test case.
         /// </returns>
         [HttpPost("Update")]
-        public async Task<UpdateTestCaseResponse> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
+        public async Task<IActionResult> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
             var response = await _testCaseService.UpdateAsync(request, ct);
-
-            return response;
+            return Ok(response);
         }
     }
 }

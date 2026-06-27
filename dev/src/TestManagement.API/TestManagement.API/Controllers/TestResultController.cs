@@ -95,7 +95,7 @@ namespace TestManagement.API.Controllers
         /// <param name="requests">A collection of test result creation requests.</param>
         /// <returns>An IActionResult with HTTP 201 Created status and the created test results.</returns>
         [HttpPost("Bulk")]
-        public async Task<ICollection<TestResultCreateResponse>> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests)
+        public async Task<IActionResult> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests)
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
@@ -134,7 +134,7 @@ namespace TestManagement.API.Controllers
                 responses.Add(response);
             }
 
-            return responses;
+            return Ok(responses);
         }
 
         /// <summary>

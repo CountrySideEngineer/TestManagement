@@ -41,12 +41,12 @@ namespace TestManagement.API.Controllers
         /// <param name="ct">Cancellation token to cancel the request.</param>
         /// <returns>A list of <see cref="GetTestExecutionResponse"/> DTOs representing stored test executions.</returns>
         [HttpGet]
-        public async Task<List<GetTestExecutionResponse>> GetAllAsync(CancellationToken ct = default)
+        public async Task<IActionResult> GetAllAsync(CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.GetAsync() start!");
 
-            var response = await _testExecutionService.GetAsync(ct);
-            return response;
+            IEnumerable<GetTestExecutionResponse> responses = await _testExecutionService.GetAsync(ct);
+            return Ok(responses);
         }
 
         /// <summary>
@@ -57,12 +57,12 @@ namespace TestManagement.API.Controllers
         /// <param name="ct">Cancellation token to cancel the request.</param>
         /// <returns>An instance of <see cref="GetTestExecutionResponse"/> for the requested execution, or an empty instance when not found.</returns>
         [HttpGet("{id}")]
-        public async Task<GetTestExecutionResponse> GetByIdAsync(long id, CancellationToken ct = default)
+        public async Task<IActionResult> GetByIdAsync(long id, CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.GetAsync() start!");
 
-            var response = await _testExecutionService.GetByIdAsync(id, ct);
-            return response;
+            GetTestExecutionResponse response = await _testExecutionService.GetByIdAsync(id, ct);
+            return Ok(response);
         }
 
         /// <summary>
@@ -73,12 +73,12 @@ namespace TestManagement.API.Controllers
         /// <param name="ct">Cancellation token to cancel the request.</param>
         /// <returns>The created <see cref="CreateTestExecutionResponse"/>.</returns>
         [HttpPost]
-        public async Task<CreateTestExecutionResponse> CreateAsync([FromBody] CreateTestExecutionRequest request, CancellationToken ct = default)
+        public async Task<IActionResult> CreateAsync([FromBody] CreateTestExecutionRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.CreateAsync() start!");
 
-            var response = await _testExecutionService.CreateAsync(request, ct);
-            return response;
+            CreateTestExecutionResponse response = await _testExecutionService.CreateAsync(request, ct);
+            return Ok(response);
         }
 
         /// <summary>
@@ -89,12 +89,12 @@ namespace TestManagement.API.Controllers
         /// <param name="ct">Cancellation token to cancel the request.</param>
         /// <returns>The updated <see cref="UpdateTestExecutionResponse"/>.</returns>
         [HttpPut]
-        public async Task<UpdateTestExecutionResponse> UpdateAsync([FromBody] UpdateTestExecutionRequest request, CancellationToken ct = default)
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateTestExecutionRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.UpdateAsync() start!");
 
-            var response = await _testExecutionService.UpdateAsync(request, ct);
-            return response;
+            UpdateTestExecutionResponse response = await _testExecutionService.UpdateAsync(request, ct);
+            return (Ok(response));
         }
     }
 }
