@@ -4,8 +4,6 @@ using TestManagement.APP.ApiClients.Environment;
 using TestManagement.APP.ApiClients.TestCase;
 using TestManagement.APP.ApiClients.TestLevel;
 using TestManagement.APP.ApiClients.TestResult;
-using TestManagement.APP.Data;
-using TestManagement.APP.Data.Repositories.TestAnalysis;
 using TestManagement.APP.Services;
 using TestManagement.APP.Services.Environment;
 using TestManagement.APP.Services.TestCase.Sync;
@@ -26,9 +24,6 @@ builder.Services.AddHttpClient("TestApiClient", client =>
         new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
 });
 
-builder.Services.AddDbContext<AnalysisRequestDbContext>(options =>
-   options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 // Add services to the container.
 //builder.Services.AddRazorPages();
 builder.Services.AddRazorPages()
@@ -36,11 +31,6 @@ builder.Services.AddRazorPages()
     {
         options.Conventions.AddPageRoute("/", "");
     });
-builder.Services.AddScoped<TestRunApiClient>();
-builder.Services.AddScoped<TestCaseApiClient>();
-builder.Services.AddScoped<DashboardApiClient>();
-builder.Services.AddScoped<UploadApiClient>();
-builder.Services.AddScoped<IRequestRepository, RequestRepository>();
 builder.Services.AddScoped<UploadFileParser>();
 builder.Services.AddScoped<ITestExecutionApiClient, TestExecutionApiClient>();
 builder.Services.AddScoped<IEnvironmentApiClient, EnvironmentApiClient>();
@@ -50,7 +40,6 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddScoped<ITestLevelService, TestLevelService>();
 builder.Services.AddScoped<ITestLevelApiClient, TestLevelApiClient>();
 builder.Services.AddScoped<ITestCaseSyncApiClient, TestCaseSyncApiClient>();
-builder.Services.AddScoped<ITestExecutionApiClient, TestExecutionApiClient>();
 builder.Services.AddScoped<ITestResultApiClient, TestResultApiClient>();
 builder.Services.AddScoped<IRegisterTestExecutionService, RegisterTestExecutionService>();
 builder.Services.AddScoped<IImportTestResultService, ImportTestResultService>();
