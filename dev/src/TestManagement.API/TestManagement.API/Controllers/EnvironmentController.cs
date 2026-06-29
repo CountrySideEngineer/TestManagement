@@ -56,11 +56,11 @@ namespace TestManagement.API.Controllers
         }
 
         /// <summary>
-        /// Returns the latest version information for the environment identified by the given id.
+        /// Returns all versions for the environment identified by the given id.
         /// </summary>
-        /// <param name="id">Identifier of the environment to retrieve.</param>
+        /// <param name="id">Identifier of the environment whose versions will be retrieved.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
-        /// <returns>A <see cref="GetEnvironmentResponse"/> DTO with the latest version details.</returns>
+        /// <returns>A collection of <see cref="GetEnvironmentResponse"/> DTOs representing versions associated with the environment.</returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ICollection<GetEnvironmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -102,12 +102,17 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(CreateEnvironmentResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<TestResultCreateResponse>> CreateAsync([FromBody] CreateEnvironmentRequest request, CancellationToken ct = default)
+        public async Task<ActionResult<CreateEnvironmentResponse>> CreateAsync([FromBody] CreateEnvironmentRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.CreateAsync start!");
 
             CreateEnvironmentResponse response = await _environmentService.CreateAsync(request, ct);
-            return Ok(response);
+
+            // Return 201 Created. Location references the GetByIdAsync route for the parent environment.
+            return CreatedAtAction(
+                nameof(GetByIdAsync),
+                new { id = response.Id },
+                response);
         }
 
         /// <summary>
