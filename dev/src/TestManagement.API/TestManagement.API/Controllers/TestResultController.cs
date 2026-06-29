@@ -40,6 +40,8 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <returns>An IActionResult containing a list of all test results with HTTP 200 OK status.</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTestResultsAsync()
         {
             _logger.LogDebug("TestResultController.GetAllTestResults() start!");
@@ -54,6 +56,9 @@ namespace TestManagement.API.Controllers
         /// <param name="id">The unique identifier of the test result to retrieve.</param>
         /// <returns>An IActionResult containing the test result with HTTP 200 OK status.</returns>
         [HttpGet("{id}", Name = "GetByIdAsync")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByIdAsync(int id)
         {
             _logger.LogDebug("TestResultController.GetById() start!");
@@ -69,6 +74,9 @@ namespace TestManagement.API.Controllers
         /// <param name="request">The test result creation request containing test result details.</param>
         /// <returns>An IActionResult with HTTP 201 Created status and the created test result.</returns>
         [HttpPost]
+        [ProducesResponseType(typeof(TestResultCreateResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] TestResultCreateRequest request)
         {
             _logger.LogDebug("TestResultController.Create() start!");
@@ -81,7 +89,7 @@ namespace TestManagement.API.Controllers
                 TestLevelId = request.TestLevelId,
                 Message = request.Message,
                 ExecutedAt = request.ExecutedAt,
-                TestResultStatus = request.TestResultStatus 
+                TestResultStatus = request.TestResultStatus
             };
             var response = await _testResultService.CreateAsync(testResultRequest);
 
@@ -95,7 +103,10 @@ namespace TestManagement.API.Controllers
         /// <param name="requests">A collection of test result creation requests.</param>
         /// <returns>An IActionResult with HTTP 201 Created status and the created test results.</returns>
         [HttpPost("Bulk")]
-        public async Task<IActionResult> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests)
+        [ProducesResponseType(typeof(ICollection<TestResultCreateResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ICollection<TestResultCreateResponse>> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests)
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
@@ -134,25 +145,7 @@ namespace TestManagement.API.Controllers
                 responses.Add(response);
             }
 
-            return Ok(responses);
-        }
-
-        /// <summary>
-        /// Creates test results from an XML file upload asynchronously.
-        /// Converts and persists the XML test suites to TestResult entities.
-        /// </summary>
-        /// <param name="suites">The XML test suites data to be converted and persisted.</param>
-        /// <returns>An IActionResult with HTTP 200 OK status on successful import.</returns>
-        [HttpPost("report")]
-        [Consumes("application/xml")]
-        public async Task<IActionResult> CreateFromXmlAsync([FromBody] TestSuitesXml suites)
-        {
-            _logger.LogDebug("TestResultController.CreateFromXml() start!");
-
-            // Convert and persist XML suites to TestResult entities using service
-            //await _testResultService.CreateAsync(suites);
-
-            return Ok();
+            return responses;
         }
     }
 }

@@ -38,6 +38,8 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <returns>An IActionResult containing a list of all test levels with HTTP 200 OK status.</returns>
         [HttpGet]
+        [ProducesResponseType(typeof(ICollection<TestLevel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllTestLevelsAsync()
         {
             _logger.LogDebug("TestLevelController.GetAllTestLevels() start!");

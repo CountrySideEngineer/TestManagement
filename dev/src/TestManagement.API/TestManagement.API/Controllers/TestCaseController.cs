@@ -41,6 +41,8 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <returns>HTTP 200 with the collection of test case versions.</returns>
         [HttpGet]
+        [ProducesResponseType(typeof(ICollection<GetTestCaseResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAsync()
         {
             _logger.LogDebug("TestCaseController.GetAllAsync() start!");
@@ -55,6 +57,9 @@ namespace TestManagement.API.Controllers
         /// <param name="id">Identifier of the test level to filter test cases by.</param>
         /// <returns>HTTP 200 with the collection of matching test case versions.</returns>
         [HttpGet("{id}")]
+        [ProducesResponseType(typeof(ICollection<GetTestCaseResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByIdAsync(long id)
         {
             _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
@@ -69,6 +74,9 @@ namespace TestManagement.API.Controllers
         /// <param name="id">Identifier (long) of the test case version to retrieve.</param>
         /// <returns>HTTP 200 with the matching <see cref="TestManagement.API.Models.TestCaseVersion"/> or 404 if not found.</returns>
         [HttpGet("Version/{id}")]
+        [ProducesResponseType(typeof(TestCaseVersion), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByVersionIdAsync(long id)
         {
             _logger.LogDebug("TestCaseController.GetByVersionIdAsync() start!");
@@ -87,6 +95,9 @@ namespace TestManagement.API.Controllers
         /// <param name="request">Request payload containing code, name, description and test level id.</param>
         /// <returns>Response containing the created test case version details.</returns>
         [HttpPost]
+        [ProducesResponseType(typeof(CreateTestCaseResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] CreateTestCaseRequest request)
         {
             _logger.LogDebug("TestCaseController.Create() start!");
@@ -108,6 +119,9 @@ namespace TestManagement.API.Controllers
         /// The returned collection preserves one response per input request.
         /// </remarks>
         [HttpPost("Bulk")]
+        [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
@@ -130,6 +144,9 @@ namespace TestManagement.API.Controllers
         /// The returned collection preserves one response per input request.
         /// </remarks>
         [HttpPost("Bulk/CreateIfNotExists")]
+        [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
         {
             _logger.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
@@ -148,6 +165,10 @@ namespace TestManagement.API.Controllers
         /// The <see cref="UpdateTestCaseResponse"/> containing the new version information for the updated test case.
         /// </returns>
         [HttpPost("Update")]
+        [ProducesResponseType(typeof(UpdateTestCaseResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
