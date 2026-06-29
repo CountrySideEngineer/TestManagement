@@ -57,15 +57,15 @@ namespace TestManagement.API.Controllers
         /// <param name="id">Identifier of the test level to filter test cases by.</param>
         /// <returns>HTTP 200 with the collection of matching test case versions.</returns>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ICollection<GetTestCaseResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetTestCaseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetByIdAsync(long id)
         {
             _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
 
-            var testCases = await _testCaseService.GetByTestCaseIdAsync(id);
-            return Ok(testCases);
+            GetTestCaseResponse testCase = await _testCaseService.GetByTestCaseIdAsync(id);
+            return Ok(testCase);
         }
 
         /// <summary>

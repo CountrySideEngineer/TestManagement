@@ -6,6 +6,7 @@ using TestManagement.API.Features.TestCases.Create;
 using TestManagement.API.Features.TestCases.Get;
 using TestManagement.API.Features.TestCases.Update;
 using TestManagement.API.Models;
+using static TestManagement.API.Features.TestCases.Get.GetTestCaseResponse;
 namespace TestManagement.API.Services
 {
     /// <summary>
@@ -138,15 +139,38 @@ namespace TestManagement.API.Services
         /// <returns>
         /// A collection of <see cref="TestCaseVersion"/> for the specified test case id.
         /// </returns>
-        public virtual async Task<ICollection<TestCaseVersion>> GetByTestCaseIdAsync(long testCaseId)
+        public virtual async Task<GetTestCaseResponse> GetByTestCaseIdAsync(long testCaseId)
         {
             _logger?.LogDebug("TestCaseService::GetByTestCaseIdAsync() start!");
 
-            return await _context.TestCaseVersions
-                .Where(_ => _.TestCaseId == testCaseId)
-                .Include(_ => _.TestLevel)
-                .AsNoTracking()
-                .ToListAsync();
+            var testCase = await _context.TestCases
+                .Where(_ => _.Id == testCaseId)
+                .Include(_ => _.Versions)
+                    .ThenInclude(_ => _.TestLevel)
+                .FirstOrDefaultAsync();
+
+            if (null == testCase)
+            {
+                return new GetTestCaseResponse();
+            }
+
+            var response = new GetTestCaseResponse
+            {
+                Id = testCase.Id,
+                Code = testCase.Code,
+                Versions = testCase.Versions.Select(tcv => new GetTestCaseResponse.TestCaseVersionItem
+                {
+                    Id = tcv.Id,
+                    Name = tcv.Name,
+                    Description = tcv.Description,
+                    VersionNumber = tcv.VersionNumber,
+                    TestLevelId = tcv.TestLevelId,
+                    IsLatest = tcv.IsLatest,
+                    CreatedAt = tcv.CreatedAt,
+                    UpdatedAt = tcv.UpdatedAt
+                }).ToList()
+            };
+            return response;
         }
 
         /// <summary>
