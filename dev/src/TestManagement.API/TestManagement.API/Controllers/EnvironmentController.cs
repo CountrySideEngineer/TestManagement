@@ -47,11 +47,12 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<GetEnvironmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ICollection<GetEnvironmentResponse>> GetAllAsync()
+        public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetAllAsync()
         {
             _logger.LogDebug("EnvironmentController.GetAllAsync start!");
 
-            return await _environmentService.GetAllAsync();
+            var result = await _environmentService.GetAllAsync();
+            return Ok(result);
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(ICollection<GetEnvironmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdAsync(int id, CancellationToken ct = default)
+        public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetByIdAsync(int id, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.GetByIdAsync start!");
 
@@ -83,7 +84,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(ICollection<GetEnvironmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByNameAsync(string name, CancellationToken ct = default)
+        public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetByNameAsync(string name, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.GetByNameAsync start!");
 
@@ -120,7 +121,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateEnvironmentRequest request, CancellationToken ct = default)
+        public async Task<ActionResult<UpdateEnvironmentResponse>> UpdateAsync([FromBody] UpdateEnvironmentRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.UpdateAsync start!");
 
