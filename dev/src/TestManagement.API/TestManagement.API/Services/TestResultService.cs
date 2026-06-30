@@ -13,12 +13,6 @@ namespace TestManagement.API.Services
     public class TestResultService
     {
         /// <summary>
-        /// Service responsible for handling operations related to test results,
-        /// including creation, retrieval and mapping to response DTOs.
-        /// </summary>
-        private readonly ITestResultRepository _testResultRepository;
-
-        /// <summary>
         /// Repository used to access and manipulate test result entities.
         /// </summary>
         private readonly ITestResultXmlConverter _xmlConverter;
@@ -47,13 +41,11 @@ namespace TestManagement.API.Services
         /// <param name="logger">Logger instance for diagnostic messages.</param>
         public TestResultService(
             TestManagementDbContext dbContext,
-            ITestResultRepository testResultRepository,
             ITestResultXmlConverter xmlConverter,
             ILogger<TestResultService> logger
             )
         {
             _dbContext = dbContext;
-            _testResultRepository = testResultRepository;
             _xmlConverter = xmlConverter;
             _logger = logger;
         }
@@ -91,7 +83,11 @@ namespace TestManagement.API.Services
         {
             _logger.LogDebug("TestResultService::GetByIdAsync() start!");
 
-            return await _testResultRepository.GetByIdAsync(id);
+            Models.TestResult testResult = await _dbContext.TestResults
+                .Where(_ => _.Id == id)
+                .Include(_ => _.TestCaseVersion)
+                .FirstAsync();
+            return testResult;
         }
 
         /// <summary>

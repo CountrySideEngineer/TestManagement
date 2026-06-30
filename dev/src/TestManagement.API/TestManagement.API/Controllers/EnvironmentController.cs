@@ -14,7 +14,7 @@ namespace TestManagement.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class EnvironmentController : ControllerBase
+    public class EnvironmentController : Controller
     {
         /// <summary>
         /// Service that encapsulates environment-related use cases and data access.

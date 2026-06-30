@@ -11,7 +11,7 @@ namespace TestManagement.API.Controllers
     /// <summary>
     /// API controller that exposes endpoints for managing test executions.
     /// </summary>
-    public class TestExecutionController : ControllerBase
+    public class TestExecutionController : Controller
     {
         /// <summary>
         /// Logger for recording diagnostic and operational messages for the controller.
@@ -86,7 +86,11 @@ namespace TestManagement.API.Controllers
             _logger.LogDebug("TestExecutionController.CreateAsync() start!");
 
             CreateTestExecutionResponse response = await _testExecutionService.CreateAsync(request, ct);
-            return Ok(response);
+            return CreatedAtAction(
+                nameof(CreateAsync),
+                new { id = response.TestExecutionId },
+                response
+                );
         }
 
         /// <summary>

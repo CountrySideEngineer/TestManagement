@@ -12,7 +12,7 @@ namespace TestManagement.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class TestCaseController : ControllerBase
+    public class TestCaseController : Controller
     {
         /// <summary>
         /// Service layer instance that encapsulates business logic and data operations for test cases.
@@ -102,7 +102,11 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestCaseController.Create() start!");
             var response = await _testCaseService.CreateAsync(request);
-            return Ok(response);
+
+            return CreatedAtAction(
+                nameof(CreateAsync),
+                new { id = response.Id },
+                response);
         }
 
         /// <summary>

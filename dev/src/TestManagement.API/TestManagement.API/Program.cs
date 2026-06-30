@@ -24,7 +24,6 @@ builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 // XML converter
 builder.Services.AddScoped<ITestResultXmlConverter, TestResultXmlConverter>();
 
-builder.Services.AddScoped<ITestResultRepository, TestResultRepository>();
 builder.Services.AddScoped<TestResultService>();
 builder.Services.AddMvc().AddXmlSerializerFormatters();
 

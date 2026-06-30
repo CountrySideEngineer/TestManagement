@@ -10,7 +10,7 @@ namespace TestManagement.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class TestLevelController : ControllerBase
+    public class TestLevelController : Controller
     {
         /// <summary>
         /// Service for handling test level business logic and data operations.

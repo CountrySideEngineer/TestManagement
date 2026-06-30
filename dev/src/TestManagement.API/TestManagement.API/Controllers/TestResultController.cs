@@ -14,7 +14,7 @@ namespace TestManagement.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class TestResultController : ControllerBase
+    public class TestResultController : Controller
     {
         /// <summary>
         /// Service for handling test result business logic and data operations.
@@ -58,10 +58,10 @@ namespace TestManagement.API.Controllers
         /// <param name="id">The unique identifier of the test result to retrieve.</param>
         /// <returns>An IActionResult containing the test result with HTTP 200 OK status.</returns>
         [HttpGet("{id}", Name = "GetByIdAsync")]
-        [ProducesResponseType(typeof(TestResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<TestResult>> GetByIdAsync(int id)
+        public async Task<ActionResult<GetTestResultResponse>> GetByIdAsync(int id)
         {
             _logger.LogDebug("TestResultController.GetById() start!");
 
@@ -95,7 +95,10 @@ namespace TestManagement.API.Controllers
             };
             CreateTestResultResponse response = await _testResultService.CreateAsync(testResultRequest);
 
-            return Ok(response);
+            return CreatedAtAction(
+                nameof(CreateAsync),
+                new { id = response.ResultId },
+                response);
         }
 
         /// <summary>
