@@ -43,7 +43,7 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<GetTestCaseResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAsync()
+        public async Task<ActionResult<ICollection<GetTestCaseResponse>>> GetAllAsync()
         {
             _logger.LogDebug("TestCaseController.GetAllAsync() start!");
 
@@ -60,7 +60,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(GetTestCaseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdAsync(long id)
+        public async Task<ActionResult<GetTestCaseResponse>> GetByIdAsync(long id)
         {
             _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
 
@@ -77,7 +77,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(TestCaseVersion), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByVersionIdAsync(long id)
+        public async Task<ActionResult<TestCaseVersion>> GetByVersionIdAsync(long id)
         {
             _logger.LogDebug("TestCaseController.GetByVersionIdAsync() start!");
 
@@ -98,7 +98,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(CreateTestCaseResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateTestCaseRequest request)
+        public async Task<ActionResult<CreateTestCaseResponse>> CreateAsync([FromBody] CreateTestCaseRequest request)
         {
             _logger.LogDebug("TestCaseController.Create() start!");
             var response = await _testCaseService.CreateAsync(request);
@@ -122,7 +122,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
@@ -147,7 +147,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
         {
             _logger.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
 
@@ -169,7 +169,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
+        public async Task<ActionResult<UpdateTestCaseResponse>> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 

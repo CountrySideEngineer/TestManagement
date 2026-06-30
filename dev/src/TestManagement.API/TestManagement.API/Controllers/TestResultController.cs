@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using TestManagement.API.Features.TestResult.Create;
+using TestManagement.API.Features.TestResult.Get;
+using TestManagement.API.Models;
 using TestManagement.API.Models.Report.Xml;
 using TestManagement.API.Models.Requests;
 using TestManagement.API.Services;
@@ -40,9 +42,9 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <returns>An IActionResult containing a list of all test results with HTTP 200 OK status.</returns>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ICollection<GetTestResultResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllTestResultsAsync()
+        public async Task<ActionResult<ICollection<GetTestResultResponse>>> GetAllTestResultsAsync()
         {
             _logger.LogDebug("TestResultController.GetAllTestResults() start!");
 
@@ -56,15 +58,15 @@ namespace TestManagement.API.Controllers
         /// <param name="id">The unique identifier of the test result to retrieve.</param>
         /// <returns>An IActionResult containing the test result with HTTP 200 OK status.</returns>
         [HttpGet("{id}", Name = "GetByIdAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(TestResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdAsync(int id)
+        public async Task<ActionResult<TestResult>> GetByIdAsync(int id)
         {
             _logger.LogDebug("TestResultController.GetById() start!");
 
-            var testResults = await _testResultService.GetByIdAsync(id);
-            return Ok(testResults);
+            TestResult testResult = await _testResultService.GetByIdAsync(id);
+            return Ok(testResult);
         }
 
         /// <summary>
@@ -74,10 +76,10 @@ namespace TestManagement.API.Controllers
         /// <param name="request">The test result creation request containing test result details.</param>
         /// <returns>An IActionResult with HTTP 201 Created status and the created test result.</returns>
         [HttpPost]
-        [ProducesResponseType(typeof(TestResultCreateResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateTestResultResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateAsync([FromBody] TestResultCreateRequest request)
+        public async Task<ActionResult<CreateTestResultResponse>> CreateAsync([FromBody] TestResultCreateRequest request)
         {
             _logger.LogDebug("TestResultController.Create() start!");
 
@@ -91,7 +93,7 @@ namespace TestManagement.API.Controllers
                 ExecutedAt = request.ExecutedAt,
                 TestResultStatus = request.TestResultStatus
             };
-            var response = await _testResultService.CreateAsync(testResultRequest);
+            CreateTestResultResponse response = await _testResultService.CreateAsync(testResultRequest);
 
             return Ok(response);
         }

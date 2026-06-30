@@ -40,7 +40,7 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<TestLevel>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllTestLevelsAsync()
+        public async Task<ActionResult<ICollection<TestLevel>>> GetAllTestLevelsAsync()
         {
             _logger.LogDebug("TestLevelController.GetAllTestLevels() start!");
 

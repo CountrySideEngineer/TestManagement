@@ -41,13 +41,13 @@ namespace TestManagement.API.Controllers
         /// <param name="ct">Cancellation token to cancel the request.</param>
         /// <returns>A list of <see cref="GetTestExecutionResponse"/> DTOs representing stored test executions.</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<GetTestExecutionResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ICollection<GetTestExecutionResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAsync(CancellationToken ct = default)
+        public async Task<ActionResult<ICollection<GetTestExecutionResponse>>> GetAllAsync(CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.GetAsync() start!");
 
-            IEnumerable<GetTestExecutionResponse> responses = await _testExecutionService.GetAsync(ct);
+            ICollection<GetTestExecutionResponse> responses = await _testExecutionService.GetAsync(ct);
             return Ok(responses);
         }
 
@@ -62,7 +62,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(GetTestExecutionResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdAsync(long id, CancellationToken ct = default)
+        public async Task<ActionResult<GetTestExecutionResponse>> GetByIdAsync(long id, CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.GetAsync() start!");
 
@@ -81,7 +81,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(CreateTestExecutionResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> CreateAsync([FromBody] CreateTestExecutionRequest request, CancellationToken ct = default)
+        public async Task<ActionResult<CreateTestExecutionResponse>> CreateAsync([FromBody] CreateTestExecutionRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.CreateAsync() start!");
 
@@ -101,7 +101,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateTestExecutionRequest request, CancellationToken ct = default)
+        public async Task<ActionResult<UpdateTestExecutionResponse>> UpdateAsync([FromBody] UpdateTestExecutionRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.UpdateAsync() start!");
 
