@@ -10,8 +10,8 @@ namespace TestManagement.API.Controllers
     /// <summary>
     /// API controller that exposes endpoints for managing test cases and their versions.
     /// </summary>
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class TestCaseController : Controller
     {
         /// <summary>
@@ -71,17 +71,17 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Returns the test case version that corresponds to the provided version id.
         /// </summary>
-        /// <param name="id">Identifier (long) of the test case version to retrieve.</param>
+        /// <param name="versionId">Identifier (long) of the test case version to retrieve.</param>
         /// <returns>HTTP 200 with the matching <see cref="TestManagement.API.Models.TestCaseVersion"/> or 404 if not found.</returns>
-        [HttpGet("Version/{id}")]
+        [HttpGet("versions/{versionId}")]
         [ProducesResponseType(typeof(TestCaseVersion), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<TestCaseVersion>> GetByVersionIdAsync(long id, CancellationToken ct)
+        public async Task<ActionResult<TestCaseVersion>> GetByVersionIdAsync(long versionId, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.GetByVersionIdAsync() start!");
 
-            var testCaseVersion = await _testCaseService.GetByVersionIdAsync(id, ct);
+            var testCaseVersion = await _testCaseService.GetByVersionIdAsync(versionId, ct);
             if (testCaseVersion == null)
             {
                 return NotFound();
@@ -104,7 +104,7 @@ namespace TestManagement.API.Controllers
             var response = await _testCaseService.CreateAsync(request, ct);
 
             return CreatedAtAction(
-                nameof(CreateAsync),
+                nameof(GetByIdAsync),
                 new { id = response.Id },
                 response);
         }
@@ -122,7 +122,7 @@ namespace TestManagement.API.Controllers
         /// The controller delegates processing to the service layer which performs validation and persistence.
         /// The returned collection preserves one response per input request.
         /// </remarks>
-        [HttpPost("Bulk")]
+        [HttpPost("bilk")]
         [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -147,7 +147,7 @@ namespace TestManagement.API.Controllers
         /// The controller delegates processing to the service layer which performs validation and persistence.
         /// The returned collection preserves one response per input request.
         /// </remarks>
-        [HttpPost("Bulk/CreateIfNotExists")]
+        [HttpPost("bilk/createIfNotExists")]
         [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -168,12 +168,12 @@ namespace TestManagement.API.Controllers
         /// <returns>
         /// The <see cref="UpdateTestCaseResponse"/> containing the new version information for the updated test case.
         /// </returns>
-        [HttpPost("Update")]
+        [HttpPut("id")]
         [ProducesResponseType(typeof(UpdateTestCaseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UpdateTestCaseResponse>> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
+        public async Task<ActionResult<UpdateTestCaseResponse>> UpdateAsync(long id, [FromBody] UpdateTestCaseRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 

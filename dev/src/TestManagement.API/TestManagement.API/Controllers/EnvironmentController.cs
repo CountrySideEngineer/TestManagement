@@ -12,8 +12,8 @@ namespace TestManagement.API.Controllers
     /// <summary>
     /// API controller that exposes endpoints for managing environments and their versions.
     /// </summary>
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class EnvironmentController : Controller
     {
         /// <summary>
@@ -80,11 +80,11 @@ namespace TestManagement.API.Controllers
         /// <param name="name">The environment name to query for (case-sensitive depending on the data store).</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
         /// <returns>A collection of <see cref="GetEnvironmentResponse"/> instances representing matching environment versions.</returns>
-        [HttpGet("name/{name}")]
+        [HttpGet("name")]
         [ProducesResponseType(typeof(ICollection<GetEnvironmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetByNameAsync(string name, CancellationToken ct = default)
+        public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetByNameAsync([FromQuery] string name, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.GetByNameAsync start!");
 
@@ -121,12 +121,12 @@ namespace TestManagement.API.Controllers
         /// <param name="request">Request DTO containing the environment identifier and new version details.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
         /// <returns>An <see cref="UpdateEnvironmentResponse"/> describing the created version.</returns>
-        [HttpPut]
+        [HttpPut("{id}")]
         [ProducesResponseType(typeof(UpdateEnvironmentResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UpdateEnvironmentResponse>> UpdateAsync([FromBody] UpdateEnvironmentRequest request, CancellationToken ct = default)
+        public async Task<ActionResult<UpdateEnvironmentResponse>> UpdateAsync(long id, [FromBody] UpdateEnvironmentRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.UpdateAsync start!");
 

@@ -12,8 +12,8 @@ namespace TestManagement.API.Controllers
     /// API controller for managing test results.
     /// Provides endpoints for retrieving, creating, and importing test results.
     /// </summary>
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class TestResultController : Controller
     {
         /// <summary>
@@ -99,7 +99,7 @@ namespace TestManagement.API.Controllers
             CreateTestResultResponse response = await _testResultService.CreateAsync(testResultRequest, ct);
 
             return CreatedAtAction(
-                nameof(CreateAsync),
+                nameof(GetByIdAsync),
                 new { id = response.ResultId },
                 response);
         }
