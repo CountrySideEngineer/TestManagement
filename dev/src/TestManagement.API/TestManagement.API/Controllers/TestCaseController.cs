@@ -18,7 +18,7 @@ namespace TestManagement.API.Controllers
         /// Service layer instance that encapsulates business logic and data operations for test cases.
         /// The controller delegates use-case operations to this service.
         /// </summary>
-        private readonly TestCaseService _testCaseService;
+        private readonly ITestCaseService _testCaseService;
 
         /// <summary>
         /// Logger instance used for diagnostic and audit logging within the controller.
@@ -30,7 +30,7 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="logger">Logger instance used for diagnostic messages.</param>
         /// <param name="testCaseService">Service that encapsulates test case use-cases.</param>
-        public TestCaseController(ILogger<TestCaseController> logger, TestCaseService testCaseService)
+        public TestCaseController(ILogger<TestCaseController> logger, ITestCaseService testCaseService)
         {
             _logger = logger;
             _testCaseService = testCaseService;
@@ -43,11 +43,11 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<GetTestCaseResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<GetTestCaseResponse>>> GetAllAsync()
+        public async Task<ActionResult<ICollection<GetTestCaseResponse>>> GetAllAsync(CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.GetAllAsync() start!");
 
-            ICollection<GetTestCaseResponse> testCases = await _testCaseService.GetAllAsync();
+            ICollection<GetTestCaseResponse> testCases = await _testCaseService.GetAllAsync(ct);
             return Ok(testCases);
         }
 
@@ -60,11 +60,11 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(GetTestCaseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetTestCaseResponse>> GetByIdAsync(long id)
+        public async Task<ActionResult<GetTestCaseResponse>> GetByIdAsync(long id, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
 
-            GetTestCaseResponse testCase = await _testCaseService.GetByTestCaseIdAsync(id);
+            GetTestCaseResponse testCase = await _testCaseService.GetByTestCaseIdAsync(id, ct);
             return Ok(testCase);
         }
 
@@ -77,11 +77,11 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(TestCaseVersion), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<TestCaseVersion>> GetByVersionIdAsync(long id)
+        public async Task<ActionResult<TestCaseVersion>> GetByVersionIdAsync(long id, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.GetByVersionIdAsync() start!");
 
-            var testCaseVersion = await _testCaseService.GetByVersionIdAsync(id);
+            var testCaseVersion = await _testCaseService.GetByVersionIdAsync(id, ct);
             if (testCaseVersion == null)
             {
                 return NotFound();
@@ -98,10 +98,10 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(CreateTestCaseResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<CreateTestCaseResponse>> CreateAsync([FromBody] CreateTestCaseRequest request)
+        public async Task<ActionResult<CreateTestCaseResponse>> CreateAsync([FromBody] CreateTestCaseRequest request, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.Create() start!");
-            var response = await _testCaseService.CreateAsync(request);
+            var response = await _testCaseService.CreateAsync(request, ct);
 
             return CreatedAtAction(
                 nameof(CreateAsync),
@@ -126,11 +126,11 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
-            var responses = await _testCaseService.CreateAsync(requests);
+            var responses = await _testCaseService.CreateAsync(requests, ct);
             return Ok(responses);
         }
 
@@ -151,11 +151,11 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
 
-            var responses = await _testCaseService.CreateIfNotExistsAsync(requests);
+            var responses = await _testCaseService.CreateIfNotExistsAsync(requests, ct);
             return Ok(responses);
         }
 

@@ -3,7 +3,7 @@ using TestManagement.API.Models;
 
 namespace TestManagement.API.Services
 {
-    public class TestLevelService
+    public class TestLevelService : ITestLevelService
     {
         private readonly ITestLevelRepository _testLevelRepository;
         private readonly ILogger<TestLevelService> _logger;
@@ -17,7 +17,7 @@ namespace TestManagement.API.Services
             _logger = logger;
         }
 
-        public async Task<ICollection<TestLevel>> GetAllAsync()
+        public async Task<ICollection<TestLevel>> GetAllAsync(CancellationToken ct)
         {
             _logger.LogDebug("TestLevelService::GetAllAsync() start!");
 

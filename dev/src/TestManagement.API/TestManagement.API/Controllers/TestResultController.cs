@@ -19,7 +19,7 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Service for handling test result business logic and data operations.
         /// </summary>
-        private readonly TestResultService _testResultService;
+        private readonly ITestResultService _testResultService;
 
         /// <summary>
         /// Logger instance for recording controller events and debugging information.
@@ -31,7 +31,10 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="logger">The logger instance for logging controller operations.</param>
         /// <param name="testResultService">The test result service for data operations.</param>
-        public TestResultController(ILogger<TestResultController> logger, TestResultService testResultService)
+        public TestResultController(
+            ILogger<TestResultController> logger, 
+            ITestResultService testResultService
+            )
         {
             _logger = logger;
             _testResultService = testResultService;
@@ -44,11 +47,11 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<GetTestResultResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<GetTestResultResponse>>> GetAllTestResultsAsync()
+        public async Task<ActionResult<ICollection<GetTestResultResponse>>> GetAllTestResultsAsync(CancellationToken ct)
         {
             _logger.LogDebug("TestResultController.GetAllTestResults() start!");
 
-            var testResults = await _testResultService.GetAllAsync();
+            var testResults = await _testResultService.GetAllAsync(ct);
             return Ok(testResults);
         }
 
@@ -61,11 +64,11 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetTestResultResponse>> GetByIdAsync(int id)
+        public async Task<ActionResult<GetTestResultResponse>> GetByIdAsync(int id, CancellationToken ct)
         {
             _logger.LogDebug("TestResultController.GetById() start!");
 
-            TestResult testResult = await _testResultService.GetByIdAsync(id);
+            TestResult testResult = await _testResultService.GetByIdAsync(id, ct);
             return Ok(testResult);
         }
 
@@ -79,7 +82,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(CreateTestResultResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<CreateTestResultResponse>> CreateAsync([FromBody] TestResultCreateRequest request)
+        public async Task<ActionResult<CreateTestResultResponse>> CreateAsync([FromBody] TestResultCreateRequest request, CancellationToken ct)
         {
             _logger.LogDebug("TestResultController.Create() start!");
 
@@ -93,7 +96,7 @@ namespace TestManagement.API.Controllers
                 ExecutedAt = request.ExecutedAt,
                 TestResultStatus = request.TestResultStatus
             };
-            CreateTestResultResponse response = await _testResultService.CreateAsync(testResultRequest);
+            CreateTestResultResponse response = await _testResultService.CreateAsync(testResultRequest, ct);
 
             return CreatedAtAction(
                 nameof(CreateAsync),
@@ -111,7 +114,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(ICollection<TestResultCreateResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ICollection<TestResultCreateResponse>> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests)
+        public async Task<ICollection<TestResultCreateResponse>> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests, CancellationToken ct)
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
@@ -131,7 +134,7 @@ namespace TestManagement.API.Controllers
                 testResults.Add(testResultRequest);
             }
 
-            var testResultResponses = await _testResultService.CreateAsync(testResults);
+            var testResultResponses = await _testResultService.CreateAsync(testResults, ct);
 
             var responses = new List<TestResultCreateResponse>();
             foreach (var testResultResponse in testResultResponses)

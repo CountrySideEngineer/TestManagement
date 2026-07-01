@@ -6,7 +6,7 @@ namespace TestManagement.API.Services
 {
     public interface IEnvironmentService
     {
-        Task<ICollection<GetEnvironmentResponse>> GetAllAsync();
+        Task<ICollection<GetEnvironmentResponse>> GetAllAsync(CancellationToken ct);
         Task<ICollection<GetEnvironmentResponse>> GetByIdAsync(int id, CancellationToken ct);
         Task<ICollection<GetEnvironmentResponse>> GetByNameAsync(string name, CancellationToken ct);
         Task<CreateEnvironmentResponse> CreateAsync(CreateEnvironmentRequest request, CancellationToken ct);

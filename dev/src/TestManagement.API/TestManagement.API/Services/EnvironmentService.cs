@@ -46,13 +46,13 @@ namespace TestManagement.API.Services
         /// <returns>
         /// A collection of <see cref="GetEnvironmentResponse"/> containing environment name and version details.
         /// </returns>
-        public async Task<ICollection<GetEnvironmentResponse>> GetAllAsync()
+        public async Task<ICollection<GetEnvironmentResponse>> GetAllAsync(CancellationToken ct = default)
         {
             _logger?.LogDebug("EnvironmentService::GetAllAsync() start!");
 
             var environments = await _dbContext.Environments
                 .Include(_ => _.Versions)
-                .ToListAsync();
+                .ToListAsync(ct);
 
             ICollection<GetEnvironmentResponse> responses = environments
                 .Select(env => new GetEnvironmentResponse

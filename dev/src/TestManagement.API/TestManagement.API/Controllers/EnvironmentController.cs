@@ -47,11 +47,11 @@ namespace TestManagement.API.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(ICollection<GetEnvironmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetAllAsync()
+        public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetAllAsync(CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.GetAllAsync start!");
 
-            var result = await _environmentService.GetAllAsync();
+            var result = await _environmentService.GetAllAsync(ct);
             return Ok(result);
         }
 

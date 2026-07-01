@@ -21,14 +21,17 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Service responsible for handling test execution operations and business logic.
         /// </summary>
-        private readonly TestExecutionService _testExecutionService;
+        private readonly ITestExecutionService _testExecutionService;
 
         /// <summary>
         /// Constructs a new instance of <see cref="TestExecutionController"/>.
         /// </summary>
         /// <param name="logger">Logger instance for the controller.</param>
         /// <param name="testExecutionService">Service that handles test execution operations.</param>
-        public TestExecutionController(ILogger<TestExecutionController> logger, TestExecutionService testExecutionService)
+        public TestExecutionController(
+            ILogger<TestExecutionController> logger, 
+            ITestExecutionService testExecutionService
+            )
         {
             _logger = logger;
             _testExecutionService = testExecutionService;

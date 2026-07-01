@@ -10,7 +10,7 @@ using TestManagement.API.Services.Xml;
 
 namespace TestManagement.API.Services
 {
-    public class TestResultService
+    public class TestResultService : ITestResultService
     {
         /// <summary>
         /// Repository used to access and manipulate test result entities.
@@ -55,7 +55,7 @@ namespace TestManagement.API.Services
         /// as a collection of <see cref="GetTestResultResponse"/> DTOs.
         /// </summary>
         /// <returns>Collection of test result response DTOs.</returns>
-        public async Task<ICollection<GetTestResultResponse>> GetAllAsync()
+        public async Task<ICollection<GetTestResultResponse>> GetAllAsync(CancellationToken ct)
         {
             _logger.LogDebug("TestResultService::GetAllAsync() start!");
 
@@ -63,7 +63,7 @@ namespace TestManagement.API.Services
                 .Include(_ => _.TestCaseVersion)
                     .ThenInclude(_ => _.TestLevel)
                 .Include(_ => _.Status)
-                .ToListAsync();
+                .ToListAsync(ct);
 
             // Map domain models to response DTOs. Mapping is delegated to a private helper
             // to keep GetAllAsync concise and make mapping testable in isolation.
@@ -79,14 +79,14 @@ namespace TestManagement.API.Services
         /// </summary>
         /// <param name="id">The identifier of the test result.</param>
         /// <returns>The test result domain model, or null if not found.</returns>
-        public async Task<Models.TestResult> GetByIdAsync(int id)
+        public async Task<Models.TestResult> GetByIdAsync(int id, CancellationToken ct)
         {
             _logger.LogDebug("TestResultService::GetByIdAsync() start!");
 
             Models.TestResult testResult = await _dbContext.TestResults
                 .Where(_ => _.Id == id)
                 .Include(_ => _.TestCaseVersion)
-                .FirstAsync();
+                .FirstAsync(ct);
             return testResult;
         }
 
@@ -95,7 +95,7 @@ namespace TestManagement.API.Services
         /// </summary>
         /// <param name="request">The request containing test result data.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task<CreateTestResultResponse> CreateAsync(CreateTestResultRequest request)
+        public async Task<CreateTestResultResponse> CreateAsync(CreateTestResultRequest request, CancellationToken ct)
         {
             _logger.LogDebug("TestResultService::Create() start!");
 
@@ -106,12 +106,12 @@ namespace TestManagement.API.Services
                     _.TestCaseId == request.TestCaseId &&
                     _.VersionNumber == request.TestCaseVersionNumber)
                 .Select(_ => _.Id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
             testResult.StatusId = await _dbContext.TestStatuses
                 .Where(_ => 
                     _.Code.ToLower() == request.TestResultStatus.ToLower())
                 .Select(_ => _.Id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(ct);
             testResult.Message = request.Message;
             testResult.ExecutedAt = request.ExecutedAt;
 
@@ -167,7 +167,7 @@ namespace TestManagement.API.Services
         /// </summary>
         /// <param name="requests">Collection of test result creation requests.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task<ICollection<CreateTestResultResponse>> CreateAsync(ICollection<CreateTestResultRequest> requests)
+        public async Task<ICollection<CreateTestResultResponse>> CreateAsync(ICollection<CreateTestResultRequest> requests, CancellationToken ct)
         {
             _logger.LogDebug("TestResultService::Create() start!");
 
@@ -181,12 +181,12 @@ namespace TestManagement.API.Services
                         _.TestCaseId == requestItem.TestCaseId &&
                         _.VersionNumber == requestItem.TestCaseVersionNumber)
                     .Select(_ => _.Id)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(ct);
                 testResult.StatusId = await _dbContext.TestStatuses
                     .Where(_ =>
                         _.Code.ToLower() == requestItem.TestResultStatus.ToLower())
                     .Select(_ => _.Id)
-                    .FirstOrDefaultAsync();
+                    .FirstOrDefaultAsync(ct);
                 testResult.Message = requestItem.Message;
                 testResult.ExecutedAt = requestItem.ExecutedAt;
 
@@ -194,7 +194,7 @@ namespace TestManagement.API.Services
                 testResults.Add(testResult);
             }
 
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(ct);
 
             var responses = new List<CreateTestResultResponse>();
             foreach (var testResultItem in testResults)
