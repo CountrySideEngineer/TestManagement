@@ -65,6 +65,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(ICollection<GetEnvironmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ActionName(nameof(GetByIdAsync))]
         public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetByIdAsync(int id, CancellationToken ct = default)
         {
             _logger.LogDebug("EnvironmentController.GetByIdAsync start!");
@@ -111,7 +112,7 @@ namespace TestManagement.API.Controllers
             // Return 201 Created. Location references the GetByIdAsync route for the parent environment.
             return CreatedAtAction(
                 nameof(GetByIdAsync),
-                new { id = response.Id },
+                new { id = response.Id, ct = ct },
                 response);
         }
 

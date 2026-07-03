@@ -63,6 +63,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(typeof(GetTestCaseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ActionName(nameof(GetByIdAsync))]
         public async Task<ActionResult<GetTestCaseResponse>> GetByIdAsync(long id, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
