@@ -14,7 +14,6 @@ string connectionString = DBConnectionFactory.CreatePostgresConnectionString(bui
 // Add services to the container.
 builder.Services.AddDbContext<TestManagementDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddScoped<ITestLevelRepository, TestLevelRepository>();
 builder.Services.AddScoped<ITestLevelService, TestLevelService>();
 builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
 builder.Services.AddScoped<ITestCaseService, TestCaseService>();

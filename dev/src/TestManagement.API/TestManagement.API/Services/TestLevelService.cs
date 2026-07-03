@@ -1,4 +1,7 @@
-﻿using TestManagement.API.Data.Repositories;
+﻿using Microsoft.EntityFrameworkCore;
+using TestManagement.API.Data;
+using TestManagement.API.Data.Repositories;
+using TestManagement.API.Features.TestLevel.Get;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services
@@ -9,9 +12,9 @@ namespace TestManagement.API.Services
     public class TestLevelService : ITestLevelService
     {
         /// <summary>
-        /// Repository used to access TestLevel data from the data store.
+        /// Database context used to access and persist test execution related entities.
         /// </summary>
-        private readonly ITestLevelRepository _testLevelRepository;
+        private readonly TestManagementDbContext _dbContext;
 
         /// <summary>
         /// Logger instance for recording diagnostic and trace information.
@@ -24,11 +27,11 @@ namespace TestManagement.API.Services
         /// <param name="testLevelRepository">Repository for TestLevel data access.</param>
         /// <param name="logger">Logger for this service.</param>
         public TestLevelService(
-            ITestLevelRepository testLevelRepository,
+            TestManagementDbContext dbContext,
             ILogger<TestLevelService> logger
             )
         {
-            _testLevelRepository = testLevelRepository;
+            _dbContext = dbContext;
             _logger = logger;
         }
 
@@ -37,11 +40,19 @@ namespace TestManagement.API.Services
         /// </summary>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
         /// <returns>A collection of <see cref="TestLevel"/> instances.</returns>
-        public async Task<ICollection<TestLevel>> GetAllAsync(CancellationToken ct)
+        public async Task<ICollection<GetTestLevelResponse>> GetAllAsync(CancellationToken ct)
         {
             _logger.LogDebug("TestLevelService::GetAllAsync() start!");
 
-            return await _testLevelRepository.GetAllAsync();
+            ICollection<TestLevel> testLevels = await _dbContext.TestLevels.ToListAsync(ct);
+            ICollection<GetTestLevelResponse> response = testLevels
+                .Select(_ => new GetTestLevelResponse
+                {
+                    Id = _.Id,
+                    Name = _.Name,
+                    Description = _.Description
+                }).ToList();
+            return response;
         }
     }
 }
