@@ -50,12 +50,15 @@ namespace TestManagement.API.Controllers
             ICollection<GetTestCaseResponse> testCases = await _testCaseService.GetAllAsync(ct);
             return Ok(testCases);
         }
-
         /// <summary>
-        /// Returns all test case versions that belong to the specified test level.
+        /// Retrieves a test case by its identifier, including its versions and associated test level information.
         /// </summary>
-        /// <param name="id">Identifier of the test level to filter test cases by.</param>
-        /// <returns>HTTP 200 with the collection of matching test case versions.</returns>
+        /// <param name="id">The identifier of the test case to retrieve.</param>
+        /// <param name="ct">A cancellation token that can be used to cancel the operation.</param>
+        /// <returns>
+        /// An <see cref="ActionResult{GetTestCaseResponse}"/> containing the requested <see cref="GetTestCaseResponse"/> when found;
+        /// returns a NotFound result when the test case does not exist. May return an error status for server-side failures.
+        /// </returns>
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(GetTestCaseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -122,7 +125,7 @@ namespace TestManagement.API.Controllers
         /// The controller delegates processing to the service layer which performs validation and persistence.
         /// The returned collection preserves one response per input request.
         /// </remarks>
-        [HttpPost("bilk")]
+        [HttpPost("bulk")]
         [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -147,7 +150,7 @@ namespace TestManagement.API.Controllers
         /// The controller delegates processing to the service layer which performs validation and persistence.
         /// The returned collection preserves one response per input request.
         /// </remarks>
-        [HttpPost("bilk/createIfNotExists")]
+        [HttpPost("bulk/createIfNotExists")]
         [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

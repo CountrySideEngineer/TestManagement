@@ -80,7 +80,7 @@ namespace TestManagement.API.Controllers
         /// <param name="name">The environment name to query for (case-sensitive depending on the data store).</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
         /// <returns>A collection of <see cref="GetEnvironmentResponse"/> instances representing matching environment versions.</returns>
-        [HttpGet("name")]
+        [HttpGet("search")]
         [ProducesResponseType(typeof(ICollection<GetEnvironmentResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

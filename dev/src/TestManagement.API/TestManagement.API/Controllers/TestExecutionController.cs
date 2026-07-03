@@ -90,7 +90,7 @@ namespace TestManagement.API.Controllers
 
             CreateTestExecutionResponse response = await _testExecutionService.CreateAsync(request, ct);
             return CreatedAtAction(
-                nameof(CreateAsync),
+                nameof(GetByIdAsync),
                 new { id = response.TestExecutionId },
                 response
                 );
@@ -103,12 +103,12 @@ namespace TestManagement.API.Controllers
         /// <param name="request">The request containing execution metadata and test cases to add.</param>
         /// <param name="ct">Cancellation token to cancel the request.</param>
         /// <returns>The updated <see cref="UpdateTestExecutionResponse"/>.</returns>
-        [HttpPut("executionId")]
+        [HttpPut("{id}")]
         [ProducesResponseType(typeof(UpdateTestExecutionResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UpdateTestExecutionResponse>> UpdateAsync(long executionId, [FromBody] UpdateTestExecutionRequest request, CancellationToken ct = default)
+        public async Task<ActionResult<UpdateTestExecutionResponse>> UpdateAsync(long id, [FromBody] UpdateTestExecutionRequest request, CancellationToken ct = default)
         {
             _logger.LogDebug("TestExecutionController.UpdateAsync() start!");
 

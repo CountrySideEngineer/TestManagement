@@ -61,7 +61,7 @@ namespace TestManagement.API.Controllers
         /// <param name="id">The unique identifier of the test result to retrieve.</param>
         /// <returns>An IActionResult containing the test result with HTTP 200 OK status.</returns>
         [HttpGet("{id}", Name = "GetByIdAsync")]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<GetTestResultResponse>> GetByIdAsync(int id, CancellationToken ct)
@@ -110,7 +110,7 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="requests">A collection of test result creation requests.</param>
         /// <returns>An IActionResult with HTTP 201 Created status and the created test results.</returns>
-        [HttpPost("Bulk")]
+        [HttpPost("bulk")]
         [ProducesResponseType(typeof(ICollection<TestResultCreateResponse>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
