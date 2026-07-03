@@ -13,7 +13,7 @@ namespace TestManagement.API.Controllers
     /// API controller that exposes endpoints for managing environments and their versions.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/environments")]
     public class EnvironmentController : Controller
     {
         /// <summary>

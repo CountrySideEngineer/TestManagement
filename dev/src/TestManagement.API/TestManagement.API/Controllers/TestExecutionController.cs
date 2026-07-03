@@ -10,7 +10,7 @@ namespace TestManagement.API.Controllers
     /// API controller that exposes endpoints for managing test executions.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/testexecutions")]
     public class TestExecutionController : Controller
     {
         /// <summary>

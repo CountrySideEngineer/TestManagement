@@ -11,7 +11,7 @@ namespace TestManagement.API.Controllers
     /// API controller that exposes endpoints for managing test cases and their versions.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/testcases")]
     public class TestCaseController : Controller
     {
         /// <summary>

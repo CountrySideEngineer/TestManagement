@@ -9,7 +9,7 @@ namespace TestManagement.API.Controllers
     /// Provides endpoints to retrieve test level information.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/testlevels")]
     public class TestLevelController : Controller
     {
         /// <summary>

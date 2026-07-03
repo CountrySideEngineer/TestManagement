@@ -13,7 +13,7 @@ namespace TestManagement.API.Controllers
     /// Provides endpoints for retrieving, creating, and importing test results.
     /// </summary>
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/testresults")]
     public class TestResultController : Controller
     {
         /// <summary>
