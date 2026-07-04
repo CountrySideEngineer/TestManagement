@@ -36,12 +36,12 @@ namespace TestManagement.APP.ApiClients.TestLevel
         /// Returns an empty list if the API returns no data.
         /// </summary>
         /// <returns>A list of <see cref="GetTestLevelResponse"/> objects.</returns>
-        public async Task<IList<GetTestLevelResponse>> GetTestLevelAsync()
+        public async Task<ICollection<GetTestLevelResponse>> GetTestLevelAsync()
         {
             _logger.LogInformation("TestLevelApiClient::GetTestLevelAsync");
 
             var responses = await _httpClient
-                .GetFromJsonAsync<List<GetTestLevelResponse>>("api/TestLevel") ??
+                .GetFromJsonAsync<ICollection<GetTestLevelResponse>>("api/testlevels") ??
                     new List<GetTestLevelResponse>();
 
             return responses;

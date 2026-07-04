@@ -45,7 +45,7 @@ namespace TestManagement.APP.Services.TestLevel
         {
             _logger.LogInformation("TestLevelService::GetTestLevelAsync() start!");
 
-            IList<GetTestLevelResponse> response = await _apiClient.GetTestLevelAsync();
+            ICollection<GetTestLevelResponse> response = await _apiClient.GetTestLevelAsync();
             if (response == null)
             {
                 return Array.Empty<TestLevelViewModel>();

@@ -9,37 +9,16 @@
         /// <summary>
         /// Unique identifier of the environment record.
         /// </summary>
-        public long EnvironmentId { get; set; } = 0;
+        public long Id { get; set; } = 0;
 
         /// <summary>
-        /// Human readable name of the environment (e.g. "staging", "windows-lab").
+        /// Name of the environment.
         /// </summary>
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; } = null!;
 
         /// <summary>
-        /// Operating system name/version for the environment.
+        /// Collection of versions associated with this environment.
         /// </summary>
-        public string Os { get;set; } = string.Empty;
-
-        /// <summary>
-        /// Runtime or platform information (for example .NET runtime version).
-        /// </summary>
-        public string RunTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Numeric version used to track changes to the environment specification.
-        /// </summary>
-        public long VersionNumber { get; set; } = 0;
-
-        /// <summary>
-        /// Identifier of the specific environment version record.
-        /// This can be used to reference the underlying version entity directly.
-        /// </summary>
-        public long VersionId { get; set; } = 0;
-
-        /// <summary>
-        /// Indicates whether this version is the latest available for the environment.
-        /// </summary>
-        public bool IsLatest { get; set; } = false;
+        public IEnumerable<EnvironmentVersion> Versions { get; set; } = null!;
     }
 }

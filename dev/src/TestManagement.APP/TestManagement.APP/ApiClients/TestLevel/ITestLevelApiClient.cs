@@ -4,6 +4,6 @@ namespace TestManagement.APP.ApiClients.TestLevel
 {
     public interface ITestLevelApiClient
     {
-        Task<IList<GetTestLevelResponse>> GetTestLevelAsync();
+        Task<ICollection<GetTestLevelResponse>> GetTestLevelAsync();
     }
 }
