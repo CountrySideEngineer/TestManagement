@@ -179,7 +179,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UpdateTestCaseResponse>> UpdateAsync(long id, [FromBody] UpdateTestCaseRequest request, CancellationToken ct = default)
         {
-            _logger.LogDebug("TestCaseController.CreateBulk() start!");
+            _logger.LogDebug("TestCaseController.UpdateAsync() start!");
 
             var response = await _testCaseService.UpdateAsync(request, ct);
             return Ok(response);
