@@ -127,7 +127,7 @@ namespace TestManagement.API.Controllers
         /// The returned collection preserves one response per input request.
         /// </remarks>
         [HttpPost("bulk")]
-        [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests, CancellationToken ct)
@@ -152,7 +152,7 @@ namespace TestManagement.API.Controllers
         /// The returned collection preserves one response per input request.
         /// </remarks>
         [HttpPost("bulk/createIfNotExists")]
-        [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests, CancellationToken ct)

@@ -79,7 +79,7 @@ namespace TestManagement.API.Services
         /// </summary>
         /// <param name="id">The identifier of the test result.</param>
         /// <returns>The test result domain model, or null if not found.</returns>
-        public async Task<Models.TestResult> GetByIdAsync(int id, CancellationToken ct)
+        public async Task<GetTestResultResponse> GetByIdAsync(int id, CancellationToken ct)
         {
             _logger.LogDebug("TestResultService::GetByIdAsync() start!");
 
@@ -87,7 +87,13 @@ namespace TestManagement.API.Services
                 .Where(_ => _.Id == id)
                 .Include(_ => _.TestCaseVersion)
                 .FirstAsync(ct);
-            return testResult;
+
+
+            // Map domain models to response DTOs. Mapping is delegated to a private helper
+            // to keep GetAllAsync concise and make mapping testable in isolation.
+            GetTestResultResponse response = MapToResponse(testResult);
+
+            return response;
         }
 
         /// <summary>

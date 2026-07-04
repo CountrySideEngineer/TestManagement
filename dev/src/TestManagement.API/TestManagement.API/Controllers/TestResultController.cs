@@ -52,6 +52,7 @@ namespace TestManagement.API.Controllers
             _logger.LogDebug("TestResultController.GetAllTestResults() start!");
 
             var testResults = await _testResultService.GetAllAsync(ct);
+
             return Ok(testResults);
         }
 
@@ -61,7 +62,7 @@ namespace TestManagement.API.Controllers
         /// <param name="id">The unique identifier of the test result to retrieve.</param>
         /// <returns>An IActionResult containing the test result with HTTP 200 OK status.</returns>
         [HttpGet("{id}", Name = "GetByIdAsync")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetTestResultResponse ), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [ActionName(nameof(GetByIdAsync))]
@@ -69,8 +70,8 @@ namespace TestManagement.API.Controllers
         {
             _logger.LogDebug("TestResultController.GetById() start!");
 
-            TestResult testResult = await _testResultService.GetByIdAsync(id, ct);
-            return Ok(testResult);
+            GetTestResultResponse response = await _testResultService.GetByIdAsync(id, ct);
+            return Ok(response);
         }
 
         /// <summary>
@@ -110,12 +111,12 @@ namespace TestManagement.API.Controllers
         /// Maps each request DTO to the domain model before persisting.
         /// </summary>
         /// <param name="requests">A collection of test result creation requests.</param>
-        /// <returns>An IActionResult with HTTP 201 Created status and the created test results.</returns>
+        /// <returns>An IActionResult with HTTP 200 OK status and the created test results.</returns>
         [HttpPost("bulk")]
-        [ProducesResponseType(typeof(ICollection<TestResultCreateResponse>), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ICollection<TestResultCreateResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ICollection<TestResultCreateResponse>> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests, CancellationToken ct)
+        public async Task<ActionResult<ICollection<TestResultCreateResponse>>> CreateBulkAsync([FromBody] IEnumerable<TestResultCreateRequest> requests, CancellationToken ct)
         {
             _logger.LogDebug("TestResultController.CreateBulk() start!");
 
@@ -154,7 +155,7 @@ namespace TestManagement.API.Controllers
                 responses.Add(response);
             }
 
-            return responses;
+            return Ok(responses);
         }
     }
 }
