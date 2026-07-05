@@ -1,59 +1,49 @@
-using System.Diagnostics;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
+using TestManagement.API.Data;
+using TestManagement.API.Data.Repositories;
+using TestManagement.API.Infrastructure.Database;
+using TestManagement.API.Services;
+using TestManagement.Data.Repositories;
+using TestManagement.API.Services.Xml;
 
-namespace TestManagement.API.Controllers
+var builder = WebApplication.CreateBuilder(args);
+
+string connectionString = DBConnectionFactory.CreatePostgresConnectionString(builder.Configuration);
+
+// Add services to the container.
+builder.Services.AddDbContext<TestManagementDbContext>(options => options.UseNpgsql(connectionString));
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<ITestLevelService, TestLevelService>();
+builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
+builder.Services.AddScoped<ITestCaseService, TestCaseService>();
+builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
+builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
+builder.Services.AddScoped<ITestResultService, TestResultService>();
+
+// XML converter
+builder.Services.AddScoped<ITestResultXmlConverter, TestResultXmlConverter>();
+
+builder.Services.AddMvc().AddXmlSerializerFormatters();
+
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
 {
-    [ApiController]
-    [Route("error")]
-    [ApiExplorerSettings(IgnoreApi = true)]
-    public class ErrorController : ControllerBase
-    {
-        private readonly ILogger<ErrorController> _logger;
-
-        public ErrorController(ILogger<ErrorController> logger)
-        {
-            _logger = logger;
-        }
-
-        [Route("")]
-        public IActionResult HandleError()
-        {
-            var feature = HttpContext.Features.Get<IExceptionHandlerFeature>();
-            var exception = feature?.Error;
-
-            var traceId = Activity.Current?.Id ?? HttpContext?.TraceIdentifier;
-
-            // ProblemDetails を生成して例外種別に応じてステータスをマップする
-            var problemDetails = new ProblemDetails
-            {
-                Title = "An unexpected error occurred.",
-                Status = StatusCodes.Status500InternalServerError,
-                Detail = exception?.Message,
-                Instance = HttpContext?.Request?.Path
-            };
-
-            if (exception is ArgumentException)
-            {
-                problemDetails.Title = "Invalid request";
-                problemDetails.Status = StatusCodes.Status400BadRequest;
-            }
-            else if (exception is KeyNotFoundException)
-            {
-                problemDetails.Title = "Resource not found";
-                problemDetails.Status = StatusCodes.Status404NotFound;
-            }
-            else if (exception is UnauthorizedAccessException)
-            {
-                problemDetails.Title = "Unauthorized";
-                problemDetails.Status = StatusCodes.Status401Unauthorized;
-            }
-
-            problemDetails.Extensions["traceId"] = traceId;
-
-            _logger.LogError(exception, "Unhandled exception caught by global handler. TraceId: {TraceId}", traceId);
-
-            return new ObjectResult(problemDetails) { StatusCode = problemDetails.Status };
-        }
-    }
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();

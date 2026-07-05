@@ -24,6 +24,6 @@
         /// <summary>
         /// Version number assigned to the newly created version after the update.
         /// </summary>
-        public int VersionNumber { get; set; } = 0;
+        public long VersionNumber { get; set; } = 0;
     }
 }

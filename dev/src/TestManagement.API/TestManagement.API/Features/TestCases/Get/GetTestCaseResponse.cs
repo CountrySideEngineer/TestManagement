@@ -45,7 +45,7 @@ namespace TestManagement.API.Features.TestCases.Get
             /// <summary>
             /// The version number of this test case version (incremental integer).
             /// </summary>
-            public int VersionNumber { get; set; } = 0;
+            public long VersionNumber { get; set; } = 0;
 
             /// <summary>
             /// The identifier of the associated test level or category.

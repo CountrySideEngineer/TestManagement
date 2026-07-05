@@ -177,57 +177,103 @@ namespace TestManagement.API.Services
         {
             _logger.LogDebug("TestResultService::Create() start!");
 
-            var testResults = new List<Models.TestResult>();
-            foreach (var requestItem in requests)
+            // Check arguments.
+            if ((requests is null) || (0 == requests.Count))
             {
-                var testResult = new Models.TestResult();
-                testResult.TestExecutionItemId = requestItem.TestExecutionItemId;
-                testResult.TestCaseVersionId = await _dbContext.TestCaseVersions
-                    .Where(_ =>
-                        _.TestCaseId == requestItem.TestCaseId &&
-                        _.VersionNumber == requestItem.TestCaseVersionNumber)
-                    .Select(_ => _.Id)
-                    .FirstOrDefaultAsync(ct);
-                testResult.StatusId = await _dbContext.TestStatuses
-                    .Where(_ =>
-                        _.Code.ToLower() == requestItem.TestResultStatus.ToLower())
-                    .Select(_ => _.Id)
-                    .FirstOrDefaultAsync(ct);
-                testResult.Message = requestItem.Message;
-                testResult.ExecutedAt = requestItem.ExecutedAt;
-
-                _dbContext.TestResults.Add(testResult);
-                testResults.Add(testResult);
+                return new List<CreateTestResultResponse>();
             }
 
-            await _dbContext.SaveChangesAsync(ct);
+            var distinctTestCaseKeys = requests
+                .Select(_ => new { _.TestCaseId, _.TestCaseVersionNumber })
+                .Distinct()
+                .ToList();
 
-            var responses = new List<CreateTestResultResponse>();
-            foreach (var testResultItem in testResults)
+            var testCaseVersions = await _dbContext.TestCaseVersions
+                .Where(_ => distinctTestCaseKeys
+                    .Any(key => (key.TestCaseId == _.TestCaseId) && (key.TestCaseVersionNumber == _.VersionNumber)))
+                .ToListAsync(ct);
+
+            var testStatusCodes = requests
+                .Select(_ => _.TestResultStatus?.ToLowerInvariant() ?? string.Empty)
+                .Where(_ => !string.IsNullOrEmpty(_))
+                .Distinct()
+                .ToList();
+
+            var testStatuses = await _dbContext.TestStatuses
+                .Where(s => testStatusCodes.Contains(s.Code.ToLower()))
+                .ToListAsync(ct);
+
+            var testCaseVersionMap = testCaseVersions.ToDictionary(
+                tc => (tc.TestCaseId, tc.VersionNumber),
+                tc => tc.Id);
+
+            var testStatusMap = testStatuses.ToDictionary(
+                s => s.Code.ToLowerInvariant(),
+                s => s.Id);
+
+            var entities = new List<Models.TestResult>();
+            foreach (var req in requests)
             {
-                string testResultStatus = await _dbContext.TestStatuses
-                    .Where(_ => _.Id == testResultItem.StatusId)
-                    .Select(_ => _.Code)
-                    .FirstOrDefaultAsync() ?? string.Empty;
+                // Validate/look up
+                testCaseVersionMap.TryGetValue((req.TestCaseId, req.TestCaseVersionNumber), out var tcVersionId);
+                testStatusMap.TryGetValue(req.TestResultStatus?.ToLowerInvariant() ?? string.Empty, out var statusId);
+
+                var tr = new Models.TestResult
+                {
+                    TestExecutionItemId = req.TestExecutionItemId,
+                    TestCaseVersionId = tcVersionId,
+                    StatusId = statusId,
+                    Message = req.Message,
+                    ExecutedAt = req.ExecutedAt
+                };
+
+                entities.Add(tr);
+            }
+
+            await using var transaction = await _dbContext.Database.BeginTransactionAsync(ct);
+            try
+            {
+                _dbContext.TestResults.AddRange(entities);
+                await _dbContext.SaveChangesAsync(ct);
+
+                await transaction.CommitAsync(ct);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Atomic bulk insert failed, transaction will be rolled back.");
+                // transaction disposed without commit -> rollback
+                throw;
+            }
+
+            // Build responses
+            var responses = new List<CreateTestResultResponse>(entities.Count);
+            foreach (var ent in entities)
+            {
+                // Lookup status code and test case version again if needed
+                string statusCode = await _dbContext.TestStatuses
+                    .Where(s => s.Id == ent.StatusId)
+                    .Select(s => s.Code)
+                    .FirstOrDefaultAsync(ct) ?? string.Empty;
+
                 var testCaseVersion = await _dbContext.TestCaseVersions
-                    .Where(_ => _.Id == testResultItem.TestCaseVersionId)
-                    .FirstOrDefaultAsync();
+                    .Where(tv => tv.Id == ent.TestCaseVersionId)
+                    .FirstOrDefaultAsync(ct);
+
                 long testCaseId = testCaseVersion?.TestCaseId ?? 0;
                 long versionNumber = testCaseVersion?.VersionNumber ?? 0;
                 long testLevelId = testCaseVersion?.TestLevelId ?? 0;
 
-                var response = new CreateTestResultResponse()
+                responses.Add(new CreateTestResultResponse
                 {
-                    ResultId = testResultItem.Id,
-                    TestExecutionItemId = testResultItem.TestExecutionItemId,
+                    ResultId = ent.Id,
+                    TestExecutionItemId = ent.TestExecutionItemId,
                     TestCaseId = testCaseId,
                     TestCaseVersionNumber = versionNumber,
                     TestLevelId = testLevelId,
-                    ExecutedAt = testResultItem.ExecutedAt,
-                    Message = testResultItem.Message,
-                    TestResultStatus = testResultStatus
-                };
-                responses.Add(response);
+                    ExecutedAt = ent.ExecutedAt,
+                    Message = ent.Message,
+                    TestResultStatus = statusCode
+                });
             }
 
             return responses;

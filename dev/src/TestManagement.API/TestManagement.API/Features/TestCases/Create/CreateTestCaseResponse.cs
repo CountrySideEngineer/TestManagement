@@ -34,6 +34,6 @@
         /// <summary>
         /// Version number assigned to the created test case version. A value of 0 may indicate a failure in batch operations.
         /// </summary>
-        public int VersionNumber { get; set; } = 0;
+        public long VersionNumber { get; set; } = 0;
     }
 }
