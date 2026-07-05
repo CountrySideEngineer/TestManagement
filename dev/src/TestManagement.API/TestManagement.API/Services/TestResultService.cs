@@ -188,10 +188,10 @@ namespace TestManagement.API.Services
                 .Distinct()
                 .ToList();
 
-            var testCaseVersions = await _dbContext.TestCaseVersions
-                .Where(_ => distinctTestCaseKeys
-                    .Any(key => (key.TestCaseId == _.TestCaseId) && (key.TestCaseVersionNumber == _.VersionNumber)))
-                .ToListAsync(ct);
+            var testCaseVersionsContext = await _dbContext.TestCaseVersions.ToListAsync(ct);
+            var testCaseVersions = testCaseVersionsContext
+                .Where(_ => distinctTestCaseKeys.Any(key => (key.TestCaseId == _.TestCaseId) && (key.TestCaseVersionNumber == _.VersionNumber)))
+                .ToList();
 
             var testStatusCodes = requests
                 .Select(_ => _.TestResultStatus?.ToLowerInvariant() ?? string.Empty)
