@@ -75,12 +75,3 @@ namespace TestManagement.APP.Pages
         }
     }
 }
-
-/// <summary>
-/// Data transfer object representing a summary of test execution statistics.
-/// </summary>
-/// <param name="ErrorNum">Number of tests that encountered errors.</param>
-/// <param name="SkippedNum">Number of tests that were skipped.</param>
-/// <param name="DisabledNum">Number of tests that were disabled.</param>
-/// <param name="ExecutedNum">Total number of tests executed.</param>
-public record SummaryDto(int ErrorNum, int SkippedNum, int DisabledNum, int ExecutedNum);

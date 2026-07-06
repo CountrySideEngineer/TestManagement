@@ -22,6 +22,13 @@
                             <div class="small exec-header">リビジョン：</div>
                             <div class="exec-value"><code>@Model.DashboardViewModel.LatestExecutionSummary.Revision</code></div>
                         </div>
+                        <div class="p-2 summary-action">
+                            <a asp-page="/ExecutionUpload/Index"
+                               asp-route-id="@(Model.DashboardViewModel.LatestExecutionSummary.ExecutionId)"
+                               class="btn btn-sm btn-outline-primary"
+                               title="実行結果の詳細ページを開く"
+                               aria-label="実行結果の詳細ページを開く">詳細</a>
+                        </div>
                     </div>
 
                     <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">

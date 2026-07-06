@@ -4,6 +4,8 @@ namespace TestManagement.APP.ViewModel.Dashboard
 {
     public class LatestExecutionSummaryViewModel
     {
+        public long ExecutionId { get; init; } = 0;
+
         /// <summary>
         /// The source control revision identifier associated with the latest execution.
         /// </summary>
