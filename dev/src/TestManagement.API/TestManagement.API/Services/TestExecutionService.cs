@@ -11,7 +11,7 @@ namespace TestManagement.API.Services
     /// <summary>
     /// Service responsible for operations related to test executions.
     /// </summary>
-    public class TestExecutionService
+    public class TestExecutionService : ITestExecutionService
     {
         /// <summary>
         /// Database context used to access and persist test execution related entities.

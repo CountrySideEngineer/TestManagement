@@ -54,7 +54,7 @@ namespace TestManagement.APP.ApiClients.TestCase
             {
                 // Post the requests as JSON to the Bulk/CreateIfNotExists endpoint.
                 var response = await _httpClient
-                    .PostAsJsonAsync("api/TestCase/Bulk/CreateIfNotExists", requests, ct)
+                    .PostAsJsonAsync("api/testcases/bulk/createifnotexists", requests, ct)
                     .ConfigureAwait(false);
 
                 // If the API did not return success, log a warning and return an empty collection.

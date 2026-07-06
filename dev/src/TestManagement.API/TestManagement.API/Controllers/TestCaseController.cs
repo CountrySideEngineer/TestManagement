@@ -10,15 +10,15 @@ namespace TestManagement.API.Controllers
     /// <summary>
     /// API controller that exposes endpoints for managing test cases and their versions.
     /// </summary>
-    [Route("api/[controller]")]
     [ApiController]
-    public class TestCaseController : ControllerBase
+    [Route("api/testcases")]
+    public class TestCaseController : Controller
     {
         /// <summary>
         /// Service layer instance that encapsulates business logic and data operations for test cases.
         /// The controller delegates use-case operations to this service.
         /// </summary>
-        private readonly TestCaseService _testCaseService;
+        private readonly ITestCaseService _testCaseService;
 
         /// <summary>
         /// Logger instance used for diagnostic and audit logging within the controller.
@@ -30,7 +30,7 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="logger">Logger instance used for diagnostic messages.</param>
         /// <param name="testCaseService">Service that encapsulates test case use-cases.</param>
-        public TestCaseController(ILogger<TestCaseController> logger, TestCaseService testCaseService)
+        public TestCaseController(ILogger<TestCaseController> logger, ITestCaseService testCaseService)
         {
             _logger = logger;
             _testCaseService = testCaseService;
@@ -41,39 +41,51 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <returns>HTTP 200 with the collection of test case versions.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllAsync()
+        [ProducesResponseType(typeof(ICollection<GetTestCaseResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ICollection<GetTestCaseResponse>>> GetAllAsync(CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.GetAllAsync() start!");
 
-            ICollection<GetTestCaseResponse> testCases = await _testCaseService.GetAllAsync();
+            ICollection<GetTestCaseResponse> testCases = await _testCaseService.GetAllAsync(ct);
             return Ok(testCases);
         }
-
         /// <summary>
-        /// Returns all test case versions that belong to the specified test level.
+        /// Retrieves a test case by its identifier, including its versions and associated test level information.
         /// </summary>
-        /// <param name="id">Identifier of the test level to filter test cases by.</param>
-        /// <returns>HTTP 200 with the collection of matching test case versions.</returns>
+        /// <param name="id">The identifier of the test case to retrieve.</param>
+        /// <param name="ct">A cancellation token that can be used to cancel the operation.</param>
+        /// <returns>
+        /// An <see cref="ActionResult{GetTestCaseResponse}"/> containing the requested <see cref="GetTestCaseResponse"/> when found;
+        /// returns a NotFound result when the test case does not exist. May return an error status for server-side failures.
+        /// </returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetByIdAsync(long id)
+        [ProducesResponseType(typeof(GetTestCaseResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [ActionName(nameof(GetByIdAsync))]
+        public async Task<ActionResult<GetTestCaseResponse>> GetByIdAsync(long id, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
 
-            var testCases = await _testCaseService.GetByTestCaseIdAsync(id);
-            return Ok(testCases);
+            GetTestCaseResponse testCase = await _testCaseService.GetByTestCaseIdAsync(id, ct);
+            return Ok(testCase);
         }
 
         /// <summary>
         /// Returns the test case version that corresponds to the provided version id.
         /// </summary>
-        /// <param name="id">Identifier (long) of the test case version to retrieve.</param>
+        /// <param name="versionId">Identifier (long) of the test case version to retrieve.</param>
         /// <returns>HTTP 200 with the matching <see cref="TestManagement.API.Models.TestCaseVersion"/> or 404 if not found.</returns>
-        [HttpGet("Version/{id}")]
-        public async Task<IActionResult> GetByVersionIdAsync(long id)
+        [HttpGet("versions/{versionId}")]
+        [ProducesResponseType(typeof(TestCaseVersion), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<TestCaseVersion>> GetByVersionIdAsync(long versionId, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.GetByVersionIdAsync() start!");
 
-            var testCaseVersion = await _testCaseService.GetByVersionIdAsync(id);
+            var testCaseVersion = await _testCaseService.GetByVersionIdAsync(versionId, ct);
             if (testCaseVersion == null)
             {
                 return NotFound();
@@ -87,11 +99,18 @@ namespace TestManagement.API.Controllers
         /// <param name="request">Request payload containing code, name, description and test level id.</param>
         /// <returns>Response containing the created test case version details.</returns>
         [HttpPost]
-        public async Task<CreateTestCaseResponse> CreateAsync([FromBody] CreateTestCaseRequest request)
+        [ProducesResponseType(typeof(CreateTestCaseResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<CreateTestCaseResponse>> CreateAsync([FromBody] CreateTestCaseRequest request, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.Create() start!");
-            var response = await _testCaseService.CreateAsync(request);
-            return response;
+            var response = await _testCaseService.CreateAsync(request, ct);
+
+            return CreatedAtAction(
+                nameof(GetByIdAsync),
+                new { id = response.Id },
+                response);
         }
 
         /// <summary>
@@ -107,14 +126,16 @@ namespace TestManagement.API.Controllers
         /// The controller delegates processing to the service layer which performs validation and persistence.
         /// The returned collection preserves one response per input request.
         /// </remarks>
-        [HttpPost("Bulk")]
-        public async Task<ICollection<CreateTestCaseResponse>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        [HttpPost("bulk")]
+        [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.CreateBulk() start!");
 
-            var responses = await _testCaseService.CreateAsync(requests);
-
-            return responses;
+            var responses = await _testCaseService.CreateAsync(requests, ct);
+            return Ok(responses);
         }
 
         /// <summary>
@@ -130,14 +151,16 @@ namespace TestManagement.API.Controllers
         /// The controller delegates processing to the service layer which performs validation and persistence.
         /// The returned collection preserves one response per input request.
         /// </remarks>
-        [HttpPost("Bulk/CreateIfNotExists")]
-        public async Task<ICollection<CreateTestCaseResponse>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests)
+        [HttpPost("bulk/createIfNotExists")]
+        [ProducesResponseType(typeof(ICollection<CreateTestCaseResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests, CancellationToken ct)
         {
             _logger.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
 
-            var responses = await _testCaseService.CreateIfNotExistsAsync(requests);
-
-            return responses;
+            var responses = await _testCaseService.CreateIfNotExistsAsync(requests, ct);
+            return Ok(responses);
         }
 
         /// <summary>
@@ -149,14 +172,17 @@ namespace TestManagement.API.Controllers
         /// <returns>
         /// The <see cref="UpdateTestCaseResponse"/> containing the new version information for the updated test case.
         /// </returns>
-        [HttpPost("Update")]
-        public async Task<UpdateTestCaseResponse> UpdateAsync(UpdateTestCaseRequest request, CancellationToken ct = default)
+        [HttpPut("id")]
+        [ProducesResponseType(typeof(UpdateTestCaseResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<UpdateTestCaseResponse>> UpdateAsync(long id, [FromBody] UpdateTestCaseRequest request, CancellationToken ct = default)
         {
-            _logger.LogDebug("TestCaseController.CreateBulk() start!");
+            _logger.LogDebug("TestCaseController.UpdateAsync() start!");
 
             var response = await _testCaseService.UpdateAsync(request, ct);
-
-            return response;
+            return Ok(response);
         }
     }
 }

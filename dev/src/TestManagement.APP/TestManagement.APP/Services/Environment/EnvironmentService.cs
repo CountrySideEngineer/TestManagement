@@ -47,15 +47,17 @@ namespace TestManagement.APP.Services.Environment
         {
             _logger.LogDebug("EnvironmentService::GetEnvironmentsAsync() start!");
 
-            IList<GetEnvironmentResponse> environmentResponses = await _apiClient.GetEnvironmentsAsync();
-            IList<EnvironmentViewModel> environmentViewModels = environmentResponses.Select(environmentResponse => new EnvironmentViewModel
-            {
-                EnvironmentId = environmentResponse.EnvironmentId,
-                Name = environmentResponse.Name,
-                Os = environmentResponse.Os,
-                RunTime = environmentResponse.RunTime,
-                DisplayName = $"{environmentResponse.Name} / {environmentResponse.Os} - ({environmentResponse.RunTime})"
-            }).ToList();
+            ICollection<GetEnvironmentResponse> environmentResponses = await _apiClient.GetEnvironmentsAsync();
+            IList<EnvironmentViewModel> environmentViewModels = environmentResponses
+                .Where(response => response.Versions.Any(v => v.IsLatest == true))
+                .Select(environmentResponse => new EnvironmentViewModel
+                {
+                    EnvironmentId = environmentResponse.Id,
+                    Name = environmentResponse.Name,
+                    Os = environmentResponse.Versions.First().Os,
+                    RunTime = environmentResponse.Versions.First().RunTime,
+                    DisplayName = $"{environmentResponse.Name} / {environmentResponse.Versions.First().Os} - ({environmentResponse.Versions.First().RunTime})"
+                }).ToList();
 
             return environmentViewModels;
         }
@@ -75,14 +77,15 @@ namespace TestManagement.APP.Services.Environment
             };
             var environmentResponses = await _apiClient.GetEnvironmentsByNameAsync(request);
             IList<EnvironmentViewModel> environmentViewModels = environmentResponses
+                .Where(response => response.Versions.Any(v => v.IsLatest == true))
                 .Select(environmentResponse => new EnvironmentViewModel
-            {
-                EnvironmentId = environmentResponse.EnvironmentId,
-                Name = environmentResponse.Name,
-                Os = environmentResponse.Os,
-                RunTime = environmentResponse.RunTime,
-                DisplayName = $"{environmentResponse.Name} / {environmentResponse.Os} - ({environmentResponse.RunTime})"
-            }).ToList();
+                {
+                    EnvironmentId = environmentResponse.Id,
+                    Name = environmentResponse.Name,
+                    Os = environmentResponse.Versions.First().Os,
+                    RunTime = environmentResponse.Versions.First().RunTime,
+                    DisplayName = $"{environmentResponse.Name} / {environmentResponse.Versions.First().Os} - ({environmentResponse.Versions.First().RunTime})"
+                }).ToList();
 
             return environmentViewModels;
         }
@@ -100,17 +103,17 @@ namespace TestManagement.APP.Services.Environment
             {
                 Name = name
             };
-            var environmentResponses = await _apiClient.GetEnvironmentsByNameAsync(request);
-            EnvironmentViewModel environmentViewModel = environmentResponses
-                .Where(_ => _.IsLatest == true)
+            ICollection<GetEnvironmentResponse> environmentResponses = await _apiClient.GetEnvironmentsByNameAsync(request);
+            EnvironmentViewModel? environmentViewModel = environmentResponses
+                .Where(response => response.Versions.Any(v => v.IsLatest == true))
                 .Select(environmentResponse => new EnvironmentViewModel
                 {
-                    EnvironmentId = environmentResponse.EnvironmentId,
+                    EnvironmentId = environmentResponse.Id,
                     Name = environmentResponse.Name,
-                    Os = environmentResponse.Os,
-                    RunTime = environmentResponse.RunTime,
-                    DisplayName = $"{environmentResponse.Name} / {environmentResponse.Os} - ({environmentResponse.RunTime})"
-                }).First();
+                    Os = environmentResponse.Versions.First().Os,
+                    RunTime = environmentResponse.Versions.First().RunTime,
+                    DisplayName = $"{environmentResponse.Name} / {environmentResponse.Versions.First().Os} - ({environmentResponse.Versions.First().RunTime})"
+                }).FirstOrDefault();
 
             return environmentViewModel;
         }

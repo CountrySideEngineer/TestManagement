@@ -1,8 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using TestManagement.APP.Models;
-
-namespace TestManagement.APP.Dto.TestResult.Post
+﻿namespace TestManagement.APP.Dto.TestResult.Post
 {
     public class PostTestResultRequest
     {

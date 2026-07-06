@@ -15,19 +15,6 @@
         /// </summary>
         public string Name { get; set; } = string.Empty;
 
-        /// <summary>
-        /// Operating system of the created environment version.
-        /// </summary>
-        public string Os { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Runtime/framework of the created environment version.
-        /// </summary>
-        public string RunTime { get; set; } = string.Empty;
-
-        /// <summary>
-        /// Version number assigned to the created environment version.
-        /// </summary>
-        public long VersionNumber { get; set; } = 0;
+        public Environment.EnvironmentVersion Version { get; set; } = null!;
     }
 }

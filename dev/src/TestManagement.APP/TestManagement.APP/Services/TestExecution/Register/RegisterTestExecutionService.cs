@@ -38,17 +38,17 @@ namespace TestManagement.APP.Services.TestExecution.Register
         /// <summary>
         /// Registers test execution results by converting them to API requests and persisting them asynchronously.
         /// </summary>
-        /// <param name="testResults">Collection of test results to register.</param>
+        /// <param name="testResultRequests">Collection of test results to register.</param>
         /// <param name="ct">Cancellation token for the asynchronous operation.</param>
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task<IEnumerable<RegisterTestResultResponse>> RegisterTestExecutionAsync(
-            IEnumerable<RegisterTestResultRequest> testResults,
+            IEnumerable<RegisterTestResultRequest> testResultRequests,
             CancellationToken ct = default)
         {
-            _logger.LogDebug("Registering test execution with {Count} test results", testResults.Count());
+            _logger.LogDebug("Registering test execution with {Count} test results", testResultRequests.Count());
 
             var requests = new List<PostTestResultRequest>();
-            foreach (var testResult in testResults)
+            foreach (var testResult in testResultRequests)
             {
                 var request = new PostTestResultRequest
                 {

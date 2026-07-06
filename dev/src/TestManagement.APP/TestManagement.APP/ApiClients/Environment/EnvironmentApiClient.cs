@@ -40,11 +40,11 @@ namespace TestManagement.APP.ApiClients.Environment
         /// </summary>
         /// <param name="request">A <see cref="GetEnvironmentRequest"/> containing the name to search for.</param>
         /// <returns>A list of <see cref="GetEnvironmentResponse"/> objects. Returns an empty list if no matches are found.</returns>
-        public async Task<IList<GetEnvironmentResponse>> GetEnvironmentsByNameAsync(GetEnvironmentRequest request)
+        public async Task<ICollection<GetEnvironmentResponse>> GetEnvironmentsByNameAsync(GetEnvironmentRequest request)
         {
             _logger.LogInformation("EnvironmentApiClient::GetEnvironmentByNameAsync() start! Name: {Request.Name}", request.Name);
 
-            string apiUrl = $"api/environment/name/{request.Name}";
+            string apiUrl = $"api/environments/search?name={request.Name}";
             var responses = await _httpClient!
                 .GetFromJsonAsync<List<GetEnvironmentResponse>>(apiUrl) ??
                     new List<GetEnvironmentResponse>();
@@ -57,12 +57,12 @@ namespace TestManagement.APP.ApiClients.Environment
         /// Returns an empty list if the API returns no data.
         /// </summary>
         /// <returns>A list of <see cref="GetEnvironmentResponse"/> objects.</returns>
-        public async Task<IList<GetEnvironmentResponse>> GetEnvironmentsAsync()
+        public async Task<ICollection<GetEnvironmentResponse>> GetEnvironmentsAsync()
         {
             _logger?.LogDebug("EnvironmentApiClient::GetEnvironmentsAsync() start!");
 
             var result = await _httpClient!
-                .GetFromJsonAsync<List<GetEnvironmentResponse>>("api/environment") ?? 
+                .GetFromJsonAsync<List<GetEnvironmentResponse>>("api/environments") ?? 
                     new List<GetEnvironmentResponse>();
 
             return result;
@@ -84,7 +84,7 @@ namespace TestManagement.APP.ApiClients.Environment
         {
             _logger?.LogInformation("EnvironmentApiClient::CreateEnvironmentAsync() start! Name: {Name}", request.Name);
 
-            var response = await _httpClient.PostAsJsonAsync("api/environment", request);
+            var response = await _httpClient.PostAsJsonAsync("api/environments", request);
             if (!response.IsSuccessStatusCode)
             {
                 _logger?.LogWarning("EnvironmentApiClient::CreateEnvironmentAsync() failed with status code {StatusCode}.", response.StatusCode);

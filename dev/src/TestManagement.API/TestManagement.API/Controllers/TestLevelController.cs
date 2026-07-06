@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TestManagement.API.Features.TestLevel.Get;
+using TestManagement.API.Models;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers
@@ -7,14 +9,14 @@ namespace TestManagement.API.Controllers
     /// API controller for managing test levels.
     /// Provides endpoints to retrieve test level information.
     /// </summary>
-    [Route("api/[controller]")]
     [ApiController]
-    public class TestLevelController : ControllerBase
+    [Route("api/testlevels")]
+    public class TestLevelController : Controller
     {
         /// <summary>
         /// Service for handling test level business logic and data operations.
         /// </summary>
-        private readonly TestLevelService _testLevelService;
+        private readonly ITestLevelService _testLevelService;
 
         /// <summary>
         /// Logger instance for recording controller events and debugging information.
@@ -26,7 +28,9 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="logger">The logger instance for logging controller operations.</param>
         /// <param name="testLevelRepository">The test level service for data operations.</param>
-        public TestLevelController(ILogger<TestLevelController> logger, TestLevelService testLevelRepository)
+        public TestLevelController(
+            ILogger<TestLevelController> logger, 
+            ITestLevelService testLevelRepository)
         {
             _logger = logger;
             _testLevelService = testLevelRepository;
@@ -37,11 +41,13 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <returns>An IActionResult containing a list of all test levels with HTTP 200 OK status.</returns>
         [HttpGet]
-        public async Task<IActionResult> GetAllTestLevelsAsync()
+        [ProducesResponseType(typeof(ICollection<GetTestLevelResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<ICollection<GetTestLevelResponse>>> GetAllAsync(CancellationToken ct)
         {
             _logger.LogDebug("TestLevelController.GetAllTestLevels() start!");
 
-            var testLevels = await _testLevelService.GetAllAsync();
+            ICollection<GetTestLevelResponse> testLevels = await _testLevelService.GetAllAsync(ct);
             return Ok(testLevels);
         }
     }

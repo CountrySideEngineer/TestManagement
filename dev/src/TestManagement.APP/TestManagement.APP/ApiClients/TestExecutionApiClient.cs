@@ -44,7 +44,7 @@ namespace TestManagement.APP.ApiClients
 
             try
             {
-                var result = await _httpClient.GetFromJsonAsync<List<GetTestExecutionResponse>>("api/TestExecution");
+                var result = await _httpClient.GetFromJsonAsync<List<GetTestExecutionResponse>>("api/testexecutions");
                 return result ?? new List<GetTestExecutionResponse>();
             }
             catch (HttpRequestException ex)
@@ -75,7 +75,7 @@ namespace TestManagement.APP.ApiClients
         {
             _logger?.LogDebug("TestExecutionApiClient::CreateTestExecutionAsync() start!");
 
-            var response = await _httpClient.PostAsJsonAsync("api/testexecution", request);
+            var response = await _httpClient.PostAsJsonAsync("api/testexecutions", request);
 
             if (!response.IsSuccessStatusCode)
             {
@@ -101,7 +101,7 @@ namespace TestManagement.APP.ApiClients
         {
             _logger?.LogDebug("TestExecutionApiClient::GetTestExecutionsByIdAsync() start!");
 
-            string url = $"api/testexecution/{id}";
+            string url = $"api/testexecutions/{id}";
 
             var response = await _httpClient.GetAsync(url);
             if (!response.IsSuccessStatusCode)

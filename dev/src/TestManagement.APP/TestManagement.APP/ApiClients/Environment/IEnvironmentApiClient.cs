@@ -5,8 +5,8 @@ namespace TestManagement.APP.ApiClients.Environment
 {
     public interface IEnvironmentApiClient
     {
-        Task<IList<GetEnvironmentResponse>> GetEnvironmentsAsync();
-        Task<IList<GetEnvironmentResponse>> GetEnvironmentsByNameAsync(GetEnvironmentRequest request);
+        Task<ICollection<GetEnvironmentResponse>> GetEnvironmentsAsync();
+        Task<ICollection<GetEnvironmentResponse>> GetEnvironmentsByNameAsync(GetEnvironmentRequest request);
         Task<PostEnvironmentResponse?> CreateEnvironmentAsync(PostEnvironmentRequest request);
     }
 }

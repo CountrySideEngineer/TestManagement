@@ -30,7 +30,7 @@
         /// <summary>
         /// Numeric version number of the test case version.
         /// </summary>
-        public int TestCaseVersionNumber { get; set; }
+        public long TestCaseVersionNumber { get; set; }
 
         /// <summary>
         /// Optional identifier of the test level/category associated with the test case version.

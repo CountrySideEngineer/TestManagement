@@ -34,7 +34,7 @@ namespace TestManagement.API.Models
         /// The numeric version identifier for this test case version.
         /// </summary>
         [Required]
-        public int VersionNumber { get; set; } = 0;
+        public long VersionNumber { get; set; } = 0;
 
         /// <summary>
         /// Foreign key referencing the <see cref="TestLevel"/> associated with this version.

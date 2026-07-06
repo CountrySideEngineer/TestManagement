@@ -6,13 +6,14 @@ using TestManagement.API.Features.TestCases.Create;
 using TestManagement.API.Features.TestCases.Get;
 using TestManagement.API.Features.TestCases.Update;
 using TestManagement.API.Models;
+using static TestManagement.API.Features.TestCases.Get.GetTestCaseResponse;
 namespace TestManagement.API.Services
 {
     /// <summary>
     /// Service that provides use-case level operations for test cases and their versions.
     /// Acts as an application service that coordinates EF Core persistence via <see cref="TestManagementDbContext"/>.
     /// </summary>
-    public class TestCaseService
+    public class TestCaseService : ITestCaseService
     {
         /// <summary>
         /// EF Core DbContext used for data access and unit-of-work operations.
@@ -38,7 +39,7 @@ namespace TestManagement.API.Services
         }
 
         // Load all TestCase entities including their Versions and map to GetTestCaseResponseWithVrersion DTOs.
-        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllAsync()
+        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllAsync(CancellationToken ct)
         {
             _logger?.LogDebug("TestCaseService::GetAllAsync() start!");
 
@@ -77,7 +78,7 @@ namespace TestManagement.API.Services
         /// <returns>
         /// A collection of <see cref="GetTestCaseResponse"/> objects representing the latest version per test case.
         /// </returns>
-        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllLatestVersionAsync()
+        public virtual async Task<ICollection<GetTestCaseResponse>> GetAllLatestVersionAsync(CancellationToken ct)
         {
             _logger?.LogDebug("TestCaseService::GetAllAsync() start!");
 
@@ -120,7 +121,7 @@ namespace TestManagement.API.Services
         /// <returns>
         /// A collection of <see cref="TestCaseVersion"/> that match the specified test level.
         /// </returns>
-        public virtual async Task<ICollection<TestCaseVersion>> GetByTestLevelIdAsync(int testLevelId)
+        public virtual async Task<ICollection<TestCaseVersion>> GetByTestLevelIdAsync(int testLevelId, CancellationToken ct)
         {
             _logger?.LogDebug("TestCaseService::GetByIdAsync() start!");
 
@@ -138,15 +139,38 @@ namespace TestManagement.API.Services
         /// <returns>
         /// A collection of <see cref="TestCaseVersion"/> for the specified test case id.
         /// </returns>
-        public virtual async Task<ICollection<TestCaseVersion>> GetByTestCaseIdAsync(long testCaseId)
+        public virtual async Task<GetTestCaseResponse> GetByTestCaseIdAsync(long testCaseId, CancellationToken ct)
         {
             _logger?.LogDebug("TestCaseService::GetByTestCaseIdAsync() start!");
 
-            return await _context.TestCaseVersions
-                .Where(_ => _.TestCaseId == testCaseId)
-                .Include(_ => _.TestLevel)
-                .AsNoTracking()
-                .ToListAsync();
+            var testCase = await _context.TestCases
+                .Where(_ => _.Id == testCaseId)
+                .Include(_ => _.Versions)
+                    .ThenInclude(_ => _.TestLevel)
+                .FirstOrDefaultAsync();
+
+            if (null == testCase)
+            {
+                return new GetTestCaseResponse();
+            }
+
+            var response = new GetTestCaseResponse
+            {
+                Id = testCase.Id,
+                Code = testCase.Code,
+                Versions = testCase.Versions.Select(tcv => new GetTestCaseResponse.TestCaseVersionItem
+                {
+                    Id = tcv.Id,
+                    Name = tcv.Name,
+                    Description = tcv.Description,
+                    VersionNumber = tcv.VersionNumber,
+                    TestLevelId = tcv.TestLevelId,
+                    IsLatest = tcv.IsLatest,
+                    CreatedAt = tcv.CreatedAt,
+                    UpdatedAt = tcv.UpdatedAt
+                }).ToList()
+            };
+            return response;
         }
 
         /// <summary>
@@ -154,7 +178,7 @@ namespace TestManagement.API.Services
         /// </summary>
         /// <param name="id">Identifier of the test case version.</param>
         /// <returns>The matching <see cref="TestCaseVersion"/> or null if not found.</returns>
-        public virtual async Task<TestCaseVersion?> GetByVersionIdAsync(long id)
+        public virtual async Task<TestCaseVersion?> GetByVersionIdAsync(long id, CancellationToken ct)
         {
             _logger?.LogDebug("TestCaseService::GetByVersionIdAsync() start!");
 
@@ -166,7 +190,7 @@ namespace TestManagement.API.Services
                 .FirstOrDefaultAsync();
         }
 
-        public virtual async Task<TestCaseVersion> GetLatestVersionByTestCaseIdAsync(long testCaseId)
+        public virtual async Task<TestCaseVersion> GetLatestVersionByTestCaseIdAsync(long testCaseId, CancellationToken ct)
         {
             _logger?.LogDebug("TestCaseService::GetLatestVersionByTestCaseIdAsync() start!");
 

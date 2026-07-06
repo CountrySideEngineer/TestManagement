@@ -13,7 +13,7 @@
         /// <summary>
         /// The version number of the test case that was executed.
         /// </summary>
-        public int TestCaseVersion { get; set; } = 0;
+        public long TestCaseVersion { get; set; } = 0;
 
         /// <summary>
         /// The status code resulting from the test execution (e.g. "Passed", "Failed").
