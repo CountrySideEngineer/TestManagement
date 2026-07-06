@@ -70,6 +70,7 @@ namespace TestManagement.APP.Services
 
                     var latestSummaryViewModel = new LatestExecutionSummaryViewModel
                     {
+                        ExecutionId = latestExecution.TestExecutionId,
                         Revision = latestExecution.Revision,
                         EnvironmentName = latestExecution.Environment,
                         ErrorNum = errNum,

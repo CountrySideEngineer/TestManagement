@@ -204,3 +204,16 @@ th {
 .col-right td {
   text-align: right;
 }
+
+/* 画面右端に配置し、ボタンは内容に応じて自動幅にする */
+.summary-action {
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* この要素を行の右端に押し出す */
+    flex: 0 0 auto; /* 自動幅（伸縮させない） */
+    padding: .5rem; /* 既存の p-2 相当 */
+}
+
+.summary-action .btn {
+    white-space: nowrap; /* ボタン内のテキストを折り返さない */
+}
