@@ -4,6 +4,9 @@ namespace TestManagement.APP.ViewModel.Dashboard
 {
     public class LatestExecutionSummaryViewModel
     {
+        /// <summary>
+        /// The unique identifier of the execution.
+        /// </summary>
         public long ExecutionId { get; init; } = 0;
 
         /// <summary>

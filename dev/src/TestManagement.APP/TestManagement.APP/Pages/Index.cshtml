@@ -95,6 +95,13 @@
                                     <span class="badge bg-success">成功</span>
                                 }
                             </div>
+                            <div class="summary-action" style="flex:0 0 100px; text-align:right; padding-left:8px;">
+                                <a asp-page="/ExecutionUpload/Index"
+                                   asp-route-id="@(exec.ExecutionId)"
+                                   class="btn btn-sm btn-outline-primary"
+                                   title="実行結果の詳細ページを開く"
+                                   aria-label="実行結果の詳細ページを開く">詳細</a>
+                            </div>
                         </li>
                     }
                 </ul>

@@ -3,6 +3,11 @@
     public class RecentExecutionViewModel
     {
         /// <summary>
+        /// The unique identifier of the execution.
+        /// </summary>
+        public long ExecutionId { get; init; } = 0;
+
+        /// <summary>
         /// Indicates whether the execution contained any failures.
         /// </summary>
         public bool HasFailure { get; init; } = false;
