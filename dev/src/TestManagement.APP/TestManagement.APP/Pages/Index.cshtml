@@ -75,6 +75,7 @@
                         <div class="exec-time" style="flex:0 0 220px; text-align:left;">実行日時</div>
                         <div class="exec-revision" style="flex:1; padding-left:12px; text-align:left;">リビジョン</div>
                         <div class="exec-status" style="flex:0 0 120px; text-align:right;">実行結果</div>
+                        <div class="exec-action d-flex justify-content-md-end" style="flex:0 0 100px;">操作</div>
                     </li>
                     @foreach (var exec in Model.DashboardViewModel.RecentExecutions)
                     {
@@ -95,7 +96,7 @@
                                     <span class="badge bg-success">成功</span>
                                 }
                             </div>
-                            <div class="summary-action" style="flex:0 0 100px; text-align:right; padding-left:8px;">
+                            <div class="summary-action d-flex justify-content-md-end" style="flex:0 0 100px; padding-left:8px; padding-right:0px;">
                                 <a asp-page="/ExecutionUpload/Index"
                                    asp-route-id="@(exec.ExecutionId)"
                                    class="btn btn-sm btn-outline-primary"
