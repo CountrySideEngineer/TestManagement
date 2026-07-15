@@ -55,21 +55,21 @@
                         <table>
                             <thead>
                                 <tr>
+                                    <th style="text-align:center;">実行数</th>
                                     <th style="text-align:center;">成功</th>
                                     <th style="text-align:center;">失敗</th>
                                     <th style="text-align:center;">スキップ</th>
                                     <th style="text-align:center;">対象外</th>
-                                    <th style="text-align:center;">実行数</th>
                                     <th style="text-align:center;">成功(%)</th>
                                     <th style="text-align:center;">失敗(%)</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
+                                    <td style="text-align:center;">@Model.ExecutionViewModel.ExecutedNum</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.PassedNum</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.ErrorNum</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.SkippedNum</td>
-                                    <td style="text-align:center;">@Model.ExecutionViewModel.ExecutedNum</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.ExecutedNum</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.SuccessRate</td>
                                     <td style="text-align:center;">@Model.ExecutionViewModel.FailedRate</td>

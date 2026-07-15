@@ -40,11 +40,11 @@
                                     リビジョン <span id="sortRevArrow"></span>
                                 </button>
                             </th>
+                            <th style="text-align:center;">実行数</th>
                             <th style="text-align:center;">成功</th>
                             <th style="text-align:center;">失敗</th>
                             <th style="text-align:center;">スキップ</th>
                             <th style="text-align:center;">対象外</th>
-                            <th style="text-align:center;">実行数</th>
                             <th style="text-align:center;">成功率 (%)</th>
                             <th style="text-align:center;">失敗率 (%)</th>
                             <th style="text-align:center;">-</th>
@@ -58,11 +58,11 @@
                                 <td style="text-align:center;">@execution.ExecutedAt.ToString("u")</td>
                                 <td style="text-align:center;">@execution.Environment</td>
                                 <td style="text-align:right;">@execution.Revision</td>
+                                <td style="text-align:right;">@execution.ExecutedNum</td>
                                 <td style="text-align:right;">@execution.PassedNum</td>
                                 <td style="text-align:right;">@execution.ErrorNum</td>
                                 <td style="text-align:right;">@execution.SkippedNum</td>
                                 <td style="text-align:right;">@execution.ExcludedNum</td>
-                                <td style="text-align:right;">@execution.ExecutedNum</td>
                                 <td style="text-align:right;">@execution.SuccessRate</td>
                                 <td style="text-align:right;">@execution.FailedRate</td>
                                 <td style="text-align:center;">
