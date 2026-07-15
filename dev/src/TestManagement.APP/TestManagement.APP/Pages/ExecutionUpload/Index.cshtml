@@ -19,7 +19,11 @@
         <div class="block">
             <div class="block-title">実行環境/リビジョン情報</div>
             <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
-                <div class="card" style="margin:0px 8px 0 0;">
+                <div class="card" style="margin: 0 8px 0 0;">
+                    <div class="card-title">リビジョン</div>
+                    <div class="card-value">@Model.ExecutionViewModel.Revision</div>
+                </div>
+                <div class="card" style="margin:0px 0px 0px 8px;">
                     <div class="card-title">実行環境</div>
                     <div class="card-value" style="font-size: 20px;">
                         <div>
@@ -39,10 +43,6 @@
                             </table>
                         </div>
                     </div>
-                </div>
-                <div class="card" style="margin: 0 0 0 8px;">
-                    <div class="card-title">リビジョン</div>
-                    <div class="card-value">@Model.ExecutionViewModel.Revision</div>
                 </div>
             </div>
         </div>
