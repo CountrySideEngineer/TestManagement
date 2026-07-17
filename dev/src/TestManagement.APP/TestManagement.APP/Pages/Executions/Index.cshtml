@@ -55,7 +55,7 @@
                         {
                             <tr>
                                 <td style="text-align:right;">@execution.TestExecutionId</td>
-                                <td style="text-align:center;">@execution.ExecutedAt.ToString("u")</td>
+                                <td style="text-align:center;">@execution.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</td>
                                 <td style="text-align:center;">@execution.Environment</td>
                                 <td style="text-align:right;">@execution.Revision</td>
                                 <td style="text-align:right;">@execution.ExecutedNum</td>

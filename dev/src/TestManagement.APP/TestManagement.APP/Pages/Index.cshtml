@@ -16,7 +16,7 @@
                     <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
                         <div class="p-2" style="flex:0 0 220px;">
                             <div class="small exec-header">実行日時：</div>
-                            <div class="small text-muted exec-value">@Model.DashboardViewModel.LatestExecutionSummary.ExecutedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div>
+                            <div class="small text-muted exec-value">@Model.DashboardViewModel.LatestExecutionSummary.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</div>
                         </div>
                         <div class="p-2" style="flex:1; padding-left:12px;">
                             <div class="small exec-header">リビジョン：</div>
@@ -81,7 +81,7 @@
                     {
                         <li class="recent-item d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #eee;">
                             <div class="exec-time" style="flex:0 0 220px;">
-                                <div class="small text-muted">@exec.ExecutedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div>
+                                <div class="small text-muted">@exec.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</div>
                             </div>
                             <div class="exec-revision" style="flex:1; padding-left:12px;">
                                 <div><code>@exec.Revision</code></div>
