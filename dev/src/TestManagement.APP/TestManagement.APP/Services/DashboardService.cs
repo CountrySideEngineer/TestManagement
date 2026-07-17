@@ -83,6 +83,7 @@ namespace TestManagement.APP.Services
                     };
                     var recentExecutions = testExecution?.OrderByDescending(_ => _.ExecutedAt).Take(new Range(1, 5)).Select(_ => new RecentExecutionViewModel()
                     {
+                        ExecutionId = _.TestExecutionId,
                         Revision = _.Revision,
                         ExecutedAt = _.ExecutedAt,
                         HasFailure = _.TestCases.Any(_ => _.TestStatusCode == "Failed")

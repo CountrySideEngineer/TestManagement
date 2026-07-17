@@ -11,6 +11,9 @@
 
 <div class="container">
     <div class="block">
+        <div class="mt-3">
+            <a asp-page="./Create" class="btn btn-primary">テスト実行追加</a>
+        </div>
         @if ((null == Model.Executions) || (!Model.Executions.Any()))
         {
             <div class="muted" style="padding:8px 0;">最近の実行はありません。</div>
@@ -37,11 +40,11 @@
                                     リビジョン <span id="sortRevArrow"></span>
                                 </button>
                             </th>
+                            <th style="text-align:center;">実行数</th>
                             <th style="text-align:center;">成功</th>
                             <th style="text-align:center;">失敗</th>
                             <th style="text-align:center;">スキップ</th>
                             <th style="text-align:center;">対象外</th>
-                            <th style="text-align:center;">実行数</th>
                             <th style="text-align:center;">成功率 (%)</th>
                             <th style="text-align:center;">失敗率 (%)</th>
                             <th style="text-align:center;">-</th>
@@ -52,14 +55,14 @@
                         {
                             <tr>
                                 <td style="text-align:right;">@execution.TestExecutionId</td>
-                                <td style="text-align:center;">@execution.ExecutedAt.ToString("u")</td>
+                                <td style="text-align:center;">@execution.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</td>
                                 <td style="text-align:center;">@execution.Environment</td>
                                 <td style="text-align:right;">@execution.Revision</td>
+                                <td style="text-align:right;">@execution.ExecutedNum</td>
                                 <td style="text-align:right;">@execution.PassedNum</td>
                                 <td style="text-align:right;">@execution.ErrorNum</td>
                                 <td style="text-align:right;">@execution.SkippedNum</td>
                                 <td style="text-align:right;">@execution.ExcludedNum</td>
-                                <td style="text-align:right;">@execution.ExecutedNum</td>
                                 <td style="text-align:right;">@execution.SuccessRate</td>
                                 <td style="text-align:right;">@execution.FailedRate</td>
                                 <td style="text-align:center;">
@@ -72,15 +75,7 @@
             </div>
         }
     </div>
-    <div class="block">
-        <div class="block-title">テスト実行新規追加</div>
-        <div class="mt-3">
-            <a asp-page="./Create" class="btn btn-primary">新規テスト実行</a>
-        </div>
-    </div>
 </div>
-
-
 
 <script>
     (function () {

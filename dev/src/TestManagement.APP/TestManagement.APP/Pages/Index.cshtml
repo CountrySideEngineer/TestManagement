@@ -16,7 +16,7 @@
                     <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
                         <div class="p-2" style="flex:0 0 220px;">
                             <div class="small exec-header">実行日時：</div>
-                            <div class="small text-muted exec-value">@Model.DashboardViewModel.LatestExecutionSummary.ExecutedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div>
+                            <div class="small text-muted exec-value">@Model.DashboardViewModel.LatestExecutionSummary.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</div>
                         </div>
                         <div class="p-2" style="flex:1; padding-left:12px;">
                             <div class="small exec-header">リビジョン：</div>
@@ -75,12 +75,13 @@
                         <div class="exec-time" style="flex:0 0 220px; text-align:left;">実行日時</div>
                         <div class="exec-revision" style="flex:1; padding-left:12px; text-align:left;">リビジョン</div>
                         <div class="exec-status" style="flex:0 0 120px; text-align:right;">実行結果</div>
+                        <div class="exec-action d-flex justify-content-md-end" style="flex:0 0 100px;">操作</div>
                     </li>
                     @foreach (var exec in Model.DashboardViewModel.RecentExecutions)
                     {
                         <li class="recent-item d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #eee;">
                             <div class="exec-time" style="flex:0 0 220px;">
-                                <div class="small text-muted">@exec.ExecutedAt.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss")</div>
+                                <div class="small text-muted">@exec.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</div>
                             </div>
                             <div class="exec-revision" style="flex:1; padding-left:12px;">
                                 <div><code>@exec.Revision</code></div>
@@ -95,6 +96,13 @@
                                     <span class="badge bg-success">成功</span>
                                 }
                             </div>
+                            <div class="summary-action d-flex justify-content-md-end" style="flex:0 0 100px; padding-left:8px; padding-right:0px;">
+                                <a asp-page="/ExecutionUpload/Index"
+                                   asp-route-id="@(exec.ExecutionId)"
+                                   class="btn btn-sm btn-outline-primary"
+                                   title="実行結果の詳細ページを開く"
+                                   aria-label="実行結果の詳細ページを開く">詳細</a>
+                            </div>
                         </li>
                     }
                 </ul>
@@ -104,15 +112,13 @@
                 <div class="muted" style="padding:8px 0;">最近の実行はありません。</div>
             }
         </div>
-    </div>
-
-    <div class="block">
-        <div class="block-title">実行結果追加</div>
-        <div style="padding:8px 0;">
-            <a asp-page="/Executions/Index" class="btn btn-primary">テスト実行登録</a>
+        <div style="padding:8px 0px; margin:16px 8px;">
+            <a asp-page="/Executions/Index"
+               class="btn btn-sm btn-outline-primary"
+               title="テスト実行一覧ページを開く"
+               aria-label="テスト実行一覧ページを開く">テスト実行一覧</a>
         </div>
     </div>
-
 
 </div>
 
