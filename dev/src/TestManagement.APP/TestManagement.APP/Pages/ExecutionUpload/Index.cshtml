@@ -22,6 +22,9 @@
                 <div class="card" style="margin: 0 8px 0 0;">
                     <div class="card-title">リビジョン</div>
                     <div class="card-value">@Model.ExecutionViewModel.Revision</div>
+
+                    <div class="card-title">実行日</div>
+                    <div class="card-value">@Model.ExecutionViewModel.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</div>
                 </div>
                 <div class="card" style="margin:0px 0px 0px 8px;">
                     <div class="card-title">実行環境</div>
