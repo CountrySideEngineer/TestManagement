@@ -92,7 +92,10 @@ namespace TestManagement.APP.Pages.Executions
 
             ICollection<EnvironmentViewModel>? envs = await _environmentService.GetEnvironmentsAsync();
             Environments = envs!;
-            EnvironmentSelectList = new SelectList(Environments, "DisplayName", "DisplayName", Environments.ElementAt(0));
+            if (0 < Environments.Count())
+            {
+                EnvironmentSelectList = new SelectList(Environments, "DisplayName", "DisplayName", Environments.ElementAt(0));
+            }
         }
 
         /// <summary>
