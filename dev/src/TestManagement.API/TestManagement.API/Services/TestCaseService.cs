@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
-using TestManagement.API.Data.Repositories;
 using TestManagement.API.Features.TestCases.Create;
 using TestManagement.API.Features.TestCases.Get;
 using TestManagement.API.Features.TestCases.Update;

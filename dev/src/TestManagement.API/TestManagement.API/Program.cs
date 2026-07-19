@@ -1,10 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using TestManagement.API.Data;
-using TestManagement.API.Data.Repositories;
 using TestManagement.API.Infrastructure.Database;
 using TestManagement.API.Services;
-using TestManagement.Data.Repositories;
 using TestManagement.API.Services.Xml;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,9 +11,7 @@ string connectionString = DBConnectionFactory.CreatePostgresConnectionString(bui
 
 // Add services to the container.
 builder.Services.AddDbContext<TestManagementDbContext>(options => options.UseNpgsql(connectionString));
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ITestLevelService, TestLevelService>();
-builder.Services.AddScoped<ITestCaseRepository, TestCaseRepository>();
 builder.Services.AddScoped<ITestCaseService, TestCaseService>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
