@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.Eventing.Reader;
 using TestManagement.API.Data;
-using TestManagement.API.Data.Repositories;
 using TestManagement.API.Features.TestResult.Create;
 using TestManagement.API.Features.TestResult.Get;
 using TestManagement.API.Models;
@@ -16,10 +15,6 @@ namespace TestManagement.API.Services
         /// Repository used to access and manipulate test result entities.
         /// </summary>
         private readonly ITestResultXmlConverter _xmlConverter;
-
-        /// <summary>
-        /// Converter responsible for transforming test result XML data to domain models and vice versa.
-        /// </summary>
 
         /// <summary>
         /// Database context used to access and persist test execution related entities.
