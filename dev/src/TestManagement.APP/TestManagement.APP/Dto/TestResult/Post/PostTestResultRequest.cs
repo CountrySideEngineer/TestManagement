@@ -12,8 +12,14 @@
         /// </summary>
         public long TestCaseId { get; set; } = 0;
 
+        /// <summary>
+        /// Version number of the test case that was executed.
+        /// </summary>
         public long TestCaseVersionNumber { get; set; } = 0;
 
+        /// <summary>
+        /// Identifier for the test level or environment (for example, unit, integration, system).
+        /// </summary>
         public long TestLevelId { get; set; } = 0;
 
         /// <summary>
