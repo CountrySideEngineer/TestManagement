@@ -2,6 +2,10 @@
 
 namespace TestManagement.APP.ViewModel.Executions
 {
+    /// <summary>
+    /// Represents the result and metadata of a single test execution for
+    /// display in lists and details views.
+    /// </summary>
     public class ExecutionViewModel
     {
         /// <summary>
@@ -9,6 +13,10 @@ namespace TestManagement.APP.ViewModel.Executions
         /// </summary>
         public long TestExecutionId { get; set; } = 0;
 
+        /// <summary>
+        /// The identifier of the specific execution item or test suite that was run.
+        /// This can be used to correlate the execution with the test definition.
+        /// </summary>
         public long TestExecutionItemId { get; set; } = 0;
 
         /// <summary>
