@@ -24,7 +24,7 @@ namespace TestManagement.API.Services
         /// <summary>
         /// Optional logger instance for diagnostic logging within the service.
         /// </summary>
-        private readonly ILogger<TestResultService> _logger;
+        private readonly ILogger<TestResultService>? _logger;
 
         // Constructor initializes required dependencies for the service.
         /// <summary>
@@ -37,7 +37,7 @@ namespace TestManagement.API.Services
         public TestResultService(
             TestManagementDbContext dbContext,
             ITestResultXmlConverter xmlConverter,
-            ILogger<TestResultService> logger
+            ILogger<TestResultService>? logger
             )
         {
             _dbContext = dbContext;
@@ -52,7 +52,7 @@ namespace TestManagement.API.Services
         /// <returns>Collection of test result response DTOs.</returns>
         public async Task<ICollection<GetTestResultResponse>> GetAllAsync(CancellationToken ct)
         {
-            _logger.LogDebug("TestResultService::GetAllAsync() start!");
+            _logger?.LogDebug("TestResultService::GetAllAsync() start!");
 
             var testResults = await _dbContext.TestResults
                 .Include(_ => _.TestCaseVersion)
@@ -64,7 +64,7 @@ namespace TestManagement.API.Services
             // to keep GetAllAsync concise and make mapping testable in isolation.
             var responses = testResults.Select(MapToResponse).ToList();
 
-            _logger.LogDebug("TestResultService::GetAllAsync() finished. Returning {Count} results.", responses.Count);
+            _logger?.LogDebug("TestResultService::GetAllAsync() finished. Returning {Count} results.", responses.Count);
 
             return responses;
         }
@@ -76,7 +76,7 @@ namespace TestManagement.API.Services
         /// <returns>The test result domain model, or null if not found.</returns>
         public async Task<GetTestResultResponse> GetByIdAsync(int id, CancellationToken ct)
         {
-            _logger.LogDebug("TestResultService::GetByIdAsync() start!");
+            _logger?.LogDebug("TestResultService::GetByIdAsync() start!");
 
             Models.TestResult testResult = await _dbContext.TestResults
                 .Where(_ => _.Id == id)
@@ -98,7 +98,7 @@ namespace TestManagement.API.Services
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task<CreateTestResultResponse> CreateAsync(CreateTestResultRequest request, CancellationToken ct)
         {
-            _logger.LogDebug("TestResultService::Create() start!");
+            _logger?.LogDebug("TestResultService::Create() start!");
 
             var testResult = new Models.TestResult();
             testResult.TestExecutionItemId = request.TestExecutionItemId;
@@ -170,7 +170,7 @@ namespace TestManagement.API.Services
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task<ICollection<CreateTestResultResponse>> CreateAsync(ICollection<CreateTestResultRequest> requests, CancellationToken ct)
         {
-            _logger.LogDebug("TestResultService::Create() start!");
+            _logger?.LogDebug("TestResultService::Create() start!");
 
             // Check arguments.
             if ((requests is null) || (0 == requests.Count))
@@ -235,7 +235,7 @@ namespace TestManagement.API.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Atomic bulk insert failed, transaction will be rolled back.");
+                _logger?.LogError(ex, "Atomic bulk insert failed, transaction will be rolled back.");
                 // transaction disposed without commit -> rollback
                 throw;
             }

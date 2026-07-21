@@ -18,7 +18,7 @@ namespace TestManagement.API.Services
         /// <summary>
         /// Logger instance for recording diagnostic and trace information.
         /// </summary>
-        private readonly ILogger<TestLevelService> _logger;
+        private readonly ILogger<TestLevelService>? _logger;
 
         /// <summary>
         /// Creates a new instance of <see cref="TestLevelService"/>.
@@ -27,7 +27,7 @@ namespace TestManagement.API.Services
         /// <param name="logger">Logger for this service.</param>
         public TestLevelService(
             TestManagementDbContext dbContext,
-            ILogger<TestLevelService> logger
+            ILogger<TestLevelService>? logger
             )
         {
             _dbContext = dbContext;
@@ -41,7 +41,7 @@ namespace TestManagement.API.Services
         /// <returns>A collection of <see cref="TestLevel"/> instances.</returns>
         public async Task<ICollection<GetTestLevelResponse>> GetAllAsync(CancellationToken ct)
         {
-            _logger.LogDebug("TestLevelService::GetAllAsync() start!");
+            _logger?.LogDebug("TestLevelService::GetAllAsync() start!");
 
             ICollection<TestLevel> testLevels = await _dbContext.TestLevels.ToListAsync(ct);
             ICollection<GetTestLevelResponse> response = testLevels

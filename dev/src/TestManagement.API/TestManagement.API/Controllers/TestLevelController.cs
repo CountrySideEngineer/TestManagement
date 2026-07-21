@@ -21,7 +21,7 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Logger instance for recording controller events and debugging information.
         /// </summary>
-        private readonly ILogger<TestLevelController> _logger;
+        private readonly ILogger<TestLevelController>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the TestLevelController class.
@@ -29,7 +29,7 @@ namespace TestManagement.API.Controllers
         /// <param name="logger">The logger instance for logging controller operations.</param>
         /// <param name="testLevelRepository">The test level service for data operations.</param>
         public TestLevelController(
-            ILogger<TestLevelController> logger, 
+            ILogger<TestLevelController>? logger, 
             ITestLevelService testLevelRepository)
         {
             _logger = logger;
@@ -45,7 +45,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<GetTestLevelResponse>>> GetAllAsync(CancellationToken ct)
         {
-            _logger.LogDebug("TestLevelController.GetAllTestLevels() start!");
+            _logger?.LogDebug("TestLevelController.GetAllTestLevels() start!");
 
             ICollection<GetTestLevelResponse> testLevels = await _testLevelService.GetAllAsync(ct);
             return Ok(testLevels);
