@@ -23,14 +23,17 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Logger instance used for diagnostic and audit logging within the controller.
         /// </summary>
-        private readonly ILogger<TestCaseController> _logger;
+        private readonly ILogger<TestCaseController>? _logger;
 
         /// <summary>
         /// Creates a new instance of <see cref="TestCaseController"/>.
         /// </summary>
         /// <param name="logger">Logger instance used for diagnostic messages.</param>
         /// <param name="testCaseService">Service that encapsulates test case use-cases.</param>
-        public TestCaseController(ILogger<TestCaseController> logger, ITestCaseService testCaseService)
+        public TestCaseController(
+            ILogger<TestCaseController>? logger, 
+            ITestCaseService testCaseService
+            )
         {
             _logger = logger;
             _testCaseService = testCaseService;
@@ -45,7 +48,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<GetTestCaseResponse>>> GetAllAsync(CancellationToken ct)
         {
-            _logger.LogDebug("TestCaseController.GetAllAsync() start!");
+            _logger?.LogDebug("TestCaseController.GetAllAsync() start!");
 
             ICollection<GetTestCaseResponse> testCases = await _testCaseService.GetAllAsync(ct);
             return Ok(testCases);
@@ -66,7 +69,7 @@ namespace TestManagement.API.Controllers
         [ActionName(nameof(GetByIdAsync))]
         public async Task<ActionResult<GetTestCaseResponse>> GetByIdAsync(long id, CancellationToken ct)
         {
-            _logger.LogDebug("TestCaseController.GetByIdAsync() start!");
+            _logger?.LogDebug("TestCaseController.GetByIdAsync() start!");
 
             GetTestCaseResponse testCase = await _testCaseService.GetByTestCaseIdAsync(id, ct);
             return Ok(testCase);
@@ -83,7 +86,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<TestCaseVersion>> GetByVersionIdAsync(long versionId, CancellationToken ct)
         {
-            _logger.LogDebug("TestCaseController.GetByVersionIdAsync() start!");
+            _logger?.LogDebug("TestCaseController.GetByVersionIdAsync() start!");
 
             var testCaseVersion = await _testCaseService.GetByVersionIdAsync(versionId, ct);
             if (testCaseVersion == null)
@@ -104,7 +107,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateTestCaseResponse>> CreateAsync([FromBody] CreateTestCaseRequest request, CancellationToken ct)
         {
-            _logger.LogDebug("TestCaseController.Create() start!");
+            _logger?.LogDebug("TestCaseController.Create() start!");
             var response = await _testCaseService.CreateAsync(request, ct);
 
             return CreatedAtAction(
@@ -132,7 +135,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateBulkAsync([FromBody] ICollection<CreateTestCaseRequest> requests, CancellationToken ct)
         {
-            _logger.LogDebug("TestCaseController.CreateBulk() start!");
+            _logger?.LogDebug("TestCaseController.CreateBulk() start!");
 
             var responses = await _testCaseService.CreateAsync(requests, ct);
             return Ok(responses);
@@ -157,7 +160,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<CreateTestCaseResponse>>> CreateIfNotExistsAsync([FromBody] ICollection<CreateTestCaseRequest> requests, CancellationToken ct)
         {
-            _logger.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
+            _logger?.LogDebug("TestCaseController.CreateIfNotExistsAsync() start!");
 
             var responses = await _testCaseService.CreateIfNotExistsAsync(requests, ct);
             return Ok(responses);
@@ -179,7 +182,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UpdateTestCaseResponse>> UpdateAsync(long id, [FromBody] UpdateTestCaseRequest request, CancellationToken ct = default)
         {
-            _logger.LogDebug("TestCaseController.UpdateAsync() start!");
+            _logger?.LogDebug("TestCaseController.UpdateAsync() start!");
 
             var response = await _testCaseService.UpdateAsync(request, ct);
             return Ok(response);

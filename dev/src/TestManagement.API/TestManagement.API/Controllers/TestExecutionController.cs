@@ -16,7 +16,7 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Logger for recording diagnostic and operational messages for the controller.
         /// </summary>
-        private readonly ILogger<TestExecutionController> _logger;
+        private readonly ILogger<TestExecutionController>? _logger;
 
         /// <summary>
         /// Service responsible for handling test execution operations and business logic.
@@ -29,7 +29,7 @@ namespace TestManagement.API.Controllers
         /// <param name="logger">Logger instance for the controller.</param>
         /// <param name="testExecutionService">Service that handles test execution operations.</param>
         public TestExecutionController(
-            ILogger<TestExecutionController> logger, 
+            ILogger<TestExecutionController>? logger, 
             ITestExecutionService testExecutionService
             )
         {
@@ -48,7 +48,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<GetTestExecutionResponse>>> GetAllAsync(CancellationToken ct = default)
         {
-            _logger.LogDebug("TestExecutionController.GetAsync() start!");
+            _logger?.LogDebug("TestExecutionController.GetAsync() start!");
 
             ICollection<GetTestExecutionResponse> responses = await _testExecutionService.GetAsync(ct);
             return Ok(responses);
@@ -68,7 +68,7 @@ namespace TestManagement.API.Controllers
         [ActionName(nameof(GetByIdAsync))]
         public async Task<ActionResult<GetTestExecutionResponse>> GetByIdAsync(long id, CancellationToken ct = default)
         {
-            _logger.LogDebug("TestExecutionController.GetAsync() start!");
+            _logger?.LogDebug("TestExecutionController.GetAsync() start!");
 
             GetTestExecutionResponse response = await _testExecutionService.GetByIdAsync(id, ct);
             return Ok(response);
@@ -87,7 +87,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateTestExecutionResponse>> CreateAsync([FromBody] CreateTestExecutionRequest request, CancellationToken ct = default)
         {
-            _logger.LogDebug("TestExecutionController.CreateAsync() start!");
+            _logger?.LogDebug("TestExecutionController.CreateAsync() start!");
 
             CreateTestExecutionResponse response = await _testExecutionService.CreateAsync(request, ct);
             return CreatedAtAction(
@@ -111,7 +111,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UpdateTestExecutionResponse>> UpdateAsync(long id, [FromBody] UpdateTestExecutionRequest request, CancellationToken ct = default)
         {
-            _logger.LogDebug("TestExecutionController.UpdateAsync() start!");
+            _logger?.LogDebug("TestExecutionController.UpdateAsync() start!");
 
             UpdateTestExecutionResponse response = await _testExecutionService.UpdateAsync(request, ct);
             return Ok(response);

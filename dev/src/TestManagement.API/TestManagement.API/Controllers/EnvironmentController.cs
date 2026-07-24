@@ -24,7 +24,7 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Logger used for diagnostic messages within the controller.
         /// </summary>
-        private readonly ILogger<EnvironmentController> _logger;
+        private readonly ILogger<EnvironmentController>? _logger;
 
         /// <summary>
         /// Creates a new instance of <see cref="EnvironmentController"/>.
@@ -32,7 +32,7 @@ namespace TestManagement.API.Controllers
         /// <param name="logger">Logger instance used for diagnostic messages.</param>
         /// <param name="environmentService">Service that provides environment use-cases.</param>
         public EnvironmentController(
-            ILogger<EnvironmentController> logger,
+            ILogger<EnvironmentController>? logger,
             IEnvironmentService environmentService
             )
         {
@@ -49,7 +49,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetAllAsync(CancellationToken ct = default)
         {
-            _logger.LogDebug("EnvironmentController.GetAllAsync start!");
+            _logger?.LogDebug("EnvironmentController.GetAllAsync start!");
 
             var result = await _environmentService.GetAllAsync(ct);
             return Ok(result);
@@ -68,7 +68,7 @@ namespace TestManagement.API.Controllers
         [ActionName(nameof(GetByIdAsync))]
         public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetByIdAsync(int id, CancellationToken ct = default)
         {
-            _logger.LogDebug("EnvironmentController.GetByIdAsync start!");
+            _logger?.LogDebug("EnvironmentController.GetByIdAsync start!");
 
             ICollection<GetEnvironmentResponse> responses = await _environmentService.GetByIdAsync(id, ct);
             return Ok(responses);
@@ -87,7 +87,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ICollection<GetEnvironmentResponse>>> GetByNameAsync([FromQuery] string name, CancellationToken ct = default)
         {
-            _logger.LogDebug("EnvironmentController.GetByNameAsync start!");
+            _logger?.LogDebug("EnvironmentController.GetByNameAsync start!");
 
             ICollection<GetEnvironmentResponse> responses = await _environmentService.GetByNameAsync(name, ct);
             return Ok(responses);
@@ -105,7 +105,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<CreateEnvironmentResponse>> CreateAsync([FromBody] CreateEnvironmentRequest request, CancellationToken ct = default)
         {
-            _logger.LogDebug("EnvironmentController.CreateAsync start!");
+            _logger?.LogDebug("EnvironmentController.CreateAsync start!");
 
             CreateEnvironmentResponse response = await _environmentService.CreateAsync(request, ct);
 
@@ -129,7 +129,7 @@ namespace TestManagement.API.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<UpdateEnvironmentResponse>> UpdateAsync(long id, [FromBody] UpdateEnvironmentRequest request, CancellationToken ct = default)
         {
-            _logger.LogDebug("EnvironmentController.UpdateAsync start!");
+            _logger?.LogDebug("EnvironmentController.UpdateAsync start!");
 
             UpdateEnvironmentResponse response = await _environmentService.UpdateAsync(request, ct);
             return Ok(response);
