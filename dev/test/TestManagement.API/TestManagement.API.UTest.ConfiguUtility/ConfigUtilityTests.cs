@@ -18,8 +18,9 @@ namespace TestManagement.API.Tests
         {
             var dict = new Dictionary<string, string?> { [key] = val };
             IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(dict).Build();
+            ConfigUtility configUtility = new ConfigUtility(config);
 
-            var result = ConfigUtility.GetValue(config, key);
+            var result = configUtility.GetValue(key);
 
             Assert.Equal(val, result);
         }
@@ -34,8 +35,9 @@ namespace TestManagement.API.Tests
         {
             var dict = new Dictionary<string, string?> { [key] = val };
             IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(dict).Build();
+            ConfigUtility configUtility = new ConfigUtility(config);
 
-            var result = ConfigUtility.GetValue(config, key);
+            var result = configUtility.GetValue(key, required: true);
 
             Assert.Equal(val, result);
         }
@@ -50,8 +52,9 @@ namespace TestManagement.API.Tests
         {
             var dict = new Dictionary<string, string?> { [key] = val };
             IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(dict).Build();
+            ConfigUtility configUtility = new ConfigUtility(config);
 
-            var result = ConfigUtility.GetValue(config, key);
+            var result = configUtility.GetValue(key, required: false);
 
             Assert.Equal(val, result);
         }
@@ -61,8 +64,9 @@ namespace TestManagement.API.Tests
         {
             var dict = new Dictionary<string, string?>();
             IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(dict).Build();
+            ConfigUtility configUtility = new ConfigUtility(config);
 
-            var result = ConfigUtility.GetValue(config, "MissingKey", required: false);
+            var result = configUtility.GetValue("MissingKey", required: false);
 
             Assert.Null(result);
         }
@@ -74,8 +78,9 @@ namespace TestManagement.API.Tests
         {
             var dict = new Dictionary<string, string?>();
             IConfiguration config = new ConfigurationBuilder().AddInMemoryCollection(dict).Build();
+            ConfigUtility configUtility = new ConfigUtility(config);
 
-            var ex = Assert.Throws<InvalidOperationException>(() => ConfigUtility.GetValue(config, key, required: true));
+            var ex = Assert.Throws<InvalidOperationException>(() => configUtility.GetValue(key, required: true));
 
             Assert.Contains(key, ex.Message);
         }
