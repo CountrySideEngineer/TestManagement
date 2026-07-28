@@ -3,8 +3,6 @@ using System;
 using TestManagement.API.Data;
 using TestManagement.API.Infrastructure.Database;
 using TestManagement.API.Services;
-using TestManagement.API.Services.Xml;
-
 var builder = WebApplication.CreateBuilder(args);
 
 string connectionString = DBConnectionFactory.CreatePostgresConnectionString(builder.Configuration);
@@ -16,9 +14,6 @@ builder.Services.AddScoped<ITestCaseService, TestCaseService>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<ITestResultService, TestResultService>();
-
-// XML converter
-builder.Services.AddScoped<ITestResultXmlConverter, TestResultXmlConverter>();
 
 builder.Services.AddMvc().AddXmlSerializerFormatters();
 

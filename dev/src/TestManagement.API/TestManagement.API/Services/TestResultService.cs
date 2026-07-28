@@ -5,17 +5,11 @@ using TestManagement.API.Features.TestResult.Create;
 using TestManagement.API.Features.TestResult.Get;
 using TestManagement.API.Models;
 using TestManagement.API.Models.Report.Xml;
-using TestManagement.API.Services.Xml;
 
 namespace TestManagement.API.Services
 {
     public class TestResultService : ITestResultService
     {
-        /// <summary>
-        /// Repository used to access and manipulate test result entities.
-        /// </summary>
-        private readonly ITestResultXmlConverter _xmlConverter;
-
         /// <summary>
         /// Database context used to access and persist test execution related entities.
         /// </summary>
@@ -36,12 +30,10 @@ namespace TestManagement.API.Services
         /// <param name="logger">Logger instance for diagnostic messages.</param>
         public TestResultService(
             TestManagementDbContext dbContext,
-            ITestResultXmlConverter xmlConverter,
             ILogger<TestResultService>? logger
             )
         {
             _dbContext = dbContext;
-            _xmlConverter = xmlConverter;
             _logger = logger;
         }
 
