@@ -5,8 +5,6 @@ using TestManagement.API.Infrastructure.Configuration;
 using TestManagement.API.Infrastructure.Database;
 using TestManagement.API.Infrastructure.IO;
 using TestManagement.API.Services;
-using TestManagement.API.Services.Xml;
-
 var builder = WebApplication.CreateBuilder(args);
 
 var fileReader = new FileReader();
@@ -22,9 +20,6 @@ builder.Services.AddScoped<ITestCaseService, TestCaseService>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<ITestResultService, TestResultService>();
-
-// XML converter
-builder.Services.AddScoped<ITestResultXmlConverter, TestResultXmlConverter>();
 
 builder.Services.AddMvc().AddXmlSerializerFormatters();
 
