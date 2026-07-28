@@ -11,7 +11,6 @@ using TestManagement.API.Features.TestResult.Create;
 using TestManagement.API.Features.TestResult.Get;
 using TestManagement.API.Models;
 using TestManagement.API.Services;
-using TestManagement.API.Services.Xml;
 using Xunit;
 
 namespace TestManagement.API.Tests.Service
@@ -64,7 +63,7 @@ namespace TestManagement.API.Tests.Service
 
 			await ctx.SaveChangesAsync();
 
-			var svc = new TestResultService(ctx, new DummyXmlConverter(), NullLogger<TestResultService>.Instance);
+			var svc = new TestResultService(ctx, NullLogger<TestResultService>.Instance);
 
 			// Act
 			var results = await svc.GetAllAsync(CancellationToken.None);

@@ -11,22 +11,12 @@ using TestManagement.API.Features.TestResult.Create;
 using TestManagement.API.Features.TestResult.Get;
 using TestManagement.API.Models;
 using TestManagement.API.Services;
-using TestManagement.API.Services.Xml;
 using Xunit;
 
 namespace TestManagement.API.Tests.Service
 {
     public partial class TestResultServiceTests
     {
-        // シンプルなスタブ実装（テスト用）。テスト対象メソッドでは未使用だがコンストラクタ引数として必要。
-        private class DummyXmlConverter : ITestResultXmlConverter
-        {
-            public Task<ICollection<TestResult>> ConvertAsync(Models.Report.Xml.TestSuitesXml suites, CancellationToken cancellationToken = default)
-            {
-                return Task.FromResult<ICollection<TestResult>>(Array.Empty<TestResult>());
-            }
-        }
-
         private static TestManagementDbContext CreateContext(string dbName)
         {
             var options = new DbContextOptionsBuilder<TestManagementDbContext>()
@@ -39,7 +29,6 @@ namespace TestManagement.API.Tests.Service
             ctx.Database.EnsureCreated();
             return ctx;
         }
-
 
         [Theory]
         [InlineData("passed")]
@@ -69,7 +58,7 @@ namespace TestManagement.API.Tests.Service
 
             await ctx.SaveChangesAsync();
 
-            var svc = new TestResultService(ctx, new DummyXmlConverter(), NullLogger<TestResultService>.Instance);
+            var svc = new TestResultService(ctx, NullLogger<TestResultService>.Instance);
 
             var req = new CreateTestResultRequest
             {
@@ -129,7 +118,7 @@ namespace TestManagement.API.Tests.Service
 
             await ctx.SaveChangesAsync();
 
-            var svc = new TestResultService(ctx, new DummyXmlConverter(), NullLogger<TestResultService>.Instance);
+            var svc = new TestResultService(ctx, NullLogger<TestResultService>.Instance);
 
             var requests = new List<CreateTestResultRequest>();
             for (int i = 0; i < count; i++)
