@@ -15,13 +15,13 @@ namespace TestManagement.API.Controllers
         /// <summary>
         /// Logger instance for recording error details.
         /// </summary>
-        private readonly ILogger<ErrorController> _logger;
+        private readonly ILogger<ErrorController>? _logger;
 
         /// <summary>
         /// Creates a new instance of <see cref="ErrorController"/>.
         /// </summary>
         /// <param name="logger">The logger used to record error events and diagnostics.</param>
-        public ErrorController(ILogger<ErrorController> logger)
+        public ErrorController(ILogger<ErrorController>? logger)
         {
             _logger = logger;
         }
@@ -65,7 +65,7 @@ namespace TestManagement.API.Controllers
 
             problemDetails.Extensions["traceId"] = traceId;
 
-            _logger.LogError(exception, "Unhandled exception caught by global handler. TraceId: {TraceId}", traceId);
+            _logger?.LogError(exception, "Unhandled exception caught by global handler. TraceId: {TraceId}", traceId);
 
             return new ObjectResult(problemDetails) { StatusCode = problemDetails.Status };
         }
