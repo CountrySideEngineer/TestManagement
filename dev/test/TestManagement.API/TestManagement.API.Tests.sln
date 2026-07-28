@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestManagement.API.UTest.Fi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestManagement.API.UTest.TestResultXmlConverter", "TestManagement.API.UTest.TestResultXmlConverter\TestManagement.API.UTest.TestResultXmlConverter.csproj", "{E0A05DD4-B230-4D52-8072-8143BD32C4D5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestManagement.API.UTest.Service.TestLevelService", "TestManagement.API.UTests.Service.TestLevelService\TestManagement.API.UTest.Service.TestLevelService.csproj", "{E094851B-9885-457A-BB68-DE66B4BA80D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{E0A05DD4-B230-4D52-8072-8143BD32C4D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0A05DD4-B230-4D52-8072-8143BD32C4D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0A05DD4-B230-4D52-8072-8143BD32C4D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E094851B-9885-457A-BB68-DE66B4BA80D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E094851B-9885-457A-BB68-DE66B4BA80D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E094851B-9885-457A-BB68-DE66B4BA80D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E094851B-9885-457A-BB68-DE66B4BA80D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
