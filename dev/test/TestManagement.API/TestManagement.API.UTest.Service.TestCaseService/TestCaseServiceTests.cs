@@ -10,23 +10,8 @@ using TestManagement.API.Services;
 
 namespace TestManagement.API.Tests.Service
 {
-    public class TestCaseServiceTests
+    public partial class TestCaseServiceTests
     {
-        [Fact]
-        public async Task GetAllAsync_ReturnsAllTestCasesWithTheirVersions()
-        {
-            await using var context = CreateContext();
-            await SeedDataAsync(context);
-            var service = CreateService(context);
-
-            var result = await service.GetAllAsync(CancellationToken.None);
-
-            Assert.Equal(2, result.Count);
-
-            var first = result.Single(_ => _.Code == "TC-001");
-            Assert.Equal(2, first.Versions.Count);
-            Assert.Contains(first.Versions, version => version.Name == "Updated");
-        }
 
         [Fact]
         public async Task GetAllLatestVersionAsync_ReturnsOnlyTheLatestVersionPerTestCase()
