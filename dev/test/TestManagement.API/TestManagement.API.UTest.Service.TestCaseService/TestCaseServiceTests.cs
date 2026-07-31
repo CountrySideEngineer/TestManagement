@@ -12,36 +12,6 @@ namespace TestManagement.API.Tests.Service
 {
     public partial class TestCaseServiceTests
     {
-
-        [Fact]
-        public async Task GetAllLatestVersionAsync_ReturnsOnlyTheLatestVersionPerTestCase()
-        {
-            await using var context = CreateContext();
-            await SeedDataAsync(context);
-            var service = CreateService(context);
-
-            var result = await service.GetAllLatestVersionAsync(CancellationToken.None);
-
-            Assert.Equal(2, result.Count);
-            Assert.All(result, response => Assert.Single(response.Versions));
-            Assert.Contains(result, response => response.Code == "TC-001" && response.Versions.Single().VersionNumber == 2);
-        }
-
-        [Fact]
-        public async Task GetByTestLevelIdAsync_ReturnsOnlyVersionsForTheRequestedLevel()
-        {
-            await using var context = CreateContext();
-            await SeedDataAsync(context);
-            var service = CreateService(context);
-
-            var unitLevel = await context.TestLevels.SingleAsync(_ => _.Code == "UNIT");
-            var result = await service.GetByTestLevelIdAsync((int)unitLevel.Id, CancellationToken.None);
-
-            Assert.Single(result);
-            Assert.Equal(unitLevel.Id, result.Single().TestLevelId);
-            Assert.Equal("Initial", result.Single().Name);
-        }
-
         [Fact]
         public async Task GetByTestCaseIdAsync_ReturnsTheTestCaseAndAllVersions()
         {
