@@ -25,7 +25,12 @@ namespace TestManagement.API.Tests.Service
 
             var first = result.Single(_ => _.Code == "TC-001");
             Assert.Equal(2, first.Versions.Count);
+            Assert.Contains(first.Versions, version => version.Name == "Initial");
             Assert.Contains(first.Versions, version => version.Name == "Updated");
+
+            var second = result.Single(_ => _.Code == "TC-002");
+            Assert.Single(second.Versions);
+            Assert.Contains(second.Versions, version => version.Name == "Only one");
         }
     }
 }
