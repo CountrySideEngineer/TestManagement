@@ -1,11 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging.Abstractions;
 using TestManagement.API.Data;
-using TestManagement.API.Features.TestExecutions.Create;
-using TestManagement.API.Features.TestExecutions.Update;
+using TestManagement.API.Features.TestExecutions;
 using TestManagement.API.Models;
 using TestManagement.API.Services;
 using Environment = TestManagement.API.Models.Environment;
+using TestManagement.API.Features.TestExecutions.Create;
+using TestManagement.API.Features.TestExecutions.Update;
 
 namespace TestManagement.API.UTest.Service
 {
@@ -75,9 +76,9 @@ namespace TestManagement.API.UTest.Service
                 Environment = environmentName,
                 Revision = revision,
                 ExecutedAt = executedAt,
-                TestCases = new List<TestManagement.API.Features.TestExecutions.TestCaseExecution>
+                TestCases = new List<TestCaseExecution>
                 {
-                    new TestManagement.API.Features.TestExecutions.TestCaseExecution
+                    new TestCaseExecution
                     {
                         TestCaseCode = testCaseCode,
                         TestCaseVersion = testCaseVersion,
@@ -158,9 +159,9 @@ namespace TestManagement.API.UTest.Service
                 Environment = environmentName,
                 Revision = revision,
                 ExecutedAt = DateTime.UtcNow.AddDays(-1),
-                TestCases = new List<TestManagement.API.Features.TestExecutions.TestCaseExecution>
+                TestCases = new List<TestCaseExecution>
                 {
-                    new TestManagement.API.Features.TestExecutions.TestCaseExecution
+                    new TestCaseExecution
                     {
                         TestCaseCode = testCaseCode,
                         TestCaseVersion = testCaseVersion,
@@ -177,9 +178,9 @@ namespace TestManagement.API.UTest.Service
                 Environment = environmentName,
                 Revision = revision,
                 ExecutedAt = DateTime.UtcNow,
-                TestCases = new List<TestManagement.API.Features.TestExecutions.TestCaseExecution>
+                TestCases = new List<TestCaseExecution>
                 {
-                    new TestManagement.API.Features.TestExecutions.TestCaseExecution
+                    new TestCaseExecution
                     {
                         TestCaseCode = testCaseCode,
                         TestCaseVersion = testCaseVersion,
@@ -252,9 +253,9 @@ namespace TestManagement.API.UTest.Service
                 Environment = environmentName,
                 Revision = revision,
                 ExecutedAt = DateTime.UtcNow,
-                TestCases = new List<TestManagement.API.Features.TestExecutions.TestCaseExecution>
+                TestCases = new List<TestCaseExecution>
                 {
-                    new TestManagement.API.Features.TestExecutions.TestCaseExecution
+                    new TestCaseExecution
                     {
                         TestCaseCode = testCaseCode,
                         TestCaseVersion = testCaseVersion,
