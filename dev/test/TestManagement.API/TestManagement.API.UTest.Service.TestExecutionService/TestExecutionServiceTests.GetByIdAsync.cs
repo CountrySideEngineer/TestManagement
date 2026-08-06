@@ -16,7 +16,7 @@ namespace TestManagement.API.UTest.Service
         [Theory]
         [InlineData("env-get-1", "rev-g1", "TC-G1", 1, "PASS")]
         [InlineData("env-get-2", "rev-g2", "TC-G2", 1, "FAIL")]
-        public async Task GetAsync_ReturnsMappedDto(
+        public async Task GetAsync_And_GetByIdAsync_ReturnsMappedDto(
             string environmentName,
             string revision,
             string testCaseCode,
@@ -71,10 +71,13 @@ namespace TestManagement.API.UTest.Service
             var created = await service.CreateAsync(createRequest, CancellationToken.None);
 
             // Act
-            var all = await service.GetAsync(CancellationToken.None);
+            var single = await service.GetByIdAsync(created.TestExecutionId, CancellationToken.None);
 
             // Assert
-            Assert.Contains(all, g => g.TestExecutionId == created.TestExecutionId);
+            Assert.Equal(created.TestExecutionId, single.TestExecutionId);
+            Assert.Equal(environmentName, single.Environment);
+            Assert.NotEmpty(single.TestCases);
+            Assert.Contains(single.TestCases, tcItem => tcItem.TestCaseCode == testCaseCode);
         }
     }
 }
