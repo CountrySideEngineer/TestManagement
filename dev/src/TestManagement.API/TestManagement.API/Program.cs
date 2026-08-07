@@ -1,14 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using TestManagement.API.Data;
+using TestManagement.API.Infrastructure.Configuration;
 using TestManagement.API.Infrastructure.Database;
+using TestManagement.API.Infrastructure.IO;
 using TestManagement.API.Services;
 var builder = WebApplication.CreateBuilder(args);
 
-string connectionString = DBConnectionFactory.CreatePostgresConnectionString(builder.Configuration);
+var fileReader = new FileReader();
+var configUtility = new ConfigUtility(builder.Configuration);
+var dbConnection = new DBConnectionFactory(configUtility, fileReader);
+string connectionString = dbConnection.CreatePostgresConnectionString();
+
+builder.Services.AddDbContext<TestManagementDbContext>(options => options.UseNpgsql(connectionString));
 
 // Add services to the container.
-builder.Services.AddDbContext<TestManagementDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddScoped<ITestLevelService, TestLevelService>();
 builder.Services.AddScoped<ITestCaseService, TestCaseService>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
@@ -20,15 +26,12 @@ builder.Services.AddMvc().AddXmlSerializerFormatters();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();
