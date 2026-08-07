@@ -217,6 +217,20 @@ namespace TestManagement.API.Services
             return response;
         }
 
+        /// <summary>
+        /// Adds a new version to an existing environment when the provided OS or runtime differ from the latest version.
+        /// The method validates that the environment exists, loads its versions, compares the latest version's OS and runtime,
+        /// and appends a new version if changes are detected.
+        /// </summary>
+        /// <param name="request">The update request containing the environment name and the desired OS and runtime values.</param>
+        /// <param name="ct">A cancellation token that can be used to cancel the operation.</param>
+        /// <returns>
+        /// An <see cref="UpdateEnvironmentResponse"/> that contains the environment name, the new OS and runtime values,
+        /// and the newly created version number.
+        /// </returns>
+        /// <exception cref="ArgumentException">Thrown when the specified environment does not exist or cannot be found.</exception>
+        /// <exception cref="InvalidOperationException">Thrown when the provided OS and runtime are identical to the latest version (no update to apply).</exception>
+        /// <exception cref="Exception">Thrown if the environment has no existing versions or if saving changes fails.</exception>
         public async Task<UpdateEnvironmentResponse> UpdateAsync(UpdateEnvironmentRequest request, CancellationToken ct = default)
         {
             _logger?.LogDebug("EnvironmentService::UpdateAsync() start!");
