@@ -21,9 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="TestManagement.API">
-      <HintPath>..\..\..\src\TestManagement.API\TestManagement.API\bin\Debug\net8.0\TestManagement.API.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\..\..\src\TestManagement.API\TestManagement.API\TestManagement.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>
