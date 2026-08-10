@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
 
-namespace TestManagement.API.UTest.Controller.TestLevelController
+namespace TestManagement.API.Tests.Controller
 {
     public class TestLevelControllerTests
     {
