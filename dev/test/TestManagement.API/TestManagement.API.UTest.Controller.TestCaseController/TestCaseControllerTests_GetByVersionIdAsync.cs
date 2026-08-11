@@ -32,5 +32,26 @@ namespace TestManagement.API.Tests.Controller
             // Assert
             Assert.IsType<NotFoundResult>(result.Result);
         }
+
+        [Fact]
+        public async Task GetByVersionIdAsync_WhenFound_ReturnsOkWithVersion()
+        {
+            // Arrange
+            var mockService = new Mock<ITestCaseService>();
+            var mockLogger = new Mock<ILogger<TestCaseController>>();
+            var controller = new TestCaseController(mockLogger.Object, mockService.Object);
+
+            var version = new TestCaseVersion { Id = 5, Name = "v1" };
+            mockService.Setup(s => s.GetByVersionIdAsync(5, It.IsAny<CancellationToken>()))
+                        .ReturnsAsync(version);
+
+            // Act
+            var result = await controller.GetByVersionIdAsync(5, CancellationToken.None);
+
+            // Assert
+            var ok = Assert.IsType<OkObjectResult>(result.Result);
+            var value = Assert.IsType<TestCaseVersion>(ok.Value);
+            Assert.Equal(5, value.Id);
+        }
     }
 }
