@@ -14,31 +14,28 @@ namespace TestManagement.API.Tests.Controller
 {
     public class TestCaseControllerTests
     {
-        private readonly Mock<ITestCaseService> _mockService;
-        private readonly Mock<ILogger<TestCaseController>> _mockLogger;
-        private readonly TestCaseController _controller;
-
         public TestCaseControllerTests()
         {
-            _mockService = new Mock<ITestCaseService>();
-            _mockLogger = new Mock<ILogger<TestCaseController>>();
-            _controller = new TestCaseController(_mockLogger.Object, _mockService.Object);
         }
 
         [Fact]
         public async Task GetAllAsync_ReturnsOkWithCollection()
         {
+            var mockService = new Mock<ITestCaseService>();
+            var mockLogger = new Mock<ILogger<TestCaseController>>();
+            var controller = new TestCaseController(mockLogger.Object, mockService.Object);
+
             // Arrange
             var list = new List<GetTestCaseResponse>
             {
                 new GetTestCaseResponse { Code = "C1", Id = 1 },
                 new GetTestCaseResponse { Code = "C2", Id = 2 }
             };
-            _mockService.Setup(s => s.GetAllAsync(It.IsAny<CancellationToken>()))
+            mockService.Setup(s => s.GetAllAsync(It.IsAny<CancellationToken>()))
                         .ReturnsAsync((ICollection<GetTestCaseResponse>)list);
 
             // Act
-            var result = await _controller.GetAllAsync(CancellationToken.None);
+            var result = await controller.GetAllAsync(CancellationToken.None);
 
             // Assert
             var ok = Assert.IsType<OkObjectResult>(result.Result);
