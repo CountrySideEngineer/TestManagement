@@ -63,7 +63,7 @@ namespace TestManagement.API.Data
         /// </summary>
         public DbSet<TestExecution> TestExecutions { get; set; }
 
-        public DbSet<TestSuiteCase> TestSuiteCases { get; set; }
+        public DbSet<TestSuiteVersion> TestSuiteCases { get; set; }
 
         /// <summary>
         /// Applies configuration for all entities when the model is being created.
@@ -415,7 +415,7 @@ namespace TestManagement.API.Data
 
         private void ConfigureTestSuiteCase(ModelBuilder builder)
         {
-            var entity = builder.Entity<TestSuiteCase>();
+            var entity = builder.Entity<TestSuiteVersion>();
 
             entity.HasKey(_ => _.Id);
 
