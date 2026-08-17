@@ -63,6 +63,8 @@ namespace TestManagement.API.Data
         /// </summary>
         public DbSet<TestExecution> TestExecutions { get; set; }
 
+        public DbSet<TestSuiteCase> TestSuiteCases { get; set; }
+
         /// <summary>
         /// Applies configuration for all entities when the model is being created.
         /// </summary>
@@ -79,6 +81,7 @@ namespace TestManagement.API.Data
             ConfigureEnvironment(modelBuilder);
             ConfigureTestExecutionItem(modelBuilder);
             ConfigureTestExecution(modelBuilder);
+            ConfigureTestSuiteCase(modelBuilder);
         }
 
         /// <summary>
@@ -407,6 +410,22 @@ namespace TestManagement.API.Data
             entity.HasKey(_ => _.Id);
 
             entity.HasIndex(_ => new { _.Revision, _.EnvironmentId })
+                .IsUnique();
+        }
+
+        private void ConfigureTestSuiteCase(ModelBuilder builder)
+        {
+            var entity = builder.Entity<TestSuiteCase>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.TestSuiteId)
+                .IsRequired();
+
+            entity.Property(_ => _.TestSuiteId)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.TestSuiteId, _.TestCaseVersionId })
                 .IsUnique();
         }
     }
