@@ -20,5 +20,9 @@ namespace TestManagement.API.Models
 
         [JsonIgnore]
         public virtual ICollection<TestCaseVersion>? TestCaseVersions { get; set; } = null;
+
+        // Navigation back to TestSuite
+        [JsonIgnore]
+        public virtual TestSuite? TestSuite { get; set; }
     }
 }

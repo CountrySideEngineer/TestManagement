@@ -424,9 +424,6 @@ namespace TestManagement.API.Data
 
             entity.Property(_ => _.TestSuiteId)
                 .IsRequired();
-
-            entity.HasIndex(_ => new { _.TestSuiteId, _.TestCaseVersionId })
-                .IsUnique();
         }
     }
 }
