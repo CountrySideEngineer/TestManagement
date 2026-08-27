@@ -63,6 +63,9 @@ namespace TestManagement.API.Data
         /// </summary>
         public DbSet<TestExecution> TestExecutions { get; set; }
 
+        /// <summary>
+        /// DbSet of test suite cases.
+        /// </summary>
         public DbSet<TestSuiteVersion> TestSuiteCases { get; set; }
 
         /// <summary>
@@ -81,7 +84,7 @@ namespace TestManagement.API.Data
             ConfigureEnvironment(modelBuilder);
             ConfigureTestExecutionItem(modelBuilder);
             ConfigureTestExecution(modelBuilder);
-            ConfigureTestSuiteCase(modelBuilder);
+            ConfigureTestSuiteVersion(modelBuilder);
         }
 
         /// <summary>
@@ -413,7 +416,10 @@ namespace TestManagement.API.Data
                 .IsUnique();
         }
 
-        private void ConfigureTestSuiteCase(ModelBuilder builder)
+        /// <summary>
+        /// Configures the TestSuiteCase entity mapping and relationships.
+        /// </summary>
+        private void ConfigureTestSuiteVersion(ModelBuilder builder)
         {
             var entity = builder.Entity<TestSuiteVersion>();
 
