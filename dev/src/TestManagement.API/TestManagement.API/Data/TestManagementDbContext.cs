@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using TestManagement.API.Models;
 using Environment = TestManagement.API.Models.Environment;
@@ -68,6 +69,8 @@ namespace TestManagement.API.Data
         /// </summary>
         public DbSet<TestSuiteVersion> TestSuiteCases { get; set; }
 
+        public DbSet<TestSuite> TestSuites { get; set; }
+
         /// <summary>
         /// Applies configuration for all entities when the model is being created.
         /// </summary>
@@ -85,6 +88,7 @@ namespace TestManagement.API.Data
             ConfigureTestExecutionItem(modelBuilder);
             ConfigureTestExecution(modelBuilder);
             ConfigureTestSuiteVersion(modelBuilder);
+            ConfigureTestSuite(modelBuilder);
         }
 
         /// <summary>
@@ -225,7 +229,7 @@ namespace TestManagement.API.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(_ => _.Status)
-                .WithMany(_ => _.TestResults )
+                .WithMany(_ => _.TestResults)
                 .HasForeignKey(_ => _.StatusId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -430,6 +434,31 @@ namespace TestManagement.API.Data
 
             entity.Property(_ => _.TestSuiteId)
                 .IsRequired();
+
+            entity.HasOne(_ => _.TestSuite)
+                .WithMany(_ => _.TestSuiteCases)
+                .HasForeignKey(_ => _.TestSuiteId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        /// <summary>
+        /// Configures the TestSuite entity mapping and constraints.
+        /// </summary>
+        /// <param name="builder"></param>
+        private void ConfigureTestSuite(ModelBuilder builder)
+        {
+            var entity = builder.Entity<TestSuite>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Name)
+                .IsRequired();
+
+            entity.Property(_ => _.ProjectId)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.ProjectId, _.Name })
+                .IsUnique();
         }
     }
 }
