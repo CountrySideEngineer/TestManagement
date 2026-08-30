@@ -20,6 +20,7 @@ builder.Services.AddScoped<ITestCaseService, TestCaseService>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<ITestResultService, TestResultService>();
+builder.Services.AddScoped<ITestSuiteService, TestSuiteService>();
 
 builder.Services.AddMvc().AddXmlSerializerFormatters();
 
