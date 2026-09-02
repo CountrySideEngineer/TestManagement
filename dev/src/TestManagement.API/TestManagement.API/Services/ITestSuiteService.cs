@@ -15,6 +15,6 @@ namespace TestManagement.API.Services
         /// <summary>
         /// Retrieve a single test suite by id.
         /// </summary>
-        Task<GetTestSuiteResponse?> GetByIdAsync(long id, CancellationToken ct = default);
+        Task<GetTestSuiteResponse> GetByIdAsync(long id, CancellationToken ct = default);
     }
 }

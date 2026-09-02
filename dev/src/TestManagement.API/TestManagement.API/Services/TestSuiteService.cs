@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 using TestManagement.API.Data;
 using TestManagement.API.Features.TestSuite;
 using TestManagement.API.Models;
@@ -95,11 +96,11 @@ public class TestSuiteService : ITestSuiteService
     /// <param name="id">Identifier of the test suite to retrieve.</param>
     /// <param name="ct">Cancellation token to cancel the operation.</param>
     /// <returns>The matching <see cref="GetTestSuiteResponse"/> if found; otherwise null.</returns>
-    public async Task<GetTestSuiteResponse?> GetByIdAsync(long id, CancellationToken ct = default)
+    public async Task<GetTestSuiteResponse> GetByIdAsync(long id, CancellationToken ct = default)
     {
         _logger?.LogDebug("TestSuiteService::GetByIdAsync() start!");
 
-        return await _context.TestSuites
+        var response = await _context.TestSuites
             .Where(ts => ts.Id == id)
             .AsNoTracking()
             .Select(ts => new GetTestSuiteResponse
@@ -141,5 +142,14 @@ public class TestSuiteService : ITestSuiteService
                     }).ToList()
             })
             .FirstOrDefaultAsync(ct);
+
+        if (response is null)
+        {
+            return new GetTestSuiteResponse();
+        }
+        else
+        {
+            return response;
+        }
     }
 }

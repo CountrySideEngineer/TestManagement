@@ -48,5 +48,31 @@ public class TestSuiteController : Controller
         _logger?.LogDebug("TestSuiteController.GetAllTestSuites() start!");
         ICollection<GetTestSuiteResponse> testSuites = await _testSuiteService.GetAllAsync(ct);
         return Ok(testSuites);
-    }   
+    }
+
+
+    /// <summary>
+    /// Retrieves a single test suite by its unique identifier.
+    /// Returns a 200 OK with the test suite when found, or 404 Not Found when no matching test suite exists.
+    /// </summary>
+    /// <param name="id">The unique identifier of the test suite to retrieve.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// An <see cref="ActionResult{GetTestSuiteResponse}"/> containing the test suite when found,
+    /// or a NotFound result when the test suite does not exist.
+    /// </returns>
+    [HttpGet("{id}")]
+    [ProducesResponseType(typeof(GetTestSuiteResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<GetTestSuiteResponse>> GetByIdAsync(long id, CancellationToken ct)
+    {
+        _logger?.LogDebug("TestSuiteController.GetTestSuiteById() start!");
+        GetTestSuiteResponse testSuite = await _testSuiteService.GetByIdAsync(id, ct);
+        if (testSuite == null)
+        {
+            return NotFound();
+        }
+        return Ok(testSuite);
+    }
 }
