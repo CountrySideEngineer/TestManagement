@@ -20,6 +20,9 @@ public class TestSuiteController : Controller
         _testSuiteService = testSuiteService;
     }
 
+    [HttpGet]
+    [ProducesResponseType(typeof(ICollection<GetTestSuiteResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ICollection<GetTestSuiteResponse>>> GetAllAsync(CancellationToken ct)
     {
         _logger?.LogDebug("TestSuiteController.GetAllTestSuites() start!");
