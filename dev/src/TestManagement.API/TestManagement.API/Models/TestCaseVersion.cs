@@ -61,7 +61,7 @@ namespace TestManagement.API.Models
         /// This property is ignored during JSON serialization to avoid circular references.
         /// </summary>
         [JsonIgnore]
-        public ICollection<TestResult> Results { get; set; } = new List<TestResult>();
+        public List<TestResult> Results { get; set; } = new List<TestResult>();
 
         /// <summary>
         /// Navigation property to the <see cref="TestLevel"/> associated with this version.

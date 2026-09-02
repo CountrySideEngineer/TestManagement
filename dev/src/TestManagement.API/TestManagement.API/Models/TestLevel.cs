@@ -55,6 +55,6 @@ namespace TestManagement.API.Models
         /// This property is ignored by JSON serialization to avoid circular references.
         /// </summary>
         [JsonIgnore]
-        public ICollection<TestCaseVersion> TestCaseVersions { get; set; } = new List<TestCaseVersion>();
+        public List<TestCaseVersion> TestCaseVersions { get; set; } = new List<TestCaseVersion>();
     }
 }

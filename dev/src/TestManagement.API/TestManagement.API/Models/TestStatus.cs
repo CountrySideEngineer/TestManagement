@@ -72,6 +72,6 @@ namespace TestManagement.API.Models
         /// Navigation property to related test results that have this status.
         /// </summary>
         [JsonIgnore]
-        public ICollection<TestResult> TestResults { get; set; } = new List<TestResult>();
+        public List<TestResult> TestResults { get; set; } = new List<TestResult>();
     }
 }

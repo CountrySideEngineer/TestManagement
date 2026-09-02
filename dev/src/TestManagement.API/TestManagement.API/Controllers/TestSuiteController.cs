@@ -69,10 +69,6 @@ public class TestSuiteController : Controller
     {
         _logger?.LogDebug("TestSuiteController.GetTestSuiteById() start!");
         GetTestSuiteResponse testSuite = await _testSuiteService.GetByIdAsync(id, ct);
-        if (testSuite == null)
-        {
-            return NotFound();
-        }
         return Ok(testSuite);
     }
 }

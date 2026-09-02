@@ -34,8 +34,7 @@ namespace TestManagement.API.Features.TestSuite
         /// <summary>
         /// Collection of versions (cases) that belong to this test suite.
         /// </summary>
-        [JsonIgnore]
-        public virtual ICollection<TestSuiteVersionResponse>? TestSuiteVersions { get; set; } = null;
+        public virtual List<TestSuiteVersionResponse>? TestSuiteVersions { get; set; } = null;
 
         public class TestSuiteVersionResponse
         {
@@ -43,7 +42,7 @@ namespace TestManagement.API.Features.TestSuite
 
             public string Version { get; set; } = string.Empty;
 
-            public ICollection<GetTestCaseResponse>? TestCases { get; set; }
+            public List<GetTestCaseResponse>? TestCases { get; set; }
 
             public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
