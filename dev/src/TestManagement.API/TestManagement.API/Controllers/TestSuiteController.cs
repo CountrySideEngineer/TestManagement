@@ -73,7 +73,18 @@ public class TestSuiteController : Controller
         return Ok(testSuite);
     }
 
-    public async Task<ActionResult<GetTestSuiteResponse>> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct)
+    /// <summary>
+    /// Creates a new test suite resource.
+    /// The request is forwarded to the <see cref="ITestSuiteService"/> which persists the entity.
+    /// On success this endpoint returns a 201 Created response with the location of the created resource.
+    /// </summary>
+    /// <param name="request">Request containing the properties for the new test suite (name, description).</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// An <see cref="ActionResult{CreateTestSuiteResponse}"/> containing the created test suite details.
+    /// Returns 201 Created when the resource is successfully created.
+    /// </returns>
+    public async Task<ActionResult<CreateTestSuiteResponse>> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct)
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuite() start!");
 
