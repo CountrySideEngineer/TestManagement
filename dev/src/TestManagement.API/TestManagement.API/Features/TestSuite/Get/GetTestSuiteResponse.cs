@@ -2,7 +2,7 @@
 using TestManagement.API.Features.TestCases.Get;
 using TestManagement.API.Models;
 
-namespace TestManagement.API.Features.TestSuite
+namespace TestManagement.API.Features.TestSuite.Get
 {
     public class GetTestSuiteResponse
     {

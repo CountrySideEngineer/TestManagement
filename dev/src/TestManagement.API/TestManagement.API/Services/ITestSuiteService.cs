@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using TestManagement.API.Features.TestSuite;
+using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services

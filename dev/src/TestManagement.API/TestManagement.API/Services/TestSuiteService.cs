@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TestManagement.API.Data;
-using TestManagement.API.Features.TestSuite;
+using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
