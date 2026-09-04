@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using TestManagement.API.Features.TestSuite;
+using TestManagement.API.Features.TestSuite.Create;
+using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers;
@@ -70,5 +71,13 @@ public class TestSuiteController : Controller
         _logger?.LogDebug("TestSuiteController.GetTestSuiteById() start!");
         GetTestSuiteResponse testSuite = await _testSuiteService.GetByIdAsync(id, ct);
         return Ok(testSuite);
+    }
+
+    public async Task<ActionResult<GetTestSuiteResponse>> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct)
+    {
+        _logger?.LogDebug("TestSuiteController.CreateTestSuite() start!");
+
+        CreateTestSuiteResponse createdTestSuite = await _testSuiteService.CreateAsync(request, ct);
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuite.Id }, createdTestSuite);
     }
 }
