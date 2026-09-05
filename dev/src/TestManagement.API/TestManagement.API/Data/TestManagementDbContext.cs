@@ -71,6 +71,8 @@ namespace TestManagement.API.Data
 
         public DbSet<TestSuite> TestSuites { get; set; }
 
+        public DbSet<Project> Projects { get; set; }
+
         /// <summary>
         /// Applies configuration for all entities when the model is being created.
         /// </summary>
@@ -89,6 +91,7 @@ namespace TestManagement.API.Data
             ConfigureTestExecution(modelBuilder);
             ConfigureTestSuiteVersion(modelBuilder);
             ConfigureTestSuite(modelBuilder);
+            ConfigureProject(modelBuilder);
         }
 
         /// <summary>
@@ -458,6 +461,20 @@ namespace TestManagement.API.Data
                 .IsRequired();
 
             entity.HasIndex(_ => new { _.ProjectId, _.Name })
+                .IsUnique();
+        }
+
+        private void ConfigureProject(ModelBuilder builder)
+        {
+            var entity = builder.Entity<Project>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Name)
+                .IsRequired();
+
+            // Make name unique.
+            entity.HasIndex(_ => _.Name)
                 .IsUnique();
         }
     }
