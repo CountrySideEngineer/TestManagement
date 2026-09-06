@@ -67,10 +67,16 @@ namespace TestManagement.API.Data
         /// <summary>
         /// DbSet of test suite cases.
         /// </summary>
-        public DbSet<TestSuiteComposition> TestSuiteCases { get; set; }
+        public DbSet<TestSuiteComposition> TestsSuiteCompositions { get; set; }
 
+        /// <summary>
+        /// DbSet of test suites.
+        /// </summary>
         public DbSet<TestSuite> TestSuites { get; set; }
 
+        /// <summary>
+        /// DbSet of projects.
+        /// </summary>
         public DbSet<Project> Projects { get; set; }
 
         /// <summary>
@@ -92,6 +98,7 @@ namespace TestManagement.API.Data
             ConfigureTestSuiteVersion(modelBuilder);
             ConfigureTestSuite(modelBuilder);
             ConfigureProject(modelBuilder);
+            ConfigureTestSuiteComposition(modelBuilder);
         }
 
         /// <summary>
@@ -464,6 +471,11 @@ namespace TestManagement.API.Data
                 .IsUnique();
         }
 
+        /// <summary>
+        /// Configures the Project entity mapping: defines the primary key, required properties,
+        /// and a unique index on the project name to enforce uniqueness.
+        /// </summary>
+        /// <param name="builder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
         private void ConfigureProject(ModelBuilder builder)
         {
             var entity = builder.Entity<Project>();
@@ -475,6 +487,27 @@ namespace TestManagement.API.Data
 
             // Make name unique.
             entity.HasIndex(_ => _.Name)
+                .IsUnique();
+        }
+
+        /// <summary>
+        /// Configures the TestSuiteComposition entity which represents the relationship between
+        /// test suites and test case versions. Defines the primary key, required foreign keys,
+        /// and a unique composite index to prevent duplicate suite–caseVersion associations.
+        /// </summary>
+        /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
+        private void ConfigureTestSuiteComposition(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<TestSuiteComposition>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.TestSuiteId)
+                .IsRequired();
+            entity.Property(_ => _.TestCaseVersionId)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.TestSuiteId, _.TestCaseVersionId })
                 .IsUnique();
         }
     }
