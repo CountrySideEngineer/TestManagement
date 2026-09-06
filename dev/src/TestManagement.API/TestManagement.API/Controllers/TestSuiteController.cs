@@ -84,6 +84,10 @@ public class TestSuiteController : Controller
     /// An <see cref="ActionResult{CreateTestSuiteResponse}"/> containing the created test suite details.
     /// Returns 201 Created when the resource is successfully created.
     /// </returns>
+    [HttpPost]
+    [ProducesResponseType(typeof(CreateTestSuiteResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<ActionResult<CreateTestSuiteResponse>> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct)
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuite() start!");
