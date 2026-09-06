@@ -67,7 +67,7 @@ namespace TestManagement.API.Data
         /// <summary>
         /// DbSet of test suite cases.
         /// </summary>
-        public DbSet<TestSuiteVersion> TestSuiteCases { get; set; }
+        public DbSet<TestSuiteComposition> TestSuiteCases { get; set; }
 
         public DbSet<TestSuite> TestSuites { get; set; }
 
@@ -428,7 +428,7 @@ namespace TestManagement.API.Data
         /// </summary>
         private void ConfigureTestSuiteVersion(ModelBuilder builder)
         {
-            var entity = builder.Entity<TestSuiteVersion>();
+            var entity = builder.Entity<TestSuiteComposition>();
 
             entity.HasKey(_ => _.Id);
 

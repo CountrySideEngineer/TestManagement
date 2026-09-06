@@ -49,7 +49,7 @@ namespace TestManagement.API.Models
         /// Collection of versions (cases) that belong to this test suite.
         /// </summary>
         [JsonIgnore]
-        public virtual ICollection<TestSuiteVersion>? TestSuiteCases { get; set; } = null;
+        public virtual ICollection<TestSuiteComposition>? TestSuiteCases { get; set; } = null;
 
         /// <summary>
         /// Compares this instance with another <see cref="TestSuite"/> for equality.

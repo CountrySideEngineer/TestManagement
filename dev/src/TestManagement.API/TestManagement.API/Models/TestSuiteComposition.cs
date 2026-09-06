@@ -8,7 +8,7 @@ namespace TestManagement.API.Models
     /// <summary>
     /// Represents a specific version of a <see cref="TestSuite"/>, containing a snapshot of included test case versions.
     /// </summary>
-    public class TestSuiteVersion
+    public class TestSuiteComposition
     {
         /// <summary>
         /// Primary key identifier for the test suite version.
@@ -21,14 +21,10 @@ namespace TestManagement.API.Models
         public long TestSuiteId { get; set; }
 
         /// <summary>
-        /// Monotonic version number for the suite version.
+        /// Foreign key referencing the associated <see cref="TestCaseVersion"/>.
+        /// Identifies which specific version of a test case is included in this suite composition.
         /// </summary>
-        public long VersionNumber { get; set; } = 0;
-
-        /// <summary>
-        /// Indicates whether this version is the latest published version for the related suite.
-        /// </summary>
-        public bool IsLatest { get; set; } = true;
+        public long TestCaseVersionId { get; set; }
 
         /// <summary>
         /// UTC timestamp when this version record was created.
@@ -51,5 +47,12 @@ namespace TestManagement.API.Models
         /// </summary>
         [JsonIgnore]
         public virtual TestSuite? TestSuite { get; set; }
+
+        /// <summary>
+        /// Navigation property to the parent <see cref="TestCase"/>.
+        /// May be null for detached instances or DTOs.
+        /// </summary>
+        [JsonIgnore]
+        public virtual TestCase? TestCase { get; set; }
     }
 }

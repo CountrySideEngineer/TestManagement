@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using TestManagement.API.Data;
 using TestManagement.API.Features.TestSuite.Create;
@@ -61,29 +60,42 @@ public class TestSuiteService : ITestSuiteService
                     : ts.TestSuiteCases.Select(sv => new GetTestSuiteResponse.TestSuiteVersionResponse
                     {
                         Id = sv.Id,
-                        Version = sv.VersionNumber.ToString(),
                         CreatedAt = sv.CreatedAt,
                         UpdatedAt = sv.UpdatedAt,
                         TestCases = sv.TestCaseVersions == null
                             ? null
                             : sv.TestCaseVersions.Select(tv => new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse
                             {
+                                // TestCase が読み込まれていればそれをベースに全バージョンを返す。なければ tv の情報を単一バージョンとして返す。
                                 Id = tv.TestCase != null ? tv.TestCase.Id : tv.TestCaseId,
                                 Code = tv.TestCase != null ? tv.TestCase.Code : string.Empty,
-                                Versions = new List<TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem>
-                                {
-                                    new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
+                                Versions = (tv.TestCase != null && tv.TestCase.Versions != null)
+                                    ? tv.TestCase.Versions.Select(v => new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
                                     {
-                                        Id = tv.Id,
-                                        Name = tv.Name,
-                                        Description = tv.Description,
-                                        VersionNumber = tv.VersionNumber,
-                                        TestLevelId = tv.TestLevelId,
-                                        IsLatest = tv.IsLatest,
-                                        CreatedAt = tv.CreatedAt,
-                                        UpdatedAt = tv.UpdatedAt
+                                        Id = v.Id,
+                                        Name = v.Name,
+                                        Description = v.Description,
+                                        VersionNumber = v.VersionNumber,
+                                        TestLevelId = v.TestLevelId,
+                                        IsLatest = v.IsLatest,
+                                        CreatedAt = v.CreatedAt,
+                                        UpdatedAt = v.UpdatedAt
+                                    }).ToList()
+                                    // フォールバック: TestCase.Versions が無い場合は tv 自身を単一要素として返す
+                                    : new List<TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem>
+                                    {
+                                        new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
+                                        {
+                                            Id = tv.Id,
+                                            Name = tv.Name,
+                                            Description = tv.Description,
+                                            VersionNumber = tv.VersionNumber,
+                                            TestLevelId = tv.TestLevelId,
+                                            IsLatest = tv.IsLatest,
+                                            CreatedAt = tv.CreatedAt,
+                                            UpdatedAt = tv.UpdatedAt
+                                        }
                                     }
-                                }
                             }).ToList()
                     }).ToList()
             })
@@ -117,7 +129,6 @@ public class TestSuiteService : ITestSuiteService
                     : ts.TestSuiteCases.Select(sv => new GetTestSuiteResponse.TestSuiteVersionResponse
                     {
                         Id = sv.Id,
-                        Version = sv.VersionNumber.ToString(),
                         CreatedAt = sv.CreatedAt,
                         UpdatedAt = sv.UpdatedAt,
                         TestCases = sv.TestCaseVersions == null
@@ -126,20 +137,32 @@ public class TestSuiteService : ITestSuiteService
                             {
                                 Id = tv.TestCase != null ? tv.TestCase.Id : tv.TestCaseId,
                                 Code = tv.TestCase != null ? tv.TestCase.Code : string.Empty,
-                                Versions = new List<TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem>
-                                {
-                                    new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
+                                Versions = (tv.TestCase != null && tv.TestCase.Versions != null)
+                                    ? tv.TestCase.Versions.Select(v => new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
                                     {
-                                        Id = tv.Id,
-                                        Name = tv.Name,
-                                        Description = tv.Description,
-                                        VersionNumber = tv.VersionNumber,
-                                        TestLevelId = tv.TestLevelId,
-                                        IsLatest = tv.IsLatest,
-                                        CreatedAt = tv.CreatedAt,
-                                        UpdatedAt = tv.UpdatedAt
+                                        Id = v.Id,
+                                        Name = v.Name,
+                                        Description = v.Description,
+                                        VersionNumber = v.VersionNumber,
+                                        TestLevelId = v.TestLevelId,
+                                        IsLatest = v.IsLatest,
+                                        CreatedAt = v.CreatedAt,
+                                        UpdatedAt = v.UpdatedAt
+                                    }).ToList()
+                                    : new List<TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem>
+                                    {
+                                        new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
+                                        {
+                                            Id = tv.Id,
+                                            Name = tv.Name,
+                                            Description = tv.Description,
+                                            VersionNumber = tv.VersionNumber,
+                                            TestLevelId = tv.TestLevelId,
+                                            IsLatest = tv.IsLatest,
+                                            CreatedAt = tv.CreatedAt,
+                                            UpdatedAt = tv.UpdatedAt
+                                        }
                                     }
-                                }
                             }).ToList()
                     }).ToList()
             })

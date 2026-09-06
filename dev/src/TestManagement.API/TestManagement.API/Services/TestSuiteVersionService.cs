@@ -21,8 +21,8 @@ public class TestSuiteVersionService : ITestSuiteVersionService
     /// This method performs a no-tracking query and supports cancellation via the provided token.
     /// </summary>
     /// <param name="ct">Cancellation token used to cancel the asynchronous operation.</param>
-    /// <returns>A collection of <see cref="TestSuiteVersion"/> entities.</returns>
-    public virtual async Task<ICollection<TestSuiteVersion>> GetAllAsync(CancellationToken ct = default)
+    /// <returns>A collection of <see cref="TestSuiteComposition"/> entities.</returns>
+    public virtual async Task<ICollection<TestSuiteComposition>> GetAllAsync(CancellationToken ct = default)
     {
         _logger?.LogDebug("TestSuiteVersionService::GetAllAsync() start!");
 
@@ -40,34 +40,13 @@ public class TestSuiteVersionService : ITestSuiteVersionService
     /// </summary>
     /// <param name="id">Primary key identifier of the test suite version.</param>
     /// <param name="ct">Cancellation token used to cancel the asynchronous operation.</param>
-    /// <returns>The matching <see cref="TestSuiteVersion"/> or null if not found.</returns>
-    public virtual async Task<TestSuiteVersion?> GetById(long id, CancellationToken ct = default)
+    /// <returns>The matching <see cref="TestSuiteComposition"/> or null if not found.</returns>
+    public virtual async Task<TestSuiteComposition?> GetById(long id, CancellationToken ct = default)
     {
         _logger?.LogDebug("TestSuiteVersionService::GetById() start!");
 
         return await _context.TestSuiteCases
             .Where(v => v.Id == id)
-            .Include(v => v.TestCaseVersions)
-            .Include(v => v.TestSuite)
-            .AsNoTracking()
-            .FirstOrDefaultAsync(ct);
-    }
-
-    /// <summary>
-    /// Retrieves a specific test suite version for a given test suite by version number.
-    /// Includes related test case versions and the owning test suite in the returned entity.
-    /// Returns null when no matching record exists for the requested suite and version.
-    /// </summary>
-    /// <param name="testSuiteId">Identifier of the owning test suite.</param>
-    /// <param name="versionNumber">Monotonic version number of the suite version to retrieve.</param>
-    /// <param name="ct">Cancellation token used to cancel the asynchronous operation.</param>
-    /// <returns>The matching <see cref="TestSuiteVersion"/> or null if not found.</returns>
-    public virtual async Task<TestSuiteVersion?> GetByIdAndVersion(long testSuiteId, long versionNumber, CancellationToken ct = default)
-    {
-        _logger?.LogDebug("TestSuiteVersionService::GetByIdAndVersion() start!");
-
-        return await _context.TestSuiteCases
-            .Where(v => v.TestSuiteId == testSuiteId && v.VersionNumber == versionNumber)
             .Include(v => v.TestCaseVersions)
             .Include(v => v.TestSuite)
             .AsNoTracking()
