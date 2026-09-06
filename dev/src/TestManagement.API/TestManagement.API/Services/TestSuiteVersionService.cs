@@ -26,7 +26,7 @@ public class TestSuiteVersionService : ITestSuiteVersionService
     {
         _logger?.LogDebug("TestSuiteVersionService::GetAllAsync() start!");
 
-        return await _context.TestsSuiteCompositions
+        return await _context.TestSuiteCompositions
             .Include(tsv => tsv.TestCaseVersions)
             .Include(tsv => tsv.TestSuite)
             .AsNoTracking()
@@ -45,7 +45,7 @@ public class TestSuiteVersionService : ITestSuiteVersionService
     {
         _logger?.LogDebug("TestSuiteVersionService::GetById() start!");
 
-        return await _context.TestsSuiteCompositions
+        return await _context.TestSuiteCompositions
             .Where(v => v.Id == id)
             .Include(v => v.TestCaseVersions)
             .Include(v => v.TestSuite)

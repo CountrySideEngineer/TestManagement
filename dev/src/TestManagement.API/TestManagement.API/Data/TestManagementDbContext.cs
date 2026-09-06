@@ -67,7 +67,7 @@ namespace TestManagement.API.Data
         /// <summary>
         /// DbSet of test suite cases.
         /// </summary>
-        public DbSet<TestSuiteComposition> TestsSuiteCompositions { get; set; }
+        public DbSet<TestSuiteComposition> TestSuiteCompositions { get; set; }
 
         /// <summary>
         /// DbSet of test suites.
