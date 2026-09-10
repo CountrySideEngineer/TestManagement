@@ -80,6 +80,11 @@ namespace TestManagement.API.Data
         public DbSet<Project> Projects { get; set; }
 
         /// <summary>
+        /// DbSet of project compositions (join entity between Project and TestSuite).
+        /// </summary>
+        public DbSet<ProjectComposition> ProjectCompositions { get; set; }
+
+        /// <summary>
         /// Applies configuration for all entities when the model is being created.
         /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -99,6 +104,7 @@ namespace TestManagement.API.Data
             ConfigureTestSuite(modelBuilder);
             ConfigureProject(modelBuilder);
             ConfigureTestSuiteComposition(modelBuilder);
+            ConfigureProjectComposition(modelBuilder);
         }
 
         /// <summary>
@@ -509,6 +515,40 @@ namespace TestManagement.API.Data
 
             entity.HasIndex(_ => new { _.TestSuiteId, _.TestCaseVersionId })
                 .IsUnique();
+        }
+
+        /// <summary>
+        /// Configures the ProjectComposition entity which represents the N:N relationship
+        /// between Project and TestSuite. Defines primary key, required foreign keys and
+        /// a unique composite index on (ProjectId, TestSuiteId).
+        /// </summary>
+        /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
+        private void ConfigureProjectComposition(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<ProjectComposition>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.ProjectId)
+                .IsRequired();
+
+            entity.Property(_ => _.TestSuiteId)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.ProjectId, _.TestSuiteId })
+                .IsUnique();
+
+            // Configure foreign keys; Project and TestSuite do not expose navigation collections for this join,
+            // so configure with empty inverse navigation.
+            entity.HasOne(_ => _.Project)
+                .WithMany()
+                .HasForeignKey(_ => _.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(_ => _.TestSuite)
+                .WithMany()
+                .HasForeignKey(_ => _.TestSuiteId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
