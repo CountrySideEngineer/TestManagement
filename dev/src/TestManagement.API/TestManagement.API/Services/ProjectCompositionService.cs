@@ -33,6 +33,8 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("ProjectCompositionService::GetAllAsync() start");
             return await _context.ProjectCompositions
+                .Include(_ => _.Project)
+                .Include(_ => _.TestSuite)
                 .AsNoTracking()
                 .ToListAsync(ct);
         }
@@ -49,6 +51,8 @@ namespace TestManagement.API.Services
             _logger?.LogDebug("ProjectCompositionService::GetByProjectIdAsync({ProjectId}) start", projectId);
             return await _context.ProjectCompositions
                 .Where(pc => pc.ProjectId == projectId)
+                .Include(_ => _.Project)
+                .Include(_ => _.TestSuite)
                 .AsNoTracking()
                 .ToListAsync(ct);
         }
@@ -65,6 +69,8 @@ namespace TestManagement.API.Services
             _logger?.LogDebug("ProjectCompositionService::GetByIdAsync({Id}) start", id);
             return await _context.ProjectCompositions
                 .Where(pc => pc.Id == id)
+                .Include(_ => _.Project)
+                .Include(_ => _.TestSuite)
                 .AsNoTracking()
                 .FirstOrDefaultAsync(ct);
         }
