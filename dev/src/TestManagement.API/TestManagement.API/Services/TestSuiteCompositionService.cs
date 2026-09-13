@@ -4,11 +4,28 @@ using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
 
+/// <summary>
+/// Service that provides read operations for test suite composition entities.
+/// Responsible for fetching TestSuiteComposition records including related
+/// TestCaseVersion and TestSuite navigation properties.
+/// </summary>
 public class TestSuiteCompositionService : ITestSuiteCompositionService
 {
+    /// <summary>
+    /// Entity Framework Core database context for test management data access.
+    /// </summary>
     private readonly TestManagementDbContext _context;
+
+    /// <summary>
+    /// Optional logger for diagnostic messages produced by this service.
+    /// </summary>
     private readonly ILogger<TestSuiteCompositionService>? _logger;
 
+    /// <summary>
+    /// Creates a new instance of <see cref="TestSuiteCompositionService"/>.
+    /// </summary>
+    /// <param name="context">The database context used to query TestSuiteComposition entities.</param>
+    /// <param name="logger">Logger instance for recording diagnostic information.</param>
     public TestSuiteCompositionService(TestManagementDbContext context, ILogger<TestSuiteCompositionService> logger)
     {
         _context = context;
