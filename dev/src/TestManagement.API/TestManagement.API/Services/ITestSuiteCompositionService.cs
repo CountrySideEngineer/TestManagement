@@ -2,7 +2,7 @@
 
 namespace TestManagement.API.Services;
 
-public interface ITestSuiteVersionService
+public interface ITestSuiteCompositionService
 {
     /// <summary>
     /// Retrieve all test suite versions including their related test case versions.

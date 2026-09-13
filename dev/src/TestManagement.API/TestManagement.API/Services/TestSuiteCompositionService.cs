@@ -4,12 +4,12 @@ using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
 
-public class TestSuiteVersionService : ITestSuiteVersionService
+public class TestSuiteCompositionService : ITestSuiteCompositionService
 {
     private readonly TestManagementDbContext _context;
-    private readonly ILogger<TestSuiteVersionService>? _logger;
+    private readonly ILogger<TestSuiteCompositionService>? _logger;
 
-    public TestSuiteVersionService(TestManagementDbContext context, ILogger<TestSuiteVersionService> logger)
+    public TestSuiteCompositionService(TestManagementDbContext context, ILogger<TestSuiteCompositionService> logger)
     {
         _context = context;
         _logger = logger;
