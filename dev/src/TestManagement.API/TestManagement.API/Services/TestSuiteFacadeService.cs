@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using TestManagement.API.Features.TestSuite.Create;
 using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Models;
 
@@ -68,6 +69,24 @@ namespace TestManagement.API.Services
 
             var testSuite = _testSuiteService.GetByIdAsync(id, ct);
             return testSuite;
+        }
+
+        /// <summary>
+        /// Creates a new test suite by delegating the request to the underlying test suite service.
+        /// </summary>
+        /// <param name="request">The request containing details required to create the test suite.</param>
+        /// <param name="ct">A <see cref="CancellationToken"/> to cancel the operation.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains
+        /// a <see cref="CreateTestSuiteResponse"/> describing the created test suite.
+        /// </returns>
+        public Task<CreateTestSuiteResponse> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestSuiteFacadeService::CreateAsync start");
+
+            var response = _testSuiteService.CreateAsync(request, ct);
+
+            return response;
         }
 
         /// <summary>

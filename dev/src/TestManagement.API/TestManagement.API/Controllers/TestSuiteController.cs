@@ -16,7 +16,7 @@ public class TestSuiteController : Controller
     /// <summary>
     /// Service that encapsulates business logic for test suites.
     /// </summary>
-    private readonly ITestSuiteService _testSuiteService;
+    private readonly ITestSuiteFacadeService _testSuiteFacadeService;
 
     /// <summary>
     /// Optional logger for the controller.
@@ -27,13 +27,13 @@ public class TestSuiteController : Controller
     /// Initializes a new instance of the <see cref="TestSuiteController"/> class.
     /// </summary>
     /// <param name="logger">Optional logger for the controller.</param>
-    /// <param name="testSuiteService">Service that encapsulates business logic for test suites.</param>
+    /// <param name="testFacadeService">Service that encapsulates business logic for test suites.</param>
     public TestSuiteController(
         ILogger<TestSuiteController>? logger,
-        ITestSuiteService testSuiteService)
+        ITestSuiteFacadeService testFacadeService)
     {
         _logger = logger;
-        _testSuiteService = testSuiteService;
+        _testSuiteFacadeService = testFacadeService;
     }
 
     /// <summary>
@@ -47,7 +47,7 @@ public class TestSuiteController : Controller
     public async Task<ActionResult<ICollection<GetTestSuiteResponse>>> GetAllAsync(CancellationToken ct)
     {
         _logger?.LogDebug("TestSuiteController.GetAllTestSuites() start!");
-        ICollection<GetTestSuiteResponse> testSuites = await _testSuiteService.GetAllAsync(ct);
+        ICollection<GetTestSuiteResponse> testSuites = await _testSuiteFacadeService.GetAllAsync(ct);
         return Ok(testSuites);
     }
 
@@ -69,7 +69,7 @@ public class TestSuiteController : Controller
     public async Task<ActionResult<GetTestSuiteResponse>> GetByIdAsync(long id, CancellationToken ct)
     {
         _logger?.LogDebug("TestSuiteController.GetTestSuiteById() start!");
-        GetTestSuiteResponse testSuite = await _testSuiteService.GetByIdAsync(id, ct);
+        GetTestSuiteResponse testSuite = await _testSuiteFacadeService.GetByIdAsync(id, ct);
         return Ok(testSuite);
     }
 
@@ -92,7 +92,7 @@ public class TestSuiteController : Controller
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuite() start!");
 
-        CreateTestSuiteResponse createdTestSuite = await _testSuiteService.CreateAsync(request, ct);
+        CreateTestSuiteResponse createdTestSuite = await _testSuiteFacadeService.CreateAsync(request, ct);
         return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuite.Id }, createdTestSuite);
     }
 }
