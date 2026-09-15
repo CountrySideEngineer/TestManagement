@@ -1,5 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
+using TestManagement.API.Features.TestSuite.Create;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
@@ -41,7 +43,7 @@ public class TestSuiteCompositionService : ITestSuiteCompositionService
     /// <returns>A collection of <see cref="TestSuiteComposition"/> entities.</returns>
     public virtual async Task<ICollection<TestSuiteComposition>> GetAllAsync(CancellationToken ct = default)
     {
-        _logger?.LogDebug("TestSuiteVersionService::GetAllAsync() start!");
+        _logger?.LogDebug("TestSuiteCompositionService::GetAllAsync() start!");
 
         return await _context.TestSuiteCompositions
             .Include(tsv => tsv.TestCaseVersions)
@@ -60,7 +62,7 @@ public class TestSuiteCompositionService : ITestSuiteCompositionService
     /// <returns>The matching <see cref="TestSuiteComposition"/> or null if not found.</returns>
     public virtual async Task<TestSuiteComposition?> GetById(long id, CancellationToken ct = default)
     {
-        _logger?.LogDebug("TestSuiteVersionService::GetById() start!");
+        _logger?.LogDebug("TestSuiteCompositionService::GetById() start!");
 
         return await _context.TestSuiteCompositions
             .Where(v => v.Id == id)
@@ -68,5 +70,58 @@ public class TestSuiteCompositionService : ITestSuiteCompositionService
             .Include(v => v.TestSuite)
             .AsNoTracking()
             .FirstOrDefaultAsync(ct);
+    }
+
+    public virtual async Task<CreateTestSuiteCompositionResponse?> CreateComposition(CreateTestSuiteCompositionRequest request, CancellationToken ct = default)
+    {
+        _logger?.LogDebug("TestSuiteCompositionService::CreateComposition() start!");
+
+        var testCaseVersion = await _context.TestCaseVersions
+            .AsNoTracking()
+            .FirstOrDefaultAsync(version =>
+                version.TestCaseId == request.TestCaseId &&
+                version.VersionNumber == request.TestCaseVersionNumber,
+                ct);
+        if (testCaseVersion is null)
+        {
+            return null;
+        }
+
+        var testCaseVersionId = testCaseVersion.Id;
+        var isExists = await _context.TestSuiteCompositions
+            .AsNoTracking()
+            .AnyAsync(_ => _.TestSuiteId == request.TestSuiteId && _.TestCaseVersionId == testCaseVersionId, ct);
+        if (isExists)
+        {
+            var testSuiteComposition = await _context.TestSuiteCompositions
+                .AsNoTracking()
+                .FirstOrDefaultAsync(_ => _.TestSuiteId == request.TestSuiteId && _.TestCaseVersionId == testCaseVersionId, ct);
+            return new CreateTestSuiteCompositionResponse
+            {
+                TestSuiteCompositionId = testSuiteComposition!.Id,
+                TestSuiteId = testSuiteComposition.TestSuiteId,
+                TestCaseId = request.TestCaseId,
+                TestCaseVersionNumber = request.TestCaseVersionNumber
+            };
+        }
+        else
+        {
+            var testSuiteComposition = new TestSuiteComposition
+            {
+                TestSuiteId = request.TestSuiteId,
+                TestCaseVersionId = testCaseVersionId
+            };
+            _context.TestSuiteCompositions.Add(testSuiteComposition);
+
+            await _context.SaveChangesAsync(ct);
+
+            return new CreateTestSuiteCompositionResponse
+            {
+                TestSuiteCompositionId = testSuiteComposition.Id,
+                TestSuiteId = testSuiteComposition.TestSuiteId,
+                TestCaseId = request.TestCaseId,
+                TestCaseVersionNumber = request.TestCaseVersionNumber
+            };
+        }
     }
 }
