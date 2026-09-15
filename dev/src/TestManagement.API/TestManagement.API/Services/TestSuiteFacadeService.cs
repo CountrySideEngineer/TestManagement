@@ -103,5 +103,12 @@ namespace TestManagement.API.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<CreateTestSuiteCompositionResponse> CreateCompositionAsync(CreateTestSuiteCompositionRequest request, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestSuiteFacadeService::CreateCompositionAsync start");
+
+            throw new NotImplementedException();
+        }
     }
 }
