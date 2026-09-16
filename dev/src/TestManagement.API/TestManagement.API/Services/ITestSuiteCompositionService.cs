@@ -1,4 +1,5 @@
-﻿using TestManagement.API.Models;
+﻿using TestManagement.API.Features.TestSuite.Create;
+using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
 
@@ -13,4 +14,9 @@ public interface ITestSuiteCompositionService
     /// Retrieve a single test suite version by its primary key identifier.
     /// </summary>
     Task<TestSuiteComposition?> GetById(long id, CancellationToken ct = default);
+
+    Task<CreateTestSuiteCompositionResponse?> CreateCompositionAsync(
+        CreateTestSuiteCompositionRequest request, 
+        CancellationToken ct = default);
+
 }

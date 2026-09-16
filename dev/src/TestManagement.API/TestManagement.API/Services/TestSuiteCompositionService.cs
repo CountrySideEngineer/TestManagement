@@ -66,13 +66,25 @@ public class TestSuiteCompositionService : ITestSuiteCompositionService
 
         return await _context.TestSuiteCompositions
             .Where(v => v.Id == id)
-            .Include(v => v.TestCaseVersions)
+            .Include(v => v.TestCaseVersions)   
             .Include(v => v.TestSuite)
             .AsNoTracking()
             .FirstOrDefaultAsync(ct);
     }
 
-    public virtual async Task<CreateTestSuiteCompositionResponse?> CreateComposition(CreateTestSuiteCompositionRequest request, CancellationToken ct = default)
+    /// <summary>
+    /// Creates a composition that links a specific test case version to a test suite.
+    /// If the referenced test case version does not exist this method returns <c>null</c>.
+    /// If the composition already exists the existing composition information is returned,
+    /// otherwise a new composition record is created and returned.
+    /// </summary>
+    /// <param name="request">A <see cref="CreateTestSuiteCompositionRequest"/> containing the target test suite id, test case id and version number.</param>
+    /// <param name="ct">Cancellation token to cancel the asynchronous operation.</param>
+    /// <returns>
+    /// A <see cref="CreateTestSuiteCompositionResponse"/> describing the existing or newly created composition,
+    /// or <c>null</c> when the requested test case version cannot be found.
+    /// </returns>
+    public virtual async Task<CreateTestSuiteCompositionResponse?> CreateCompositionAsync(CreateTestSuiteCompositionRequest request, CancellationToken ct = default)
     {
         _logger?.LogDebug("TestSuiteCompositionService::CreateComposition() start!");
 

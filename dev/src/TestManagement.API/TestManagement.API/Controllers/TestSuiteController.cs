@@ -95,4 +95,15 @@ public class TestSuiteController : Controller
         CreateTestSuiteResponse createdTestSuite = await _testSuiteFacadeService.CreateAsync(request, ct);
         return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuite.Id }, createdTestSuite);
     }
+
+    public async Task<ActionResult<CreateTestSuiteCompositionResponse>> CreateCompositionAsync(CreateTestSuiteCompositionRequest request, CancellationToken ct = default)
+    {
+        _logger?.LogDebug("TestSuiteController.CreateTestSuiteComposition() start!");
+
+        CreateTestSuiteCompositionResponse createdTestSuiteComposition = await _testSuiteFacadeService.CreateCompositionAsync(request, ct);
+
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuiteComposition.TestSuiteCompositionId}, createdTestSuiteComposition);
+
+    }
+
 }
