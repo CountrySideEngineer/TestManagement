@@ -90,23 +90,6 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Creates one or more compositions linking the specified test case to test suites within the given project.
-        /// This facade-level operation is expected to coordinate underlying services to determine the correct
-        /// target test suites for the provided project and test case.
-        /// </summary>
-        /// <param name="projectId">The identifier of the project where compositions should be created.</param>
-        /// <param name="testCaseId">The identifier of the test case to link into project test suites.</param>
-        /// <param name="ct">Cancellation token to cancel the asynchronous operation.</param>
-        /// <returns>
-        /// A task that represents the asynchronous operation. The task result contains a collection of
-        /// <see cref="TestSuiteComposition"/> instances that were created or updated as part of the operation.
-        /// </returns>
-        public Task<ICollection<TestSuiteComposition>> CreateCompositionAsync(long projectId, long testCaseId, CancellationToken ct = default)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Creates a composition that links a specific test case version to a test suite by delegating
         /// to the underlying <see cref="ITestSuiteCompositionService"/>. If the composition cannot be created
         /// because the referenced test case version does not exist, an empty <see cref="CreateTestSuiteCompositionResponse"/>
