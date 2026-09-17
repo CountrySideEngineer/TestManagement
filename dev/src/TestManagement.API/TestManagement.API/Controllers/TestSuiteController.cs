@@ -62,7 +62,7 @@ public class TestSuiteController : Controller
     /// An <see cref="ActionResult{GetTestSuiteResponse}"/> containing the test suite when found,
     /// or a NotFound result when the test suite does not exist.
     /// </returns>
-    [HttpGet("{id}")]
+    [HttpGet("{id:long}")]
     [ProducesResponseType(typeof(GetTestSuiteResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -96,17 +96,32 @@ public class TestSuiteController : Controller
         return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuite.Id }, createdTestSuite);
     }
 
-    [HttpPost("composition")]
+    [HttpPost("{id:long}/composition")]
     [ProducesResponseType(typeof(CreateTestSuiteCompositionResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<ActionResult<CreateTestSuiteCompositionResponse>> CreateCompositionAsync(CreateTestSuiteCompositionRequest request, CancellationToken ct = default)
+    public async Task<ActionResult<CreateTestSuiteCompositionResponse>> CreateCompositionAsync(long id, TestSuiteCompositionCreateRequest request, CancellationToken ct = default)
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuiteComposition() start!");
 
-        CreateTestSuiteCompositionResponse createdTestSuiteComposition = await _testSuiteFacadeService.CreateCompositionAsync(request, ct);
+        var createRequest = new CreateTestSuiteCompositionRequest
+        {
+            TestSuiteId = id,
+            TestCaseId = request.TestCaseId,
+            TestCaseVersionNumber = request.TestCaseVersionNumber
+        };
 
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuiteComposition.TestSuiteCompositionId}, createdTestSuiteComposition);
+        CreateTestSuiteCompositionResponse createdTestSuiteComposition = await _testSuiteFacadeService.CreateCompositionAsync(createRequest, ct);
+
+        var response = new TestSuiteCompositionCreateResponse()
+        {
+            TestSuiteCompositionId = createdTestSuiteComposition.TestSuiteCompositionId,
+            TestSuiteId = createdTestSuiteComposition.TestSuiteId,
+            TestCaseId = createdTestSuiteComposition.TestCaseId,
+            TestCaseVersionNumber = createdTestSuiteComposition.TestCaseVersionNumber
+        };
+
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = response.TestSuiteCompositionId}, response);
     }
 
     /// <summary>
@@ -122,16 +137,36 @@ public class TestSuiteController : Controller
     /// An <see cref="ActionResult{ICollection}"/> containing the created or existing
     /// <see cref="CreateTestSuiteCompositionResponse"/> objects and a 201 Created status.
     /// </returns>
-    [HttpPost("compositions")]
+    [HttpPost("{id:long}/compositions")]
     [ProducesResponseType(typeof(ICollection<CreateTestSuiteCompositionResponse>), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<ActionResult<ICollection<CreateTestSuiteCompositionResponse>>> CreateCompositionsAsync(ICollection<CreateTestSuiteCompositionRequest> requests, CancellationToken ct = default)
+    public async Task<ActionResult<ICollection<CreateTestSuiteCompositionResponse>>> CreateCompositionsAsync(
+        long id, 
+        ICollection<TestSuiteCompositionCreateRequest> requests, 
+        CancellationToken ct = default
+        )
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuiteComposition() start!");
 
-        ICollection<CreateTestSuiteCompositionResponse> createdTestSuiteCompositions = await _testSuiteFacadeService.CreateCompositionsAsync(requests, ct);
+        var createRequests = requests.Select(r => new CreateTestSuiteCompositionRequest
+            {
+                TestSuiteId = id,
+                TestCaseId = r.TestCaseId,
+                TestCaseVersionNumber = r.TestCaseVersionNumber
+            })
+            .ToList();
 
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuiteCompositions.FirstOrDefault()?.TestSuiteCompositionId }, createdTestSuiteCompositions);
+        ICollection<CreateTestSuiteCompositionResponse> createdTestSuiteCompositions = await _testSuiteFacadeService.CreateCompositionsAsync(createRequests, ct);
+
+        var responses = new TestSuiteCompositionCreateResponse
+        {
+            TestSuiteCompositionId = createdTestSuiteCompositions.FirstOrDefault()?.TestSuiteCompositionId ?? 0,
+            TestSuiteId = createdTestSuiteCompositions.FirstOrDefault()?.TestSuiteId ?? 0,
+            TestCaseId = createdTestSuiteCompositions.FirstOrDefault()?.TestCaseId ?? 0,
+            TestCaseVersionNumber = createdTestSuiteCompositions.FirstOrDefault()?.TestCaseVersionNumber ?? 0
+        };
+
+        return Ok(responses);
     }
 }

@@ -1,10 +1,6 @@
 ﻿namespace TestManagement.API.Features.TestSuite.Create;
 
-/// <summary>
-/// Response returned after creating or retrieving a test suite composition entry.
-/// Contains identifiers that describe the association between a test suite and a specific test case version.
-/// </summary>
-public class CreateTestSuiteCompositionResponse
+public class TestSuiteCompositionCreateResponse
 {
     /// <summary>
     /// Primary key identifier of the newly created or existing test suite composition record.
