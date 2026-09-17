@@ -19,4 +19,7 @@ public interface ITestSuiteCompositionService
         CreateTestSuiteCompositionRequest request, 
         CancellationToken ct = default);
 
+    Task<ICollection<CreateTestSuiteCompositionResponse>> CreateCompositionsAsync(
+        ICollection<CreateTestSuiteCompositionRequest> requests,
+        CancellationToken ct = default);
 }

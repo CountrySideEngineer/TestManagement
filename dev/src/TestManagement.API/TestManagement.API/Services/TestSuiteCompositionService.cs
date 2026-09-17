@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
 using TestManagement.API.Features.TestSuite.Create;
 using TestManagement.API.Models;
@@ -135,5 +134,76 @@ public class TestSuiteCompositionService : ITestSuiteCompositionService
                 TestCaseVersionNumber = request.TestCaseVersionNumber
             };
         }
+    }
+
+    /// <summary>
+    /// Creates multiple compositions that link specific test case versions to test suites.
+    /// For each request, if the referenced test case version does not exist the request is skipped.
+    /// If a composition already exists the existing composition information is included in the response;
+    /// otherwise a new composition record is created.
+    /// </summary>
+    /// <param name="requests">Collection of <see cref="CreateTestSuiteCompositionRequest"/> specifying test suite, test case and version.</param>
+    /// <param name="ct">Cancellation token to cancel the asynchronous operation.</param>
+    /// <returns>Collection of <see cref="CreateTestSuiteCompositionResponse"/> describing existing or newly created compositions.</returns>
+    public virtual async Task<ICollection<CreateTestSuiteCompositionResponse>> CreateCompositionsAsync(ICollection<CreateTestSuiteCompositionRequest> requests, CancellationToken ct = default)
+    {
+        _logger?.LogDebug("TestSuiteCompositionService::CreateComposition() start!");
+
+        var responses = new List<CreateTestSuiteCompositionResponse>();
+
+        foreach (var request in requests)
+        {
+            var testCaseVersion = await _context.TestCaseVersions
+                .AsNoTracking()
+                .FirstOrDefaultAsync(version =>
+                    version.TestCaseId == request.TestCaseId &&
+                    version.VersionNumber == request.TestCaseVersionNumber,
+                    ct);
+            if (testCaseVersion is null)
+            {
+                continue;
+            }
+
+            var testCaseVersionId = testCaseVersion.Id;
+            var isExists = await _context.TestSuiteCompositions
+                .AsNoTracking()
+                .AnyAsync(_ => _.TestSuiteId == request.TestSuiteId && _.TestCaseVersionId == testCaseVersionId, ct);
+            if (isExists)
+            {
+                var testSuiteComposition = await _context.TestSuiteCompositions
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(_ => _.TestSuiteId == request.TestSuiteId && _.TestCaseVersionId == testCaseVersionId, ct);
+                var response = new CreateTestSuiteCompositionResponse
+                {
+                    TestSuiteCompositionId = testSuiteComposition!.Id,
+                    TestSuiteId = testSuiteComposition.TestSuiteId,
+                    TestCaseId = request.TestCaseId,
+                    TestCaseVersionNumber = request.TestCaseVersionNumber
+                };
+                responses.Add(response);
+            }
+            else
+            {
+                var testSuiteComposition = new TestSuiteComposition
+                {
+                    TestSuiteId = request.TestSuiteId,
+                    TestCaseVersionId = testCaseVersionId
+                };
+                _context.TestSuiteCompositions.Add(testSuiteComposition);
+
+                await _context.SaveChangesAsync(ct);
+
+                var response = new CreateTestSuiteCompositionResponse
+                {
+                    TestSuiteCompositionId = testSuiteComposition.Id,
+                    TestSuiteId = testSuiteComposition.TestSuiteId,
+                    TestCaseId = request.TestCaseId,
+                    TestCaseVersionNumber = request.TestCaseVersionNumber
+                };
+                responses.Add(response);
+            }
+        }
+
+        return responses;
     }
 }
