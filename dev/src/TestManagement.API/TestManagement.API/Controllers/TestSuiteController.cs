@@ -96,6 +96,10 @@ public class TestSuiteController : Controller
         return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuite.Id }, createdTestSuite);
     }
 
+    [HttpPost("composition")]
+    [ProducesResponseType(typeof(CreateTestSuiteCompositionResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
     public async Task<ActionResult<CreateTestSuiteCompositionResponse>> CreateCompositionAsync(CreateTestSuiteCompositionRequest request, CancellationToken ct = default)
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuiteComposition() start!");
@@ -103,7 +107,5 @@ public class TestSuiteController : Controller
         CreateTestSuiteCompositionResponse createdTestSuiteComposition = await _testSuiteFacadeService.CreateCompositionAsync(request, ct);
 
         return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuiteComposition.TestSuiteCompositionId}, createdTestSuiteComposition);
-
     }
-
 }

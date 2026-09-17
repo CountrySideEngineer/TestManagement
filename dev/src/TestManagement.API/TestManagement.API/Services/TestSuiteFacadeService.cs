@@ -115,5 +115,33 @@ namespace TestManagement.API.Services
                 return response;
             }
         }
+
+        /// <summary>
+        /// Creates multiple compositions that link test case versions to test suites by delegating
+        /// the work to the underlying <see cref="ITestSuiteCompositionService"/>.
+        /// If the delegated service returns <c>null</c>, this facade will return an empty collection.
+        /// Each request in the provided collection is processed independently; requests referencing
+        /// non-existent test case versions are effectively skipped by the delegated service.
+        /// </summary>
+        /// <param name="requests">A collection of <see cref="CreateTestSuiteCompositionRequest"/> specifying test suites, test cases and version numbers to link.</param>
+        /// <param name="ct">Cancellation token to cancel the asynchronous operation.</param>
+        /// <returns>
+        /// A task that represents the asynchronous operation. The task result contains a collection
+        /// of <see cref="CreateTestSuiteCompositionResponse"/> describing existing or newly created compositions.
+        /// The returned collection will never be <c>null</c> (an empty list is returned when there are no successful compositions).
+        /// </returns>
+        public async Task<ICollection<CreateTestSuiteCompositionResponse>> CreateCompositionsAsync(ICollection<CreateTestSuiteCompositionRequest> requests, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestSuiteFacadeService::CreateCompositionsAsync start");
+            var responses = await _testSuiteCompositionService.CreateCompositionsAsync(requests, ct);
+            if (responses is null)
+            {
+                return new List<CreateTestSuiteCompositionResponse>();
+            }
+            else
+            {
+                return responses;
+            }
+        }
     }
 }
