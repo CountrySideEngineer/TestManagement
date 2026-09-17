@@ -13,4 +13,8 @@ public interface ITestSuiteFacadeService
     Task<CreateTestSuiteResponse> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct = default);
 
     Task<CreateTestSuiteCompositionResponse> CreateCompositionAsync(CreateTestSuiteCompositionRequest request, CancellationToken ct = default);
+
+    Task<ICollection<CreateTestSuiteCompositionResponse>> CreateCompositionsAsync(
+        ICollection<CreateTestSuiteCompositionRequest> requests, 
+        CancellationToken ct = default);
 }

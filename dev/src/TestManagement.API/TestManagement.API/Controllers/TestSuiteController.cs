@@ -108,4 +108,30 @@ public class TestSuiteController : Controller
 
         return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuiteComposition.TestSuiteCompositionId}, createdTestSuiteComposition);
     }
+
+    /// <summary>
+    /// Creates multiple compositions that link test case versions to test suites.
+    /// Delegates processing to the <see cref="ITestSuiteFacadeService"/> and returns
+    /// a 201 Created response containing the collection of created or existing compositions.
+    /// If the facade service produces no results an empty collection is returned in the response body.
+    /// The Location header is set using the first composition id in the returned collection when available.
+    /// </summary>
+    /// <param name="requests">A collection of <see cref="CreateTestSuiteCompositionRequest"/> describing the compositions to create.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> to cancel the operation.</param>
+    /// <returns>
+    /// An <see cref="ActionResult{ICollection}"/> containing the created or existing
+    /// <see cref="CreateTestSuiteCompositionResponse"/> objects and a 201 Created status.
+    /// </returns>
+    [HttpPost("compositions")]
+    [ProducesResponseType(typeof(ICollection<CreateTestSuiteCompositionResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status501NotImplemented)]
+    public async Task<ActionResult<ICollection<CreateTestSuiteCompositionResponse>>> CreateCompositionsAsync(ICollection<CreateTestSuiteCompositionRequest> requests, CancellationToken ct = default)
+    {
+        _logger?.LogDebug("TestSuiteController.CreateTestSuiteComposition() start!");
+
+        ICollection<CreateTestSuiteCompositionResponse> createdTestSuiteCompositions = await _testSuiteFacadeService.CreateCompositionsAsync(requests, ct);
+
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuiteCompositions.FirstOrDefault()?.TestSuiteCompositionId }, createdTestSuiteCompositions);
+    }
 }
