@@ -6,12 +6,27 @@ using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
 
+/// <summary>
+/// Service for managing tester entities and providing related operations.
+/// Implements CRUD operations for tester data and handles data persistence.
+/// </summary>
 public class TesterService : ITesterService
 {
+    /// <summary>
+    /// Database context used to access and persist tester-related entities.
+    /// </summary>
     private readonly TestManagementDbContext _context;
 
+    /// <summary>
+    /// Logger instance for recording diagnostic and trace information.
+    /// </summary>
     private readonly ILogger<TesterService>? _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TesterService"/> class.
+    /// </summary>
+    /// <param name="context">The database context for data access.</param>
+    /// <param name="logger">Optional logger for diagnostic logging.</param>
     public TesterService(
         TestManagementDbContext context,
         ILogger<TesterService>? logger
@@ -21,6 +36,11 @@ public class TesterService : ITesterService
         _logger = logger;
     }
 
+    /// <summary>
+    /// Retrieves all testers asynchronously with no tracking.
+    /// </summary>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>A collection of <see cref="GetTesterResponse"/> objects representing all testers.</returns>
     public async Task<ICollection<GetTesterResponse>> GetAllAsync(CancellationToken ct)
     {
         _logger?.LogDebug("TesterService::GetAllAsync() start!");
@@ -43,6 +63,13 @@ public class TesterService : ITesterService
         return response;
     }
 
+    /// <summary>
+    /// Retrieves a specific tester by its identifier asynchronously.
+    /// </summary>
+    /// <param name="id">The unique identifier of the tester to retrieve.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>A <see cref="GetTesterResponse"/> object representing the tester.</returns>
+    /// <exception cref="InvalidOperationException">Thrown when no tester with the specified identifier is found.</exception>
     public async Task<GetTesterResponse> GetByIdAsync(long id, CancellationToken ct)
     {
         _logger?.LogDebug("TesterService::GetByIdAsync({Id}) start!", id);
@@ -62,6 +89,13 @@ public class TesterService : ITesterService
         return response;
     }
 
+    /// <summary>
+    /// Creates a new tester asynchronously and persists it to the database.
+    /// </summary>
+    /// <param name="request">The <see cref="CreateTesterRequest"/> containing the tester's information to create.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>A <see cref="CreateTesterResponse"/> containing the created tester's details including the generated identifier.</returns>
+    /// <exception cref="Exception">Thrown when an error occurs during database persistence.</exception>
     public async Task<CreateTesterResponse> CreateAsync(CreateTesterRequest request, CancellationToken ct)
     {
         _logger?.LogDebug("TesterService::CreateAsync() start!");

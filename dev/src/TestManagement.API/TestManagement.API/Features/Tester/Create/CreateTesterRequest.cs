@@ -6,12 +6,12 @@ namespace TestManagement.API.Features.Tester.Create;
 public class CreateTesterRequest
 {
     /// <summary>
-    /// Tester name.
+    /// Gets or sets the tester's name.
     /// </summary>
     public string Name { get; set; } = string.Empty;
 
     /// <summary>
-    /// Email address of the tester.
+    /// Gets or sets the tester's email address.
     /// </summary>
     public string Email { get; set; } = string.Empty;
 }
