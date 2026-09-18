@@ -3,6 +3,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using TestManagement.API.Features.Project.Get;
+using TestManagement.API.Features.Tester.Get;
+using TestManagement.API.Services;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
@@ -11,15 +13,21 @@ public class ProjectFacadeService : IProjectFacadeService
 {
     private readonly IProjectService _projectService;
     private readonly IProjectCompositionService _projectCompositionService;
+    private readonly ProjectTesterFacadeService _projectTesterFacadeService;
+    private readonly ITesterService _testerService;
     private readonly ILogger<ProjectFacadeService> _logger;
 
     public ProjectFacadeService(
         IProjectService projectService,
         IProjectCompositionService projectCompositionService,
+        ProjectTesterFacadeService projectTesterFacadeService,
+        ITesterService testerService,
         ILogger<ProjectFacadeService> logger)
     {
         _projectService = projectService;
         _projectCompositionService = projectCompositionService;
+        _projectTesterFacadeService = projectTesterFacadeService;
+        _testerService = testerService;
         _logger = logger;
     }
 
@@ -39,6 +47,18 @@ public class ProjectFacadeService : IProjectFacadeService
     {
         _logger.LogDebug("ProjectFacadeService::GetCompositionsByProjectIdAsync start: {ProjectId}", projectId);
         return _projectCompositionService.GetByProjectIdAsync(projectId, ct);
+    }
+
+    public Task<ICollection<GetTesterResponse>> GetTestersByProjectIdAsync(long projectId, CancellationToken ct = default)
+    {
+        _logger.LogDebug("ProjectFacadeService::GetTestersByProjectIdAsync start: {ProjectId}", projectId);
+        return _projectTesterFacadeService.GetTestersByProjectIdAsync(projectId, ct);
+    }
+
+    public Task<GetTesterResponse> GetTesterByIdAsync(long testerId, CancellationToken ct = default)
+    {
+        _logger.LogDebug("ProjectFacadeService::GetTesterByIdAsync start: {TesterId}", testerId);
+        return _testerService.GetByIdAsync(testerId, ct);
     }
 
     public Task<ProjectComposition> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default)
