@@ -11,6 +11,8 @@ namespace TestManagement.API.Controllers
     /// API controller that handles operations related to projects.
     /// Uses a facade service to keep the controller thin.
     /// </summary>
+    [ApiController]
+    [Route("api/projects")]
     public class ProjectController : Controller
     {
         /// <summary>
