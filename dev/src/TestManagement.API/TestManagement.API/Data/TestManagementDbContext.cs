@@ -85,6 +85,11 @@ namespace TestManagement.API.Data
         public DbSet<ProjectComposition> ProjectCompositions { get; set; }
 
         /// <summary>
+        /// DbSet of testers.
+        /// </summary>
+        public DbSet<Tester> Testers { get; set; }
+
+        /// <summary>
         /// Applies configuration for all entities when the model is being created.
         /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -105,6 +110,7 @@ namespace TestManagement.API.Data
             ConfigureProject(modelBuilder);
             ConfigureTestSuiteComposition(modelBuilder);
             ConfigureProjectComposition(modelBuilder);
+            ConfigureTester(modelBuilder);
         }
 
         /// <summary>
@@ -549,6 +555,27 @@ namespace TestManagement.API.Data
                 .WithMany()
                 .HasForeignKey(_ => _.TestSuiteId)
                 .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        /// <summary>
+        /// Configures the Tester entity mapping and seeds initial testers.
+        /// </summary>
+        private void ConfigureTester(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<Tester>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(_ => _.Email)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.HasIndex(_ => _.Email)
+                .IsUnique();
         }
     }
 }
