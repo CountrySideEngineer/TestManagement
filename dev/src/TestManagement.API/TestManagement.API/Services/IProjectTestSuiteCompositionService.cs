@@ -5,7 +5,7 @@ namespace TestManagement.API.Services
     /// <summary>
     /// Service interface for managing Project &amp; TestSuite compositions (N:N).
     /// </summary>
-    public interface IProjectCompositionService
+    public interface IProjectTestSuiteCompositionService
     {
         /// <summary>
         /// Returns all project compositions.

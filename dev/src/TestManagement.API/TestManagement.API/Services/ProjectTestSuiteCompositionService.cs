@@ -7,17 +7,17 @@ namespace TestManagement.API.Services
     /// <summary>
     /// Service that provides operations to manage ProjectComposition entities.
     /// </summary>
-    public class ProjectCompositionService : IProjectCompositionService
+    public class ProjectTestSuiteCompositionService : IProjectTestSuiteCompositionService
     {
         private readonly TestManagementDbContext _context;
-        private readonly ILogger<ProjectCompositionService>? _logger;
+        private readonly ILogger<ProjectTestSuiteCompositionService>? _logger;
 
         /// <summary>
-        /// Creates a new instance of <see cref="ProjectCompositionService"/>.
+        /// Creates a new instance of <see cref="ProjectTestSuiteCompositionService"/>.
         /// </summary>
-        public ProjectCompositionService(
+        public ProjectTestSuiteCompositionService(
             TestManagementDbContext context,
-            ILogger<ProjectCompositionService>? logger)
+            ILogger<ProjectTestSuiteCompositionService>? logger)
         {
             _context = context;
             _logger = logger;

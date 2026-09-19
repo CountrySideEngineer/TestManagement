@@ -11,12 +11,12 @@ namespace TestManagement.API.Controllers
     [Route("api/projectcompositions")]
     public class ProjectCompositionController : Controller
     {
-        private readonly IProjectCompositionService _service;
+        private readonly IProjectTestSuiteCompositionService _service;
         private readonly ILogger<ProjectCompositionController>? _logger;
 
         public ProjectCompositionController(
             ILogger<ProjectCompositionController>? logger,
-            IProjectCompositionService service)
+            IProjectTestSuiteCompositionService service)
         {
             _logger = logger;
             _service = service;
