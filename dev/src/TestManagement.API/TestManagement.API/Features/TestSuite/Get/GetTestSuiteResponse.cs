@@ -40,7 +40,7 @@ namespace TestManagement.API.Features.TestSuite.Get
         {
             public long Id { get; set; }
 
-            public string Version { get; set; } = string.Empty;
+            public long VersionNumber { get; set; } = 0;
 
             public List<GetTestCaseResponse>? TestCases { get; set; }
 

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
+using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services
@@ -24,50 +25,60 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Retrieves all <see cref="ProjectComposition"/> entities from the database.
+        /// Retrieves all <see cref="ProjectTestSuiteComposition"/> entities from the database.
         /// This returns a no-tracking collection suitable for read-only scenarios.
         /// </summary>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
-        /// <returns>A collection of <see cref="ProjectComposition"/>.</returns>
-        public virtual async Task<ICollection<ProjectComposition>> GetAllAsync(CancellationToken ct)
+        /// <returns>A collection of <see cref="ProjectTestSuiteComposition"/>.</returns>
+        public virtual async Task<ICollection<GetTestSuiteResponse>> GetAllAsync(CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionService::GetAllAsync() start");
-            return await _context.ProjectCompositions
+
+            var projectCompositions = await _context.ProjectTestSuiteCompositions
                 .Include(_ => _.Project)
                 .Include(_ => _.TestSuite)
                 .AsNoTracking()
                 .ToListAsync(ct);
+
+            var testSuiteReponses = new List<GetTestSuiteResponse>();
+
+            return testSuiteReponses;
         }
 
         /// <summary>
-        /// Retrieves all <see cref="ProjectComposition"/> entities for the specified project id.
+        /// Retrieves all <see cref="ProjectTestSuiteComposition"/> entities for the specified project id.
         /// The returned collection is not tracked by the DbContext.
         /// </summary>
         /// <param name="projectId">Identifier of the project whose compositions are returned.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
-        /// <returns>A collection of <see cref="ProjectComposition"/> that belong to the project.</returns>
-        public virtual async Task<ICollection<ProjectComposition>> GetByProjectIdAsync(long projectId, CancellationToken ct)
+        /// <returns>A collection of <see cref="ProjectTestSuiteComposition"/> that belong to the project.</returns>
+        public virtual async Task<ICollection<GetTestSuiteResponse>> GetByProjectIdAsync(long projectId, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionService::GetByProjectIdAsync({ProjectId}) start", projectId);
-            return await _context.ProjectCompositions
+
+            var projectComposition = await _context.ProjectTestSuiteCompositions
                 .Where(pc => pc.ProjectId == projectId)
                 .Include(_ => _.Project)
                 .Include(_ => _.TestSuite)
                 .AsNoTracking()
                 .ToListAsync(ct);
+
+            var testSuiteReponses = new List<GetTestSuiteResponse>();
+
+            return testSuiteReponses;
         }
 
         /// <summary>
-        /// Retrieves a single <see cref="ProjectComposition"/> by its identifier.
+        /// Retrieves a single <see cref="ProjectTestSuiteComposition"/> by its identifier.
         /// Returns null when no matching entity is found.
         /// </summary>
         /// <param name="id">Identifier of the composition to retrieve.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
-        /// <returns>The matching <see cref="ProjectComposition"/> or null if not found.</returns>
-        public virtual async Task<ProjectComposition?> GetByIdAsync(long id, CancellationToken ct)
+        /// <returns>The matching <see cref="ProjectTestSuiteComposition"/> or null if not found.</returns>
+        public virtual async Task<ProjectTestSuiteComposition?> GetByIdAsync(long id, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionService::GetByIdAsync({Id}) start", id);
-            return await _context.ProjectCompositions
+            return await _context.ProjectTestSuiteCompositions
                 .Where(pc => pc.Id == id)
                 .Include(_ => _.Project)
                 .Include(_ => _.TestSuite)
@@ -76,16 +87,16 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Creates a new <see cref="ProjectComposition"/> linking the specified project and test suite.
+        /// Creates a new <see cref="ProjectTestSuiteComposition"/> linking the specified project and test suite.
         /// Validates that both the project and the test suite exist and prevents creating duplicate links.
         /// Throws <see cref="InvalidOperationException"/> when validation fails.
         /// </summary>
         /// <param name="projectId">Identifier of the project to link.</param>
         /// <param name="testSuiteId">Identifier of the test suite to link.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
-        /// <returns>The created <see cref="ProjectComposition"/>.</returns>
+        /// <returns>The created <see cref="ProjectTestSuiteComposition"/>.</returns>
         /// <exception cref="InvalidOperationException">Thrown when the project or test suite does not exist or the composition already exists.</exception>
-        public virtual async Task<ProjectComposition> CreateAsync(long projectId, long testSuiteId, CancellationToken ct)
+        public virtual async Task<ProjectTestSuiteComposition> CreateAsync(long projectId, long testSuiteId, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionService::CreateAsync(projectId={ProjectId}, testSuiteId={TestSuiteId}) start", projectId, testSuiteId);
 
@@ -103,20 +114,20 @@ namespace TestManagement.API.Services
             }
 
             // Prevent duplicate (unique index exists at DB level)
-            var already = await _context.ProjectCompositions
+            var already = await _context.ProjectTestSuiteCompositions
                 .AnyAsync(pc => pc.ProjectId == projectId && pc.TestSuiteId == testSuiteId, ct);
             if (already)
             {
                 throw new InvalidOperationException("The composition already exists.");
             }
 
-            var composition = new ProjectComposition
+            var composition = new ProjectTestSuiteComposition
             {
                 ProjectId = projectId,
                 TestSuiteId = testSuiteId
             };
 
-            _context.ProjectCompositions.Add(composition);
+            _context.ProjectTestSuiteCompositions.Add(composition);
 
             try
             {
@@ -132,7 +143,7 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Deletes a <see cref="ProjectComposition"/> by its identifier.
+        /// Deletes a <see cref="ProjectTestSuiteComposition"/> by its identifier.
         /// </summary>
         /// <param name="id">Identifier of the composition to delete.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
@@ -141,14 +152,14 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("ProjectCompositionService::DeleteAsync({Id}) start", id);
 
-            var existing = await _context.ProjectCompositions
+            var existing = await _context.ProjectTestSuiteCompositions
                 .FirstOrDefaultAsync(pc => pc.Id == id, ct);
             if (existing == null)
             {
                 return false;
             }
 
-            _context.ProjectCompositions.Remove(existing);
+            _context.ProjectTestSuiteCompositions.Remove(existing);
             await _context.SaveChangesAsync(ct);
             return true;
         }

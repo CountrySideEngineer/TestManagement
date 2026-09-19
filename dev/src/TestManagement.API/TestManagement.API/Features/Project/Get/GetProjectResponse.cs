@@ -1,4 +1,7 @@
-﻿namespace TestManagement.API.Features.Project.Get
+﻿using TestManagement.API.Features.Tester.Get;
+using TestManagement.API.Features.TestSuite.Get;
+
+namespace TestManagement.API.Features.Project.Get
 {
     public class GetProjectResponse
     {
@@ -16,6 +19,10 @@
         /// A short description of the project.
         /// </summary>
         public string Description { get; set; } = string.Empty;
+
+        public List<GetTesterResponse>? Testers { get; set; } = null;
+
+        public List<GetTestSuiteResponse>? TestSuites { get; set; } = null;
 
         //TODO: Add collection of TestSuite models to the response.
 

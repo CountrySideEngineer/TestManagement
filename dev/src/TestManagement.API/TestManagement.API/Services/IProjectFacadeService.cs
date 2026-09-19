@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using TestManagement.API.Features.Project.Get;
 using TestManagement.API.Models;
 using TestManagement.API.Features.Tester.Get;
+using TestManagement.API.Features.Project.Create;
 
 namespace TestManagement.API.Services;
 
@@ -12,13 +13,15 @@ namespace TestManagement.API.Services;
 /// </summary>
 public interface IProjectFacadeService
 {
-    Task<ICollection<GetProjectResponse>> GetAllAsync(CancellationToken ct = default);
+    Task<ICollection<Features.Project.Get.GetProjectResponse>> GetAllAsync(CancellationToken ct = default);
 
-    Task<GetProjectResponse> GetByIdAsync(long id, CancellationToken ct = default);
+    Task<Features.Project.Get.GetProjectResponse> GetByIdAsync(long id, CancellationToken ct = default);
 
-    Task<ICollection<ProjectComposition>> GetCompositionsByProjectIdAsync(long projectId, CancellationToken ct = default);
+    Task<ICollection<Models.ProjectTestSuiteComposition>> GetCompositionsByProjectIdAsync(long projectId, CancellationToken ct = default);
 
-    Task<ProjectComposition> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default);
+    Task<CreateProjectResponse> CreateProjectAsync(CreateProjectRequest request, CancellationToken ct = default);
+
+    Task<Models.ProjectTestSuiteComposition> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default);
 
     Task<bool> DeleteCompositionAsync(long id, CancellationToken ct = default);
 

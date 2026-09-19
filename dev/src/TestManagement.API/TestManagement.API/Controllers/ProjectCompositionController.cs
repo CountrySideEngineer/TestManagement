@@ -26,9 +26,9 @@ namespace TestManagement.API.Controllers
         /// Returns all project compositions.
         /// </summary>
         [HttpGet]
-        [ProducesResponseType(typeof(ICollection<ProjectComposition>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ICollection<ProjectTestSuiteComposition>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<ProjectComposition>>> GetAllAsync(CancellationToken ct)
+        public async Task<ActionResult<ICollection<ProjectTestSuiteComposition>>> GetAllAsync(CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionController.GetAllAsync() start");
             var items = await _service.GetAllAsync(ct);
@@ -39,10 +39,10 @@ namespace TestManagement.API.Controllers
         /// Returns compositions for a specific project.
         /// </summary>
         [HttpGet("project/{projectId}")]
-        [ProducesResponseType(typeof(ICollection<ProjectComposition>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ICollection<ProjectTestSuiteComposition>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<ProjectComposition>>> GetByProjectIdAsync(long projectId, CancellationToken ct)
+        public async Task<ActionResult<ICollection<ProjectTestSuiteComposition>>> GetByProjectIdAsync(long projectId, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionController.GetByProjectIdAsync({ProjectId}) start", projectId);
             var items = await _service.GetByProjectIdAsync(projectId, ct);
@@ -53,9 +53,9 @@ namespace TestManagement.API.Controllers
         /// Gets a composition by id.
         /// </summary>
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ProjectComposition), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProjectTestSuiteComposition), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ProjectComposition>> GetByIdAsync(long id, CancellationToken ct)
+        public async Task<ActionResult<ProjectTestSuiteComposition>> GetByIdAsync(long id, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionController.GetByIdAsync({Id}) start", id);
             var item = await _service.GetByIdAsync(id, ct);
@@ -67,9 +67,9 @@ namespace TestManagement.API.Controllers
         /// Creates a new project composition.
         /// </summary>
         [HttpPost]
-        [ProducesResponseType(typeof(ProjectComposition), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ProjectTestSuiteComposition), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<ProjectComposition>> CreateAsync([FromBody] ProjectComposition request, CancellationToken ct)
+        public async Task<ActionResult<ProjectTestSuiteComposition>> CreateAsync([FromBody] ProjectTestSuiteComposition request, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionController.CreateAsync() start");
             if (request == null) return BadRequest();

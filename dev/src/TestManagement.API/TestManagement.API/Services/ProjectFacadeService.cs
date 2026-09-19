@@ -7,76 +7,91 @@ using TestManagement.API.Features.Tester.Get;
 using TestManagement.API.Services;
 using TestManagement.API.Models;
 
+using GetProjectResponse = TestManagement.API.Features.Project.Get.GetProjectResponse;
+using TestManagement.API.Features.Project.Create;
+
 namespace TestManagement.API.Services;
 
 public class ProjectFacadeService : IProjectFacadeService
 {
     private readonly IProjectService _projectService;
-    private readonly IProjectTestSuiteCompositionService _projectCompositionService;
-    private readonly ProjectTesterCompositionService _projectTesterCompositionService;
-    private readonly ITesterService _testerService;
+    private readonly IProjectTestSuiteCompositionService _projectTestSuiteCompositionService;
+    private readonly IProjectTesterCompositionService _projectTesterCompositionService;
     private readonly ILogger<ProjectFacadeService> _logger;
 
     public ProjectFacadeService(
         IProjectService projectService,
         IProjectTestSuiteCompositionService projectCompositionService,
-        ProjectTesterCompositionService projectTesterCompositionService,
-        ITesterService testerService,
+        IProjectTesterCompositionService projectTesterCompositionService,
         ILogger<ProjectFacadeService> logger)
     {
         _projectService = projectService;
-        _projectCompositionService = projectCompositionService;
+        _projectTestSuiteCompositionService = projectCompositionService;
         _projectTesterCompositionService = projectTesterCompositionService;
-        _testerService = testerService;
         _logger = logger;
     }
 
-    public Task<ICollection<GetProjectResponse>> GetAllAsync(CancellationToken ct = default)
+    public async Task<ICollection<GetProjectResponse>> GetAllAsync(CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectFacadeService::GetAllAsync start");
 
-        return _projectService.GetAllAsync(ct);
+        return await _projectService.GetAllAsync(ct);
     }
 
-    public Task<GetProjectResponse> GetByIdAsync(long id, CancellationToken ct = default)
+    public async Task<GetProjectResponse> GetByIdAsync(long id, CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectFacadeService::GetByIdAsync start: {Id}", id);
 
-        return _projectService.GetByIdAsync(id, ct);
+        return await _projectService.GetByIdAsync(id, ct);
     }
 
-    public Task<ICollection<ProjectComposition>> GetCompositionsByProjectIdAsync(long projectId, CancellationToken ct = default)
+    public async Task<ICollection<Models.ProjectTestSuiteComposition>> GetCompositionsByProjectIdAsync(long projectId, CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectFacadeService::GetCompositionsByProjectIdAsync start: {ProjectId}", projectId);
 
-        return _projectCompositionService.GetByProjectIdAsync(projectId, ct);
+        GetProjectResponse projectResponse = await _projectService.GetByIdAsync(projectId, ct);
+
+        var projectTestSuiteCompositions = await _projectTestSuiteCompositionService.GetByProjectIdAsync(projectId, ct);
+
+        projectResponse.TestSuites = projectTestSuiteCompositions.ToList();
+
+        return null;
     }
 
-    public Task<ICollection<GetTesterResponse>> GetTestersByProjectIdAsync(long projectId, CancellationToken ct = default)
+    public async Task<ICollection<GetTesterResponse>> GetTestersByProjectIdAsync(long projectId, CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectFacadeService::GetTestersByProjectIdAsync start: {ProjectId}", projectId);
 
-        return _projectTesterCompositionService.GetByTesterIdAsync(projectId, ct);
+        return null;
     }
 
-    public Task<GetTesterResponse> GetTesterByIdAsync(long testerId, CancellationToken ct = default)
+    public async Task<GetTesterResponse> GetTesterByIdAsync(long testerId, CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectFacadeService::GetTesterByIdAsync start: {TesterId}", testerId);
 
-        return _testerService.GetByIdAsync(testerId, ct);
+        return null;
     }
 
-    public Task<ProjectComposition> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default)
+    public async Task<CreateProjectResponse> CreateProjectAsync(CreateProjectRequest request, CancellationToken ct = default)
+    {
+        _logger.LogDebug("ProjectFacadeService::CreateProjectAsync start: {Request}", request);
+
+        var response = await _projectService.CreateAsync(request, ct);
+
+        return response;
+    }
+
+    public async Task<Models.ProjectTestSuiteComposition> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectFacadeService::CreateCompositionAsync start: {ProjectId} {TestSuiteId}", projectId, testSuiteId);
 
-        return _projectCompositionService.CreateAsync(projectId, testSuiteId, ct);
+        return await _projectTestSuiteCompositionService.CreateAsync(projectId, testSuiteId, ct);
     }
 
-    public Task<bool> DeleteCompositionAsync(long id, CancellationToken ct = default)
+    public async Task<bool> DeleteCompositionAsync(long id, CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectFacadeService::DeleteCompositionAsync start: {Id}", id);
 
-        return _projectCompositionService.DeleteAsync(id, ct);
+        return await _projectTestSuiteCompositionService.DeleteAsync(id, ct);
     }
 }

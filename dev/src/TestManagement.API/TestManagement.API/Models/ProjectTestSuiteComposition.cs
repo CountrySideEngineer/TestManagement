@@ -5,7 +5,7 @@ namespace TestManagement.API.Models;
 /// <summary>
 /// Join entity that associates <see cref="Project"/> and <see cref="TestSuite"/> (N:N).
 /// </summary>
-public class ProjectComposition
+public class ProjectTestSuiteComposition
 {
     /// <summary>
     /// Primary key identifier for the composition.

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Threading;
+using TestManagement.API.Features.Project.Create;
 using TestManagement.API.Features.Project.Get;
+using TestManagement.API.Features.TestCases.Create;
 using TestManagement.API.Models;
 using TestManagement.API.Services;
 
@@ -43,11 +45,11 @@ namespace TestManagement.API.Controllers
         /// Retrieves all projects.
         /// </summary>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
-        /// <returns>ActionResult containing a collection of <see cref="GetProjectResponse"/>.</returns>
+        /// <returns>ActionResult containing a collection of <see cref="Features.Project.Get.GetProjectResponse"/>.</returns>
         [HttpGet]
-        [ProducesResponseType(typeof(ICollection<GetProjectResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ICollection<Features.Project.Get.GetProjectResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<ICollection<GetProjectResponse>>> GetAllAsync(CancellationToken ct = default)
+        public async Task<ActionResult<ICollection<Features.Project.Get.GetProjectResponse>>> GetAllAsync(CancellationToken ct = default)
         {
             _logger.LogDebug("ProjectController::GetAllAsync() start!");
             var projects = await _projectFacadeService.GetAllAsync(ct);
@@ -59,14 +61,16 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="id">The identifier of the project to retrieve.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
-        /// <returns>ActionResult containing the <see cref="GetProjectResponse"/> for the specified id, or NotFound if missing.</returns>
-        [HttpGet("{id:long}")]
-        [ProducesResponseType(typeof(GetProjectResponse), StatusCodes.Status200OK)]
+        /// <returns>ActionResult containing the <see cref="Features.Project.Get.GetProjectResponse"/> for the specified id, or NotFound if missing.</returns>
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Features.Project.Get.GetProjectResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<GetProjectResponse>> GetByIdAsync(long id, CancellationToken ct = default)
+        [ActionName(nameof(GetByIdAsync))]
+        public async Task<ActionResult<Features.Project.Get.GetProjectResponse>> GetByIdAsync(long id, CancellationToken ct = default)
         {
             _logger.LogDebug("ProjectController::GetByIdAsync() start!");
+
             var project = await _projectFacadeService.GetByIdAsync(id, ct);
             if (project == null) return NotFound();
             return Ok(project);
@@ -77,14 +81,32 @@ namespace TestManagement.API.Controllers
         /// </summary>
         /// <param name="id">Project identifier.</param>
         /// <param name="ct">Cancellation token.</param>
-        /// <returns>ActionResult containing a collection of <see cref="ProjectComposition"/>.</returns>
+        /// <returns>ActionResult containing a collection of <see cref="Models.ProjectTestSuiteComposition"/>.</returns>
         [HttpGet("{id:long}/compositions")]
-        [ProducesResponseType(typeof(ICollection<ProjectComposition>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<ICollection<ProjectComposition>>> GetCompositionsByProjectIdAsync(long id, CancellationToken ct = default)
+        [ProducesResponseType(typeof(ICollection<Models.ProjectTestSuiteComposition>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<ICollection<Models.ProjectTestSuiteComposition>>> GetCompositionsByProjectIdAsync(long id, CancellationToken ct = default)
         {
             _logger.LogDebug("ProjectController::GetCompositionsByProjectIdAsync() start! ProjectId: {Id}", id);
             var comps = await _projectFacadeService.GetCompositionsByProjectIdAsync(id, ct);    
             return Ok(comps);
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(CreateProjectResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<CreateProjectResponse>> CreateProjectAsync(CreateProjectRequest request, CancellationToken ct = default)
+        {
+            _logger.LogDebug("ProjectController::CreateProjectAsync() start! Request: {@Request}", request);
+
+            var created = await _projectFacadeService.CreateProjectAsync(request, ct);
+
+            var actionResult = CreatedAtAction(
+                nameof(GetByIdAsync), 
+                new { id = created.Id },
+                created);
+
+            return actionResult;
         }
 
         /// <summary>
@@ -95,8 +117,8 @@ namespace TestManagement.API.Controllers
         /// <param name="ct">Cancellation token.</param>
         /// <returns>Created composition and a 201 Created response.</returns>
         [HttpPost("{projectId:long}/compositions/{testSuiteId:long}")]
-        [ProducesResponseType(typeof(ProjectComposition), StatusCodes.Status201Created)]
-        public async Task<ActionResult<ProjectComposition>> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default)
+        [ProducesResponseType(typeof(Models.ProjectTestSuiteComposition), StatusCodes.Status201Created)]
+        public async Task<ActionResult<Models.ProjectTestSuiteComposition>> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default)
         {
             _logger.LogDebug("ProjectController::CreateCompositionAsync() start! ProjectId: {ProjectId}, TestSuiteId: {TestSuiteId}", projectId, testSuiteId);
             var created = await _projectFacadeService.CreateCompositionAsync(projectId, testSuiteId, ct);

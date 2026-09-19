@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Runtime.CompilerServices;
 using TestManagement.API.Data;
+using TestManagement.API.Features.Project.Create;
 using TestManagement.API.Features.Project.Get;
+using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
 
@@ -86,5 +88,35 @@ public class ProjectService : IProjectService
         {
             return project;
         }
+    }
+
+    public async Task<CreateProjectResponse> CreateAsync(CreateProjectRequest request, CancellationToken ct = default)
+    {
+        _logger?.LogDebug("ProjectService::CreateAsync() start!");
+
+        var project = new Project
+        {
+            Name = request.Name,
+            Description = request.Description
+        };
+        _context.Projects.Add(project);
+
+        try
+        {
+            int result = await _context.SaveChangesAsync(ct);
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogError(ex, "Error occurred while saving new project to the database.");
+            throw;
+        }
+
+        var response = new CreateProjectResponse
+        {
+            Id = project.Id,
+            Name = project.Name,
+            Description = project.Description
+        };
+        return response;
     }
 }

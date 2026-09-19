@@ -25,7 +25,9 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
     /// </summary>
     /// <param name="dbContext">The database context used for data access.</param>
     /// <param name="logger">Optional logger instance.</param>
-    public ProjectTesterCompositionService(TestManagementDbContext dbContext, ILogger<ProjectTesterCompositionService>? logger)
+    public ProjectTesterCompositionService(
+        TestManagementDbContext dbContext, 
+        ILogger<ProjectTesterCompositionService>? logger)
     {
         _dbContext = dbContext;
         _logger = logger;
@@ -37,7 +39,9 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
     /// <param name="projectId">Identifier of the project to filter compositions.</param>
     /// <param name="ct">Cancellation token to cancel the operation.</param>
     /// <returns>A collection of <see cref="ProjectTesterComposition"/> instances associated with the project.</returns>
-    public async Task<ICollection<ProjectTesterComposition>> GetByProjectIdAsync(long projectId, CancellationToken ct)
+    public async Task<ICollection<ProjectTesterComposition>> GetByProjectIdAsync(
+        long projectId, 
+        CancellationToken ct)
     {
         _logger?.LogDebug("ProjectTesterCompositionService::GetByProjectIdAsync({ProjectId}) start", projectId);
 
@@ -58,7 +62,9 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
     /// <param name="testerId">Identifier of the tester to filter compositions.</param>
     /// <param name="ct">Cancellation token to cancel the operation.</param>
     /// <returns>A collection of <see cref="ProjectTesterComposition"/> instances associated with the tester.</returns>
-    public async Task<ICollection<ProjectTesterComposition>> GetByTesterIdAsync(long testerId, CancellationToken ct)
+    public async Task<ICollection<ProjectTesterComposition>> GetByTesterIdAsync(
+        long testerId, 
+        CancellationToken ct)
     {
         _logger?.LogDebug("ProjectTesterCompositionService::GetByTesterIdAsync({TesterId}) start", testerId);
 
@@ -101,7 +107,10 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
     /// <param name="ct">Cancellation token to cancel the operation.</param>
     /// <returns>The created or existing <see cref="ProjectTesterComposition"/> instance.</returns>
     /// <exception cref="Exception">Propagates exceptions thrown while saving to the database.</exception>
-    public async Task<ProjectTesterComposition> CreateAsync(long projectId, long testerId, CancellationToken ct)
+    public async Task<ProjectTesterComposition> CreateAsync(
+        long projectId, 
+        long 
+        testerId, CancellationToken ct)
     {
         _logger?.LogDebug("ProjectTesterCompositionService::CreateAsync(ProjectId={ProjectId}, TesterId={TesterId}) start", projectId, testerId);
 

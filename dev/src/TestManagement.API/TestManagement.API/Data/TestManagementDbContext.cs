@@ -82,7 +82,7 @@ namespace TestManagement.API.Data
         /// <summary>
         /// DbSet of project compositions (join entity between Project and TestSuite).
         /// </summary>
-        public DbSet<ProjectComposition> ProjectCompositions { get; set; }
+        public DbSet<ProjectTestSuiteComposition> ProjectTestSuiteCompositions { get; set; }
 
         /// <summary>
         /// DbSet of testers.
@@ -531,7 +531,7 @@ namespace TestManagement.API.Data
         /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
         private void ConfigureProjectComposition(ModelBuilder modelBuilder)
         {
-            var entity = modelBuilder.Entity<ProjectComposition>();
+            var entity = modelBuilder.Entity<ProjectTestSuiteComposition>();
 
             entity.HasKey(_ => _.Id);
 
