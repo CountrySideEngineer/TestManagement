@@ -66,6 +66,7 @@ public class TestSuiteController : Controller
     [ProducesResponseType(typeof(GetTestSuiteResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ActionName(nameof(GetByIdAsync))]
     public async Task<ActionResult<GetTestSuiteResponse>> GetByIdAsync(long id, CancellationToken ct)
     {
         _logger?.LogDebug("TestSuiteController.GetTestSuiteById() start!");

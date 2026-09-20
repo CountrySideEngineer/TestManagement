@@ -30,23 +30,5 @@ namespace TestManagement.API.Features.TestSuite.Get
         /// UTC timestamp when the suite was last updated.
         /// </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-
-        /// <summary>
-        /// Collection of versions (cases) that belong to this test suite.
-        /// </summary>
-        public virtual List<TestSuiteVersionResponse>? TestSuiteVersions { get; set; } = null;
-
-        public class TestSuiteVersionResponse
-        {
-            public long Id { get; set; }
-
-            public long VersionNumber { get; set; } = 0;
-
-            public List<GetTestCaseResponse>? TestCases { get; set; }
-
-            public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
-            public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-        }
     }
 }

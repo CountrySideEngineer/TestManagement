@@ -25,6 +25,9 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IProjectTestSuiteCompositionService, ProjectTestSuiteCompositionService>();
 builder.Services.AddScoped<IProjectTesterCompositionService, ProjectTesterCompositionService>();
 builder.Services.AddScoped<IProjectFacadeService, ProjectFacadeService>();
+builder.Services.AddScoped<ITestSuiteFacadeService, TestSuiteFacadeService>();
+builder.Services.AddScoped<ITestSuiteService, TestSuiteService>();
+builder.Services.AddScoped<ITestSuiteCompositionService, TestSuiteCompositionService>();
 
 builder.Services.AddMvc().AddXmlSerializerFormatters();
 

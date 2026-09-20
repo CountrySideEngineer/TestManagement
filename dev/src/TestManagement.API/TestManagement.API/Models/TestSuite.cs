@@ -35,11 +35,6 @@ namespace TestManagement.API.Models
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Foreign key referencing the owning <see cref="Project"/>.
-        /// </summary>
-        public long ProjectId { get; set; }
-
-        /// <summary>
         /// Navigation property to the owning project. May be null for detached or DTO instances.
         /// </summary>
         [JsonIgnore]
@@ -77,11 +72,6 @@ namespace TestManagement.API.Models
                 return Id == other.Id;
             }
 
-            if (ProjectId != 0 || other.ProjectId != 0)
-            {
-                return ProjectId == other.ProjectId && string.Equals(Name, other.Name, StringComparison.Ordinal);
-            }
-
             return false;
         }
 
@@ -106,7 +96,6 @@ namespace TestManagement.API.Models
             unchecked
             {
                 var hash = 17;
-                hash = hash * 23 + ProjectId.GetHashCode();
                 hash = hash * 23 + (Name != null ? StringComparer.Ordinal.GetHashCode(Name) : 0);
                 return hash;
             }

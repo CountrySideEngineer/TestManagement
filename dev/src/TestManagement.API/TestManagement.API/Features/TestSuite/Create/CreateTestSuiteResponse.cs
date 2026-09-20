@@ -19,10 +19,5 @@
         /// Description of the test suite.
         /// </summary>
         public string Description { get; set; } = null!;
-
-        /// <summary>
-        /// Identifier of the project the test suite belongs to.
-        /// </summary>
-        public long ProjectId { get; set; } = 0;
     }
 }

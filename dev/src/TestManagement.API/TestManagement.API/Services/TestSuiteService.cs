@@ -46,7 +46,7 @@ public class TestSuiteService : ITestSuiteService
     {
         _logger?.LogDebug("TestSuiteService::GetAllAsync() start!");
 
-        return await _context.TestSuites
+        var suites = await _context.TestSuites
             .AsNoTracking()
             .Select(ts => new GetTestSuiteResponse
             {
@@ -54,52 +54,11 @@ public class TestSuiteService : ITestSuiteService
                 Name = ts.Name,
                 Description = ts.Description,
                 CreatedAt = ts.CreatedAt,
-                UpdatedAt = ts.UpdatedAt,
-                TestSuiteVersions = ts.TestSuiteCases == null
-                    ? null
-                    : ts.TestSuiteCases.Select(sv => new GetTestSuiteResponse.TestSuiteVersionResponse
-                    {
-                        Id = sv.Id,
-                        CreatedAt = sv.CreatedAt,
-                        UpdatedAt = sv.UpdatedAt,
-                        TestCases = sv.TestCaseVersions == null
-                            ? null
-                            : sv.TestCaseVersions.Select(tv => new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse
-                            {
-                                // TestCase が読み込まれていればそれをベースに全バージョンを返す。なければ tv の情報を単一バージョンとして返す。
-                                Id = tv.TestCase != null ? tv.TestCase.Id : tv.TestCaseId,
-                                Code = tv.TestCase != null ? tv.TestCase.Code : string.Empty,
-                                Versions = (tv.TestCase != null && tv.TestCase.Versions != null)
-                                    ? tv.TestCase.Versions.Select(v => new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
-                                    {
-                                        Id = v.Id,
-                                        Name = v.Name,
-                                        Description = v.Description,
-                                        VersionNumber = v.VersionNumber,
-                                        TestLevelId = v.TestLevelId,
-                                        IsLatest = v.IsLatest,
-                                        CreatedAt = v.CreatedAt,
-                                        UpdatedAt = v.UpdatedAt
-                                    }).ToList()
-                                    // フォールバック: TestCase.Versions が無い場合は tv 自身を単一要素として返す
-                                    : new List<TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem>
-                                    {
-                                        new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
-                                        {
-                                            Id = tv.Id,
-                                            Name = tv.Name,
-                                            Description = tv.Description,
-                                            VersionNumber = tv.VersionNumber,
-                                            TestLevelId = tv.TestLevelId,
-                                            IsLatest = tv.IsLatest,
-                                            CreatedAt = tv.CreatedAt,
-                                            UpdatedAt = tv.UpdatedAt
-                                        }
-                                    }
-                            }).ToList()
-                    }).ToList()
+                UpdatedAt = ts.UpdatedAt
             })
             .ToListAsync(ct);
+
+        return suites;
     }
 
     /// <summary>
@@ -123,48 +82,7 @@ public class TestSuiteService : ITestSuiteService
                 Name = ts.Name,
                 Description = ts.Description,
                 CreatedAt = ts.CreatedAt,
-                UpdatedAt = ts.UpdatedAt,
-                TestSuiteVersions = ts.TestSuiteCases == null
-                    ? null
-                    : ts.TestSuiteCases.Select(sv => new GetTestSuiteResponse.TestSuiteVersionResponse
-                    {
-                        Id = sv.Id,
-                        CreatedAt = sv.CreatedAt,
-                        UpdatedAt = sv.UpdatedAt,
-                        TestCases = sv.TestCaseVersions == null
-                            ? null
-                            : sv.TestCaseVersions.Select(tv => new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse
-                            {
-                                Id = tv.TestCase != null ? tv.TestCase.Id : tv.TestCaseId,
-                                Code = tv.TestCase != null ? tv.TestCase.Code : string.Empty,
-                                Versions = (tv.TestCase != null && tv.TestCase.Versions != null)
-                                    ? tv.TestCase.Versions.Select(v => new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
-                                    {
-                                        Id = v.Id,
-                                        Name = v.Name,
-                                        Description = v.Description,
-                                        VersionNumber = v.VersionNumber,
-                                        TestLevelId = v.TestLevelId,
-                                        IsLatest = v.IsLatest,
-                                        CreatedAt = v.CreatedAt,
-                                        UpdatedAt = v.UpdatedAt
-                                    }).ToList()
-                                    : new List<TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem>
-                                    {
-                                        new TestManagement.API.Features.TestCases.Get.GetTestCaseResponse.TestCaseVersionItem
-                                        {
-                                            Id = tv.Id,
-                                            Name = tv.Name,
-                                            Description = tv.Description,
-                                            VersionNumber = tv.VersionNumber,
-                                            TestLevelId = tv.TestLevelId,
-                                            IsLatest = tv.IsLatest,
-                                            CreatedAt = tv.CreatedAt,
-                                            UpdatedAt = tv.UpdatedAt
-                                        }
-                                    }
-                            }).ToList()
-                    }).ToList()
+                UpdatedAt = ts.UpdatedAt
             })
             .FirstOrDefaultAsync(ct);
 
@@ -219,7 +137,6 @@ public class TestSuiteService : ITestSuiteService
             Id = newTestSuite.Id,
             Name = newTestSuite.Name,
             Description = newTestSuite.Description,
-            ProjectId = newTestSuite.ProjectId
         };
         return response;
     }

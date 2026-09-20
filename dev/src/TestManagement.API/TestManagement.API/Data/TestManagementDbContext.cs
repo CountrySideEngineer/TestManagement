@@ -475,12 +475,6 @@ namespace TestManagement.API.Data
 
             entity.Property(_ => _.Name)
                 .IsRequired();
-
-            entity.Property(_ => _.ProjectId)
-                .IsRequired();
-
-            entity.HasIndex(_ => new { _.ProjectId, _.Name })
-                .IsUnique();
         }
 
         /// <summary>
