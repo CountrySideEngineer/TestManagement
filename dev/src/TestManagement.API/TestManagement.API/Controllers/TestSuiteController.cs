@@ -89,15 +89,15 @@ public class TestSuiteController : Controller
     /// An <see cref="ActionResult{GetTestSuiteResponse}"/> containing the suite and its test case summaries.
     /// </returns>
     [HttpGet("{id:long}/composition")]
-    [ProducesResponseType(typeof(GetTestSuiteResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetTestSuiteWithTestCaseResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ActionName(nameof(GetByIdWithTestCasesAsync))]
-    public async Task<ActionResult<GetTestSuiteResponse>> GetByIdWithTestCasesAsync(long id, CancellationToken ct)
+    public async Task<ActionResult<GetTestSuiteWithTestCaseResponse>> GetByIdWithTestCasesAsync(long id, CancellationToken ct)
     {
         _logger?.LogDebug("TestSuiteController.GetTestSuiteByIdWithTestCases() start!");
 
-        GetTestSuiteResponse testSuite = await _testSuiteFacadeService.GetByIdWithTestCasesAsync(id, ct);
+        GetTestSuiteWithTestCaseResponse testSuite = await _testSuiteFacadeService.GetByIdWithTestCasesAsync(id, ct);
         return Ok(testSuite);
     }
 

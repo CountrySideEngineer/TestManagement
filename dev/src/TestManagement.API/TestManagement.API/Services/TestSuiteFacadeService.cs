@@ -63,11 +63,12 @@ namespace TestManagement.API.Services
         /// <param name="id">The identifier of the test suite to retrieve.</param>
         /// <param name="ct">A <see cref="CancellationToken"/> to cancel the operation.</param>
         /// <returns>A task that represents the asynchronous operation. The task result contains the <see cref="GetTestSuiteResponse"/> for the specified id.</returns>
-        public Task<GetTestSuiteResponse> GetByIdAsync(long id, CancellationToken ct = default)
+        public async Task<GetTestSuiteResponse> GetByIdAsync(long id, CancellationToken ct = default)
         {
             _logger?.LogDebug("TestSuiteFacadeService::GetByIdAsync start");
 
-            var testSuite = _testSuiteService.GetByIdAsync(id, ct);
+            var testSuite = await _testSuiteService.GetByIdAsync(id, ct);
+
             return testSuite;
         }
 
@@ -88,43 +89,40 @@ namespace TestManagement.API.Services
         /// A <see cref="GetTestSuiteResponse"/> containing suite metadata and a collection of test case summaries.
         /// If no suite is found, an empty response instance is returned.
         /// </returns>
-        public async Task<GetTestSuiteResponse> GetByIdWithTestCasesAsync(long id, CancellationToken ct = default)
+        public async Task<GetTestSuiteWithTestCaseResponse> GetByIdWithTestCasesAsync(long id, CancellationToken ct = default)
         {
             _logger?.LogDebug("TestSuiteFacadeService::GetByIdWithTestCasesAsync start");
 
+            var testSuiteWithTestCase = new GetTestSuiteWithTestCaseResponse();
             var testSuite = await _testSuiteService.GetByIdAsync(id, ct);
             if (testSuite is null)
             {
-                return new GetTestSuiteResponse();
+                return testSuiteWithTestCase;
             }
+            testSuiteWithTestCase.Id = testSuite.Id;
+            testSuiteWithTestCase.Name = testSuite.Name;
+            testSuiteWithTestCase.Description = testSuite.Description;
+            testSuiteWithTestCase.TestCaseSummaries = new List<GetTestSuiteWithTestCaseResponse.TestCaseSummary>();
 
-            testSuite.TestCaseSummaries = new List<GetTestSuiteResponse.TestCaseSummary>();
             var compositions = await _testSuiteCompositionService.GetByTestSuiteId(id, ct);
             if (compositions is null)
             {
-                return testSuite;
+                return testSuiteWithTestCase;
             }
 
-            testSuite.TestCaseSummaries = new List<GetTestSuiteResponse.TestCaseSummary>();
-            foreach (var composition in compositions)
-            {
-                var testCaseVersion = composition.TestCaseVersion;
-                if (testCaseVersion is null)
+            var summaries = compositions
+                .Select(tcv => new GetTestSuiteWithTestCaseResponse.TestCaseSummary()
                 {
-                    continue;
-                }
-                var summary = new GetTestSuiteResponse.TestCaseSummary()
-                {
-                    Id = testCaseVersion.TestCaseId,
-                    VersionNumber = testCaseVersion.VersionNumber,
-                    Name = testCaseVersion.Name,
-                    Description = testCaseVersion.Description,
-                    TestLevelName = testCaseVersion.TestLevel?.DisplayName ?? string.Empty, 
-                };
-                testSuite.TestCaseSummaries.Add(summary);
-            }
+                    Id = tcv.TestCaseVersionId,
+                    VersionNumber = tcv.TestCaseVersion?.VersionNumber ?? 0,
+                    Name = tcv.TestCaseVersion?.Name ?? string.Empty,
+                    Description = tcv.TestCaseVersion?.Description ?? string.Empty,
+                    TestLevelName = tcv.TestCaseVersion?.TestLevel?.DisplayName ?? string.Empty,
+                })
+                .ToList();
+            testSuiteWithTestCase.TestCaseSummaries = summaries;
 
-            return testSuite;
+            return testSuiteWithTestCase;
         }
 
         /// <summary>
@@ -136,11 +134,11 @@ namespace TestManagement.API.Services
         /// A task that represents the asynchronous operation. The task result contains
         /// a <see cref="CreateTestSuiteResponse"/> describing the created test suite.
         /// </returns>
-        public Task<CreateTestSuiteResponse> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct = default)
+        public async Task<CreateTestSuiteResponse> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct = default)
         {
             _logger?.LogDebug("TestSuiteFacadeService::CreateAsync start");
 
-            var response = _testSuiteService.CreateAsync(request, ct);
+            var response = await _testSuiteService.CreateAsync(request, ct);
 
             return response;
         }

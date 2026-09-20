@@ -52,9 +52,7 @@ public class TestSuiteService : ITestSuiteService
             {
                 Id = ts.Id,
                 Name = ts.Name,
-                Description = ts.Description,
-                CreatedAt = ts.CreatedAt,
-                UpdatedAt = ts.UpdatedAt
+                Description = ts.Description
             })
             .ToListAsync(ct);
 
@@ -81,8 +79,6 @@ public class TestSuiteService : ITestSuiteService
                 Id = ts.Id,
                 Name = ts.Name,
                 Description = ts.Description,
-                CreatedAt = ts.CreatedAt,
-                UpdatedAt = ts.UpdatedAt
             })
             .FirstOrDefaultAsync(ct);
 
