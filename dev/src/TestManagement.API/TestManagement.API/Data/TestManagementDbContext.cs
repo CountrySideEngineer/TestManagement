@@ -458,7 +458,7 @@ namespace TestManagement.API.Data
                 .IsRequired();
 
             entity.HasOne(_ => _.TestSuite)
-                .WithMany(_ => _.TestSuiteCases)
+                .WithMany(_ => _.TestSuiteCompositions)
                 .HasForeignKey(_ => _.TestSuiteId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
@@ -510,11 +510,22 @@ namespace TestManagement.API.Data
 
             entity.Property(_ => _.TestSuiteId)
                 .IsRequired();
+
             entity.Property(_ => _.TestCaseVersionId)
                 .IsRequired();
 
             entity.HasIndex(_ => new { _.TestSuiteId, _.TestCaseVersionId })
                 .IsUnique();
+
+            entity.HasOne(_ => _.TestSuite)
+                .WithMany(_ => _.TestSuiteCompositions)
+                .HasForeignKey(_ => _.TestSuiteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(_ => _.TestCaseVersion)
+                .WithMany(_ => _.TestSuiteCompositions)
+                .HasForeignKey(_ => _.TestCaseVersionId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>

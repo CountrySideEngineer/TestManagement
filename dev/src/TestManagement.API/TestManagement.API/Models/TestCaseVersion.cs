@@ -63,6 +63,9 @@ namespace TestManagement.API.Models
         [JsonIgnore]
         public List<TestResult> Results { get; set; } = new List<TestResult>();
 
+        [JsonIgnore]
+        public List<TestSuiteComposition>? TestSuiteCompositions { get; set; } = null;
+
         /// <summary>
         /// Navigation property to the <see cref="TestLevel"/> associated with this version.
         /// </summary>

@@ -75,6 +75,33 @@ public class TestSuiteController : Controller
     }
 
     /// <summary>
+    /// HTTP GET endpoint to retrieve a test suite and its composition (test case summaries).
+    /// </summary>
+    /// <remarks>
+    /// - Route: GET /{id:long}/composition
+    /// - Returns 200 with <see cref="GetTestSuiteResponse"/> on success.
+    /// - Returns 404/500 as appropriate (handled by higher-level middleware or service layer exceptions).
+    /// - This action delegates retrieval to <see cref="TestSuiteFacadeService.GetByIdWithTestCasesAsync(long, CancellationToken)"/>.
+    /// </remarks>
+    /// <param name="id">The id of the test suite to retrieve.</param>
+    /// <param name="ct">Cancellation token to cancel the request.</param>
+    /// <returns>
+    /// An <see cref="ActionResult{GetTestSuiteResponse}"/> containing the suite and its test case summaries.
+    /// </returns>
+    [HttpGet("{id:long}/composition")]
+    [ProducesResponseType(typeof(GetTestSuiteResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ActionName(nameof(GetByIdWithTestCasesAsync))]
+    public async Task<ActionResult<GetTestSuiteResponse>> GetByIdWithTestCasesAsync(long id, CancellationToken ct)
+    {
+        _logger?.LogDebug("TestSuiteController.GetTestSuiteByIdWithTestCases() start!");
+
+        GetTestSuiteResponse testSuite = await _testSuiteFacadeService.GetByIdWithTestCasesAsync(id, ct);
+        return Ok(testSuite);
+    }
+
+    /// <summary>
     /// Creates a new test suite resource.
     /// The request is forwarded to the <see cref="ITestSuiteService"/> which persists the entity.
     /// On success this endpoint returns a 201 Created response with the location of the created resource.

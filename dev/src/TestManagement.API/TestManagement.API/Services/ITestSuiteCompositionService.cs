@@ -15,6 +15,8 @@ public interface ITestSuiteCompositionService
     /// </summary>
     Task<TestSuiteComposition?> GetById(long id, CancellationToken ct = default);
 
+    Task<ICollection<TestSuiteComposition>?> GetByTestSuiteId(long suiteId, CancellationToken ct = default);
+
     Task<CreateTestSuiteCompositionResponse?> CreateCompositionAsync(
         CreateTestSuiteCompositionRequest request, 
         CancellationToken ct = default);

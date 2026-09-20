@@ -10,6 +10,8 @@ public interface ITestSuiteFacadeService
 
     Task<GetTestSuiteResponse> GetByIdAsync(long id, CancellationToken ct = default);
 
+    Task<GetTestSuiteResponse> GetByIdWithTestCasesAsync(long id, CancellationToken ct = default);
+
     Task<CreateTestSuiteResponse> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct = default);
 
     Task<CreateTestSuiteCompositionResponse> CreateCompositionAsync(CreateTestSuiteCompositionRequest request, CancellationToken ct = default);

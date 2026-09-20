@@ -45,7 +45,7 @@ public class TestSuiteCompositionService : ITestSuiteCompositionService
         _logger?.LogDebug("TestSuiteCompositionService::GetAllAsync() start!");
 
         return await _context.TestSuiteCompositions
-            .Include(tsv => tsv.TestCaseVersions)
+            .Include(tsv => tsv.TestCaseVersion)
             .Include(tsv => tsv.TestSuite)
             .AsNoTracking()
             .ToListAsync(ct);
@@ -65,10 +65,40 @@ public class TestSuiteCompositionService : ITestSuiteCompositionService
 
         return await _context.TestSuiteCompositions
             .Where(v => v.Id == id)
-            .Include(v => v.TestCaseVersions)   
+            .Include(v => v.TestCaseVersion)
             .Include(v => v.TestSuite)
             .AsNoTracking()
             .FirstOrDefaultAsync(ct);
+    }
+
+    /// <summary>
+    /// Retrieve all TestSuiteComposition records for a given test suite id,
+    /// including the related TestCaseVersion and its TestLevel.
+    /// </summary>
+    /// <remarks>
+    /// - Uses EF Core eager loading (<c>Include</c> / <c>ThenInclude</c>) to fetch related entities in a single query.
+    /// - Query is executed with <c>AsNoTracking()</c> as this is a read-only operation.
+    /// - Returns <c>null</c> only if the query execution itself results in no data; callers should handle an empty collection as appropriate.
+    /// - Consider returning a projection (DTO) instead of entity objects if only a subset of fields is required.
+    /// </remarks>
+    /// <param name="suiteId">The identifier of the test suite whose compositions should be retrieved.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// A collection of <see cref="TestSuiteComposition"/> instances, or <c>null</c> if none are found.
+    /// </returns>
+    public virtual async Task<ICollection<TestSuiteComposition>?> GetByTestSuiteId(long suiteId, CancellationToken ct = default)
+    {
+        _logger?.LogDebug("TestSuiteCompositionService::GetByTestSuiteId() start!");
+
+        var compositions = await _context.TestSuiteCompositions
+            .Where(v => v.TestSuiteId == suiteId)
+            .Include(v => v.TestCaseVersion)
+                .ThenInclude(_ => _.TestLevel)
+            .Include(v => v.TestSuite)
+            .AsNoTracking()
+            .ToListAsync(ct);
+
+        return compositions;
     }
 
     /// <summary>

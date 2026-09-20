@@ -30,5 +30,16 @@ namespace TestManagement.API.Features.TestSuite.Get
         /// UTC timestamp when the suite was last updated.
         /// </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public List<TestCaseSummary>? TestCaseSummaries { get; set; } = null;
+
+        public class TestCaseSummary
+        {
+            public long Id { get; set; } = 0;
+            public long VersionNumber { get; set; } = 0;
+            public string Name { get; set; } = string.Empty;
+            public string Description { get; set; } = string.Empty;
+            public string TestLevelName { get; set; } = string.Empty;
+        }
     }
 }

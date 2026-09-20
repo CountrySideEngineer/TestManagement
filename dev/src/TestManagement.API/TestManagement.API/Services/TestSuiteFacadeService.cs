@@ -72,6 +72,62 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
+        /// Retrieve a test suite along with its included test case summaries.
+        /// </summary>
+        /// <remarks>
+        /// - Loads the basic test suite DTO via <see cref="_testSuiteService.GetByIdAsync(long, CancellationToken)"/>.
+        /// - Loads related suite compositions via <see cref="_testSuiteCompositionService.GetByTestSuiteId(long, CancellationToken)"/>.
+        /// - Projects each composition's <c>TestCaseVersion</c> into <see cref="GetTestSuiteResponse.TestCaseSummary"/>.
+        /// - If the suite is not found, an empty <see cref="GetTestSuiteResponse"/> instance is returned.
+        /// - Exceptions from underlying services are not swallowed and will propagate to the caller.
+        /// - Consider projecting only required fields in the composition query to avoid N+1 and reduce memory usage.
+        /// </remarks>
+        /// <param name="id">Primary key identifier of the test suite to retrieve.</param>
+        /// <param name="ct">Cancellation token to cancel the operation.</param>
+        /// <returns>
+        /// A <see cref="GetTestSuiteResponse"/> containing suite metadata and a collection of test case summaries.
+        /// If no suite is found, an empty response instance is returned.
+        /// </returns>
+        public async Task<GetTestSuiteResponse> GetByIdWithTestCasesAsync(long id, CancellationToken ct = default)
+        {
+            _logger?.LogDebug("TestSuiteFacadeService::GetByIdWithTestCasesAsync start");
+
+            var testSuite = await _testSuiteService.GetByIdAsync(id, ct);
+            if (testSuite is null)
+            {
+                return new GetTestSuiteResponse();
+            }
+
+            testSuite.TestCaseSummaries = new List<GetTestSuiteResponse.TestCaseSummary>();
+            var compositions = await _testSuiteCompositionService.GetByTestSuiteId(id, ct);
+            if (compositions is null)
+            {
+                return testSuite;
+            }
+
+            testSuite.TestCaseSummaries = new List<GetTestSuiteResponse.TestCaseSummary>();
+            foreach (var composition in compositions)
+            {
+                var testCaseVersion = composition.TestCaseVersion;
+                if (testCaseVersion is null)
+                {
+                    continue;
+                }
+                var summary = new GetTestSuiteResponse.TestCaseSummary()
+                {
+                    Id = testCaseVersion.TestCaseId,
+                    VersionNumber = testCaseVersion.VersionNumber,
+                    Name = testCaseVersion.Name,
+                    Description = testCaseVersion.Description,
+                    TestLevelName = testCaseVersion.TestLevel?.DisplayName ?? string.Empty, 
+                };
+                testSuite.TestCaseSummaries.Add(summary);
+            }
+
+            return testSuite;
+        }
+
+        /// <summary>
         /// Creates a new test suite by delegating the request to the underlying test suite service.
         /// </summary>
         /// <param name="request">The request containing details required to create the test suite.</param>
