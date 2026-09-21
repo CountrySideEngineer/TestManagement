@@ -93,7 +93,10 @@ public class TestSuiteController : Controller
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [ActionName(nameof(GetByIdWithTestCasesAsync))]
-    public async Task<ActionResult<GetTestSuiteWithTestCaseResponse>> GetByIdWithTestCasesAsync(long id, CancellationToken ct)
+    public async Task<ActionResult<GetTestSuiteWithTestCaseResponse>> GetByIdWithTestCasesAsync(
+        long id, 
+        CancellationToken ct
+        )
     {
         _logger?.LogDebug("TestSuiteController.GetTestSuiteByIdWithTestCases() start!");
 
@@ -116,7 +119,10 @@ public class TestSuiteController : Controller
     [ProducesResponseType(typeof(CreateTestSuiteResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<ActionResult<CreateTestSuiteResponse>> CreateAsync(CreateTestSuiteRequest request, CancellationToken ct)
+    public async Task<ActionResult<CreateTestSuiteResponse>> CreateAsync(
+        CreateTestSuiteRequest request, 
+        CancellationToken ct
+        )
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuite() start!");
 
@@ -142,7 +148,11 @@ public class TestSuiteController : Controller
     [ProducesResponseType(typeof(CreateTestSuiteCompositionResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status501NotImplemented)]
-    public async Task<ActionResult<CreateTestSuiteCompositionResponse>> CreateCompositionAsync(long id, TestSuiteCompositionCreateRequest request, CancellationToken ct = default)
+    public async Task<ActionResult<CreateTestSuiteCompositionResponse>> CreateCompositionAsync(
+        long id, 
+        TestSuiteCompositionCreateRequest request, 
+        CancellationToken ct = default
+        )
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuiteComposition() start!");
 
