@@ -124,6 +124,20 @@ public class TestSuiteController : Controller
         return CreatedAtAction(nameof(GetByIdAsync), new { id = createdTestSuite.Id }, createdTestSuite);
     }
 
+    /// <summary>
+    /// Creates a new composition entry that associates a test case (and a specific version)
+    /// with an existing test suite.
+    /// 
+    /// - Validates and maps the incoming HTTP request to an internal facade request.
+    /// - Delegates creation to the facade service which performs business logic and persistence.
+    /// - Returns 201 Created with the created composition resource location.
+    /// </summary>
+    /// <param name="id">The id of the test suite to which the test case will be added.</param>
+    /// <param name="request">Client request containing the test case id and version to add to the suite.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// ActionResult containing a <see cref="CreateTestSuiteCompositionResponse"/> and a 201 Created status.
+    /// </returns>
     [HttpPost("{id:long}/composition")]
     [ProducesResponseType(typeof(CreateTestSuiteCompositionResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -132,6 +146,7 @@ public class TestSuiteController : Controller
     {
         _logger?.LogDebug("TestSuiteController.CreateTestSuiteComposition() start!");
 
+        // Map the API request model to an internal facade request DTO.
         var createRequest = new CreateTestSuiteCompositionRequest
         {
             TestSuiteId = id,
@@ -139,8 +154,10 @@ public class TestSuiteController : Controller
             TestCaseVersionNumber = request.TestCaseVersionNumber
         };
 
+        // Delegate creation to the facade which handles validation and persistence.
         CreateTestSuiteCompositionResponse createdTestSuiteComposition = await _testSuiteFacadeService.CreateCompositionAsync(createRequest, ct);
 
+        // Map facade response to API response model.
         var response = new TestSuiteCompositionCreateResponse()
         {
             TestSuiteCompositionId = createdTestSuiteComposition.TestSuiteCompositionId,
@@ -149,7 +166,8 @@ public class TestSuiteController : Controller
             TestCaseVersionNumber = createdTestSuiteComposition.TestCaseVersionNumber
         };
 
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = response.TestSuiteCompositionId}, response);
+        // Return 201 Created with the location header pointing to the newly created resource.
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = response.TestSuiteCompositionId }, response);
     }
 
     /// <summary>
