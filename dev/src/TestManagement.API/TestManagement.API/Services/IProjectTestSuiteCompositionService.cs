@@ -1,3 +1,4 @@
+using TestManagement.API.Features.Project.Create;
 using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Models;
 
@@ -26,7 +27,9 @@ namespace TestManagement.API.Services
         /// <summary>
         /// Creates a new project composition linking a project and a test suite.
         /// </summary>
-        Task<ProjectTestSuiteComposition> CreateAsync(long projectId, long testSuiteId, CancellationToken ct);
+        Task<ProjectTestSuiteComposition> CreateAsync(
+            CreateProjectTestSuiteCompositionRequest request,
+            CancellationToken ct);
 
         /// <summary>
         /// Deletes a composition by id.

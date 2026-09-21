@@ -81,11 +81,15 @@ public class ProjectFacadeService : IProjectFacadeService
         return response;
     }
 
-    public async Task<Models.ProjectTestSuiteComposition> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default)
+    public async Task<Models.ProjectTestSuiteComposition> CreateTestSuiteCompositionAsync(
+        CreateProjectTestSuiteCompositionRequest request,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("ProjectFacadeService::CreateCompositionAsync start: {ProjectId} {TestSuiteId}", projectId, testSuiteId);
+        _logger.LogDebug("ProjectFacadeService::CreateTestSuiteCompositionAsync start: {ProjectId} {TestSuiteId}",
+            request.ProjetId,
+            request.TestSuiteId);
 
-        return await _projectTestSuiteCompositionService.CreateAsync(projectId, testSuiteId, ct);
+        return await _projectTestSuiteCompositionService.CreateAsync(request, ct);
     }
 
     public async Task<bool> DeleteCompositionAsync(long id, CancellationToken ct = default)

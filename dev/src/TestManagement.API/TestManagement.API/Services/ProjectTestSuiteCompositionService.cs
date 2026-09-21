@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
+using TestManagement.API.Features.Project.Create;
 using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Models;
 
@@ -87,58 +88,74 @@ namespace TestManagement.API.Services
         }
 
         /// <summary>
-        /// Creates a new <see cref="ProjectTestSuiteComposition"/> linking the specified project and test suite.
-        /// Validates that both the project and the test suite exist and prevents creating duplicate links.
-        /// Throws <see cref="InvalidOperationException"/> when validation fails.
+        /// Creates a new ProjectTestSuiteComposition that links a project and a test suite.
         /// </summary>
-        /// <param name="projectId">Identifier of the project to link.</param>
-        /// <param name="testSuiteId">Identifier of the test suite to link.</param>
+        /// <param name="request">Request containing the project and test suite identifiers.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
-        /// <returns>The created <see cref="ProjectTestSuiteComposition"/>.</returns>
-        /// <exception cref="InvalidOperationException">Thrown when the project or test suite does not exist or the composition already exists.</exception>
-        public virtual async Task<ProjectTestSuiteComposition> CreateAsync(long projectId, long testSuiteId, CancellationToken ct)
+        /// <returns>The created <see cref="ProjectTestSuiteComposition"/> entity.</returns>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when the referenced project or test suite does not exist, or when the composition already exists.
+        /// </exception>
+        /// <exception cref="DbUpdateException">
+        /// Thrown when saving changes to the database fails.
+        /// </exception>
+        public virtual async Task<ProjectTestSuiteComposition> CreateAsync(
+            CreateProjectTestSuiteCompositionRequest request,
+            CancellationToken ct
+            )
         {
-            _logger?.LogDebug("ProjectCompositionService::CreateAsync(projectId={ProjectId}, testSuiteId={TestSuiteId}) start", projectId, testSuiteId);
+            _logger?.LogDebug("ProjectCompositionService::CreateAsync(projectId={ProjectId}, testSuiteId={TestSuiteId}) start",
+                request.ProjetId,
+                request.TestSuiteId);
 
-            // Ensure related entities exist
-            var projectExists = await _context.Projects.AnyAsync(p => p.Id == projectId, ct);
+            // Ensure related entities exist -------------------------------------------------
+            // Check that the project exists before creating the composition.
+            var projectExists = await _context.Projects.AnyAsync(p => p.Id == request.ProjetId, ct);
             if (!projectExists)
             {
-                throw new InvalidOperationException($"Project with id {projectId} does not exist.");
+                throw new InvalidOperationException($"Project with id {request.ProjetId} does not exist.");
             }
 
-            var testSuiteExists = await _context.TestSuites.AnyAsync(ts => ts.Id == testSuiteId, ct);
+            // Check that the test suite exists before creating the composition.
+            var testSuiteExists = await _context.TestSuites.AnyAsync(ts => ts.Id == request.TestSuiteId, ct);
             if (!testSuiteExists)
             {
-                throw new InvalidOperationException($"TestSuite with id {testSuiteId} does not exist.");
+                throw new InvalidOperationException($"TestSuite with id {request.TestSuiteId} does not exist.");
             }
 
-            // Prevent duplicate (unique index exists at DB level)
+            // Prevent duplicate (unique index exists at DB level) ---------------------------
+            // Verify there is no existing composition for the same project and test suite.
             var already = await _context.ProjectTestSuiteCompositions
-                .AnyAsync(pc => pc.ProjectId == projectId && pc.TestSuiteId == testSuiteId, ct);
+                .AnyAsync(pc => pc.ProjectId == request.ProjetId && pc.TestSuiteId == request.ProjetId, ct);
             if (already)
             {
                 throw new InvalidOperationException("The composition already exists.");
             }
 
+            // Create the composition entity and attach it to the context --------------------
             var composition = new ProjectTestSuiteComposition
             {
-                ProjectId = projectId,
-                TestSuiteId = testSuiteId
+                ProjectId = request.ProjetId,
+                TestSuiteId = request.TestSuiteId
             };
 
             _context.ProjectTestSuiteCompositions.Add(composition);
 
+            // Persist changes and handle possible database errors --------------------------
             try
             {
                 await _context.SaveChangesAsync(ct);
             }
             catch (DbUpdateException ex)
             {
-                _logger?.LogError(ex, "Failed to create ProjectComposition(projectId={ProjectId}, testSuiteId={TestSuiteId})", projectId, testSuiteId);
+                // Log the exception with context and rethrow to let upstream handle it.
+                _logger?.LogError(ex, "Failed to create ProjectComposition(projectId={ProjectId}, testSuiteId={TestSuiteId})",
+                    composition.ProjectId,
+                    composition.TestSuiteId);
                 throw;
             }
 
+            // Return the newly created composition entity.
             return composition;
         }
 

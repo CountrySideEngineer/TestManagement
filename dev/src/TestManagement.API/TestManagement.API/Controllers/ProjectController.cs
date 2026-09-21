@@ -91,18 +91,37 @@ public class ProjectController : Controller
         return Ok(comps);
     }
 
+    /// <summary>
+    /// Creates a new project from the specified <see cref="CreateProjectRequest"/>.
+    /// </summary>
+    /// <remarks>
+    /// The endpoint delegates creation to the project facade service and returns a
+    /// 201 Created response with a Location header that points to <see cref="GetByIdAsync"/>.
+    /// </remarks>
+    /// <param name="request">Request DTO containing the data required to create the project.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>
+    /// An <see cref="ActionResult{CreateProjectResponse}"/> containing the created project
+    /// and an HTTP 201 Created status on success.
+    /// Possible responses:
+    ///  - 201 Created: Project successfully created.
+    ///  - 400 Bad Request: Request validation failed.
+    ///  - 500 Internal Server Error: Unexpected server error.
+    /// </returns>
     [HttpPost]
     [ProducesResponseType(typeof(CreateProjectResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<CreateProjectResponse>> CreateProjectAsync(CreateProjectRequest request, CancellationToken ct = default)
+    public async Task<ActionResult<CreateProjectResponse>> CreateProjectAsync(
+        CreateProjectRequest request,
+        CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectController::CreateProjectAsync() start! Request: {@Request}", request);
 
         var created = await _projectFacadeService.CreateProjectAsync(request, ct);
 
         var actionResult = CreatedAtAction(
-            nameof(GetByIdAsync), 
+            nameof(GetByIdAsync),
             new { id = created.Id },
             created);
 
@@ -116,12 +135,25 @@ public class ProjectController : Controller
     /// <param name="testSuiteId">Test suite identifier.</param>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>Created composition and a 201 Created response.</returns>
-    [HttpPost("{projectId:long}/compositions/{testSuiteId:long}")]
+    [HttpPost("{projectId:long}/compositions/testsuite")]
     [ProducesResponseType(typeof(Models.ProjectTestSuiteComposition), StatusCodes.Status201Created)]
-    public async Task<ActionResult<Models.ProjectTestSuiteComposition>> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default)
+    public async Task<ActionResult<Models.ProjectTestSuiteComposition>> CreateCompositionAsync(
+        long projectId, 
+        ProjectTestSuiteCompositionCreateRequest request,
+        CancellationToken ct = default)
     {
-        _logger.LogDebug("ProjectController::CreateCompositionAsync() start! ProjectId: {ProjectId}, TestSuiteId: {TestSuiteId}", projectId, testSuiteId);
-        var created = await _projectFacadeService.CreateCompositionAsync(projectId, testSuiteId, ct);
+        _logger.LogDebug("ProjectController::CreateCompositionAsync() start! ProjectId: {ProjectId}, TestSuiteId: {TestSuiteId}",
+            projectId, 
+            request.TestSuiteId);
+
+        var createRequest = new CreateProjectTestSuiteCompositionRequest
+        {
+            ProjetId = projectId,
+            TestSuiteId = request.TestSuiteId
+        };
+
+
+        var created = await _projectFacadeService.CreateTestSuiteCompositionAsync(createRequest, ct);
         return CreatedAtAction(nameof(GetCompositionsByProjectIdAsync), new { id = projectId }, created);
     }
 

@@ -21,7 +21,9 @@ public interface IProjectFacadeService
 
     Task<CreateProjectResponse> CreateProjectAsync(CreateProjectRequest request, CancellationToken ct = default);
 
-    Task<Models.ProjectTestSuiteComposition> CreateCompositionAsync(long projectId, long testSuiteId, CancellationToken ct = default);
+    Task<Models.ProjectTestSuiteComposition> CreateTestSuiteCompositionAsync(
+        CreateProjectTestSuiteCompositionRequest request,
+        CancellationToken ct = default);
 
     Task<bool> DeleteCompositionAsync(long id, CancellationToken ct = default);
 
