@@ -185,15 +185,18 @@ public class TestSuiteController : Controller
             })
             .ToList();
 
-        ICollection<CreateTestSuiteCompositionResponse> createdTestSuiteCompositions = await _testSuiteFacadeService.CreateCompositionsAsync(createRequests, ct);
+        ICollection<CreateTestSuiteCompositionResponse> createdTestSuiteCompositions = 
+            await _testSuiteFacadeService.CreateCompositionsAsync(createRequests, ct);
 
-        var responses = new TestSuiteCompositionCreateResponse
-        {
-            TestSuiteCompositionId = createdTestSuiteCompositions.FirstOrDefault()?.TestSuiteCompositionId ?? 0,
-            TestSuiteId = createdTestSuiteCompositions.FirstOrDefault()?.TestSuiteId ?? 0,
-            TestCaseId = createdTestSuiteCompositions.FirstOrDefault()?.TestCaseId ?? 0,
-            TestCaseVersionNumber = createdTestSuiteCompositions.FirstOrDefault()?.TestCaseVersionNumber ?? 0
-        };
+        var responses = createdTestSuiteCompositions
+            .Select(tc => new CreateTestSuiteCompositionResponse
+            {
+                TestSuiteCompositionId = tc.TestSuiteCompositionId,
+                TestSuiteId = tc.TestSuiteId,
+                TestCaseId = tc.TestCaseId,
+                TestCaseVersionNumber = tc.TestCaseVersionNumber
+            })
+            .ToList();
 
         return Ok(responses);
     }
