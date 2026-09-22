@@ -45,20 +45,45 @@ public class ProjectFacadeService : IProjectFacadeService
         return await _projectService.GetByIdAsync(id, ct);
     }
 
-    public async Task<ICollection<Models.ProjectTestSuiteComposition>> GetCompositionsByProjectIdAsync(long projectId, CancellationToken ct = default)
+    public async Task<GetProjectWithTestSuiteResponse> GetByIdWithTestSuitesAsync(
+        long projectId,
+        CancellationToken ct = default
+        )
     {
-        _logger.LogDebug("ProjectFacadeService::GetCompositionsByProjectIdAsync start: {ProjectId}", projectId);
+        _logger.LogDebug("ProjectFacadeService::GetByIdWithTestSuitesAsync start: {ProjectId}", projectId);
 
         GetProjectResponse projectResponse = await _projectService.GetByIdAsync(projectId, ct);
+        var response = new GetProjectWithTestSuiteResponse
+        {
+            Id = projectId,
+            Name = projectResponse.Name,
+            Description = projectResponse.Description,
+        };
 
-        var projectTestSuiteCompositions = await _projectTestSuiteCompositionService.GetByProjectIdAsync(projectId, ct);
+        var composition = await _projectTestSuiteCompositionService.GetByProjectIdAsync(projectId, ct);
+        if (composition is null)
+        {
+            response.TestSuiteSummaries = new();
+            return response;
+        }
 
-        projectResponse.TestSuites = projectTestSuiteCompositions.ToList();
+        var summaries = composition
+            .Select(cmp => new GetProjectWithTestSuiteResponse.TestSuiteSummary()
+            {
+                Id = cmp.TestSuite?.Id ?? 0,
+                Name = cmp.TestSuite?.Name ?? string.Empty,
+                Description = cmp.TestSuite?.Description ?? string.Empty,
+            })
+            .ToList();
+        response.TestSuiteSummaries = summaries;
 
-        return null;
+        return response;
     }
 
-    public async Task<ICollection<GetTesterResponse>> GetTestersByProjectIdAsync(long projectId, CancellationToken ct = default)
+    public async Task<ICollection<GetTesterResponse>> GetTestersByProjectIdAsync(
+        long projectId, 
+        CancellationToken ct = default
+        )
     {
         _logger.LogDebug("ProjectFacadeService::GetTestersByProjectIdAsync start: {ProjectId}", projectId);
 
@@ -72,7 +97,10 @@ public class ProjectFacadeService : IProjectFacadeService
         return null;
     }
 
-    public async Task<CreateProjectResponse> CreateProjectAsync(CreateProjectRequest request, CancellationToken ct = default)
+    public async Task<CreateProjectResponse> CreateProjectAsync(
+        CreateProjectRequest request, 
+        CancellationToken ct = default
+        )
     {
         _logger.LogDebug("ProjectFacadeService::CreateProjectAsync start: {Request}", request);
 

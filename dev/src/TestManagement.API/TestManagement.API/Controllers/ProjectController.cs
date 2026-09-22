@@ -84,10 +84,13 @@ public class ProjectController : Controller
     /// <returns>ActionResult containing a collection of <see cref="Models.ProjectTestSuiteComposition"/>.</returns>
     [HttpGet("{id:long}/compositions")]
     [ProducesResponseType(typeof(ICollection<Models.ProjectTestSuiteComposition>), StatusCodes.Status200OK)]
-    public async Task<ActionResult<ICollection<Models.ProjectTestSuiteComposition>>> GetCompositionsByProjectIdAsync(long id, CancellationToken ct = default)
+    public async Task<ActionResult<ICollection<Models.ProjectTestSuiteComposition>>> GetByIdWithTestSuitesAsync(
+        long id, 
+        CancellationToken ct = default)
     {
         _logger.LogDebug("ProjectController::GetCompositionsByProjectIdAsync() start! ProjectId: {Id}", id);
-        var comps = await _projectFacadeService.GetCompositionsByProjectIdAsync(id, ct);    
+
+        var comps = await _projectFacadeService.GetByIdWithTestSuitesAsync(id, ct);    
         return Ok(comps);
     }
 
@@ -154,7 +157,7 @@ public class ProjectController : Controller
 
 
         var created = await _projectFacadeService.CreateTestSuiteCompositionAsync(createRequest, ct);
-        return CreatedAtAction(nameof(GetCompositionsByProjectIdAsync), new { id = projectId }, created);
+        return CreatedAtAction(nameof(GetByIdWithTestSuitesAsync), new { id = projectId }, created);
     }
 
     /// <summary>
