@@ -1,4 +1,5 @@
 using TestManagement.API.Features.Project.Create;
+using TestManagement.API.Features.Project.Get;
 using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Models;
 
@@ -17,7 +18,7 @@ namespace TestManagement.API.Services
         /// <summary>
         /// Returns compositions for a specific project.
         /// </summary>
-        Task<ICollection<GetTestSuiteResponse>> GetByProjectIdAsync(long projectId, CancellationToken ct);
+        Task<ICollection<ProjectTestSuiteComposition>?> GetByProjectIdAsync(long projectId, CancellationToken ct);
 
         /// <summary>
         /// Gets a single composition by id.

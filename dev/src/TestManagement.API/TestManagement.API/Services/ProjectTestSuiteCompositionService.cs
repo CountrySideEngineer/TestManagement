@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
 using TestManagement.API.Features.Project.Create;
+using TestManagement.API.Features.Project.Get;
 using TestManagement.API.Features.TestSuite.Get;
 using TestManagement.API.Models;
 
@@ -53,7 +54,7 @@ namespace TestManagement.API.Services
         /// <param name="projectId">Identifier of the project whose compositions are returned.</param>
         /// <param name="ct">Cancellation token to cancel the operation.</param>
         /// <returns>A collection of <see cref="ProjectTestSuiteComposition"/> that belong to the project.</returns>
-        public virtual async Task<ICollection<GetTestSuiteResponse>> GetByProjectIdAsync(long projectId, CancellationToken ct)
+        public virtual async Task<ICollection<ProjectTestSuiteComposition>?> GetByProjectIdAsync(long projectId, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionService::GetByProjectIdAsync({ProjectId}) start", projectId);
 
@@ -64,9 +65,7 @@ namespace TestManagement.API.Services
                 .AsNoTracking()
                 .ToListAsync(ct);
 
-            var testSuiteReponses = new List<GetTestSuiteResponse>();
-
-            return testSuiteReponses;
+            return projectComposition;
         }
 
         /// <summary>
