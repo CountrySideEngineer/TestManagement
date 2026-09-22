@@ -1,8 +1,4 @@
-﻿using System.Text.Json.Serialization;
-using TestManagement.API.Features.TestCases.Get;
-using TestManagement.API.Models;
-
-namespace TestManagement.API.Features.TestSuite.Get;
+﻿namespace TestManagement.API.Features.TestSuite.Get;
 
 /// <summary>
 /// Response DTO used when returning a test suite along with a collection of
