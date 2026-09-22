@@ -107,12 +107,14 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
     /// <param name="ct">Cancellation token to cancel the operation.</param>
     /// <returns>The created or existing <see cref="ProjectTesterComposition"/> instance.</returns>
     /// <exception cref="Exception">Propagates exceptions thrown while saving to the database.</exception>
-    public async Task<ProjectTesterComposition> CreateAsync(
+    public async Task<ProjectTesterComposition> CreateCompositionAsync(
         long projectId, 
-        long 
-        testerId, CancellationToken ct)
+        long testerId, 
+        CancellationToken ct)
     {
-        _logger?.LogDebug("ProjectTesterCompositionService::CreateAsync(ProjectId={ProjectId}, TesterId={TesterId}) start", projectId, testerId);
+        _logger?.LogDebug("ProjectTesterCompositionService::CreateCompositionAsync(ProjectId={ProjectId}, TesterId={TesterId}) start",
+            projectId,
+            testerId);
 
         var set = _dbContext.Set<ProjectTesterComposition>();
 

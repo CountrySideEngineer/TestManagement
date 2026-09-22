@@ -30,7 +30,7 @@ public interface IProjectTesterCompositionService
     /// Creates a new composition between the specified project and tester.
     /// If an identical composition already exists, the existing one is returned.
     /// </summary>
-    Task<ProjectTesterComposition> CreateAsync(long projectId, long testerId, CancellationToken ct);
+    Task<ProjectTesterComposition> CreateCompositionAsync(long projectId, long testerId, CancellationToken ct);
 
     /// <summary>
     /// Deletes a composition by its identifier. Returns true if deleted.
