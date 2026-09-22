@@ -13,11 +13,13 @@ namespace TestManagement.API.Services;
 /// </summary>
 public interface IProjectFacadeService
 {
-    Task<ICollection<Features.Project.Get.GetProjectResponse>> GetAllAsync(CancellationToken ct = default);
+    Task<ICollection<GetProjectResponse>> GetAllAsync(CancellationToken ct = default);
 
-    Task<Features.Project.Get.GetProjectResponse> GetByIdAsync(long id, CancellationToken ct = default);
+    Task<GetProjectResponse> GetByIdAsync(long id, CancellationToken ct = default);
 
-    Task<ICollection<Models.ProjectTestSuiteComposition>> GetCompositionsByProjectIdAsync(long projectId, CancellationToken ct = default);
+    Task<GetProjectWithTestSuiteResponse> GetByIdWithTestSuitesAsync(
+        long projectId, 
+        CancellationToken ct = default);
 
     Task<CreateProjectResponse> CreateProjectAsync(CreateProjectRequest request, CancellationToken ct = default);
 
