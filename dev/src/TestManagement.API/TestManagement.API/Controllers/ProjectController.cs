@@ -82,7 +82,7 @@ public class ProjectController : Controller
     /// <param name="id">Project identifier.</param>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>ActionResult containing a collection of <see cref="Models.ProjectTestSuiteComposition"/>.</returns>
-    [HttpGet("{id:long}/compositions")]
+    [HttpGet("{id:long}/compositions/testsuite")]
     [ProducesResponseType(typeof(ICollection<Models.ProjectTestSuiteComposition>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ICollection<Models.ProjectTestSuiteComposition>>> GetByIdWithTestSuitesAsync(
         long id, 
