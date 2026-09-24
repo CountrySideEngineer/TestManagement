@@ -89,6 +89,9 @@ namespace TestManagement.API.Data
         /// </summary>
         public DbSet<Tester> Testers { get; set; }
 
+        /// <summary>
+        /// DbSet of project-tester compositions that associate projects with testers.
+        /// </summary>
         public DbSet<ProjectTesterComposition> ProjectTesterCompositions { get; set; }
 
         /// <summary>
@@ -586,6 +589,9 @@ namespace TestManagement.API.Data
                 .IsUnique();
         }
 
+        /// <summary>
+        /// Configures the ProjectTesterComposition entity mapping and relationships.
+        /// </summary>
         private void ConfigureProjectTesterComposition(ModelBuilder modelBuilder)
         {
             var entity = modelBuilder.Entity<ProjectTesterComposition>();
