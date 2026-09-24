@@ -89,6 +89,8 @@ namespace TestManagement.API.Data
         /// </summary>
         public DbSet<Tester> Testers { get; set; }
 
+        public DbSet<ProjectTesterComposition> ProjectTesterCompositions { get; set; }
+
         /// <summary>
         /// Applies configuration for all entities when the model is being created.
         /// </summary>
@@ -111,6 +113,7 @@ namespace TestManagement.API.Data
             ConfigureTestSuiteComposition(modelBuilder);
             ConfigureProjectComposition(modelBuilder);
             ConfigureTester(modelBuilder);
+            ConfigureProjectTesterComposition(modelBuilder);
         }
 
         /// <summary>
@@ -581,6 +584,32 @@ namespace TestManagement.API.Data
 
             entity.HasIndex(_ => _.Email)
                 .IsUnique();
+        }
+
+        private void ConfigureProjectTesterComposition(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<ProjectTesterComposition>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.ProjectId)
+                .IsRequired();
+
+            entity.Property(_ => _.TesterId)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.ProjectId, _.TesterId })
+                .IsUnique();
+
+            entity.HasOne(_ => _.Project)
+                .WithMany()
+                .HasForeignKey(_ => _.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(_ => _.Tester)
+                .WithMany()
+                .HasForeignKey(_ => _.TesterId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
