@@ -116,9 +116,9 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
             projectId,
             testerId);
 
-        var set = _dbContext.Set<ProjectTesterComposition>();
+        var compositions = _dbContext.ProjectTesterCompositions;
 
-        var existing = await set.FirstOrDefaultAsync(c => c.ProjectId == projectId && c.TesterId == testerId, ct);
+        var existing = await compositions.FirstOrDefaultAsync(c => c.ProjectId == projectId && c.TesterId == testerId, ct);
         if (existing is not null)
         {
             _logger?.LogDebug("Composition already exists with Id={Id}", existing.Id);
@@ -133,7 +133,7 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
             UpdatedAt = DateTime.UtcNow
         };
 
-        set.Add(composition);
+        compositions.Add(composition);
 
         try
         {
@@ -145,7 +145,7 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
             throw;
         }
 
-        _logger?.LogDebug("ProjectTesterCompositionService::CreateAsync finished. Created Id={Id}", composition.Id);
+        _logger?.LogDebug("ProjectTesterCompositionService::CreateAsync finished. Created Id={Id}", compositions.Id);
 
         return composition;
     }
