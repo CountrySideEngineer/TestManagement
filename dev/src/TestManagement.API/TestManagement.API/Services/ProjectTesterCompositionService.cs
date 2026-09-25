@@ -145,7 +145,7 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
             throw;
         }
 
-        _logger?.LogDebug("ProjectTesterCompositionService::CreateAsync finished. Created Id={Id}", compositions.Id);
+        _logger?.LogDebug("ProjectTesterCompositionService::CreateAsync finished. Created Id={Id}", composition.Id);
 
         return composition;
     }
