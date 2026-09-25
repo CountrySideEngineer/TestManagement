@@ -84,6 +84,7 @@ public class ProjectController : Controller
     /// <returns>ActionResult containing a collection of <see cref="Models.ProjectTestSuiteComposition"/>.</returns>
     [HttpGet("{id:long}/compositions/testsuite")]
     [ProducesResponseType(typeof(ICollection<Models.ProjectTestSuiteComposition>), StatusCodes.Status200OK)]
+    [ActionName(nameof(GetByIdWithTestSuitesAsync))]
     public async Task<ActionResult<ICollection<Models.ProjectTestSuiteComposition>>> GetByIdWithTestSuitesAsync(
         long id, 
         CancellationToken ct = default)
