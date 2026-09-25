@@ -125,7 +125,7 @@ namespace TestManagement.API.Services
             // Prevent duplicate (unique index exists at DB level) ---------------------------
             // Verify there is no existing composition for the same project and test suite.
             var already = await _context.ProjectTestSuiteCompositions
-                .AnyAsync(pc => pc.ProjectId == request.ProjetId && pc.TestSuiteId == request.ProjetId, ct);
+                .AnyAsync(pc => pc.ProjectId == request.ProjetId && pc.TestSuiteId == request.TestSuiteId, ct);
             if (already)
             {
                 throw new InvalidOperationException("The composition already exists.");
