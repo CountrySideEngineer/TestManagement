@@ -163,6 +163,13 @@ public class ProjectController : Controller
         return CreatedAtAction(nameof(GetByIdWithTestSuitesAsync), new { id = projectId }, created);
     }
 
+    /// <summary>
+    /// Creates multiple compositions linking a project to test suites.
+    /// </summary>
+    /// <param name="projectId">Project identifier.</param>
+    /// <param name="requests">Requests containing the test suite identifiers.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>The responses for the created compositions.</returns>
     [HttpPost("{projectId:long}/compositions/testsuites")]
     [ProducesResponseType(typeof(Models.ProjectTestSuiteComposition), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

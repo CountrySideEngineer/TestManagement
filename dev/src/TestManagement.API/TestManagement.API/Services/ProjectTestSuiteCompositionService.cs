@@ -8,11 +8,13 @@ using TestManagement.API.Models;
 namespace TestManagement.API.Services
 {
     /// <summary>
-    /// Service that provides operations to manage ProjectComposition entities.
+    /// Service that provides operations to manage project and test suite compositions.
     /// </summary>
     public class ProjectTestSuiteCompositionService : IProjectTestSuiteCompositionService
     {
+        /// <summary>Database context used to query and persist compositions.</summary>
         private readonly TestManagementDbContext _context;
+        /// <summary>Optional logger used for service diagnostics.</summary>
         private readonly ILogger<ProjectTestSuiteCompositionService>? _logger;
 
         /// <summary>
@@ -126,6 +128,12 @@ namespace TestManagement.API.Services
             return response;
         }
 
+        /// <summary>
+        /// Creates multiple project and test suite compositions and saves them as one operation.
+        /// </summary>
+        /// <param name="requests">Requests containing the project and test suite identifiers.</param>
+        /// <param name="ct">Cancellation token to cancel the operation.</param>
+        /// <returns>The responses for the created compositions.</returns>
         public async Task<ICollection<CreateProjectTestSuiteCompositionResponse>> CreateAsync(ICollection<CreateProjectTestSuiteCompositionRequest> requests, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionService::CreateAsync(request count = {0}) start", requests.Count);
@@ -151,6 +159,13 @@ namespace TestManagement.API.Services
             return responses;
         }
 
+        /// <summary>
+        /// Validates a composition request, registers the composition with the database context,
+        /// and creates its response without saving changes.
+        /// </summary>
+        /// <param name="request">Request containing the project and test suite identifiers.</param>
+        /// <param name="ct">Cancellation token to cancel the operation.</param>
+        /// <returns>The response for the registered composition.</returns>
         protected async Task<CreateProjectTestSuiteCompositionResponse> RegisterCompositionItemAsync(CreateProjectTestSuiteCompositionRequest request, CancellationToken ct)
         {
             _logger?.LogDebug("ProjectCompositionService::RegisterCompositionItemAsync(projectId={ProjectId}, testSuiteId={TestSuiteId}) start",
