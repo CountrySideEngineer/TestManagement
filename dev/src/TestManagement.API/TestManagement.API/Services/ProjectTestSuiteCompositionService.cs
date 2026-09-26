@@ -98,7 +98,7 @@ namespace TestManagement.API.Services
         /// <exception cref="DbUpdateException">
         /// Thrown when saving changes to the database fails.
         /// </exception>
-        public virtual async Task<ProjectTestSuiteComposition> CreateAsync(
+        public virtual async Task<CreateProjectTestSuiteCompositionResponse> CreateAsync(
             CreateProjectTestSuiteCompositionRequest request,
             CancellationToken ct
             )
@@ -107,8 +107,56 @@ namespace TestManagement.API.Services
                 request.ProjetId,
                 request.TestSuiteId);
 
-            // Ensure related entities exist -------------------------------------------------
-            // Check that the project exists before creating the composition.
+            var response = await RegisterCompositionItemAsync(request, ct);
+
+            try
+            {
+                await _context.SaveChangesAsync(ct);
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log the exception with context and rethrow to let upstream handle it.
+                _logger?.LogError(ex, "Failed to create ProjectComposition(projectId={ProjectId}, testSuiteId={TestSuiteId})",
+                    response.ProjectId,
+                    response.TestSuiteId);
+                throw;
+            }
+
+            // Return the newly created composition entity.
+            return response;
+        }
+
+        public async Task<ICollection<CreateProjectTestSuiteCompositionResponse>> CreateAsync(ICollection<CreateProjectTestSuiteCompositionRequest> requests, CancellationToken ct)
+        {
+            _logger?.LogDebug("ProjectCompositionService::CreateAsync(request count = {0}) start", requests.Count);
+
+            var responses = new List<CreateProjectTestSuiteCompositionResponse>();
+            foreach (var request in requests)
+            {
+                var response = await RegisterCompositionItemAsync(request, ct);
+                responses.Add(response);
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync(ct);
+            }
+            catch (DbUpdateException ex)
+            {
+                // Log the exception with context and rethrow to let upstream handle it.
+                _logger?.LogError(ex, "Failed to create ProjectCompositions.");
+                throw;
+            }
+
+            return responses;
+        }
+
+        protected async Task<CreateProjectTestSuiteCompositionResponse> RegisterCompositionItemAsync(CreateProjectTestSuiteCompositionRequest request, CancellationToken ct)
+        {
+            _logger?.LogDebug("ProjectCompositionService::RegisterCompositionItemAsync(projectId={ProjectId}, testSuiteId={TestSuiteId}) start",
+                request.ProjetId,
+                request.TestSuiteId);
+
             var projectExists = await _context.Projects.AnyAsync(p => p.Id == request.ProjetId, ct);
             if (!projectExists)
             {
@@ -140,22 +188,14 @@ namespace TestManagement.API.Services
 
             _context.ProjectTestSuiteCompositions.Add(composition);
 
-            // Persist changes and handle possible database errors --------------------------
-            try
+            var response = new CreateProjectTestSuiteCompositionResponse
             {
-                await _context.SaveChangesAsync(ct);
-            }
-            catch (DbUpdateException ex)
-            {
-                // Log the exception with context and rethrow to let upstream handle it.
-                _logger?.LogError(ex, "Failed to create ProjectComposition(projectId={ProjectId}, testSuiteId={TestSuiteId})",
-                    composition.ProjectId,
-                    composition.TestSuiteId);
-                throw;
-            }
+                CompositionId = composition.Id,
+                ProjectId = composition.ProjectId,
+                TestSuiteId = composition.TestSuiteId
+            };
 
-            // Return the newly created composition entity.
-            return composition;
+            return response;
         }
 
         /// <summary>

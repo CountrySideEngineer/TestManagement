@@ -4,7 +4,7 @@
     {
         public long CompositionId { get; set; }
 
-        public long ProjetId { get; set; }
+        public long ProjectId { get; set; }
 
         public long TestSuiteId { get; set; }
     }

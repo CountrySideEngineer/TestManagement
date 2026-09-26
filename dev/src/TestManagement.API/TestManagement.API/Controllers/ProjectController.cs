@@ -141,6 +141,8 @@ public class ProjectController : Controller
     /// <returns>Created composition and a 201 Created response.</returns>
     [HttpPost("{projectId:long}/compositions/testsuite")]
     [ProducesResponseType(typeof(Models.ProjectTestSuiteComposition), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<Models.ProjectTestSuiteComposition>> CreateCompositionAsync(
         long projectId, 
         ProjectTestSuiteCompositionCreateRequest request,
@@ -159,6 +161,35 @@ public class ProjectController : Controller
 
         var created = await _projectFacadeService.CreateTestSuiteCompositionAsync(createRequest, ct);
         return CreatedAtAction(nameof(GetByIdWithTestSuitesAsync), new { id = projectId }, created);
+    }
+
+    [HttpPost("{projectId:long}/compositions/testsuites")]
+    [ProducesResponseType(typeof(Models.ProjectTestSuiteComposition), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ICollection<ProjectTestSuiteCompositionCreateResponse>>> CreateCompositionAsync(
+        long projectId,
+        ICollection<ProjectTestSuiteCompositionCreateRequest> requests,
+        CancellationToken ct = default)
+    {
+        _logger.LogDebug("ProjectController::CreateCompositionAsync() start! ProjectId: {ProjectId}",
+            projectId);
+
+        var createRequests = requests.Select(request => new CreateProjectTestSuiteCompositionRequest
+            {
+                ProjetId = projectId,
+                TestSuiteId = request.TestSuiteId
+            })
+            .ToList();
+
+        var created = await _projectFacadeService.CreateTestSuiteCompositionAsync(createRequests, ct);
+        var createdResponse = created.Select(_ => new ProjectTestSuiteCompositionCreateResponse
+            {
+                CompositionId = _.CompositionId,
+                TestSuiteId = _.TestSuiteId
+            })
+            .ToList();
+        return Ok(createdResponse);
     }
 
     /// <summary>

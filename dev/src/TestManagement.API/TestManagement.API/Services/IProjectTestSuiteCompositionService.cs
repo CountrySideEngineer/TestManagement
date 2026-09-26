@@ -28,8 +28,12 @@ namespace TestManagement.API.Services
         /// <summary>
         /// Creates a new project composition linking a project and a test suite.
         /// </summary>
-        Task<ProjectTestSuiteComposition> CreateAsync(
+        Task<CreateProjectTestSuiteCompositionResponse> CreateAsync(
             CreateProjectTestSuiteCompositionRequest request,
+            CancellationToken ct);
+
+        Task<ICollection<CreateProjectTestSuiteCompositionResponse>> CreateAsync(
+            ICollection<CreateProjectTestSuiteCompositionRequest> requests,
             CancellationToken ct);
 
         /// <summary>
