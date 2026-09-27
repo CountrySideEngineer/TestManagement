@@ -174,6 +174,26 @@ public class ProjectFacadeService : IProjectFacadeService
         return await _projectTestSuiteCompositionService.CreateAsync(requests, ct);
     }
 
+    /// <summary>Creates a project and tester composition.</summary>
+    /// <param name="request">Request containing the project and tester identifiers.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>The created composition response.</returns>
+    public async Task<ProjectTesterCompositionCreateResponse> CreateTesterCompositionAsync(
+        CreateProjectTesterCompositionRequest request,
+        CancellationToken ct = default)
+    {
+        _logger.LogDebug("ProjectFacadeService::CreateTesterCompositionAsync start: {ProjectId} {TesterId}",
+            request.ProjectId,
+            request.TesterId);
+
+        var created = await _projectTesterCompositionService.CreateCompositionAsync(request, ct);
+        return new ProjectTesterCompositionCreateResponse
+        {
+            CompositionId = created.CompositionId,
+            TesterId = created.TesterId
+        };
+    }
+
     /// <summary>Deletes a project composition by its identifier.</summary>
     /// <param name="id">Identifier of the composition.</param>
     /// <param name="ct">Cancellation token to cancel the operation.</param>

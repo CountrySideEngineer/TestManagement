@@ -200,6 +200,36 @@ public class ProjectController : Controller
     }
 
     /// <summary>
+    /// Creates a composition linking the specified project and tester.
+    /// </summary>
+    /// <param name="projectId">Project identifier.</param>
+    /// <param name="request">Request containing the tester identifier.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The created tester composition and a 201 Created response.</returns>
+    [HttpPost("{projectId:long}/compositions/tester")]
+    [ProducesResponseType(typeof(ProjectTesterCompositionCreateResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ProjectTesterCompositionCreateResponse>> CreateTesterCompositionAsync(
+        long projectId,
+        ProjectTesterCompositionCreateRequest request,
+        CancellationToken ct = default)
+    {
+        _logger.LogDebug("ProjectController::CreateTesterCompositionAsync() start! ProjectId: {ProjectId}, TesterId: {TesterId}",
+            projectId,
+            request.TesterId);
+
+        var createRequest = new CreateProjectTesterCompositionRequest
+        {
+            ProjectId = projectId,
+            TesterId = request.TesterId
+        };
+
+        var created = await _projectFacadeService.CreateTesterCompositionAsync(createRequest, ct);
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = projectId }, created);
+    }
+
+    /// <summary>
     /// Deletes a composition by its identifier.
     /// </summary>
     /// <param name="id">Composition identifier.</param>

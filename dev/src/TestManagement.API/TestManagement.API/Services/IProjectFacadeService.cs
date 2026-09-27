@@ -31,6 +31,10 @@ public interface IProjectFacadeService
         ICollection<CreateProjectTestSuiteCompositionRequest> requests,
         CancellationToken ct = default);
 
+    Task<ProjectTesterCompositionCreateResponse> CreateTesterCompositionAsync(
+        CreateProjectTesterCompositionRequest request,
+        CancellationToken ct = default);
+
     Task<bool> DeleteCompositionAsync(long id, CancellationToken ct = default);
 
     /// <summary>
