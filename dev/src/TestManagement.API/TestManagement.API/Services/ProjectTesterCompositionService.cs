@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.API.Data;
+using TestManagement.API.Features.Project.Create;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
@@ -102,35 +103,36 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
     /// Creates a new composition between the specified project and tester.
     /// If an identical composition already exists, the existing one is returned.
     /// </summary>
-    /// <param name="projectId">Identifier of the project to associate.</param>
-    /// <param name="testerId">Identifier of the tester to associate.</param>
+    /// <param name="request">Request containing the project and tester identifiers to associate.</param>
     /// <param name="ct">Cancellation token to cancel the operation.</param>
-    /// <returns>The created or existing <see cref="ProjectTesterComposition"/> instance.</returns>
+    /// <returns>The response containing the created or existing composition identifiers.</returns>
     /// <exception cref="Exception">Propagates exceptions thrown while saving to the database.</exception>
-    public async Task<ProjectTesterComposition> CreateCompositionAsync(
-        long projectId, 
-        long testerId, 
+    public async Task<CreateProjectTesterCompositionResponse> CreateCompositionAsync(
+        CreateProjectTesterCompositionRequest request,
         CancellationToken ct)
     {
         _logger?.LogDebug("ProjectTesterCompositionService::CreateCompositionAsync(ProjectId={ProjectId}, TesterId={TesterId}) start",
-            projectId,
-            testerId);
+            request.ProjectId,
+            request.TesterId);
 
         var compositions = _dbContext.ProjectTesterCompositions;
 
-        var existing = await compositions.FirstOrDefaultAsync(c => c.ProjectId == projectId && c.TesterId == testerId, ct);
+        var existing = await compositions.FirstOrDefaultAsync(c => c.ProjectId == request.ProjectId && c.TesterId == request.TesterId, ct);
         if (existing is not null)
         {
             _logger?.LogDebug("Composition already exists with Id={Id}", existing.Id);
-            return existing;
+            return new CreateProjectTesterCompositionResponse
+            {
+                CompositionId = existing.Id,
+                ProjectId = existing.ProjectId,
+                TesterId = existing.TesterId
+            };
         }
 
         var composition = new ProjectTesterComposition
         {
-            ProjectId = projectId,
-            TesterId = testerId,
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow
+            ProjectId = request.ProjectId,
+            TesterId = request.TesterId
         };
 
         compositions.Add(composition);
@@ -147,7 +149,12 @@ public class ProjectTesterCompositionService : IProjectTesterCompositionService
 
         _logger?.LogDebug("ProjectTesterCompositionService::CreateAsync finished. Created Id={Id}", composition.Id);
 
-        return composition;
+        return new CreateProjectTesterCompositionResponse
+        {
+            CompositionId = composition.Id,
+            ProjectId = composition.ProjectId,
+            TesterId = composition.TesterId
+        };
     }
 
     /// <summary>

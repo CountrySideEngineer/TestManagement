@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using TestManagement.API.Features.Project.Create;
 using TestManagement.API.Models;
 
 namespace TestManagement.API.Services;
@@ -30,7 +31,7 @@ public interface IProjectTesterCompositionService
     /// Creates a new composition between the specified project and tester.
     /// If an identical composition already exists, the existing one is returned.
     /// </summary>
-    Task<ProjectTesterComposition> CreateCompositionAsync(long projectId, long testerId, CancellationToken ct);
+    Task<CreateProjectTesterCompositionResponse> CreateCompositionAsync(CreateProjectTesterCompositionRequest request, CancellationToken ct);
 
     /// <summary>
     /// Deletes a composition by its identifier. Returns true if deleted.
