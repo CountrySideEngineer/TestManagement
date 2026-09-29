@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using TestManagement.APP.Services;
-using TestManagement.APP.ViewModel.Dashboard;
+using TestManagement.APP.Services.Project;
+using TestManagement.APP.ViewModel.Project;
 
 namespace TestManagement.APP.Pages
 {
     /// <summary>
-    /// Page model for the home/dashboard page.
-    /// Displays dashboard statistics and overview of test executions.
+    /// Page model for the home page.
+    /// Displays the list of projects.
     /// </summary>
     public class IndexModel : PageModel
     {
@@ -16,61 +17,61 @@ namespace TestManagement.APP.Pages
         private readonly ILogger<IndexModel>? _logger;
 
         /// <summary>
-        /// Service for retrieving dashboard data and statistics.
+        /// Service for retrieving projects.
         /// </summary>
-        private readonly IDashboardService? _dashboardService;
+        private readonly IProjectService _projectService;
 
         /// <summary>
         /// Constructs an instance of <see cref="IndexModel"/>.
         /// </summary>
         /// <param name="logger">Logger for diagnostics.</param>
-        /// <param name="dashboardService">Service to retrieve dashboard data.</param>
+        /// <param name="projectService">Service to retrieve projects.</param>
         public IndexModel(
             ILogger<IndexModel>? logger,
-            IDashboardService? dashboardService
+            IProjectService projectService
             ) : base()
         {
             _logger = logger;
-            _dashboardService = dashboardService;
+            _projectService = projectService;
         }
 
         /// <summary>
-        /// View model containing dashboard data to be displayed on the page.
+        /// Projects displayed on the home page.
         /// </summary>
-        public DashboardViewModel? DashboardViewModel { get; set; }
+        public ICollection<ProjectViewModel> Projects { get; private set; } = new List<ProjectViewModel>();
 
         /// <summary>
         /// Handles GET requests for the home page.
-        /// Retrieves dashboard data asynchronously.
+        /// Retrieves projects asynchronously.
         /// </summary>
         /// <returns>A task representing the asynchronous operation.</returns>
         public async Task OnGetAsync()
         {
             try
             {
-                DashboardViewModel = await _dashboardService!.GetAsync();
+                Projects = await _projectService.GetProjectsAsync();
             }
             catch (HttpRequestException ex)
             {
-                _logger?.LogWarning(ex, "Failed to retrieve dashboard data due to a communication error.");
+                _logger?.LogWarning(ex, "Failed to retrieve projects due to a communication error.");
                 ViewData["ErrorMessage"] = "データの取得に失敗しました(通信エラー)" +
                     "後ほど再実行してください。";
 
-                DashboardViewModel = null;
+                Projects = new List<ProjectViewModel>();
             }
             catch (TaskCanceledException ex)
             {
-                _logger?.LogWarning(ex, "The dashboard request timed out.");
-                ViewData["ErrorMessage"] = "ダッシュボード取得がタイムアウトしました。";
+                _logger?.LogWarning(ex, "The project request timed out.");
+                ViewData["ErrorMessage"] = "プロジェクト取得がタイムアウトしました。";
 
-                DashboardViewModel = null;
+                Projects = new List<ProjectViewModel>();
             }
             catch (Exception ex)
             {
-                _logger?.LogWarning(ex, "Failed to retrieve dashboard data due to an unexpected error.");
+                _logger?.LogWarning(ex, "Failed to retrieve projects due to an unexpected error.");
                 ViewData["ErrorMessage"] = "予期せぬエラーが発生しました。管理者に問い合わせてください。";
 
-                DashboardViewModel = null;
+                Projects = new List<ProjectViewModel>();
             }
         }
     }

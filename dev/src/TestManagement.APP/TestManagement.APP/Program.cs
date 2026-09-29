@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using TestManagement.APP.ApiClients;
 using TestManagement.APP.ApiClients.Environment;
+using TestManagement.APP.ApiClients.Project;
 using TestManagement.APP.ApiClients.TestCase;
 using TestManagement.APP.ApiClients.TestLevel;
 using TestManagement.APP.ApiClients.TestResult;
@@ -11,6 +12,7 @@ using TestManagement.APP.Services.TestExecution;
 using TestManagement.APP.Services.TestExecution.Import;
 using TestManagement.APP.Services.TestExecution.Register;
 using TestManagement.APP.Services.TestLevel;
+using TestManagement.APP.Services.Project;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +35,8 @@ builder.Services.AddRazorPages()
     });
 builder.Services.AddScoped<ITestExecutionApiClient, TestExecutionApiClient>();
 builder.Services.AddScoped<IEnvironmentApiClient, EnvironmentApiClient>();
+builder.Services.AddScoped<IProjectApiClient, ProjectApiClient>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<IDashboardService, DashboardService>();

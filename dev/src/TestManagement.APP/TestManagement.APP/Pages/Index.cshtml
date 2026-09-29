@@ -1,157 +1,35 @@
 @page
 @model IndexModel
 @{
-    ViewData["Title"] = "開発者向けダッシュボード";
+    ViewData["Title"] = "プロジェクト一覧";
 }
 
 <div class="container">
     <div class="block">
-        <div class="block-title">最新の実行状況</div>
-        <!--リビジョン情報-->
-        <div class="lattest-exec">
-            @if (null != Model.DashboardViewModel)
+        <div class="block-title">プロジェクト一覧</div>
+        <div class="project-list">
+            @if (Model.Projects.Any())
             {
-                @if (Model.DashboardViewModel.LatestExecutionSummary != null)
-                {
-                    <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
-                        <div class="p-2" style="flex:0 0 220px;">
-                            <div class="small exec-header">実行日時：</div>
-                            <div class="small text-muted exec-value">@Model.DashboardViewModel.LatestExecutionSummary.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</div>
-                        </div>
-                        <div class="p-2" style="flex:1; padding-left:12px;">
-                            <div class="small exec-header">リビジョン：</div>
-                            <div class="exec-value"><code>@Model.DashboardViewModel.LatestExecutionSummary.Revision</code></div>
-                        </div>
-                        <div class="p-2 summary-action">
-                            <a asp-page="/ExecutionUpload/Index"
-                               asp-route-id="@(Model.DashboardViewModel.LatestExecutionSummary.ExecutionId)"
-                               class="btn btn-sm btn-outline-primary"
-                               title="実行結果の詳細ページを開く"
-                               aria-label="実行結果の詳細ページを開く">詳細</a>
-                        </div>
-                    </div>
-
-                    <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
-
-                        <div class="summary-row d-flex flex-row align-items-stretch" style="gap:0;">
-                            <div class="summary-col" style="flex:1; max-width:100%; display:flex; padding:0; margin: 0 8px 0 0;">
-                                <div class="chart-card d-flex align-items-center justify-content-center flex-fill" style="padding:0; margin:0;">
-                                    <canvas id="summaryChart" aria-label="成功率と実行件数の円グラフ" style="display:block; width:100%; height:100%; padding:8px;"></canvas>
-                                </div>
-                            </div>
-
-                            <div class="summary-col" style="flex:1; max-width:100%; display:flex; flex-direction:column; padding:0; white-space: nowrap;">
-                                <div class="card" style="margin:0 0 4px 0; align-content: center">
-                                    <div class="card-title">成功率：</div>
-                                    <div class="card-value" style="text-align:right;">@Model.DashboardViewModel.LatestExecutionSummary?.SuccessRate %</div>
-                                </div>
-
-                                <div class="card" style="margin:4px 0 0 0;">
-                                    <div class="card-title">実行件数：</div>
-                                    <div class="card-value" style="text-align:right">@Model.DashboardViewModel.LatestExecutionSummary?.ExecutedNum 件</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <div class="muted" style="padding:8px 0;">最近の実行はありません。</div>
-            }
-        </div>
-
-    </div>
-
-    <!-- 最近の実行結果 -->
-    <div class="block">
-        <div class="block-title">最近の実行結果</div>
-        <div class="recent-list">
-            @if (Model.DashboardViewModel?.RecentExecutions != null && Model.DashboardViewModel.RecentExecutions.Any())
-            {
-                <ul class="list-unstyled" style="margin:0; padding:0;">
-                    <!-- Column headers -->
-                    <li class="recent-item recent-header d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #ddd; font-weight:600;">
-                        <div class="exec-time" style="flex:0 0 220px; text-align:left;">実行日時</div>
-                        <div class="exec-revision" style="flex:1; padding-left:12px; text-align:left;">リビジョン</div>
-                        <div class="exec-status" style="flex:0 0 120px; text-align:right;">実行結果</div>
-                        <div class="exec-action d-flex justify-content-md-end" style="flex:0 0 100px;">操作</div>
-                    </li>
-                    @foreach (var exec in Model.DashboardViewModel.RecentExecutions)
+                <div class="row g-3">
+                    @foreach (var project in Model.Projects)
                     {
-                        <li class="recent-item d-flex align-items-center" style="padding:8px 0; border-bottom:1px solid #eee;">
-                            <div class="exec-time" style="flex:0 0 220px;">
-                                <div class="small text-muted">@exec.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm:ss")</div>
-                            </div>
-                            <div class="exec-revision" style="flex:1; padding-left:12px;">
-                                <div><code>@exec.Revision</code></div>
-                            </div>
-                            <div class="exec-status" style="flex:0 0 120px; text-align:right;">
-                                @if (exec.HasFailure)
-                                {
-                                    <span class="badge bg-danger">失敗</span>
-                                }
-                                else
-                                {
-                                    <span class="badge bg-success">成功</span>
-                                }
-                            </div>
-                            <div class="summary-action d-flex justify-content-md-end" style="flex:0 0 100px; padding-left:8px; padding-right:0px;">
-                                <a asp-page="/ExecutionUpload/Index"
-                                   asp-route-id="@(exec.ExecutionId)"
-                                   class="btn btn-sm btn-outline-primary"
-                                   title="実行結果の詳細ページを開く"
-                                   aria-label="実行結果の詳細ページを開く">詳細</a>
-                            </div>
-                        </li>
+                        <div class="col-12 col-md-6">
+                            <a asp-page="/Projects/Index"
+                               asp-route-id="@project.Id"
+                               class="card h-100 text-decoration-none">
+                                <div class="card-body">
+                                    <h2 class="card-title h5">@project.Name</h2>
+                                    <p class="card-text">@project.Description</p>
+                                </div>
+                            </a>
+                        </div>
                     }
-                </ul>
+                </div>
             }
             else
             {
-                <div class="muted" style="padding:8px 0;">最近の実行はありません。</div>
+                <div class="muted" style="padding:8px 0;">プロジェクトがありません。</div>
             }
-        </div>
-        <div style="padding:8px 0px; margin:16px 8px;">
-            <a asp-page="/Executions/Index"
-               class="btn btn-sm btn-outline-primary"
-               title="テスト実行一覧ページを開く"
-               aria-label="テスト実行一覧ページを開く">テスト実行一覧</a>
         </div>
     </div>
-
 </div>
-
-<script>
-    (function() {
-        // Summary counts from server
-        const executed = @(Model.DashboardViewModel?.LatestExecutionSummary?.ExecutedNum ?? 0);
-        const errors = @(Model.DashboardViewModel?.LatestExecutionSummary?.ErrorNum ?? 0);
-        const success = Math.max(0, executed - errors);
-
-        const ctx = document.getElementById('summaryChart');
-        if (!ctx) return;
-
-        const data = {
-            labels: ['成功', '失敗'],
-            datasets: [{
-                data: [success, errors],
-                backgroundColor: ['#2ecc71', '#e74c3c'],
-                hoverOffset: 6
-            }]
-        };
-
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: data,
-            options: {
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: { position: 'bottom' },
-                    tooltip: { enabled: true }
-                },
-                cutout: '60%'
-            }
-        });
-    })();
-</script>
