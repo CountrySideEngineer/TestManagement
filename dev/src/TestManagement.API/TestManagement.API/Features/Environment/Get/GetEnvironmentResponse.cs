@@ -19,7 +19,7 @@
         /// <summary>
         /// Collection of versions associated with this environment.
         /// </summary>
-        public IEnumerable<EnvironmentVersion> Versions { get; set; } = null!;
+        public List<EnvironmentVersion> Versions { get; set; } = new List<EnvironmentVersion>();
     }
 
 

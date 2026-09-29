@@ -53,6 +53,6 @@
         /// <summary>
         /// Collection of test execution items that were run in this environment version.
         /// </summary>
-        public ICollection<TestExecutionItem> TestExecutionItems { get; set; } = new List<TestExecutionItem>();
+        public List<TestExecutionItem> TestExecutionItems { get; set; } = new List<TestExecutionItem>();
     }
 }

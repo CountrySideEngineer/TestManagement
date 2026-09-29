@@ -20,18 +20,29 @@ builder.Services.AddScoped<ITestCaseService, TestCaseService>();
 builder.Services.AddScoped<ITestExecutionService, TestExecutionService>();
 builder.Services.AddScoped<IEnvironmentService, EnvironmentService>();
 builder.Services.AddScoped<ITestResultService, TestResultService>();
+builder.Services.AddScoped<ITestSuiteService, TestSuiteService>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IProjectTestSuiteCompositionService, ProjectTestSuiteCompositionService>();
+builder.Services.AddScoped<IProjectTesterCompositionService, ProjectTesterCompositionService>();
+builder.Services.AddScoped<IProjectFacadeService, ProjectFacadeService>();
+builder.Services.AddScoped<ITestSuiteService, TestSuiteService>();
+builder.Services.AddScoped<ITestSuiteCompositionService, TestSuiteCompositionService>();
+builder.Services.AddScoped<ITestSuiteFacadeService, TestSuiteFacadeService>();
 
 builder.Services.AddMvc().AddXmlSerializerFormatters();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 
 app.UseHttpsRedirection();

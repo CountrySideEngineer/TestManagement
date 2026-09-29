@@ -52,7 +52,7 @@ namespace TestManagement.API.Models
 
             public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
-            public ICollection<ExecutedTest> ExecutedTests { get; set; } = new List<ExecutedTest>();
+            public List<ExecutedTest> ExecutedTests { get; set; } = new List<ExecutedTest>();
         }
 
         public class ExecutedTest

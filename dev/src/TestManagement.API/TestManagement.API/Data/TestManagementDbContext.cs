@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using System.Data.Common;
+using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using TestManagement.API.Models;
 using Environment = TestManagement.API.Models.Environment;
@@ -64,6 +65,36 @@ namespace TestManagement.API.Data
         public DbSet<TestExecution> TestExecutions { get; set; }
 
         /// <summary>
+        /// DbSet of test suite cases.
+        /// </summary>
+        public DbSet<TestSuiteComposition> TestSuiteCompositions { get; set; }
+
+        /// <summary>
+        /// DbSet of test suites.
+        /// </summary>
+        public DbSet<TestSuite> TestSuites { get; set; }
+
+        /// <summary>
+        /// DbSet of projects.
+        /// </summary>
+        public DbSet<Project> Projects { get; set; }
+
+        /// <summary>
+        /// DbSet of project compositions (join entity between Project and TestSuite).
+        /// </summary>
+        public DbSet<ProjectTestSuiteComposition> ProjectTestSuiteCompositions { get; set; }
+
+        /// <summary>
+        /// DbSet of testers.
+        /// </summary>
+        public DbSet<Tester> Testers { get; set; }
+
+        /// <summary>
+        /// DbSet of project-tester compositions that associate projects with testers.
+        /// </summary>
+        public DbSet<ProjectTesterComposition> ProjectTesterCompositions { get; set; }
+
+        /// <summary>
         /// Applies configuration for all entities when the model is being created.
         /// </summary>
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -79,6 +110,13 @@ namespace TestManagement.API.Data
             ConfigureEnvironment(modelBuilder);
             ConfigureTestExecutionItem(modelBuilder);
             ConfigureTestExecution(modelBuilder);
+            ConfigureTestSuiteVersion(modelBuilder);
+            ConfigureTestSuite(modelBuilder);
+            ConfigureProject(modelBuilder);
+            ConfigureTestSuiteComposition(modelBuilder);
+            ConfigureProjectComposition(modelBuilder);
+            ConfigureTester(modelBuilder);
+            ConfigureProjectTesterComposition(modelBuilder);
         }
 
         /// <summary>
@@ -219,7 +257,7 @@ namespace TestManagement.API.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             entity.HasOne(_ => _.Status)
-                .WithMany(_ => _.TestResults )
+                .WithMany(_ => _.TestResults)
                 .HasForeignKey(_ => _.StatusId)
                 .OnDelete(DeleteBehavior.Restrict);
 
@@ -408,6 +446,176 @@ namespace TestManagement.API.Data
 
             entity.HasIndex(_ => new { _.Revision, _.EnvironmentId })
                 .IsUnique();
+        }
+
+        /// <summary>
+        /// Configures the TestSuiteCase entity mapping and relationships.
+        /// </summary>
+        private void ConfigureTestSuiteVersion(ModelBuilder builder)
+        {
+            var entity = builder.Entity<TestSuiteComposition>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.TestSuiteId)
+                .IsRequired();
+
+            entity.Property(_ => _.TestSuiteId)
+                .IsRequired();
+
+            entity.HasOne(_ => _.TestSuite)
+                .WithMany(_ => _.TestSuiteCompositions)
+                .HasForeignKey(_ => _.TestSuiteId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        /// <summary>
+        /// Configures the TestSuite entity mapping and constraints.
+        /// </summary>
+        /// <param name="builder"></param>
+        private void ConfigureTestSuite(ModelBuilder builder)
+        {
+            var entity = builder.Entity<TestSuite>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Name)
+                .IsRequired();
+        }
+
+        /// <summary>
+        /// Configures the Project entity mapping: defines the primary key, required properties,
+        /// and a unique index on the project name to enforce uniqueness.
+        /// </summary>
+        /// <param name="builder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
+        private void ConfigureProject(ModelBuilder builder)
+        {
+            var entity = builder.Entity<Project>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Name)
+                .IsRequired();
+
+            // Make name unique.
+            entity.HasIndex(_ => _.Name)
+                .IsUnique();
+        }
+
+        /// <summary>
+        /// Configures the TestSuiteComposition entity which represents the relationship between
+        /// test suites and test case versions. Defines the primary key, required foreign keys,
+        /// and a unique composite index to prevent duplicate suite–caseVersion associations.
+        /// </summary>
+        /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
+        private void ConfigureTestSuiteComposition(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<TestSuiteComposition>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.TestSuiteId)
+                .IsRequired();
+
+            entity.Property(_ => _.TestCaseVersionId)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.TestSuiteId, _.TestCaseVersionId })
+                .IsUnique();
+
+            entity.HasOne(_ => _.TestSuite)
+                .WithMany(_ => _.TestSuiteCompositions)
+                .HasForeignKey(_ => _.TestSuiteId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(_ => _.TestCaseVersion)
+                .WithMany(_ => _.TestSuiteCompositions)
+                .HasForeignKey(_ => _.TestCaseVersionId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        /// <summary>
+        /// Configures the ProjectComposition entity which represents the N:N relationship
+        /// between Project and TestSuite. Defines primary key, required foreign keys and
+        /// a unique composite index on (ProjectId, TestSuiteId).
+        /// </summary>
+        /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
+        private void ConfigureProjectComposition(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<ProjectTestSuiteComposition>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.ProjectId)
+                .IsRequired();
+
+            entity.Property(_ => _.TestSuiteId)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.ProjectId, _.TestSuiteId })
+                .IsUnique();
+
+            // Configure foreign keys; Project and TestSuite do not expose navigation collections for this join,
+            // so configure with empty inverse navigation.
+            entity.HasOne(_ => _.Project)
+                .WithMany()
+                .HasForeignKey(_ => _.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(_ => _.TestSuite)
+                .WithMany()
+                .HasForeignKey(_ => _.TestSuiteId)
+                .OnDelete(DeleteBehavior.Cascade);
+        }
+
+        /// <summary>
+        /// Configures the Tester entity mapping and seeds initial testers.
+        /// </summary>
+        private void ConfigureTester(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<Tester>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.Name)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            entity.Property(_ => _.Email)
+                .IsRequired()
+                .HasMaxLength(200);
+
+            entity.HasIndex(_ => _.Email)
+                .IsUnique();
+        }
+
+        /// <summary>
+        /// Configures the ProjectTesterComposition entity mapping and relationships.
+        /// </summary>
+        private void ConfigureProjectTesterComposition(ModelBuilder modelBuilder)
+        {
+            var entity = modelBuilder.Entity<ProjectTesterComposition>();
+
+            entity.HasKey(_ => _.Id);
+
+            entity.Property(_ => _.ProjectId)
+                .IsRequired();
+
+            entity.Property(_ => _.TesterId)
+                .IsRequired();
+
+            entity.HasIndex(_ => new { _.ProjectId, _.TesterId })
+                .IsUnique();
+
+            entity.HasOne(_ => _.Project)
+                .WithMany()
+                .HasForeignKey(_ => _.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasOne(_ => _.Tester)
+                .WithMany()
+                .HasForeignKey(_ => _.TesterId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

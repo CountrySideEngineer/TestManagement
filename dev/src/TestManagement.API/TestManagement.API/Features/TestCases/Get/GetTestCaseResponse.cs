@@ -19,7 +19,7 @@ namespace TestManagement.API.Features.TestCases.Get
         /// A collection of version items for the test case. Typically contains the
         /// latest version and may include historical versions if populated.
         /// </summary>
-        public ICollection<TestCaseVersionItem> Versions { get; set; } = new List<TestCaseVersionItem>();
+        public List<TestCaseVersionItem> Versions { get; set; } = new List<TestCaseVersionItem>();
 
         /// <summary>
         /// Represents a single version of a test case, including metadata such as

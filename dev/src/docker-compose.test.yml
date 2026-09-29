@@ -10,6 +10,7 @@ services:
       - "5433:5432"
     volumes:
       - ./postgres/init:/docker-entrypoint-initdb.d
+      - pgdata:/var/lib/postgresql
       - ./secure/db_pass:/run/secrets/db_pass:ro
     environment:
       POSTGRES_USER: "${POSTGRES_USER}"
@@ -64,3 +65,6 @@ services:
       - ./secure/api_pass:/run/secrets/api_pass:ro
     env_file:
       - .env
+
+volumes:
+  pgdata:
