@@ -7,5 +7,7 @@ public interface IProjectApiClient
 {
     Task<ICollection<GetProjectResponse>> GetProjectsAsync();
 
+    Task<GetProjectResponse?> GetProjectAsync(long id);
+
     Task<CreateProjectResponse?> CreateProjectAsync(CreateProjectRequest request);
 }

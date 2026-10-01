@@ -7,5 +7,7 @@ public interface IProjectService
 {
     Task<ICollection<ProjectViewModel>> GetProjectsAsync();
 
+    Task<ProjectViewModel?> GetProjectAsync(long id);
+
     Task<ProjectViewModel?> CreateProjectAsync(CreateProjectRequest request);
 }

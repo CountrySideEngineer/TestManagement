@@ -34,6 +34,24 @@ public class ProjectService : IProjectService
             .ToList();
     }
 
+    public async Task<ProjectViewModel?> GetProjectAsync(long id)
+    {
+        _logger.LogInformation("ProjectService::GetProjectAsync() start! Id: {Id}", id);
+
+        var response = await _apiClient.GetProjectAsync(id);
+        if (response is null)
+        {
+            return null;
+        }
+
+        return new ProjectViewModel
+        {
+            Id = response.Id,
+            Name = response.Name,
+            Description = response.Description
+        };
+    }
+
     public async Task<ProjectViewModel?> CreateProjectAsync(CreateProjectRequest request)
     {
         _logger.LogInformation("ProjectService::CreateProjectAsync() start! Name: {Name}", request.Name);

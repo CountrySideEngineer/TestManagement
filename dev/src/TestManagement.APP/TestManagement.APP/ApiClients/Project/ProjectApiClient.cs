@@ -1,4 +1,3 @@
-using System.Net.Http.Json;
 using TestManagement.APP.Dto.Project.Get;
 using TestManagement.APP.Dto.Project.Create;
 using System.Net.Http.Json;
@@ -24,6 +23,13 @@ public class ProjectApiClient : IProjectApiClient
 
         return await _httpClient.GetFromJsonAsync<List<GetProjectResponse>>("api/projects")
             ?? new List<GetProjectResponse>();
+    }
+
+    public async Task<GetProjectResponse?> GetProjectAsync(long id)
+    {
+        _logger.LogDebug("ProjectApiClient::GetProjectAsync() start! Id: {Id}", id);
+
+        return await _httpClient.GetFromJsonAsync<GetProjectResponse>($"api/projects/{id}");
     }
 
     public async Task<CreateProjectResponse?> CreateProjectAsync(CreateProjectRequest request)
