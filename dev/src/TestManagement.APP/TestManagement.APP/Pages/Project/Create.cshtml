@@ -1,0 +1,31 @@
+@page "/project"
+@model TestManagement.APP.Pages.Project.CreateModel
+
+<div class="container">
+    <div class="block">
+        <div class="block-title">プロジェクトを追加</div>
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="Project.Name" class="form-label">プロジェクト名</label>
+                <input asp-for="Project.Name" class="form-control" />
+                <span asp-validation-for="Project.Name" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Project.Description" class="form-label">概要</label>
+                <textarea asp-for="Project.Description" class="form-control" rows="4"></textarea>
+                <span asp-validation-for="Project.Description" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">追加</button>
+            <a asp-page="/Index" class="btn btn-secondary ms-2">キャンセル</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

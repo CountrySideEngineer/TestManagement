@@ -7,6 +7,12 @@
 <div class="container">
     <div class="block">
         <div class="block-title">プロジェクト一覧</div>
+        <div class="mb-3">
+            <a asp-page="/Project/Create"
+               class="btn btn-primary"
+               title="プロジェクトを追加"
+               aria-label="プロジェクトを追加">プロジェクトを追加</a>
+        </div>
         <div class="project-list">
             @if (Model.Projects.Any())
             {
