@@ -2,7 +2,23 @@
 @model IndexModel
 @{
     ViewData["Title"] = "プロジェクト一覧";
+
+    string GetDescriptionPreview(string description)
+    {
+        return description.Length > 24
+            ? $"{description[..23]}..."
+            : description;
+    }
 }
+
+<style>
+    .project-list-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 280px);
+        gap: 1rem;
+        justify-content: start;
+    }
+</style>
 
 <div class="container">
     <div class="block">
@@ -16,16 +32,16 @@
         <div class="project-list">
             @if (Model.Projects.Any())
             {
-                <div class="row g-3">
+                <div class="project-list-grid">
                     @foreach (var project in Model.Projects)
                     {
-                        <div class="col-12 col-md-6">
+                        <div>
                             <a asp-page="/Projects/Index"
                                asp-route-id="@project.Id"
                                class="card h-100 text-decoration-none">
                                 <div class="card-body">
-                                    <h2 class="card-title h5">@project.Name</h2>
-                                    <p class="card-text">@project.Description</p>
+                                    <h2 class="card-title">@project.Name</h2>
+                                    <p class="card-text small" style="white-space: pre-line;">@GetDescriptionPreview(project.Description)</p>
                                 </div>
                             </a>
                         </div>
