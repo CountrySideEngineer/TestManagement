@@ -4,16 +4,25 @@
     ViewData["Title"] = Model.Project?.Name ?? "プロジェクト";
 }
 
+<style>
+    .project-name {
+        font-size: 2rem;
+        font-weight: 600;
+    }
+
+    .project-description {
+        font-size: 1rem;
+    }
+</style>
+
 <div class="container">
     <div class="block">
         @if (Model.Project is not null)
         {
-            <div class="block-title">@Model.Project.Name</div>
-
             <div class="card">
                 <div class="card-body">
-                    <h1 class="h3 card-title">@Model.Project.Name</h1>
-                    <p class="card-text" style="white-space: pre-line;">@Model.Project.Description</p>
+                    <h1 class="card-title project-name">@Model.Project.Name</h1>
+                    <p class="card-text project-description" style="white-space: pre-line;">@Model.Project.Description</p>
                 </div>
             </div>
 
