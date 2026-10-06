@@ -26,6 +26,56 @@
                 </div>
             </div>
 
+            <div class="row g-3 mt-1">
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="h4">対応付けられたTestSuite</h2>
+                            @if (Model.TestSuites.Any())
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var testSuite in Model.TestSuites)
+                                    {
+                                        <li class="list-group-item px-0">
+                                            <div class="fw-semibold">@testSuite.Name</div>
+                                            <div class="small text-muted" style="white-space: pre-line;">@testSuite.Description</div>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">対応付けられたTestSuiteはありません。</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h2 class="h4">対応付けられたTester</h2>
+                            @if (Model.Testers.Any())
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var tester in Model.Testers)
+                                    {
+                                        <li class="list-group-item px-0">
+                                            <div class="fw-semibold">@tester.Name</div>
+                                            <div class="small text-muted">@tester.Email</div>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">対応付けられたTesterはありません。</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="mt-3">
                 <a asp-page="/Index" class="btn btn-secondary">プロジェクト一覧へ戻る</a>
             </div>

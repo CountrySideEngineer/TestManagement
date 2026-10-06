@@ -1,5 +1,7 @@
 using TestManagement.APP.Dto.Project.Get;
 using TestManagement.APP.Dto.Project.Create;
+using TestManagement.APP.Dto.Project.Get;
+using TestManagement.APP.Dto.Tester.Get;
 using System.Net.Http.Json;
 
 namespace TestManagement.APP.ApiClients.Project;
@@ -54,6 +56,22 @@ public class ProjectApiClient : IProjectApiClient
         _logger.LogDebug("ProjectApiClient::GetProjectAsync() start! Id: {Id}", id);
 
         return await _httpClient.GetFromJsonAsync<GetProjectResponse>($"api/projects/{id}");
+    }
+
+    public async Task<GetProjectWithTestSuiteResponse?> GetProjectWithTestSuitesAsync(long id)
+    {
+        _logger.LogDebug("ProjectApiClient::GetProjectWithTestSuitesAsync() start! Id: {Id}", id);
+
+        return await _httpClient.GetFromJsonAsync<GetProjectWithTestSuiteResponse>(
+            $"api/projects/{id}/compositions/testsuite");
+    }
+
+    public async Task<ICollection<GetTesterResponse>> GetProjectTestersAsync(long id)
+    {
+        _logger.LogDebug("ProjectApiClient::GetProjectTestersAsync() start! Id: {Id}", id);
+
+        return await _httpClient.GetFromJsonAsync<List<GetTesterResponse>>(
+            $"/api/projects/{id}/compositions/tester") ?? new List<GetTesterResponse>();
     }
 
     /// <summary>

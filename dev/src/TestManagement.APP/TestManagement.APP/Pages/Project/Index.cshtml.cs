@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TestManagement.APP.Services;
 using TestManagement.APP.Services.Project;
 using TestManagement.APP.ViewModel.Project;
+using TestManagement.APP.ViewModel.TestSuite;
+using TestManagement.APP.ViewModel.Tester;
 
 namespace TestManagement.APP.Pages.Project;
 
@@ -38,6 +41,10 @@ public class IndexModel : PageModel
     /// </summary>
     public ProjectViewModel? Project { get; private set; }
 
+    public ICollection<TestSuiteViewModel> TestSuites { get; private set; } = new List<TestSuiteViewModel>();
+
+    public ICollection<TesterViewModel> Testers { get; private set; } = new List<TesterViewModel>();
+
     /// <summary>
     /// Handles GET requests and loads the requested project.
     /// </summary>
@@ -53,6 +60,8 @@ public class IndexModel : PageModel
         try
         {
             Project = await _projectService.GetProjectAsync(id.Value);
+            TestSuites = await _projectService.GetProjectTestSuitesAsync(id.Value);
+            //Testers = await _projectService.GetProjectTestersAsync(id.Value);
             return Project is null ? NotFound() : Page();
         }
         catch (HttpRequestException ex)

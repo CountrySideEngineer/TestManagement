@@ -116,7 +116,17 @@ public class ProjectFacadeService : IProjectFacadeService
     {
         _logger.LogDebug("ProjectFacadeService::GetTestersByProjectIdAsync start: {ProjectId}", projectId);
 
-        return null;
+        var compositions = await _projectTesterCompositionService.GetByProjectIdAsync(projectId, ct);
+
+        return compositions
+            .Where(composition => composition.Tester is not null)
+            .Select(composition => new GetTesterResponse
+            {
+                Id = composition.Tester!.Id,
+                Name = composition.Tester.Name,
+                Email = composition.Tester.Email
+            })
+            .ToList();
     }
 
     /// <summary>Retrieves a tester by its identifier.</summary>

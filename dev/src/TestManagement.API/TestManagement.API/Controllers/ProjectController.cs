@@ -96,6 +96,24 @@ public class ProjectController : Controller
     }
 
     /// <summary>
+    /// Retrieves testers associated with a specific project.
+    /// </summary>
+    /// <param name="id">Project identifier.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The testers associated with the project.</returns>
+    [HttpGet("{id:long}/testers")]
+    [ProducesResponseType(typeof(ICollection<GetTesterResponse>), StatusCodes.Status200OK)]
+    public async Task<ActionResult<ICollection<GetTesterResponse>>> GetTestersByProjectIdAsync(
+        long id,
+        CancellationToken ct = default)
+    {
+        _logger.LogDebug("ProjectController::GetTestersByProjectIdAsync() start! ProjectId: {Id}", id);
+
+        var testers = await _projectFacadeService.GetTestersByProjectIdAsync(id, ct);
+        return Ok(testers);
+    }
+
+    /// <summary>
     /// Creates a new project from the specified <see cref="CreateProjectRequest"/>.
     /// </summary>
     /// <remarks>

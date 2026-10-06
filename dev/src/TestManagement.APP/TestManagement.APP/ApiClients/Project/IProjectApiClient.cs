@@ -1,5 +1,7 @@
 using TestManagement.APP.Dto.Project.Get;
 using TestManagement.APP.Dto.Project.Create;
+using TestManagement.APP.Dto.Project.Get;
+using TestManagement.APP.Dto.Tester.Get;
 
 namespace TestManagement.APP.ApiClients.Project;
 
@@ -20,6 +22,10 @@ public interface IProjectApiClient
     /// <param name="id">The identifier of the project to retrieve.</param>
     /// <returns>The project response, or <see langword="null"/> when no response content is available.</returns>
     Task<GetProjectResponse?> GetProjectAsync(long id);
+
+    Task<GetProjectWithTestSuiteResponse?> GetProjectWithTestSuitesAsync(long id);
+
+    Task<ICollection<GetTesterResponse>> GetProjectTestersAsync(long id);
 
     /// <summary>
     /// Creates a project.

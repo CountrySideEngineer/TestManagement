@@ -2,6 +2,8 @@ using TestManagement.APP.ApiClients.Project;
 using TestManagement.APP.Dto.Project.Get;
 using TestManagement.APP.Dto.Project.Create;
 using TestManagement.APP.ViewModel.Project;
+using TestManagement.APP.ViewModel.TestSuite;
+using TestManagement.APP.ViewModel.Tester;
 
 namespace TestManagement.APP.Services.Project;
 
@@ -50,6 +52,32 @@ public class ProjectService : IProjectService
             Name = response.Name,
             Description = response.Description
         };
+    }
+
+    public async Task<ICollection<TestSuiteViewModel>> GetProjectTestSuitesAsync(long id)
+    {
+        _logger.LogInformation("ProjectService::GetProjectTestSuitesAsync() start! Id: {Id}", id);
+
+        var response = await _apiClient.GetProjectWithTestSuitesAsync(id);
+        return response?.TestSuiteSummaries.Select(testSuite => new TestSuiteViewModel
+        {
+            Id = testSuite.Id,
+            Name = testSuite.Name,
+            Description = testSuite.Description
+        }).ToList() ?? new List<TestSuiteViewModel>();
+    }
+
+    public async Task<ICollection<TesterViewModel>> GetProjectTestersAsync(long id)
+    {
+        _logger.LogInformation("ProjectService::GetProjectTestersAsync() start! Id: {Id}", id);
+
+        var response = await _apiClient.GetProjectTestersAsync(id);
+        return response.Select(tester => new TesterViewModel
+        {
+            Id = tester.Id,
+            Name = tester.Name,
+            Email = tester.Email
+        }).ToList() ?? new List<TesterViewModel>();
     }
 
     public async Task<ProjectViewModel?> CreateProjectAsync(CreateProjectRequest request)
