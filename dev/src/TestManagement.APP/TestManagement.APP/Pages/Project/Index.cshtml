@@ -1,84 +1,128 @@
 @page "/projects"
 @model TestManagement.APP.Pages.Project.IndexModel
 @{
-    ViewData["Title"] = Model.Project?.Name ?? "プロジェクト";
+    ViewData["Title"] = Model.Project?.Name ?? "プロジェクト分析";
 }
 
 <style>
-    .project-name {
-        font-size: 2rem;
-        font-weight: 600;
-    }
-
-    .project-description {
-        font-size: 1rem;
-    }
+    .analytics-page { background-color: #f8f9fa; }
+    .analytics-card { border: 0; box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075); }
+    .metric-value { font-size: 1.9rem; font-weight: 700; }
+    .chart-container { position: relative; height: 300px; }
 </style>
 
-<div class="container">
-    <div class="block">
-        @if (Model.Project is not null)
+<div class="analytics-page py-4">
+    <div class="container-fluid">
+        <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
+            <div>
+                <div class="text-muted small">テスト分析ダッシュボード</div>
+                <h1 class="h3 mb-1">@(Model.Project?.Name ?? "プロジェクト")</h1>
+                <div class="text-muted">テスト実行状況の概要</div>
+            </div>
+            <a asp-page="/Index" class="btn btn-outline-secondary">プロジェクト一覧へ戻る</a>
+        </div>
+
+        @if (ViewData["ErrorMessage"] is string errorMessage)
         {
-            <div class="card">
-                <div class="card-body">
-                    <h1 class="card-title project-name">@Model.Project.Name</h1>
-                    <p class="card-text project-description" style="white-space: pre-line;">@Model.Project.Description</p>
-                </div>
-            </div>
-
-            <div class="row g-3 mt-1">
-                <div class="col-12">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h2 class="h4">対応付けられたTestSuite</h2>
-                            @if (Model.TestSuites.Any())
-                            {
-                                <ul class="list-group list-group-flush">
-                                    @foreach (var testSuite in Model.TestSuites)
-                                    {
-                                        <li class="list-group-item px-0">
-                                            <div class="fw-semibold">@testSuite.Name</div>
-                                            <div class="small text-muted" style="white-space: pre-line;">@testSuite.Description</div>
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                            else
-                            {
-                                <p class="text-muted mb-0">対応付けられたTestSuiteはありません。</p>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <h2 class="h4">対応付けられたTester</h2>
-                            @if (Model.Testers.Any())
-                            {
-                                <ul class="list-group list-group-flush">
-                                    @foreach (var tester in Model.Testers)
-                                    {
-                                        <li class="list-group-item px-0">
-                                            <div class="fw-semibold">@tester.Name</div>
-                                            <div class="small text-muted">@tester.Email</div>
-                                        </li>
-                                    }
-                                </ul>
-                            }
-                            else
-                            {
-                                <p class="text-muted mb-0">対応付けられたTesterはありません。</p>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mt-3">
-                <a asp-page="/Index" class="btn btn-secondary">プロジェクト一覧へ戻る</a>
-            </div>
+            <div class="alert alert-warning">@errorMessage</div>
         }
+
+        <div class="row g-3 mb-3">
+            <div class="col-sm-6 col-xl-3">
+                <div class="card analytics-card h-100"><div class="card-body">
+                    <div class="text-muted small">実行回数</div>
+                    <div class="metric-value">@Model.ExecutionCount</div>
+                    <div class="small text-muted">取得済みのテスト実行</div>
+                </div></div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card analytics-card h-100"><div class="card-body">
+                    <div class="text-muted small">テストケース数</div>
+                    <div class="metric-value">@Model.TotalTestCases</div>
+                    <div class="small text-muted">実行・スキップ・除外を含む</div>
+                </div></div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card analytics-card h-100"><div class="card-body">
+                    <div class="text-muted small">成功率</div>
+                    <div class="metric-value text-success">@Model.SuccessRate.ToString("0.0")%</div>
+                    <div class="small text-muted">成功 @Model.PassedTestCases 件</div>
+                </div></div>
+            </div>
+            <div class="col-sm-6 col-xl-3">
+                <div class="card analytics-card h-100"><div class="card-body">
+                    <div class="text-muted small">失敗</div>
+                    <div class="metric-value text-danger">@Model.FailedTestCases</div>
+                    <div class="small text-muted">失敗したテストケース</div>
+                </div></div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-3">
+            <div class="col-lg-8">
+                <div class="card analytics-card h-100"><div class="card-body">
+                    <h2 class="h5">テスト結果の推移</h2>
+                    <div class="chart-container"><canvas id="executionTrendChart"></canvas></div>
+                </div></div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card analytics-card h-100"><div class="card-body">
+                    <h2 class="h5">結果の内訳</h2>
+                    <div class="chart-container"><canvas id="resultSummaryChart"></canvas></div>
+                </div></div>
+            </div>
+        </div>
+
+        <div class="card analytics-card">
+            <div class="card-body">
+                <h2 class="h5">最近のテスト実行</h2>
+                @if (Model.RecentExecutions.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead><tr><th>実行日時</th><th>環境</th><th>リビジョン</th><th>成功率</th><th>結果</th></tr></thead>
+                            <tbody>
+                            @foreach (var execution in Model.RecentExecutions)
+                            {
+                                <tr>
+                                    <td>@execution.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")</td>
+                                    <td>@execution.Environment</td>
+                                    <td><code>@execution.Revision</code></td>
+                                    <td>@execution.SuccessRate%</td>
+                                    <td><span class="badge @(execution.ErrorNum == 0 ? "text-bg-success" : "text-bg-danger")">@(execution.ErrorNum == 0 ? "成功" : "失敗")</span></td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">テスト実行データがありません。</p>
+                }
+            </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        const labels = @Html.Raw(Model.ChartLabelsJson);
+        new Chart(document.getElementById('executionTrendChart'), {
+            type: 'line',
+            data: { labels, datasets: [
+                { label: '成功', data: @Html.Raw(Model.PassedTrendJson), borderColor: '#198754', tension: .3 },
+                { label: '失敗', data: @Html.Raw(Model.FailedTrendJson), borderColor: '#dc3545', tension: .3 }
+            ]},
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+        new Chart(document.getElementById('resultSummaryChart'), {
+            type: 'doughnut',
+            data: { labels: ['成功', '失敗', 'スキップ', '除外'], datasets: [{
+                data: [@Model.PassedTestCases, @Model.FailedTestCases, @Model.SkippedTestCases, @Model.ExcludedTestCases],
+                backgroundColor: ['#198754', '#dc3545', '#ffc107', '#6c757d']
+            }]},
+            options: { responsive: true, maintainAspectRatio: false }
+        });
+    </script>
+}

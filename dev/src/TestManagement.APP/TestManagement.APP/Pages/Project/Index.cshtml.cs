@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System.Text.Json;
 using TestManagement.APP.Services;
 using TestManagement.APP.Services.Project;
+using TestManagement.APP.Services.TestExecution;
 using TestManagement.APP.ViewModel.Project;
-using TestManagement.APP.ViewModel.TestSuite;
-using TestManagement.APP.ViewModel.Tester;
+using TestManagement.APP.ViewModel.Executions;
 
 namespace TestManagement.APP.Pages.Project;
 
@@ -22,6 +23,7 @@ public class IndexModel : PageModel
     /// Service used to retrieve project information.
     /// </summary>
     private readonly IProjectService _projectService;
+    private readonly ITestExecutionService _testExecutionService;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="IndexModel"/> class.
@@ -30,10 +32,12 @@ public class IndexModel : PageModel
     /// <param name="projectService">Service used to retrieve project information.</param>
     public IndexModel(
         ILogger<IndexModel> logger,
-        IProjectService projectService)
+        IProjectService projectService,
+        ITestExecutionService testExecutionService)
     {
         _logger = logger;
         _projectService = projectService;
+        _testExecutionService = testExecutionService;
     }
 
     /// <summary>
@@ -41,9 +45,18 @@ public class IndexModel : PageModel
     /// </summary>
     public ProjectViewModel? Project { get; private set; }
 
-    public ICollection<TestSuiteViewModel> TestSuites { get; private set; } = new List<TestSuiteViewModel>();
+    public ICollection<ExecutionViewModel> RecentExecutions { get; private set; } = new List<ExecutionViewModel>();
 
-    public ICollection<TesterViewModel> Testers { get; private set; } = new List<TesterViewModel>();
+    public int ExecutionCount { get; private set; }
+    public long TotalTestCases { get; private set; }
+    public long PassedTestCases { get; private set; }
+    public long FailedTestCases { get; private set; }
+    public long SkippedTestCases { get; private set; }
+    public long ExcludedTestCases { get; private set; }
+    public double SuccessRate { get; private set; }
+    public string ChartLabelsJson { get; private set; } = "[]";
+    public string PassedTrendJson { get; private set; } = "[]";
+    public string FailedTrendJson { get; private set; } = "[]";
 
     /// <summary>
     /// Handles GET requests and loads the requested project.
@@ -60,8 +73,29 @@ public class IndexModel : PageModel
         try
         {
             Project = await _projectService.GetProjectAsync(id.Value);
-            TestSuites = await _projectService.GetProjectTestSuitesAsync(id.Value);
-            //Testers = await _projectService.GetProjectTestersAsync(id.Value);
+
+            // Get the number of test execution.
+            var executions = await _testExecutionService.GetExecutionsAsync() ?? new List<ExecutionViewModel>();
+
+            // Retrieve only 10 test cases to display the 10 most recent test cases.
+            RecentExecutions = executions.OrderByDescending(execution => execution.ExecutedAt).Take(10).ToList();
+
+            // Retrieve the number of test cases, success rate, and failure count for the test.
+            ExecutionCount = executions.Count;
+            PassedTestCases = executions.Sum(execution => execution.PassedNum);
+            FailedTestCases = executions.Sum(execution => execution.ErrorNum);
+            SkippedTestCases = executions.Sum(execution => execution.SkippedNum);
+            ExcludedTestCases = executions.Sum(execution => execution.ExcludedNum);
+            TotalTestCases = PassedTestCases + FailedTestCases + SkippedTestCases + ExcludedTestCases;
+            SuccessRate = PassedTestCases + FailedTestCases == 0
+                ? 0
+                : PassedTestCases * 100d / (PassedTestCases + FailedTestCases);
+
+            var trend = executions.OrderBy(execution => execution.ExecutedAt).TakeLast(14).ToList();
+            ChartLabelsJson = JsonSerializer.Serialize(trend.Select(execution => execution.ExecutedAt.ToLocalTime().ToString("MM/dd")));
+            PassedTrendJson = JsonSerializer.Serialize(trend.Select(execution => execution.PassedNum));
+            FailedTrendJson = JsonSerializer.Serialize(trend.Select(execution => execution.ErrorNum));
+
             return Project is null ? NotFound() : Page();
         }
         catch (HttpRequestException ex)
