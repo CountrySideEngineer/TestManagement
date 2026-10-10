@@ -4,6 +4,7 @@ using System.Threading;
 using TestManagement.API.Features.Project.Create;
 using TestManagement.API.Features.Project.Get;
 using TestManagement.API.Features.TestCases.Create;
+using TestManagement.API.Features.Tester.Get;
 using TestManagement.API.Models;
 using TestManagement.API.Services;
 
