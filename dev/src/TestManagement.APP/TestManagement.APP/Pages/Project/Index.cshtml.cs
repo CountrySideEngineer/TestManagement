@@ -23,6 +23,10 @@ public class IndexModel : PageModel
     /// Service used to retrieve project information.
     /// </summary>
     private readonly IProjectService _projectService;
+
+    /// <summary>
+    /// Service used to retrieve test execution information.
+    /// </summary>
     private readonly ITestExecutionService _testExecutionService;
 
     /// <summary>
@@ -30,6 +34,7 @@ public class IndexModel : PageModel
     /// </summary>
     /// <param name="logger">Logger used for project page diagnostics.</param>
     /// <param name="projectService">Service used to retrieve project information.</param>
+    /// <param name="testExecutionService">Service used to retrieve test execution information.</param>
     public IndexModel(
         ILogger<IndexModel> logger,
         IProjectService projectService,
@@ -45,17 +50,59 @@ public class IndexModel : PageModel
     /// </summary>
     public ProjectViewModel? Project { get; private set; }
 
+    /// <summary>
+    /// Gets the most recent test executions displayed in the dashboard.
+    /// </summary>
     public ICollection<ExecutionViewModel> RecentExecutions { get; private set; } = new List<ExecutionViewModel>();
 
+    /// <summary>
+    /// Gets the total number of test executions.
+    /// </summary>
     public int ExecutionCount { get; private set; }
+
+    /// <summary>
+    /// Gets the total number of test cases across all result categories.
+    /// </summary>
     public long TotalTestCases { get; private set; }
+
+    /// <summary>
+    /// Gets the total number of passed test cases.
+    /// </summary>
     public long PassedTestCases { get; private set; }
+
+    /// <summary>
+    /// Gets the total number of failed test cases.
+    /// </summary>
     public long FailedTestCases { get; private set; }
+
+    /// <summary>
+    /// Gets the total number of skipped test cases.
+    /// </summary>
     public long SkippedTestCases { get; private set; }
+
+    /// <summary>
+    /// Gets the total number of excluded test cases.
+    /// </summary>
     public long ExcludedTestCases { get; private set; }
+
+    /// <summary>
+    /// Gets the overall success rate as a percentage.
+    /// </summary>
     public double SuccessRate { get; private set; }
+
+    /// <summary>
+    /// Gets the JSON-serialized labels used by the execution trend chart.
+    /// </summary>
     public string ChartLabelsJson { get; private set; } = "[]";
+
+    /// <summary>
+    /// Gets the JSON-serialized passed test counts used by the execution trend chart.
+    /// </summary>
     public string PassedTrendJson { get; private set; } = "[]";
+
+    /// <summary>
+    /// Gets the JSON-serialized failed test counts used by the execution trend chart.
+    /// </summary>
     public string FailedTrendJson { get; private set; } = "[]";
 
     /// <summary>
