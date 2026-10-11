@@ -20,7 +20,10 @@
                 <div class="text-muted">テスト実行状況の概要</div>
             </div>
             <div class="d-flex gap-2">
-                <a asp-page="/Project/Executions" asp-route-projectId="@Model.Project?.Id" class="btn btn-primary">テスト実行履歴</a>
+                <a 
+                    asp-page="/Project/Executions/index" 
+                    asp-route-projectId="@Model.Project?.Id" 
+                    class="btn btn-primary">テスト実行履歴</a>
                 <a asp-page="/Index" class="btn btn-outline-secondary">プロジェクト一覧へ戻る</a>
             </div>
         </div>
