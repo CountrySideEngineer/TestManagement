@@ -86,7 +86,7 @@
                 {
                     <div class="table-responsive">
                         <table class="table align-middle mb-0">
-                            <thead><tr><th>実行日時</th><th>環境</th><th>リビジョン</th><th>成功率</th><th>結果</th></tr></thead>
+                            <thead><tr><th>実行日時</th><th>環境</th><th>リビジョン</th><th>成功率</th><th>結果</th><th>操作</th></tr></thead>
                             <tbody>
                             @foreach (var execution in Model.RecentExecutions)
                             {
@@ -96,6 +96,14 @@
                                     <td><code>@execution.Revision</code></td>
                                     <td>@execution.SuccessRate%</td>
                                     <td><span class="badge @(execution.ErrorNum == 0 ? "text-bg-success" : "text-bg-danger")">@(execution.ErrorNum == 0 ? "成功" : "失敗")</span></td>
+                                    <td>
+                                        <a asp-page="/Project/Executions/Details"
+                                            asp-route-projectId="@Model.Project?.Id"
+                                            asp-route-executionId="@execution.TestExecutionId"
+                                            class="btn btn-sm btn-outline-primary">
+                                            詳細
+                                        </a>
+                                    </td>
                                 </tr>
                             }
                             </tbody>
