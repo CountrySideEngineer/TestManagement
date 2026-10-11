@@ -1,4 +1,4 @@
-@page "/projects"
+@page "/projects/{id:long}"
 @model TestManagement.APP.Pages.Project.IndexModel
 @{
     ViewData["Title"] = Model.Project?.Name ?? "プロジェクト分析";
@@ -19,7 +19,10 @@
                 <h1 class="h3 mb-1">@(Model.Project?.Name ?? "プロジェクト")</h1>
                 <div class="text-muted">テスト実行状況の概要</div>
             </div>
-            <a asp-page="/Index" class="btn btn-outline-secondary">プロジェクト一覧へ戻る</a>
+            <div class="d-flex gap-2">
+                <a asp-page="/Project/Executions" asp-route-projectId="@Model.Project?.Id" class="btn btn-primary">テスト実行履歴</a>
+                <a asp-page="/Index" class="btn btn-outline-secondary">プロジェクト一覧へ戻る</a>
+            </div>
         </div>
 
         @if (ViewData["ErrorMessage"] is string errorMessage)

@@ -1,0 +1,28 @@
+@page "/projects/{projectId:long}/testers"
+@model TestManagement.APP.Pages.Project.Testers.IndexModel
+@{
+    ViewData["Title"] = "Tester管理";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">Tester管理</h1>
+        <a asp-page="/Project/Index" asp-route-id="@Model.Project?.Id" class="btn btn-outline-secondary">ダッシュボードへ戻る</a>
+    </div>
+    @if (Model.Testers.Any())
+    {
+        <div class="card shadow-sm"><div class="table-responsive"><table class="table align-middle mb-0">
+            <thead><tr><th>名前</th><th>メールアドレス</th></tr></thead>
+            <tbody>
+            @foreach (var tester in Model.Testers)
+            {
+                <tr><td class="fw-semibold">@tester.Name</td><td>@tester.Email</td></tr>
+            }
+            </tbody>
+        </table></div></div>
+    }
+    else
+    {
+        <div class="alert alert-info">このプロジェクトに割り当てられたTesterはありません。</div>
+    }
+</div>

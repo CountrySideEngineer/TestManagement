@@ -1,0 +1,35 @@
+@page "/projects/{projectId:long}/executions"
+@model TestManagement.APP.Pages.Project.Executions.IndexModel
+@{
+    ViewData["Title"] = "テスト実行履歴";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h3">テスト実行履歴</h1>
+        <a asp-page="/Project/Index" asp-route-id="@Model.Project?.Id" class="btn btn-outline-secondary">ダッシュボードへ戻る</a>
+    </div>
+    @if (Model.Executions.Any())
+    {
+        <div class="card shadow-sm"><div class="table-responsive"><table class="table align-middle mb-0">
+            <thead><tr><th>実行日時</th><th>環境</th><th>Revision</th><th>実行数</th><th>成功率</th><th>結果</th></tr></thead>
+            <tbody>
+            @foreach (var execution in Model.Executions)
+            {
+                <tr>
+                    <td>@execution.ExecutedAt.ToLocalTime().ToString("yyyy/MM/dd HH:mm")</td>
+                    <td>@execution.Environment</td>
+                    <td><code>@execution.Revision</code></td>
+                    <td>@execution.ExecutedNum</td>
+                    <td>@execution.SuccessRate%</td>
+                    <td><span class="badge @(execution.ErrorNum == 0 ? "text-bg-success" : "text-bg-danger")">@(execution.ErrorNum == 0 ? "成功" : "失敗")</span></td>
+                </tr>
+            }
+            </tbody>
+        </table></div></div>
+    }
+    else
+    {
+        <div class="alert alert-info">テスト実行履歴はありません。</div>
+    }
+</div>
