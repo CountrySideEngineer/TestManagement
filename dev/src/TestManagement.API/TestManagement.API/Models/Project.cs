@@ -45,6 +45,10 @@ namespace TestManagement.API.Models
         /// </summary>
         public IReadOnlyCollection<TestSuite> TestSuites => _testSuites;
 
+        private readonly List<TestExecution> _executions = new();
+
+        public IReadOnlyCollection<TestExecution> Executions => _executions;
+
         /// <summary>
         /// Attempts to add the given <see cref="TestSuite"/> to this project.
         /// If the suite is considered a duplicate (by Id when persisted, or by ProjectId+Name for non-persisted),
@@ -77,6 +81,26 @@ namespace TestManagement.API.Models
             _testSuites.Add(testSuite);
 
             UpdatedAt = DateTime.UtcNow;
+            return true;
+        }
+
+        public virtual bool AddTestExecution(TestExecution execution)
+        {
+            ArgumentNullException.ThrowIfNull(execution);
+
+            if (0 != execution.Id)
+            {
+                throw new ArgumentException("Execution Id must be 0 when adding a new execution to a project.", 
+                    nameof(execution));
+            }
+
+            execution.ProjectId = Id;
+            execution.Project = this;
+
+            _executions.Add(execution);
+
+            UpdatedAt = DateTime.UtcNow;
+
             return true;
         }
     }
