@@ -58,15 +58,14 @@
             {
                 try
                 {
-
+                    long newVersionNumber = Versions.Max(_ => _.VersionNumber) + 1;
+                    version.VersionNumber = newVersionNumber;
                 }
                 catch (Exception ex)
                 when ((ex is ArgumentNullException) || (ex is InvalidOperationException))
                 {
                     throw new InvalidOperationException("Failed to calculate new version number.", ex);
                 }
-                long newVersionNumber = Versions.Max(_ => _.VersionNumber) + 1;
-                version.VersionNumber = newVersionNumber;
             }
             
             foreach (var versionItem in _versions)
