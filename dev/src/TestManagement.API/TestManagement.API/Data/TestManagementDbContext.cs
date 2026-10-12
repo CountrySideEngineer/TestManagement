@@ -444,8 +444,13 @@ namespace TestManagement.API.Data
             var entity = builder.Entity<TestExecution>();
             entity.HasKey(_ => _.Id);
 
-            entity.HasIndex(_ => new { _.Revision, _.EnvironmentId })
+            entity.HasIndex(_ => new { _.ProjectId, _.Revision, _.EnvironmentId })
                 .IsUnique();
+
+            entity.HasOne(_ => _.Project)
+                .WithMany(prj => prj.Executions)
+                .HasForeignKey(_ => _.ProjectId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>
