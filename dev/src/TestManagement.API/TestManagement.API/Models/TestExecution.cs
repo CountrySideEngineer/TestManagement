@@ -4,65 +4,115 @@ using System.Security.Cryptography.X509Certificates;
 namespace TestManagement.API.Models
 {
     /// <summary>
-    /// Represents a test execution which groups together execution items run in a specific environment.
+    /// Represents a test execution that groups together test execution items
+    /// run in a specific environment and project.
     /// </summary>
     public class TestExecution
     {
         /// <summary>
-        /// Unique identifier for the test execution.
+        /// Gets or sets the unique identifier of the test execution.
         /// </summary>
         public long Id { get; set; }
 
         /// <summary>
-        /// Revision or version identifier for the execution (e.g. commit hash or build number).
+        /// Gets or sets the revision or version identifier associated with the execution,
+        /// such as a commit hash or build number.
         /// </summary>
         public string Revision { get; set; } = null!;
 
         /// <summary>
-        /// Identifier of the environment where the tests were executed.
+        /// Gets or sets the identifier of the environment in which the tests were executed.
         /// </summary>
         public long EnvironmentId { get; set; }
 
         /// <summary>
-        /// The point in time when the tests were executed (UTC).
+        /// Gets or sets the identifier of the project associated with the test execution.
+        /// </summary>
+        public long ProjectId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the date and time when the tests were executed, in UTC.
         /// </summary>
         public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// The point in time when this record was created (UTC).
+        /// Gets or sets the date and time when this record was created, in UTC.
         /// </summary>
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         /// <summary>
-        /// Navigation property to the environment details associated with this execution.
+        /// Gets or sets the environment associated with this test execution.
         /// </summary>
         public Environment Environment { get; set; } = null!;
 
-        // Backing field for the collection of execution items.
+        /// <summary>
+        /// Gets or sets the project associated with this test execution.
+        /// </summary>
+        public Project Project { get; set; } = null!;
+
+        /// <summary>
+        /// Stores the collection of test execution items associated with this execution.
+        /// </summary>
         private readonly List<Models.TestExecutionItem> _items = new();
 
         /// <summary>
-        /// Read-only collection of individual test execution items that belong to this execution.
+        /// Gets the read-only collection of test execution items associated with this execution.
         /// </summary>
         public IReadOnlyCollection<Models.TestExecutionItem> Items => _items;
 
+        /// <summary>
+        /// Represents the input data required to create a test execution item.
+        /// </summary>
         public class TestExecutionItemInner
         {
+            /// <summary>
+            /// Gets or sets the identifier of the environment where the tests were executed.
+            /// </summary>
             public long EnvId { get; set; } = 0;
 
+            /// <summary>
+            /// Gets or sets the date and time when the tests were executed, in UTC.
+            /// </summary>
             public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
+            /// <summary>
+            /// Gets or sets the collection of tests executed as part of the execution item.
+            /// </summary>
             public List<ExecutedTest> ExecutedTests { get; set; } = new List<ExecutedTest>();
         }
 
+        /// <summary>
+        /// Represents a test case and its status within a test execution.
+        /// </summary>
         public class ExecutedTest
         {
+            /// <summary>
+            /// Gets or sets the identifier of the test case version.
+            /// </summary>
             public long TestCaseVersionId { get; set; } = 0;
 
+            /// <summary>
+            /// Gets or sets the identifier of the test status.
+            /// </summary>
             public long TestStatusId { get; set; } = 0;
         }
 
-        public void AddExecutionItem(long envId, DateTime executedAt, ICollection<ExecutedTest> executedTests)
+        /// <summary>
+        /// Creates and adds a test execution item to this test execution.
+        /// </summary>
+        /// <param name="envId">
+        /// The identifier of the environment where the tests were executed.
+        /// </param>
+        /// <param name="executedAt">
+        /// The date and time when the tests were executed.
+        /// </param>
+        /// <param name="executedTests">
+        /// The collection of tests executed during the execution item.
+        /// </param>
+        public void AddExecutionItem(
+            long envId,
+            DateTime executedAt,
+            ICollection<ExecutedTest> executedTests)
         {
             var newItem = new TestExecutionItem
             {
@@ -75,6 +125,7 @@ namespace TestManagement.API.Models
                     ExecutedAt = executedAt
                 }).ToList()
             };
+
             _items.Add(newItem);
         }
     }
