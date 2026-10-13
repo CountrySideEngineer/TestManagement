@@ -248,6 +248,45 @@ public class ProjectController : Controller
         return CreatedAtAction(nameof(GetByIdAsync), new { id = projectId }, created);
     }
 
+    /// <summary>
+    /// Creates a test execution for the specified project.
+    /// </summary>
+    /// <param name="projectId">Project identifier.</param>
+    /// <param name="request">Request containing the test execution data.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>The created test execution and a 201 Created response.</returns>
+    [HttpPost("{projectId:long}/testexecutions")]
+    [ProducesResponseType(typeof(CreateProjectTestExecutionResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<CreateProjectTestExecutionResponse>> CreateTestExecutionAsync(
+        long projectId,
+        ProjectTestExecutionCreateRequest request,
+        CancellationToken ct = default)
+    {
+        _logger.LogDebug("ProjectController::CreateTestExecutionAsync() start! ProjectId: {ProjectId}", projectId);
+
+        var createRequest = new CreateProjectTestExecutionRequest
+        {
+            ProjectId = projectId,
+            ExecutedAt = request.ExecutedAt,
+            Environment = request.Environment,
+            Revision = request.Revision
+        };
+
+        var created = await _projectFacadeService.CreateTestExecutionAsync(createRequest, ct);
+
+        var response = new ProjectTestExecutionCreateResponse
+        {
+            TestExecutionId = created.TestExecutionId,
+            ExecutedAt = created.ExecutedAt,
+            Environment = created.Environment,
+            Revision = created.Revision,
+        };
+
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = projectId }, response);
+    }
+
 
     /// <summary>
     /// Deletes a composition by its identifier.
