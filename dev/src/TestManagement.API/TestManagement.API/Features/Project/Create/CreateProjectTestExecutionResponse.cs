@@ -1,5 +1,8 @@
 ﻿namespace TestManagement.API.Features.Project.Create;
 
+/// <summary>
+/// Represents the response returned after creating a project test execution.
+/// </summary>
 public class CreateProjectTestExecutionResponse
 {
     /// <summary>
@@ -13,14 +16,17 @@ public class CreateProjectTestExecutionResponse
     public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
-    /// The target environment for the test execution (e.g. "staging", "production").
+    /// The target environment for the test execution, such as "staging" or "production".
     /// </summary>
     public string Environment { get; set; } = null!;
 
     /// <summary>
-    /// The revision identifier (commit hash or build number) associated with the execution.
+    /// The revision identifier, such as a commit hash or build number, associated with the execution.
     /// </summary>
     public string Revision { get; set; } = string.Empty;
 
+    /// <summary>
+    /// The identifier of the project associated with the test execution.
+    /// </summary>
     public long ProjectId { get; set; } = 0;
 }

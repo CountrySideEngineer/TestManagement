@@ -1,7 +1,8 @@
-﻿using TestManagement.API.Features.TestExecutions;
+﻿namespace TestManagement.API.Features.Project.Create;
 
-namespace TestManagement.API.Features.Project.Create;
-
+/// <summary>
+/// Represents the request data required to create a project test execution.
+/// </summary>
 public class CreateProjectTestExecutionRequest
 {
     /// <summary>
@@ -20,7 +21,8 @@ public class CreateProjectTestExecutionRequest
     /// </summary>
     public string Revision { get; set; } = null!;
 
+    /// <summary>
+    /// The identifier of the project associated with the test execution.
+    /// </summary>
     public long ProjectId { get; set; } = 0;
-
-
 }
