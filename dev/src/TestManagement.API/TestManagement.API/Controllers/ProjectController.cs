@@ -248,6 +248,7 @@ public class ProjectController : Controller
         return CreatedAtAction(nameof(GetByIdAsync), new { id = projectId }, created);
     }
 
+
     /// <summary>
     /// Deletes a composition by its identifier.
     /// </summary>

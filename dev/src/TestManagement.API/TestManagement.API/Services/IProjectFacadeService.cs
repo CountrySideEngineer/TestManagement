@@ -38,8 +38,8 @@ public interface IProjectFacadeService
         CreateProjectTesterCompositionRequest request,
         CancellationToken ct = default);
 
-    Task<CreateTestExecutionResponse> CreateTestExecutionAsync(
-            Project.Create.CreateTestExecutionRequest request,
+    Task<CreateProjectTestExecutionResponse> CreateTestExecutionAsync(
+            Project.Create.CreateProjectTestExecutionRequest request,
             CancellationToken ct = default);
     Task<bool> DeleteCompositionAsync(long id, CancellationToken ct = default);
 

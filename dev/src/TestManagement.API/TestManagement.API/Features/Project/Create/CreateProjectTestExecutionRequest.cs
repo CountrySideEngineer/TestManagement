@@ -1,14 +1,12 @@
-﻿namespace TestManagement.API.Features.Project.Create;
+﻿using TestManagement.API.Features.TestExecutions;
 
-public class CreateTestExecutionResponse
+namespace TestManagement.API.Features.Project.Create;
+
+public class CreateProjectTestExecutionRequest
 {
     /// <summary>
-    /// The identifier of the created test execution record.
-    /// </summary>
-    public long TestExecutionId { get; set; } = 0;
-
-    /// <summary>
     /// The UTC date and time when the test execution occurred.
+    /// Defaults to the current UTC time if not provided.
     /// </summary>
     public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
 
@@ -20,7 +18,9 @@ public class CreateTestExecutionResponse
     /// <summary>
     /// The revision identifier (commit hash or build number) associated with the execution.
     /// </summary>
-    public string Revision { get; set; } = string.Empty;
+    public string Revision { get; set; } = null!;
 
     public long ProjectId { get; set; } = 0;
+
+
 }

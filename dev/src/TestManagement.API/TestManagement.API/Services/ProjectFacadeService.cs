@@ -218,8 +218,8 @@ public class ProjectFacadeService : IProjectFacadeService
     /// <param name="request">Request containing the test execution data.</param>
     /// <param name="ct">Cancellation token to cancel the operation.</param>
     /// <returns>The created test execution.</returns>
-    public async Task<CreateTestExecutionResponse> CreateTestExecutionAsync(
-        Project.Create.CreateTestExecutionRequest request,
+    public async Task<CreateProjectTestExecutionResponse> CreateTestExecutionAsync(
+        Project.Create.CreateProjectTestExecutionRequest request,
         CancellationToken ct = default)
     {
         _logger.LogDebug(
@@ -237,7 +237,7 @@ public class ProjectFacadeService : IProjectFacadeService
 
         var createdExecution = await _testExecutionService.CreateAsync(executionRequest, ct);
 
-        return new Project.Create.CreateTestExecutionResponse
+        return new Project.Create.CreateProjectTestExecutionResponse
         {
             TestExecutionId = createdExecution.TestExecutionId,
             ExecutedAt = createdExecution.ExecutedAt,
