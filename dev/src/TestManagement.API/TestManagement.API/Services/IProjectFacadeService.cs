@@ -6,6 +6,9 @@ using TestManagement.API.Models;
 using TestManagement.API.Features.Tester.Get;
 using TestManagement.API.Features.Project.Create;
 
+using Project = TestManagement.API.Features.Project;
+using TestExecution = TestManagement.API.Features.TestExecutions;
+
 namespace TestManagement.API.Services;
 
 /// <summary>
@@ -35,6 +38,9 @@ public interface IProjectFacadeService
         CreateProjectTesterCompositionRequest request,
         CancellationToken ct = default);
 
+    Task<CreateTestExecutionResponse> CreateTestExecutionAsync(
+            Project.Create.CreateTestExecutionRequest request,
+            CancellationToken ct = default);
     Task<bool> DeleteCompositionAsync(long id, CancellationToken ct = default);
 
     /// <summary>

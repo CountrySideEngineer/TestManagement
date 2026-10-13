@@ -26,6 +26,8 @@
         /// </summary>
         public string Revision { get; set; } = string.Empty;
 
+        public long ProjectId { get; set; } = 0;
+
         /// <summary>
         /// A collection of test case execution results included in this execution.
         /// </summary>

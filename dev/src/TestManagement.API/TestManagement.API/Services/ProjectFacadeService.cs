@@ -9,6 +9,8 @@ using TestManagement.API.Models;
 
 using GetProjectResponse = TestManagement.API.Features.Project.Get.GetProjectResponse;
 using TestManagement.API.Features.Project.Create;
+using Project = TestManagement.API.Features.Project;
+using TestExecution = TestManagement.API.Features.TestExecutions;
 
 namespace TestManagement.API.Services;
 
@@ -19,10 +21,16 @@ public class ProjectFacadeService : IProjectFacadeService
 {
     /// <summary>Service that manages projects.</summary>
     private readonly IProjectService _projectService;
+
+    /// <summary>Service that manages test executions.</summary>
+    private readonly ITestExecutionService _testExecutionService;
+
     /// <summary>Service that manages project and test suite compositions.</summary>
     private readonly IProjectTestSuiteCompositionService _projectTestSuiteCompositionService;
+
     /// <summary>Service that manages project and tester compositions.</summary>
     private readonly IProjectTesterCompositionService _projectTesterCompositionService;
+
     /// <summary>Logger used for facade diagnostics.</summary>
     private readonly ILogger<ProjectFacadeService> _logger;
 
@@ -35,11 +43,13 @@ public class ProjectFacadeService : IProjectFacadeService
     /// <param name="logger">Logger used for diagnostics.</param>
     public ProjectFacadeService(
         IProjectService projectService,
+        ITestExecutionService testExecutionService,
         IProjectTestSuiteCompositionService projectCompositionService,
         IProjectTesterCompositionService projectTesterCompositionService,
         ILogger<ProjectFacadeService> logger)
     {
         _projectService = projectService;
+        _testExecutionService = testExecutionService;
         _projectTestSuiteCompositionService = projectCompositionService;
         _projectTesterCompositionService = projectTesterCompositionService;
         _logger = logger;
@@ -201,6 +211,39 @@ public class ProjectFacadeService : IProjectFacadeService
         {
             CompositionId = created.CompositionId,
             TesterId = created.TesterId
+        };
+    }
+
+    /// <summary>Creates a new test execution.</summary>
+    /// <param name="request">Request containing the test execution data.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>The created test execution.</returns>
+    public async Task<CreateTestExecutionResponse> CreateTestExecutionAsync(
+        Project.Create.CreateTestExecutionRequest request,
+        CancellationToken ct = default)
+    {
+        _logger.LogDebug(
+            "ProjectFacadeService::CreateTestExecutionAsync start: {Environment} {Revision}",
+            request.Environment,
+            request.Revision);
+
+        var executionRequest = new TestExecution.Create.CreateTestExecutionRequest
+        {
+            ExecutedAt = request.ExecutedAt,
+            Environment = request.Environment,
+            Revision = request.Revision,
+            ProjectId = request.ProjectId,
+        };
+
+        var createdExecution = await _testExecutionService.CreateAsync(executionRequest, ct);
+
+        return new Project.Create.CreateTestExecutionResponse
+        {
+            TestExecutionId = createdExecution.TestExecutionId,
+            ExecutedAt = createdExecution.ExecutedAt,
+            Environment = createdExecution.Environment,
+            Revision = createdExecution.Revision,
+            ProjectId = createdExecution.ProjectId
         };
     }
 

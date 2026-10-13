@@ -1,0 +1,26 @@
+﻿using TestManagement.API.Features.TestExecutions;
+
+namespace TestManagement.API.Features.Project.Create;
+
+public class CreateTestExecutionRequest
+{
+    /// <summary>
+    /// The UTC date and time when the test execution occurred.
+    /// Defaults to the current UTC time if not provided.
+    /// </summary>
+    public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// The target environment for the test execution (e.g. "staging", "production").
+    /// </summary>
+    public string Environment { get; set; } = null!;
+
+    /// <summary>
+    /// The revision identifier (commit hash or build number) associated with the execution.
+    /// </summary>
+    public string Revision { get; set; } = null!;
+
+    public long ProjectId { get; set; } = 0;
+
+
+}

@@ -24,6 +24,8 @@ namespace TestManagement.API.Features.TestExecutions.Create
         /// </summary>
         public string Revision { get; set; } = null!;
 
+        public long ProjectId { get; set; } = 0;
+
         /// <summary>
         /// A collection of test case execution results included in this execution.
         /// </summary>
