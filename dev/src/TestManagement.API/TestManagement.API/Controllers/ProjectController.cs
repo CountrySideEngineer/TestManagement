@@ -255,7 +255,7 @@ public class ProjectController : Controller
     /// <param name="request">Request containing the test execution data.</param>
     /// <param name="ct">Cancellation token.</param>
     /// <returns>The created test execution and a 201 Created response.</returns>
-    [HttpPost("{projectId:long}/testexecutions")]
+    [HttpPost("{projectId:long}/testexecution")]
     [ProducesResponseType(typeof(CreateProjectTestExecutionResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -286,7 +286,6 @@ public class ProjectController : Controller
 
         return CreatedAtAction(nameof(GetByIdAsync), new { id = projectId }, response);
     }
-
 
     /// <summary>
     /// Deletes a composition by its identifier.
