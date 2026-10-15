@@ -1,25 +1,25 @@
 @page "/projects/{projectId:long}/executions"
 @model TestManagement.APP.Pages.Project.Executions.IndexModel
 @{
-    ViewData["Title"] = "ƒeƒXƒgÀs—š—ğ";
+    ViewData["Title"] = "ãƒ†ã‚¹ãƒˆå®Ÿè¡Œå±¥æ­´";
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">ƒeƒXƒgÀs—š—ğ</h1>
+        <h1 class="h3">ãƒ†ã‚¹ãƒˆå®Ÿè¡Œå±¥æ­´</h1>
         <div class="d-flex gap-2">
             <a asp-page="/Project/Executions/Create"
                asp-route-projectId="@Model.Project?.Id"
                class="btn btn-primary">
-                ƒeƒXƒgÀs‚ğ’Ç‰Á
+                ãƒ†ã‚¹ãƒˆå®Ÿè¡Œã‚’è¿½åŠ 
             </a>
-            <a asp-page="/Project/Index" asp-route-id="@Model.Project?.Id" class="btn btn-outline-secondary">ƒ_ƒbƒVƒ…ƒ{[ƒh‚Ö–ß‚é</a>
+            <a asp-page="/Project/Index" asp-route-id="@Model.Project?.Id" class="btn btn-outline-secondary">ãƒ€ãƒƒã‚·ãƒ¥ãƒœãƒ¼ãƒ‰ã¸æˆ»ã‚‹</a>
         </div>
     </div>
     @if (Model.Executions.Any())
     {
         <div class="card shadow-sm"><div class="table-responsive"><table class="table align-middle mb-0">
-            <thead><tr><th>Às“ú</th><th>ŠÂ‹«</th><th>Revision</th><th>Às”</th><th>¬Œ÷—¦</th><th>Œ‹‰Ê</th><th>‘€ì</th></tr></thead>
+            <thead><tr><th>å®Ÿè¡Œæ—¥æ™‚</th><th>ç’°å¢ƒ</th><th>Revision</th><th>å®Ÿè¡Œæ•°</th><th>æˆåŠŸç‡</th><th>çµæœ</th><th>æ“ä½œ</th></tr></thead>
             <tbody>
             @foreach (var execution in Model.Executions)
             {
@@ -29,13 +29,13 @@
                     <td><code>@execution.Revision</code></td>
                     <td>@execution.ExecutedNum</td>
                     <td>@execution.SuccessRate%</td>
-                    <td><span class="badge @(execution.ErrorNum == 0 ? "text-bg-success" : "text-bg-danger")">@(execution.ErrorNum == 0 ? "¬Œ÷" : "¸”s")</span></td>
+                    <td><span class="badge @(execution.ErrorNum == 0 ? "text-bg-success" : "text-bg-danger")">@(execution.ErrorNum == 0 ? "æˆåŠŸ" : "å¤±æ•—")</span></td>
                     <td>
                         <a asp-page="/Project/Executions/Details"
                            asp-route-projectId="@Model.Project?.Id"
                            asp-route-executionId="@execution.TestExecutionId"
                            class="btn btn-sm btn-outline-primary">
-                            Ú×
+                            è©³ç´°
                         </a>
                     </td>
                 </tr>
@@ -45,6 +45,6 @@
     }
     else
     {
-        <div class="alert alert-info">ƒeƒXƒgÀs—š—ğ‚Í‚ ‚è‚Ü‚¹‚ñB</div>
+        <div class="alert alert-info">ãƒ†ã‚¹ãƒˆå®Ÿè¡Œå±¥æ­´ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚</div>
     }
 </div>

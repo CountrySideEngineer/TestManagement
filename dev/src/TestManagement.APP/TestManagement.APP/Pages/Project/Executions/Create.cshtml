@@ -1,28 +1,28 @@
 @page "/projects/{projectId:long}/executions/create"
 @model TestManagement.APP.Pages.Project.Executions.CreateModel
 @{
-    ViewData["Title"] = "ƒeƒXƒgÀs’Ç‰Á";
+    ViewData["Title"] = "ãƒ†ã‚¹ãƒˆå®Ÿè¡Œè¿½åŠ ";
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">ƒeƒXƒgÀs’Ç‰Á</h1>
+        <h1 class="h3">ãƒ†ã‚¹ãƒˆå®Ÿè¡Œè¿½åŠ </h1>
         <a asp-page="/Project/Executions/Index"
            asp-route-projectId="@RouteData.Values["projectId"]"
            class="btn btn-outline-secondary">
-            Às—š—ğ‚Ö–ß‚é
+            å®Ÿè¡Œå±¥æ­´ã¸æˆ»ã‚‹
         </a>
     </div>
 
     <form method="post">
         <div class="mb-3">
-            <label asp-for="ExecutedAt" class="form-label">Às“ú</label>
+            <label asp-for="ExecutedAt" class="form-label">å®Ÿè¡Œæ—¥</label>
             <input asp-for="ExecutedAt" class="form-control" type="datetime-local" />
             <span asp-validation-for="ExecutedAt" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Environment" class="form-label">ÀsŠÂ‹«</label>
+            <label asp-for="Environment" class="form-label">å®Ÿè¡Œç’°å¢ƒ</label>
             <select asp-for="Environment" class="form-select">
                 @foreach (var environment in Model.Environments)
                 {
@@ -33,16 +33,16 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Revision" class="form-label">ƒŠƒrƒWƒ‡ƒ“</label>
+            <label asp-for="Revision" class="form-label">ãƒªãƒ“ã‚¸ãƒ§ãƒ³</label>
             <input asp-for="Revision" class="form-control" />
             <span asp-validation-for="Revision" class="text-danger"></span>
         </div>
 
-        <button type="submit" class="btn btn-primary">“o˜^</button>
+        <button type="submit" class="btn btn-primary">ç™»éŒ²</button>
         <a asp-page="/Project/Executions/Index"
            asp-route-projectId="@RouteData.Values["projectId"]"
            class="btn btn-secondary">
-            ƒLƒƒƒ“ƒZƒ‹
+            ã‚­ãƒ£ãƒ³ã‚»ãƒ«
         </a>
     </form>
 </div>

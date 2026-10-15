@@ -1,13 +1,13 @@
 @page "/projects/{projectId:long}/testsuites"
 @model TestManagement.APP.Pages.Project.TestSuites.IndexModel
 @{
-    ViewData["Title"] = "TestSuiteŠÇ—";
+    ViewData["Title"] = "TestSuiteç®¡ç†";
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="h3">TestSuiteŠÇ—</h1>
-        <a asp-page="/Project/Index" asp-route-id="@Model.Project?.Id" class="btn btn-outline-secondary">ƒ_ƒbƒVƒ…ƒ{[ƒh‚Ö–ß‚é</a>
+        <h1 class="h3">TestSuiteç®¡ç†</h1>
+        <a asp-page="/Project/Index" asp-route-id="@Model.Project?.Id" class="btn btn-outline-secondary">ãƒ€ãƒƒã‚·ãƒ¥ãƒœãƒ¼ãƒ‰ã¸æˆ»ã‚‹</a>
     </div>
     @if (Model.TestSuites.Any())
     {
@@ -25,6 +25,6 @@
     }
     else
     {
-        <div class="alert alert-info">‚±‚ÌƒvƒƒWƒFƒNƒg‚ÉŠ„‚è“–‚Ä‚ç‚ê‚½TestSuite‚Í‚ ‚è‚Ü‚¹‚ñB</div>
+        <div class="alert alert-info">ã“ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã«å‰²ã‚Šå½“ã¦ã‚‰ã‚ŒãŸTestSuiteã¯ã‚ã‚Šã¾ã›ã‚“ã€‚</div>
     }
 </div>

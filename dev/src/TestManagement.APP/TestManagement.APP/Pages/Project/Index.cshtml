@@ -1,7 +1,7 @@
 @page "/projects/{id:long}"
 @model TestManagement.APP.Pages.Project.IndexModel
 @{
-    ViewData["Title"] = Model.Project?.Name ?? "ƒvƒƒWƒFƒNƒg•ªÍ";
+    ViewData["Title"] = Model.Project?.Name ?? "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆåˆ†æ";
 }
 
 <style>
@@ -15,16 +15,16 @@
     <div class="container-fluid">
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-2">
             <div>
-                <div class="text-muted small">ƒeƒXƒg•ªÍƒ_ƒbƒVƒ…ƒ{[ƒh</div>
-                <h1 class="h3 mb-1">@(Model.Project?.Name ?? "ƒvƒƒWƒFƒNƒg")</h1>
-                <div class="text-muted">ƒeƒXƒgÀsó‹µ‚ÌŠT—v</div>
+                <div class="text-muted small">ãƒ†ã‚¹ãƒˆåˆ†æãƒ€ãƒƒã‚·ãƒ¥ãƒœãƒ¼ãƒ‰</div>
+                <h1 class="h3 mb-1">@(Model.Project?.Name ?? "ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ")</h1>
+                <div class="text-muted">ãƒ†ã‚¹ãƒˆå®Ÿè¡ŒçŠ¶æ³ã®æ¦‚è¦</div>
             </div>
             <div class="d-flex gap-2">
                 <a 
                     asp-page="/Project/Executions/index" 
                     asp-route-projectId="@Model.Project?.Id" 
-                    class="btn btn-primary">ƒeƒXƒgÀs—š—ğ</a>
-                <a asp-page="/Index" class="btn btn-outline-secondary">ƒvƒƒWƒFƒNƒgˆê——‚Ö–ß‚é</a>
+                    class="btn btn-primary">ãƒ†ã‚¹ãƒˆå®Ÿè¡Œå±¥æ­´</a>
+                <a asp-page="/Index" class="btn btn-outline-secondary">ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆä¸€è¦§ã¸æˆ»ã‚‹</a>
             </div>
         </div>
 
@@ -36,30 +36,30 @@
         <div class="row g-3 mb-3">
             <div class="col-sm-6 col-xl-3">
                 <div class="card analytics-card h-100"><div class="card-body">
-                    <div class="text-muted small">Às‰ñ”</div>
+                    <div class="text-muted small">å®Ÿè¡Œå›æ•°</div>
                     <div class="metric-value">@Model.ExecutionCount</div>
-                    <div class="small text-muted">æ“¾Ï‚İ‚ÌƒeƒXƒgÀs</div>
+                    <div class="small text-muted">å–å¾—æ¸ˆã¿ã®ãƒ†ã‚¹ãƒˆå®Ÿè¡Œ</div>
                 </div></div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="card analytics-card h-100"><div class="card-body">
-                    <div class="text-muted small">ƒeƒXƒgƒP[ƒX”</div>
+                    <div class="text-muted small">ãƒ†ã‚¹ãƒˆã‚±ãƒ¼ã‚¹æ•°</div>
                     <div class="metric-value">@Model.TotalTestCases</div>
-                    <div class="small text-muted">ÀsEƒXƒLƒbƒvEœŠO‚ğŠÜ‚Ş</div>
+                    <div class="small text-muted">å®Ÿè¡Œãƒ»ã‚¹ã‚­ãƒƒãƒ—ãƒ»é™¤å¤–ã‚’å«ã‚€</div>
                 </div></div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="card analytics-card h-100"><div class="card-body">
-                    <div class="text-muted small">¬Œ÷—¦</div>
+                    <div class="text-muted small">æˆåŠŸç‡</div>
                     <div class="metric-value text-success">@Model.SuccessRate.ToString("0.0")%</div>
-                    <div class="small text-muted">¬Œ÷ @Model.PassedTestCases Œ</div>
+                    <div class="small text-muted">æˆåŠŸ @Model.PassedTestCases ä»¶</div>
                 </div></div>
             </div>
             <div class="col-sm-6 col-xl-3">
                 <div class="card analytics-card h-100"><div class="card-body">
-                    <div class="text-muted small">¸”s</div>
+                    <div class="text-muted small">å¤±æ•—</div>
                     <div class="metric-value text-danger">@Model.FailedTestCases</div>
-                    <div class="small text-muted">¸”s‚µ‚½ƒeƒXƒgƒP[ƒX</div>
+                    <div class="small text-muted">å¤±æ•—ã—ãŸãƒ†ã‚¹ãƒˆã‚±ãƒ¼ã‚¹</div>
                 </div></div>
             </div>
         </div>
@@ -67,13 +67,13 @@
         <div class="row g-3 mb-3">
             <div class="col-lg-8">
                 <div class="card analytics-card h-100"><div class="card-body">
-                    <h2 class="h5">ƒeƒXƒgŒ‹‰Ê‚Ì„ˆÚ</h2>
+                    <h2 class="h5">ãƒ†ã‚¹ãƒˆçµæœã®æ¨ç§»</h2>
                     <div class="chart-container"><canvas id="executionTrendChart"></canvas></div>
                 </div></div>
             </div>
             <div class="col-lg-4">
                 <div class="card analytics-card h-100"><div class="card-body">
-                    <h2 class="h5">Œ‹‰Ê‚Ì“à–ó</h2>
+                    <h2 class="h5">çµæœã®å†…è¨³</h2>
                     <div class="chart-container"><canvas id="resultSummaryChart"></canvas></div>
                 </div></div>
             </div>
@@ -81,12 +81,12 @@
 
         <div class="card analytics-card">
             <div class="card-body">
-                <h2 class="h5">Å‹ß‚ÌƒeƒXƒgÀs</h2>
+                <h2 class="h5">æœ€è¿‘ã®ãƒ†ã‚¹ãƒˆå®Ÿè¡Œ</h2>
                 @if (Model.RecentExecutions.Any())
                 {
                     <div class="table-responsive">
                         <table class="table align-middle mb-0">
-                            <thead><tr><th>Às“ú</th><th>ŠÂ‹«</th><th>ƒŠƒrƒWƒ‡ƒ“</th><th>¬Œ÷—¦</th><th>Œ‹‰Ê</th><th>‘€ì</th></tr></thead>
+                            <thead><tr><th>å®Ÿè¡Œæ—¥æ™‚</th><th>ç’°å¢ƒ</th><th>ãƒªãƒ“ã‚¸ãƒ§ãƒ³</th><th>æˆåŠŸç‡</th><th>çµæœ</th><th>æ“ä½œ</th></tr></thead>
                             <tbody>
                             @foreach (var execution in Model.RecentExecutions)
                             {
@@ -95,13 +95,13 @@
                                     <td>@execution.Environment</td>
                                     <td><code>@execution.Revision</code></td>
                                     <td>@execution.SuccessRate%</td>
-                                    <td><span class="badge @(execution.ErrorNum == 0 ? "text-bg-success" : "text-bg-danger")">@(execution.ErrorNum == 0 ? "¬Œ÷" : "¸”s")</span></td>
+                                    <td><span class="badge @(execution.ErrorNum == 0 ? "text-bg-success" : "text-bg-danger")">@(execution.ErrorNum == 0 ? "æˆåŠŸ" : "å¤±æ•—")</span></td>
                                     <td>
                                         <a asp-page="/Project/Executions/Details"
                                             asp-route-projectId="@Model.Project?.Id"
                                             asp-route-executionId="@execution.TestExecutionId"
                                             class="btn btn-sm btn-outline-primary">
-                                            Ú×
+                                            è©³ç´°
                                         </a>
                                     </td>
                                 </tr>
@@ -112,7 +112,7 @@
                 }
                 else
                 {
-                    <p class="text-muted mb-0">ƒeƒXƒgÀsƒf[ƒ^‚ª‚ ‚è‚Ü‚¹‚ñB</p>
+                    <p class="text-muted mb-0">ãƒ†ã‚¹ãƒˆå®Ÿè¡Œãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚Šã¾ã›ã‚“ã€‚</p>
                 }
             </div>
         </div>
@@ -125,14 +125,14 @@
         new Chart(document.getElementById('executionTrendChart'), {
             type: 'line',
             data: { labels, datasets: [
-                { label: '¬Œ÷', data: @Html.Raw(Model.PassedTrendJson), borderColor: '#198754', tension: .3 },
-                { label: '¸”s', data: @Html.Raw(Model.FailedTrendJson), borderColor: '#dc3545', tension: .3 }
+                { label: 'æˆåŠŸ', data: @Html.Raw(Model.PassedTrendJson), borderColor: '#198754', tension: .3 },
+                { label: 'å¤±æ•—', data: @Html.Raw(Model.FailedTrendJson), borderColor: '#dc3545', tension: .3 }
             ]},
             options: { responsive: true, maintainAspectRatio: false }
         });
         new Chart(document.getElementById('resultSummaryChart'), {
             type: 'doughnut',
-            data: { labels: ['¬Œ÷', '¸”s', 'ƒXƒLƒbƒv', 'œŠO'], datasets: [{
+            data: { labels: ['æˆåŠŸ', 'å¤±æ•—', 'ã‚¹ã‚­ãƒƒãƒ—', 'é™¤å¤–'], datasets: [{
                 data: [@Model.PassedTestCases, @Model.FailedTestCases, @Model.SkippedTestCases, @Model.ExcludedTestCases],
                 backgroundColor: ['#198754', '#dc3545', '#ffc107', '#6c757d']
             }]},
