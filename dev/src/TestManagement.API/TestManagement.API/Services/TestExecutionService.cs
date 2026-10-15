@@ -47,38 +47,40 @@ namespace TestManagement.API.Services
         {
             _logger?.LogDebug("TestExecutionService.GetAsync() start!");
 
-            var testExecutions = await _dbContext.TestExecutions
-                .Include(_ => _.Environment)
-                .Include(_ => _.Items)
-                    .ThenInclude(i => i.TestResults)
-                        .ThenInclude(i => i.TestCaseVersion)
-                            .ThenInclude(tc => tc.TestCase)
-                .Include(_ => _.Items)
-                    .ThenInclude(_ => _.TestResults)
-                        .ThenInclude(i => i.Status) 
-                .ToListAsync(ct);
-            var response = testExecutions.Select(_ => new GetTestExecutionResponse()
+            try
             {
-                TestExecutionId = _.Id,
-                EnvironmentId = _.Environment.Id,
-                Environment = _.Environment.Name,
-                ExecutedAt = _.ExecutedAt,
-                Revision = _.Revision,
-                TestExecutionItemId = _.Items.FirstOrDefault()?.Id ?? 0,
-                TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
+                var testExecutions = await _dbContext.TestExecutions
+                    .ToListAsync(ct);
+                var response = testExecutions.Select(_ => new GetTestExecutionResponse()
                 {
-                    TestCaseCode = tr.TestCaseVersion.TestCase!.Code,
-                    TestCaseVersion = tr.TestCaseVersion.VersionNumber,
-                    TestStatusCode = tr.Status.Code,
-                    IsPassed = tr.Status.IsSuccess,
-                    IsFailed = tr.Status.IsFailed,
-                    IsSkipped = tr.Status.IsSkipped,
-                    IsExcluded = tr.Status.IsExcluded,
-                    IsInProgress = tr.Status.IsInProgress
-                })).ToList()
-            }).ToList();
+                    TestExecutionId = _.Id,
+                    EnvironmentId = 0,
+                    Environment = string.Empty,
+                    ExecutedAt = _.ExecutedAt,
+                    Revision = _.Revision,
+                    TestExecutionItemId = _.Items.FirstOrDefault()?.Id ?? 0,
+                    TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
+                    {
+                        TestCaseCode = tr.TestCaseVersion.TestCase!.Code,
+                        TestCaseVersion = tr.TestCaseVersion.VersionNumber,
+                        TestStatusCode = tr.Status.Code,
+                        IsPassed = tr.Status.IsSuccess,
+                        IsFailed = tr.Status.IsFailed,
+                        IsSkipped = tr.Status.IsSkipped,
+                        IsExcluded = tr.Status.IsExcluded,
+                        IsInProgress = tr.Status.IsInProgress
+                    })).ToList()
+                }).ToList();
 
-            return response;
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "An error occurred while retrieving test executions.");
+
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -94,20 +96,12 @@ namespace TestManagement.API.Services
 
             var testExecutions = await _dbContext.TestExecutions
                 .Where(_ => _.Id == id)
-                .Include(_ => _.Environment)
-                .Include(_ => _.Items)
-                    .ThenInclude(i => i.TestResults)
-                        .ThenInclude(i => i.TestCaseVersion)
-                            .ThenInclude(tc => tc.TestCase)
-                .Include(_ => _.Items)
-                    .ThenInclude(_ => _.TestResults)
-                        .ThenInclude(i => i.Status)
                 .ToListAsync(ct);
             var response = testExecutions.Select(_ => new GetTestExecutionResponse()
             {
                 TestExecutionId = _.Id,
-                EnvironmentId = _.Environment.Id,
-                Environment = _.Environment.Name,
+                EnvironmentId = 0,
+                Environment = string.Empty,
                 ExecutedAt = _.ExecutedAt,
                 Revision = _.Revision,
                 TestExecutionItemId = _.Items.FirstOrDefault()?.Id ?? 0,
@@ -145,7 +139,7 @@ namespace TestManagement.API.Services
             }
 
             var isExists = await _dbContext.TestExecutions
-                .AnyAsync(_ => _.Revision == request.Revision && _.EnvironmentId == testEnvironment.Id);
+                .AnyAsync(_ => _.Revision == request.Revision);
             if (isExists)
             {
                 throw new Exception($"Test execution about {request.Revision} already exists.");
@@ -154,8 +148,7 @@ namespace TestManagement.API.Services
             var testExecution = new TestExecution()
             {
                 Revision = request.Revision,
-                ExecutedAt = request.ExecutedAt,
-                EnvironmentId = testEnvironment.Id
+                ExecutedAt = request.ExecutedAt
             };
 
             ICollection<TestExecution.ExecutedTest> executedTests = GetExecutedTestsFromRequest(request.TestCases);
@@ -173,10 +166,6 @@ namespace TestManagement.API.Services
 
             var createdTestExecution = await _dbContext.TestExecutions
                 .Where(_ => _.Revision == request.Revision)
-                .Include(_ => _.Environment)
-                .Include(_ => _.Items)
-                    .ThenInclude(i => i.TestResults)
-                .Include(_ => _.Items)
                 .FirstOrDefaultAsync(ct);
             var response = new CreateTestExecutionResponse()
             {
@@ -207,14 +196,14 @@ namespace TestManagement.API.Services
             }
 
             var isExists = await _dbContext.TestExecutions
-                .AnyAsync(_ => _.Revision == request.Revision && _.EnvironmentId == testEnvironment.Id);
+                .AnyAsync(_ => _.Revision == request.Revision);
             if (!isExists)
             {
                 throw new Exception($"Test execution about {request.Revision} does not exist.");
             }
 
             var testExecution = await _dbContext.TestExecutions
-                .Where(_ => _.Revision == request.Revision && _.EnvironmentId == testEnvironment.Id)
+                .Where(_ => _.Revision == request.Revision)
                 .Include(_ => _.Items)
                     .ThenInclude(i => i.TestResults)
                 .FirstOrDefaultAsync(ct);
@@ -225,7 +214,7 @@ namespace TestManagement.API.Services
 
             ICollection<TestExecution.ExecutedTest> executedTests = GetExecutedTestsFromRequest(request.TestCases);
 
-            testExecution.AddExecutionItem(testExecution.EnvironmentId, request.ExecutedAt, executedTests);
+            testExecution.AddExecutionItem(0, request.ExecutedAt, executedTests);
             await _dbContext.SaveChangesAsync();
 
             var response = new UpdateTestExecutionResponse()

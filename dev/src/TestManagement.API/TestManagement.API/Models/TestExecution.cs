@@ -18,11 +18,6 @@ public class TestExecution
     public string Revision { get; set; } = null!;
 
     /// <summary>
-    /// Gets or sets the identifier of the environment in which the tests were executed.
-    /// </summary>
-    public long EnvironmentId { get; set; }
-
-    /// <summary>
     /// Gets or sets the identifier of the project associated with the test execution.
     /// </summary>
     public long ProjectId { get; set; }
@@ -38,11 +33,6 @@ public class TestExecution
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
-    /// Gets or sets the environment associated with this test execution.
-    /// </summary>
-    public Environment Environment { get; set; } = null!;
-
-    /// <summary>
     /// Gets or sets the project associated with this test execution.
     /// </summary>
     public Project Project { get; set; } = null!;
@@ -50,12 +40,12 @@ public class TestExecution
     /// <summary>
     /// Stores the collection of test execution items associated with this execution.
     /// </summary>
-    private readonly List<Models.TestExecutionItem> _items = new();
+    private readonly List<TestExecutionItem> _items = new();
 
     /// <summary>
     /// Gets the read-only collection of test execution items associated with this execution.
     /// </summary>
-    public IReadOnlyCollection<Models.TestExecutionItem> Items => _items;
+    public IReadOnlyCollection<TestExecutionItem> Items => _items;
 
     /// <summary>
     /// Represents the input data required to create a test execution item.

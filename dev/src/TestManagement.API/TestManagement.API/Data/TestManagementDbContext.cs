@@ -442,13 +442,18 @@ namespace TestManagement.API.Data
         private void ConfigureTestExecution(ModelBuilder builder)
         {
             var entity = builder.Entity<TestExecution>();
+
             entity.HasKey(_ => _.Id);
 
-            entity.HasIndex(_ => new { _.ProjectId, _.Revision, _.EnvironmentId })
+            entity.Property(_ => _.Revision).IsRequired();
+
+            entity.Property(_ => _.ProjectId).IsRequired();
+
+            entity.HasIndex(_ => new { _.ProjectId, _.Revision })
                 .IsUnique();
 
             entity.HasOne(_ => _.Project)
-                .WithMany(prj => prj.Executions)
+                .WithMany(pr => pr.Executions)
                 .HasForeignKey(_ => _.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
