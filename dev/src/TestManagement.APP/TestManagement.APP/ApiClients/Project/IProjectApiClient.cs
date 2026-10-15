@@ -1,6 +1,5 @@
 using TestManagement.APP.Dto.Project.Get;
 using TestManagement.APP.Dto.Project.Create;
-using TestManagement.APP.Dto.Project.Get;
 using TestManagement.APP.Dto.Tester.Get;
 
 namespace TestManagement.APP.ApiClients.Project;
