@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query.Internal;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,6 +35,8 @@ namespace TestManagement.API.Models
         /// </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+        public List<ProjectTestSuiteComposition> TestSuitesComposition { get; set; } = new();
+
         /// <summary>
         /// Stores the test suites associated with this project.
         /// The internal list preserves the insertion order of the suites.
@@ -43,7 +46,7 @@ namespace TestManagement.API.Models
         /// <summary>
         /// Gets a read-only collection of test suites associated with this project.
         /// </summary>
-        public IReadOnlyCollection<TestSuite> TestSuites => _testSuites;
+        public List<TestSuite> TestSuites => _testSuites;
 
         /// <summary>
         /// Stores the test executions associated with this project.

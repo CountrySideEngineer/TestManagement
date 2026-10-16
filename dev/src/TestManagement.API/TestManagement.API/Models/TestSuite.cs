@@ -40,6 +40,8 @@ namespace TestManagement.API.Models
         [JsonIgnore]
         public virtual Project? Project { get; set; }
 
+        public List<ProjectTestSuiteComposition> ProjectCompositions { get; set; } = new();
+
         /// <summary>
         /// Collection of versions (cases) that belong to this test suite.
         /// </summary>

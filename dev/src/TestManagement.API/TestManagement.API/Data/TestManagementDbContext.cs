@@ -114,7 +114,7 @@ namespace TestManagement.API.Data
             ConfigureTestSuite(modelBuilder);
             ConfigureProject(modelBuilder);
             ConfigureTestSuiteComposition(modelBuilder);
-            ConfigureProjectComposition(modelBuilder);
+            ConfigureProjectTestSuiteComposition(modelBuilder);
             ConfigureTester(modelBuilder);
             ConfigureProjectTesterComposition(modelBuilder);
         }
@@ -560,7 +560,7 @@ namespace TestManagement.API.Data
         /// a unique composite index on (ProjectId, TestSuiteId).
         /// </summary>
         /// <param name="modelBuilder">The <see cref="ModelBuilder"/> used to configure the EF Core model.</param>
-        private void ConfigureProjectComposition(ModelBuilder modelBuilder)
+        private void ConfigureProjectTestSuiteComposition(ModelBuilder modelBuilder)
         {
             var entity = modelBuilder.Entity<ProjectTestSuiteComposition>();
 
@@ -578,13 +578,13 @@ namespace TestManagement.API.Data
             // Configure foreign keys; Project and TestSuite do not expose navigation collections for this join,
             // so configure with empty inverse navigation.
             entity.HasOne(_ => _.Project)
-                .WithMany()
-                .HasForeignKey(_ => _.ProjectId)
+                .WithMany(project => project.TestSuitesComposition)
+                .HasForeignKey(composition => composition.ProjectId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(_ => _.TestSuite)
-                .WithMany()
-                .HasForeignKey(_ => _.TestSuiteId)
+                .WithMany(suite => suite.ProjectCompositions)
+                .HasForeignKey(composition => composition.TestSuiteId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
 
