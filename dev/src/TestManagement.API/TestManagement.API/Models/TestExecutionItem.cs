@@ -25,6 +25,9 @@
         /// </summary>
         public long EnvironmentId { get; set; } = 0;
 
+        /// <summary>
+        /// Gets or sets the identifier of the tester who performed this execution item.
+        /// </summary>
         public long TesterId { get; set; } = 0;
 
         /// <summary>
