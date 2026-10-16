@@ -35,6 +35,9 @@ namespace TestManagement.API.Models
         /// </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
+        /// <summary>
+        /// Gets or sets the project-to-test-suite associations for this project.
+        /// </summary>
         public List<ProjectTestSuiteComposition> TestSuitesComposition { get; set; } = new();
 
         /// <summary>

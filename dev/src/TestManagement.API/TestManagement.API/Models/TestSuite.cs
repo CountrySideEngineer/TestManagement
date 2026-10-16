@@ -40,6 +40,9 @@ namespace TestManagement.API.Models
         [JsonIgnore]
         public virtual Project? Project { get; set; }
 
+        /// <summary>
+        /// Gets or sets the project-to-test-suite associations for this test suite.
+        /// </summary>
         public List<ProjectTestSuiteComposition> ProjectCompositions { get; set; } = new();
 
         /// <summary>
