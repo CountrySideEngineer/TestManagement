@@ -444,6 +444,11 @@ namespace TestManagement.API.Data
                 .WithMany(e => e.TestExecutionItems)
                 .HasForeignKey(_ => _.EnvironmentId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(_ => _.Tester)
+                .WithMany(tester => tester.TestExecutionItems)
+                .HasForeignKey(execItem => execItem.TesterId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
 
         /// <summary>
@@ -605,7 +610,7 @@ namespace TestManagement.API.Data
                 .IsRequired()
                 .HasMaxLength(200);
 
-            entity.HasIndex(_ => _.Email)
+            entity.HasIndex(_ => new { _.Name, _.Email })
                 .IsUnique();
         }
 

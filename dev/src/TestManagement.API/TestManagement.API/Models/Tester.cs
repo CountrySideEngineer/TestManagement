@@ -27,6 +27,11 @@ public class Tester
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
+    /// Gets or sets the collection of test execution items associated with this tester.
+    /// </summary>
+    public List<TestExecutionItem> TestExecutionItems { get; set; } = new();
+
+    /// <summary>
     /// UTC timestamp when the tester record was created.
     /// </summary>
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

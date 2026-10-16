@@ -25,6 +25,8 @@
         /// </summary>
         public long EnvironmentId { get; set; } = 0;
 
+        public long TesterId { get; set; } = 0;
+
         /// <summary>
         /// The point in time when this record was created (UTC).
         /// </summary>
@@ -49,6 +51,8 @@
         /// Navigation property to the environment where this item was executed.
         /// </summary>
         public EnvironmentVersion? EnvironmentVersion { get; set; } = null;
+
+        public Tester? Tester { get; set; } = null;
 
     }
 }
