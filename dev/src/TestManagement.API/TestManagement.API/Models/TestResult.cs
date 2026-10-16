@@ -23,8 +23,6 @@ namespace TestManagement.API.Models
         /// <summary>
         /// Foreign key referencing the test execution item that triggered this result.
         /// </summary>
-        [Required]
-        [ForeignKey(nameof(TestExecutionItem))]
         public long TestExecutionItemId { get; set; }
 
         /// <summary>
@@ -35,8 +33,6 @@ namespace TestManagement.API.Models
         /// <summary>
         /// Foreign key referencing the specific <see cref="TestCaseVersion"/> executed.
         /// </summary>
-        [Required]
-        [ForeignKey(nameof(TestCaseVersion))]
         public long TestCaseVersionId { get; set; }
 
         /// <summary>
@@ -52,8 +48,6 @@ namespace TestManagement.API.Models
         /// <summary>
         /// Foreign key referencing the <see cref="TestStatus"/> assigned to this result.
         /// </summary>
-        [Required]
-        [ForeignKey(nameof(TestStatus))]
         public long StatusId { get; set; }
 
         /// <summary>

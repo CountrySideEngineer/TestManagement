@@ -246,10 +246,16 @@ namespace TestManagement.API.Data
             var entity = builder.Entity<TestResult>();
             entity.HasKey(_ => _.Id);
 
+            entity.Property(_ => _.ActualResult)
+                .IsRequired()
+                .HasMaxLength(2000);
+
+            entity.Property(_ => _.TestExecutionItemId).IsRequired();
+
             entity.HasOne(_ => _.TestExecutionItem)
                 .WithMany(te => te.TestResults)
                 .HasForeignKey(_ => _.TestExecutionItemId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             entity.HasOne(_ => _.TestCaseVersion)
                 .WithMany(tc => tc.Results)
