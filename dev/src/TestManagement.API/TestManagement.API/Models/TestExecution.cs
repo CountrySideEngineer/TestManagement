@@ -23,14 +23,14 @@ public class TestExecution
     public long ProjectId { get; set; }
 
     /// <summary>
-    /// Gets or sets the date and time when the tests were executed, in UTC.
-    /// </summary>
-    public DateTime ExecutedAt { get; set; } = DateTime.UtcNow;
-
-    /// <summary>
     /// Gets or sets the date and time when this record was created, in UTC.
     /// </summary>
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    /// <summary>
+    /// Gets or sets the date and time when this record was last updated, in UTC.
+    /// </summary>
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     /// <summary>
     /// Gets or sets the project associated with this test execution.

@@ -425,6 +425,10 @@ namespace TestManagement.API.Data
             var entity = builder.Entity<TestExecutionItem>();
             entity.HasKey(_ => _.Id);
 
+            entity.Property(_ => _.TestExecutionId).IsRequired();
+
+            entity.Property(_ => _.EnvironmentId).IsRequired();
+
             entity.HasOne(_ => _.TestExecution)
                 .WithMany(te => te.Items)
                 .HasForeignKey(_ => _.TestExecutionId)

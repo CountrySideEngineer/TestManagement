@@ -56,7 +56,6 @@ namespace TestManagement.API.Services
                     TestExecutionId = _.Id,
                     EnvironmentId = 0,
                     Environment = string.Empty,
-                    ExecutedAt = _.ExecutedAt,
                     Revision = _.Revision,
                     TestExecutionItemId = _.Items.FirstOrDefault()?.Id ?? 0,
                     TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
@@ -102,7 +101,6 @@ namespace TestManagement.API.Services
                 TestExecutionId = _.Id,
                 EnvironmentId = 0,
                 Environment = string.Empty,
-                ExecutedAt = _.ExecutedAt,
                 Revision = _.Revision,
                 TestExecutionItemId = _.Items.FirstOrDefault()?.Id ?? 0,
                 TestCases = _.Items.SelectMany(i => i.TestResults.Select(tr => new TestCaseExecution()
@@ -147,8 +145,7 @@ namespace TestManagement.API.Services
 
             var testExecution = new TestExecution()
             {
-                Revision = request.Revision,
-                ExecutedAt = request.ExecutedAt
+                Revision = request.Revision
             };
 
             ICollection<TestExecution.ExecutedTest> executedTests = GetExecutedTestsFromRequest(request.TestCases);
