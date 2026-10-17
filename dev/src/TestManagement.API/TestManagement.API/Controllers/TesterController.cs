@@ -111,6 +111,6 @@ public class TesterController : Controller
             Email = createdTester.Email
         };
 
-        return StatusCode(StatusCodes.Status201Created, response);
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = response.Id }, response);
     }
 }
