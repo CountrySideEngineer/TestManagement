@@ -106,8 +106,8 @@ namespace TestManagement.API.Data
             ConfigureTestCase(modelBuilder);
             ConfigureTestResult(modelBuilder);
             ConfigureTestStatus(modelBuilder);
-            ConfigureEnvironmentVersion(modelBuilder);
             ConfigureEnvironment(modelBuilder);
+            ConfigureEnvironmentVersion(modelBuilder);
             ConfigureTestExecutionItem(modelBuilder);
             ConfigureTestExecution(modelBuilder);
             ConfigureTestSuiteVersion(modelBuilder);
