@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TestManagement.API.Features.Tester.Create;
 using TestManagement.API.Features.Tester.Get;
 using TestManagement.API.Services;
 
@@ -46,5 +47,40 @@ public class TesterController : Controller
             .ToList();
 
         return Ok(responses);
+    }
+
+    /// <summary>
+    /// Creates a new tester.
+    /// </summary>
+    /// <param name="request">Request containing the tester's name and email address.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>The created tester.</returns>
+    [HttpPost]
+    [ProducesResponseType(typeof(TesterCreateResponse), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TesterCreateResponse>> CreateAsync(
+        [FromBody] TesterCreateRequest request,
+        CancellationToken ct)
+    {
+        _logger.LogDebug("TesterController.CreateAsync() start!");
+
+        CreateTesterRequest createRequest = new()
+        {
+            Name = request.Name,
+            Email = request.Email
+        };
+
+        CreateTesterResponse createdTester =
+            await _testerService.CreateAsync(createRequest, ct);
+
+        TesterCreateResponse response = new()
+        {
+            Id = createdTester.Id,
+            Name = createdTester.Name,
+            Email = createdTester.Email
+        };
+
+        return StatusCode(StatusCodes.Status201Created, response);
     }
 }
