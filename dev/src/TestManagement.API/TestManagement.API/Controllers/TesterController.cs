@@ -83,4 +83,34 @@ public class TesterController : Controller
 
         return StatusCode(StatusCodes.Status201Created, response);
     }
+
+    /// <summary>
+    /// Retrieves a tester by its identifier.
+    /// </summary>
+    /// <param name="id">The unique identifier of the tester.</param>
+    /// <param name="ct">Cancellation token to cancel the operation.</param>
+    /// <returns>The tester response.</returns>
+    [HttpGet("{id:long}")]
+    [ProducesResponseType(typeof(TesterGetResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    [ActionName(nameof(GetByIdAsync))]
+    public async Task<ActionResult<TesterGetResponse>> GetByIdAsync(
+        long id,
+        CancellationToken ct)
+    {
+        _logger.LogDebug("TesterController.GetByIdAsync() start. Id: {Id}", id);
+
+        GetTesterResponse tester =
+            await _testerService.GetByIdAsync(id, ct);
+
+        TesterGetResponse response = new()
+        {
+            Id = tester.Id,
+            Name = tester.Name,
+            Email = tester.Email
+        };
+
+        return Ok(response);
+    }
 }
