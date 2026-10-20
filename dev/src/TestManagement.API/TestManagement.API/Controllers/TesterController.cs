@@ -5,14 +5,32 @@ using TestManagement.API.Services;
 
 namespace TestManagement.API.Controllers;
 
+/// <summary>
+/// API controller for managing tester resources.
+/// </summary>
 [ApiController]
 [Route("api/testers")]
 public class TesterController : Controller
 {
+    /// <summary>
+    /// Service used to retrieve and create tester data.
+    /// </summary>
     private readonly ITesterService _testerService;
 
+    /// <summary>
+    /// Logger used to record controller diagnostic information.
+    /// </summary>
     private readonly ILogger<TesterController> _logger;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="TesterController"/> class.
+    /// </summary>
+    /// <param name="testerService">
+    /// Service used to retrieve and create tester data.
+    /// </param>
+    /// <param name="logger">
+    /// Logger used to record controller diagnostic information.
+    /// </param>
     public TesterController(
         ITesterService testerService,
         ILogger<TesterController> logger)
