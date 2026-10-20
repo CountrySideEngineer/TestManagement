@@ -207,6 +207,7 @@ public class ProjectFacadeService : IProjectFacadeService
             request.TesterId);
 
         var created = await _projectTesterCompositionService.CreateCompositionAsync(request, ct);
+
         return new ProjectTesterCompositionCreateResponse
         {
             CompositionId = created.CompositionId,
